@@ -48,21 +48,57 @@ import java.util.Objects;
  * output contract.
  */
 public interface Output {
+    /**
+     * Returns type.
+     *
+     * @return {@link OutputType}
+     */
 
     @JsonIgnore
     OutputType getType();
+/**
+ * Returns name.
+ *
+ * @return {@link String}
+ */
 
     String getName();
+/**
+ * Returns strategy.
+ *
+ * @return {@link OutputStrategy}
+ */
 
     OutputStrategy getStrategy();
+/**
+ * Returns scope.
+ *
+ * @return {@link AttributeScope}
+ */
 
     default AttributeScope getScope() {
         return null;
     }
+/**
+ * Returns decimals by default.
+ *
+ * @return {@link Integer}
+ */
 
     Integer getDecimalsByDefault();
+/**
+ * Set decimals by default.
+ *
+ * @param decimalsByDefault decimals by default ({@link Integer})
+ */
 
     void setDecimalsByDefault(Integer decimalsByDefault);
+/**
+ * Has context only changes.
+ *
+ * @param other other ({@link Output})
+ * @return the boolean result
+ */
 
     default boolean hasContextOnlyChanges(Output other) {
         if (!getType().equals(other.getType())) {

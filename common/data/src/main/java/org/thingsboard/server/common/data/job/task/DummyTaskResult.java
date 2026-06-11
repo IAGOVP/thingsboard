@@ -39,12 +39,25 @@ public class DummyTaskResult extends TaskResult {
         super(success, discarded);
         this.failure = failure;
     }
+    /**
+     * Success.
+     *
+     * @param task task ({@link DummyTask})
+     * @return {@link DummyTaskResult}
+     */
 
     public static DummyTaskResult success(DummyTask task) {
         return DummyTaskResult.builder()
                 .success(true)
                 .build();
     }
+    /**
+     * Failed.
+     *
+     * @param task task ({@link DummyTask})
+     * @param error error ({@link Throwable})
+     * @return {@link DummyTaskResult}
+     */
 
     public static DummyTaskResult failed(DummyTask task, Throwable error) {
         return DummyTaskResult.builder()
@@ -55,17 +68,33 @@ public class DummyTaskResult extends TaskResult {
                         .build())
                 .build();
     }
+    /**
+     * Discarded.
+     *
+     * @param task task ({@link DummyTask})
+     * @return {@link DummyTaskResult}
+     */
 
     public static DummyTaskResult discarded(DummyTask task) {
         return DummyTaskResult.builder()
                 .discarded(true)
                 .build();
     }
+    /**
+     * Returns job type.
+     *
+     * @return {@link JobType}
+     */
 
     @Override
     public JobType getJobType() {
         return JobType.DUMMY;
     }
+    /**
+     * Returns error.
+     *
+     * @return {@link String}
+     */
 
     @Override
     public String getError() {

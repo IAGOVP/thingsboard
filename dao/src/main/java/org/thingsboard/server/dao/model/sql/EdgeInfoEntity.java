@@ -23,8 +23,11 @@ import org.thingsboard.server.common.data.edge.EdgeInfo;
 import java.util.HashMap;
 import java.util.Map;
 /**
- * Edge info entity.
+ * JPA/Cassandra row model for edge info.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -53,6 +56,12 @@ public class EdgeInfoEntity extends AbstractEdgeEntity<EdgeInfo> {
             this.customerIsPublic = false;
         }
     }
+    /**
+     * To data.
+     *
+     * @return {@link EdgeInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EdgeInfo toData() {

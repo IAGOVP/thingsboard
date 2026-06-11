@@ -35,8 +35,11 @@ import org.thingsboard.server.dao.util.mapping.JsonConverter;
 
 import java.util.UUID;
 /**
- * Rule node entity.
+ * JPA/Cassandra row model for rule node.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -99,6 +102,12 @@ public class RuleNodeEntity extends BaseSqlEntity<RuleNode> {
             this.externalId = ruleNode.getExternalId().getId();
         }
     }
+    /**
+     * To data.
+     *
+     * @return {@link RuleNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleNode toData() {

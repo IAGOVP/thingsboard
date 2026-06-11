@@ -31,8 +31,14 @@ import org.thingsboard.server.dao.util.BufferedRateExecutor;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 /**
- * Cassandra abstract dao.
+ * Cassandra abstract dao (Cassandra async DAO infrastructure (Cassandra async DAO base classes)).
  */
+
+
+
+
+
+
 
 @Slf4j
 public abstract class CassandraAbstractDao {
@@ -63,51 +69,75 @@ public abstract class CassandraAbstractDao {
         return session;
     }
 
+    
     /**
-
      * Prepare.
-
+     *
+     * @param query filter and sort query definition
+     * @return {@link PreparedStatement}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected PreparedStatement prepare(String query) {
         return preparedStatementMap.computeIfAbsent(query, i -> getSession().prepare(i));
     }
 
+    
     /**
-
-     * Execute read.
-
+     * Executes read.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param statement statement ({@link Statement})
+     * @return {@link AsyncResultSet}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected AsyncResultSet executeRead(TenantId tenantId, Statement statement) {
         return execute(tenantId, statement, defaultReadLevel, rateReadLimiter);
     }
 
+    
     /**
-
-     * Execute write.
-
+     * Executes write.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param statement statement ({@link Statement})
+     * @return {@link AsyncResultSet}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected AsyncResultSet executeWrite(TenantId tenantId, Statement statement) {
         return execute(tenantId, statement, defaultWriteLevel, rateWriteLimiter);
     }
 
+    
     /**
-
-     * Execute async read.
-
+     * Executes async read.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param statement statement ({@link Statement})
+     * @return {@link TbResultSetFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected TbResultSetFuture executeAsyncRead(TenantId tenantId, Statement statement) {
         return executeAsync(tenantId, statement, defaultReadLevel, rateReadLimiter);
     }
 
+    
     /**
-
-     * Execute async write.
-
+     * Executes async write.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param statement statement ({@link Statement})
+     * @return {@link TbResultSetFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected TbResultSetFuture executeAsyncWrite(TenantId tenantId, Statement statement) {
         return executeAsync(tenantId, statement, defaultWriteLevel, rateWriteLimiter);

@@ -23,7 +23,8 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 @ConditionalOnProperty(prefix = "database.ts_latest", value = "type", havingValue = "cassandra")
 public @/**
- * DAO contract for no sql ts latest.
+ * no sql ts latest dao contract for the DAO layer.
  */
+
 interface NoSqlTsLatestDao {
 }

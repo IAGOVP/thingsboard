@@ -40,6 +40,11 @@ public class EntityDataQuery extends AbstractDataQuery<EntityDataPageLink> {
     public EntityDataQuery(EntityFilter entityFilter, EntityDataPageLink pageLink, List<EntityKey> entityFields, List<EntityKey> latestValues, List<KeyFilter> keyFilters, ComplexOperation keyFiltersOperation) {
         super(entityFilter, pageLink, entityFields, latestValues, keyFilters, keyFiltersOperation);
     }
+    /**
+     * Next.
+     *
+     * @return {@link EntityDataQuery}
+     */
 
     @JsonIgnore
     public EntityDataQuery next() {

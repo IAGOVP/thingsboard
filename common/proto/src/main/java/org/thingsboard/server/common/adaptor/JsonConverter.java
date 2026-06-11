@@ -157,6 +157,7 @@ public class JsonConverter {
         if (json != null && !json.isEmpty()) {
             return convertToClaimDeviceProto(deviceId, JsonParser.parseString(json));
         }
+        /** Build claim device msg. */
         return buildClaimDeviceMsg(deviceId, DataConstants.DEFAULT_SECRET_KEY, durationMs);
     }
 
@@ -174,6 +175,7 @@ public class JsonConverter {
         } else {
             throw new JsonSyntaxException(CAN_T_PARSE_VALUE + jsonElement);
         }
+        /** Build claim device msg. */
         return buildClaimDeviceMsg(deviceId, secretKey, durationMs);
     }
 
@@ -475,10 +477,12 @@ public class JsonConverter {
     }
 
     public static JsonObject toJson(ProvisionDeviceResponseMsg payload) {
+        /** To json. */
         return toJson(payload, false, 0);
     }
 
     public static JsonObject toJson(ProvisionDeviceResponseMsg payload, int requestId) {
+        /** To json. */
         return toJson(payload, true, requestId);
     }
 
@@ -541,6 +545,7 @@ public class JsonConverter {
 
     public static List<AttributeKvEntry> convertToAttributes(JsonElement element) {
         long ts = System.currentTimeMillis();
+        /** Convert to attributes. */
         return convertToAttributes(element, ts);
     }
 
@@ -586,11 +591,13 @@ public class JsonConverter {
 
     public static Map<Long, List<KvEntry>> convertToTelemetry(JsonElement jsonElement, long systemTs) throws
             JsonSyntaxException {
+        /** Convert to telemetry. */
         return convertToTelemetry(jsonElement, systemTs, false);
     }
 
     public static Map<Long, List<KvEntry>> convertToSortedTelemetry(JsonElement jsonElement, long systemTs) throws
             JsonSyntaxException {
+        /** Convert to telemetry. */
         return convertToTelemetry(jsonElement, systemTs, true);
     }
 
@@ -600,7 +607,6 @@ public class JsonConverter {
         convertToTelemetry(jsonElement, systemTs, result, null);
         return result;
     }
-
 
     private static void parseObject(Map<Long, List<KvEntry>> result, long systemTs, JsonObject jo) {
         if (jo.has("ts") && jo.has("values")) {
@@ -662,6 +668,7 @@ public class JsonConverter {
     }
 
     public static TransportProtos.ProvisionDeviceRequestMsg convertToProvisionRequestMsg(JsonObject jo) {
+        /** Build provision request msg. */
         return buildProvisionRequestMsg(jo);
     }
 
@@ -692,7 +699,6 @@ public class JsonConverter {
                 .setProvisionDeviceSecret(provisionSecret)
                 .build();
     }
-
 
     private static String getStrValue(JsonObject jo, String field, boolean requiredField) {
         if (jo.has(field)) {

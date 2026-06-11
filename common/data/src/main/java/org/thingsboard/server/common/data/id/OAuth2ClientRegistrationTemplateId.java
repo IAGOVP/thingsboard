@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.UUID;
 
 /**
- * Typed identifier for oauth2client registration template.
+ * Typed identifier for OAuth2 client registration template.
  */
 public class OAuth2ClientRegistrationTemplateId extends UUIDBased {
 
@@ -29,6 +29,12 @@ public class OAuth2ClientRegistrationTemplateId extends UUIDBased {
     public OAuth2ClientRegistrationTemplateId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * From string.
+     *
+     * @param clientRegistrationTemplateId client registration template id ({@link String})
+     * @return {@link OAuth2ClientRegistrationTemplateId}
+     */
 
     public static OAuth2ClientRegistrationTemplateId fromString(String clientRegistrationTemplateId) {
         return new OAuth2ClientRegistrationTemplateId(UUID.fromString(clientRegistrationTemplateId));

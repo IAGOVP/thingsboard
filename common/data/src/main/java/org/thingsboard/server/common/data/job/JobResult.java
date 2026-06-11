@@ -69,11 +69,21 @@ public abstract class JobResult implements Serializable {
     private long finishTs;
     @Schema(description = "Timestamp of the job cancellation, in milliseconds")
     private long cancellationTs;
+    /**
+     * Returns completed count.
+     *
+     * @return the int result
+     */
 
     @JsonIgnore
     public int getCompletedCount() {
         return successfulCount + failedCount + discardedCount;
     }
+    /**
+     * Processes task result.
+     *
+     * @param taskResult task result ({@link TaskResult})
+     */
 
     public void processTaskResult(TaskResult taskResult) {
         if (taskResult.isSuccess()) {
@@ -93,6 +103,11 @@ public abstract class JobResult implements Serializable {
             }
         }
     }
+    /**
+     * Returns job type.
+     *
+     * @return {@link JobType}
+     */
 
     @JsonIgnore
     public abstract JobType getJobType();

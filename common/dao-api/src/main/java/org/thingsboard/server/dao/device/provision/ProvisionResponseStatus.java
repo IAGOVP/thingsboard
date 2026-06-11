@@ -16,8 +16,9 @@
 package org.thingsboard.server.dao.device.provision;
 
 /**
- * provision response status values.
+ * Enumerates provision response status values used by DAO configuration.
  */
+
 public enum ProvisionResponseStatus {
     UNKNOWN,
     SUCCESS,

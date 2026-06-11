@@ -35,40 +35,58 @@ import java.util.Set;
  */
 public interface GitRepositoryService {
 
+    /** Returns the active repository tenants. */
     Set<TenantId> getActiveRepositoryTenants();
 
+    /** Prepare commit. */
     void prepareCommit(PendingCommit pendingCommit);
 
+    /** List versions. */
     PageData<EntityVersion> listVersions(TenantId tenantId, String branch, String path, PageLink pageLink) throws Exception;
 
+    /** List entities at version. */
     List<VersionedEntityInfo> listEntitiesAtVersion(TenantId tenantId, String versionId, String path) throws Exception;
 
+    /** Test repository. */
     void testRepository(TenantId tenantId, RepositorySettings settings) throws Exception;
 
+    /** Init repository. */
     void initRepository(TenantId tenantId, RepositorySettings settings, boolean fetch) throws Exception;
 
+    /** Returns the repository settings. */
     RepositorySettings getRepositorySettings(TenantId tenantId) throws Exception;
 
+    /** Clear repository. */
     void clearRepository(TenantId tenantId) throws IOException;
 
+    /** Add. */
     void add(PendingCommit commit, String relativePath, String entityDataJson) throws IOException;
 
+    /** Delete folder content. */
     void deleteFolderContent(PendingCommit commit, String relativePath) throws IOException;
 
+    /** Push. */
     VersionCreationResult push(PendingCommit commit);
 
+    /** Clean up. */
     void cleanUp(PendingCommit commit);
 
+    /** Abort. */
     void abort(PendingCommit commit);
 
+    /** List branches. */
     List<BranchInfo> listBranches(TenantId tenantId);
 
+    /** Returns the file content at commit. */
     String getFileContentAtCommit(TenantId tenantId, String relativePath, String versionId) throws IOException;
 
+    /** Returns the versions diff list. */
     List<Diff> getVersionsDiffList(TenantId tenantId, String path, String versionId1, String versionId2) throws IOException;
 
+    /** Returns the contents diff. */
     String getContentsDiff(TenantId tenantId, String content1, String content2) throws IOException;
 
+    /** Fetch. */
     void fetch(TenantId tenantId) throws GitAPIException;
 
 }

@@ -33,6 +33,11 @@ public class AttributesOutput implements Output {
     public AttributesOutput() {
         this.strategy = new AttributesRuleChainOutputStrategy();
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link OutputType}
+     */
 
     @Override
     public OutputType getType() {

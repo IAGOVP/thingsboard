@@ -28,8 +28,9 @@ import static org.thingsboard.server.common.data.edqs.fields.FieldsUtil.getText;
 @NoArgsConstructor
 @SuperBuilder
 /**
- * Edge fields.
+ * Lightweight edge field selection for EDQS queries and events (EDQS data — lightweight entity field DTOs for EDQS).
  */
+
 public class EdgeFields extends AbstractEntityFields {
 
     private String type;

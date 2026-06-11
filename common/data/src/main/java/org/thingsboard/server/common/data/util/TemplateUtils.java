@@ -39,6 +39,13 @@ public class TemplateUtils {
     );
 
     private TemplateUtils() {}
+    /**
+     * Processes template.
+     *
+     * @param template template ({@link String})
+     * @param context context ({@link Map})
+     * @return {@link String}
+     */
 
     public static String processTemplate(String template, Map<String, String> context) {
         return TEMPLATE_PARAM_PATTERN.matcher(template).replaceAll(matchResult -> {

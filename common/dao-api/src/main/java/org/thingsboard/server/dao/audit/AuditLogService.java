@@ -34,14 +34,63 @@ import java.util.List;
  */
 public interface AuditLogService {
 
+    /**
+     * Finds audit logs by tenant id and customer id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId customer to assign or filter by
+     * @param actionTypes action types ({@link List})
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<AuditLog> findAuditLogsByTenantIdAndCustomerId(TenantId tenantId, CustomerId customerId, List<ActionType> actionTypes, TimePageLink pageLink);
 
+    /**
+     * Finds audit logs by tenant id and user id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId user id ({@link UserId})
+     * @param actionTypes action types ({@link List})
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<AuditLog> findAuditLogsByTenantIdAndUserId(TenantId tenantId, UserId userId, List<ActionType> actionTypes, TimePageLink pageLink);
 
+    /**
+     * Finds audit logs by tenant id and entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId entity id ({@link EntityId})
+     * @param actionTypes action types ({@link List})
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<AuditLog> findAuditLogsByTenantIdAndEntityId(TenantId tenantId, EntityId entityId, List<ActionType> actionTypes, TimePageLink pageLink);
 
+    /**
+     * Finds audit logs by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param actionTypes action types ({@link List})
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<AuditLog> findAuditLogsByTenantId(TenantId tenantId, List<ActionType> actionTypes, TimePageLink pageLink);
 
+    /**
+     * Log entity action.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId customer to assign or filter by
+     * @param userId user id ({@link UserId})
+     * @param userName user name ({@link String})
+     * @param entityId entity id ({@link I})
+     * @param entity entity ({@link E})
+     * @param actionType action type ({@link ActionType})
+     * @param e e ({@link Exception})
+     * @param additionalInfo additional info
+     * @return the operation result
+     */
     <E extends HasName, I extends EntityId> ListenableFuture<Void> logEntityAction(
             TenantId tenantId,
             CustomerId customerId,

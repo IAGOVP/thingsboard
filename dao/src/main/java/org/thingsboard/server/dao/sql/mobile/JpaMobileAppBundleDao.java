@@ -38,8 +38,11 @@ import org.thingsboard.server.dao.util.SqlDao;
 import java.util.List;
 import java.util.UUID;
 /**
- * JPA implementation of mobile app bundle dao.
+ * JPA/PostgreSQL implementation of mobile app bundle dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Component
 @RequiredArgsConstructor
@@ -48,52 +51,126 @@ public class JpaMobileAppBundleDao extends JpaAbstractDao<MobileAppBundleEntity,
 
     private final MobileAppBundleRepository mobileAppBundleRepository;
     private final MobileAppBundleOauth2ClientRepository mobileOauth2ProviderRepository;
+    /**
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Class<MobileAppBundleEntity> getEntityClass() {
         return MobileAppBundleEntity.class;
     }
+    /**
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected JpaRepository<MobileAppBundleEntity, UUID> getRepository() {
         return mobileAppBundleRepository;
     }
+    /**
+     * Finds infos by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<MobileAppBundleInfo> findInfosByTenantId(TenantId tenantId, PageLink pageLink) {
         return DaoUtil.toPageData(mobileAppBundleRepository.findInfoByTenantId(tenantId.getId(), pageLink.getTextSearch(), DaoUtil.toPageable(pageLink)));
     }
+    /**
+     * Finds info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param mobileAppBundleId mobile app bundle id ({@link MobileAppBundleId})
+     * @return {@link MobileAppBundleInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public MobileAppBundleInfo findInfoById(TenantId tenantId, MobileAppBundleId mobileAppBundleId) {
         return DaoUtil.getData(mobileAppBundleRepository.findInfoById(mobileAppBundleId.getId()));
     }
+    /**
+     * Finds oauth2clients by mobile app bundle id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param mobileAppBundleId mobile app bundle id ({@link MobileAppBundleId})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<MobileAppBundleOauth2Client> findOauth2ClientsByMobileAppBundleId(TenantId tenantId, MobileAppBundleId mobileAppBundleId) {
         return DaoUtil.convertDataList(mobileOauth2ProviderRepository.findAllByMobileAppBundleId(mobileAppBundleId.getId()));
     }
+    /**
+     * Add oauth2client.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param mobileAppBundleOauth2Client mobile app bundle oauth2client ({@link MobileAppBundleOauth2Client})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void addOauth2Client(TenantId tenantId, MobileAppBundleOauth2Client mobileAppBundleOauth2Client) {
         mobileOauth2ProviderRepository.save(new MobileAppBundleOauth2ClientEntity(mobileAppBundleOauth2Client));
     }
+    /**
+     * Removes oauth2client.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param mobileAppBundleOauth2Client mobile app bundle oauth2client ({@link MobileAppBundleOauth2Client})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void removeOauth2Client(TenantId tenantId, MobileAppBundleOauth2Client mobileAppBundleOauth2Client) {
         mobileOauth2ProviderRepository.deleteById(new MobileAppOauth2ClientCompositeKey(mobileAppBundleOauth2Client.getMobileAppBundleId().getId(),
                 mobileAppBundleOauth2Client.getOAuth2ClientId().getId()));
     }
+    /**
+     * Finds by pkg name and platform.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pkgName pkg name ({@link String})
+     * @param platform platform ({@link PlatformType})
+     * @return {@link MobileAppBundle}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public MobileAppBundle findByPkgNameAndPlatform(TenantId tenantId, String pkgName, PlatformType platform) {
         return DaoUtil.getData(mobileAppBundleRepository.findByPkgNameAndPlatformType(pkgName, platform));
     }
+    /**
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteByTenantId(TenantId tenantId) {
         mobileAppBundleRepository.deleteByTenantId(tenantId.getId());
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

@@ -22,6 +22,14 @@ public interface ActivityReportCallback<Key> {
 
     void onSuccess(Key key, long reportedTime);
 
+    /**
+     * Handles failure.
+     *
+     * @param key key ({@link Key})
+     * @param t t ({@link Throwable})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void onFailure(Key key, Throwable t);
 
 }

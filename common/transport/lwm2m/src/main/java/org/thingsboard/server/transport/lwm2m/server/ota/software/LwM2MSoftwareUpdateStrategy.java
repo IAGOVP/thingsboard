@@ -29,7 +29,13 @@ public enum LwM2MSoftwareUpdateStrategy {
         this.code = code;
         this.type = type;
     }
-
+    /**
+     * From strategy sw by type.
+     *
+     * @param type type ({@link String})
+     * @return {@link LwM2MSoftwareUpdateStrategy}
+     * @throws Exception on processing failure
+     */
     public static LwM2MSoftwareUpdateStrategy fromStrategySwByType(String type) {
         for (LwM2MSoftwareUpdateStrategy to : LwM2MSoftwareUpdateStrategy.values()) {
             if (to.type.equals(type)) {
@@ -38,7 +44,13 @@ public enum LwM2MSoftwareUpdateStrategy {
         }
         throw new IllegalArgumentException(String.format("Unsupported SW Strategy type  : %s", type));
     }
-
+    /**
+     * From strategy sw by code.
+     *
+     * @param code code
+     * @return {@link LwM2MSoftwareUpdateStrategy}
+     * @throws Exception on processing failure
+     */
     public static LwM2MSoftwareUpdateStrategy fromStrategySwByCode(int code) {
         for (LwM2MSoftwareUpdateStrategy to : LwM2MSoftwareUpdateStrategy.values()) {
             if (to.code == code) {

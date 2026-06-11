@@ -31,18 +31,26 @@ import org.thingsboard.server.dao.service.DataValidator;
 
 import java.net.URI;
 /**
- * Oauth2client data validator.
+ * Validates oauth2client entities before persistence.
+ *
+ * <p>Enforces constraints, uniqueness, and referential integrity at the DAO layer.
  */
+
 
 @Component
 @AllArgsConstructor
 public class Oauth2ClientDataValidator extends DataValidator<OAuth2Client> {
 
+    
     /**
-
-     * Validate data impl.
-
+     * Validates data impl.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param oAuth2Client o auth2client ({@link OAuth2Client})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateDataImpl(TenantId tenantId, OAuth2Client oAuth2Client) {

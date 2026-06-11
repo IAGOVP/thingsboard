@@ -40,22 +40,34 @@ public class DeviceDescriptor extends EdgeNodeDescriptor {
         this.deviceId = deviceId;
         this.descriptorString = edgeNodeDescriptor.getDescriptorString() + "/" + deviceId;
     }
-
+    /**
+     * Returns device id.
+     *
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
     public String getDeviceId() {
         return deviceId;
     }
 
+    
     /**
-     * Returns a {@link String} representing the Device's Descriptor of the form:
-     * "<groupName>/<edgeNodeName>/<deviceId>".
+     * Returns descriptor string.
      *
-     * @return a {@link String} representing the Device's Descriptor.
+     * @return {@link String}
+     * @throws Exception on processing failure
      */
+
     @Override
     public String getDescriptorString() {
         return descriptorString;
     }
-
+    /**
+     * Returns edge node descriptor string.
+     *
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
     public String getEdgeNodeDescriptorString() {
         return super.getDescriptorString();
     }

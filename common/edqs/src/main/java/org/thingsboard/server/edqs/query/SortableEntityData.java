@@ -23,18 +23,31 @@ import org.thingsboard.server.edqs.data.EntityData;
 
 import java.util.UUID;
 
-@Data
 /**
- * In-memory EDQS projection of sortable entity entity fields and metadata.
+ * Sortable entity data (EDQS microservice).
  */
+
+@Data
 public class SortableEntityData {
 
     private final EntityData entityData;
     private DataPoint sortValue;
+    /**
+     * Returns id.
+     *
+     * @return {@link UUID}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public UUID getId(){
         return entityData.getId();
     }
+    /**
+     * Returns entity id.
+     *
+     * @return {@link EntityId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public EntityId getEntityId() {
         return EntityIdFactory.getByTypeAndUuid(entityData.getEntityType(), entityData.getId());

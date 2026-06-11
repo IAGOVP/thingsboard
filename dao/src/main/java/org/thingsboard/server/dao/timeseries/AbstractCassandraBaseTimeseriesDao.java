@@ -33,8 +33,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 /**
- * Abstract cassandra base timeseries dao.
+ * Abstract cassandra base timeseries dao (Cassandra telemetry and latest-value DAO (Cassandra time-series DAO and latest-value caches)).
  */
+
+
+
+
+
+
 
 @Slf4j
 public abstract class AbstractCassandraBaseTimeseriesDao extends CassandraAbstractAsyncDao {
@@ -43,6 +49,14 @@ public abstract class AbstractCassandraBaseTimeseriesDao extends CassandraAbstra
     public static final String INSERT_INTO = "INSERT INTO ";
     public static final String SELECT_PREFIX = "SELECT ";
     public static final String EQUALS_PARAM = " = ? ";
+    /**
+     * To kv entry.
+     *
+     * @param row row ({@link Row})
+     * @param key attribute or cache key
+     * @return {@link KvEntry}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static KvEntry toKvEntry(Row row, String key) {
         KvEntry kvEntry = null;
@@ -74,6 +88,13 @@ public abstract class AbstractCassandraBaseTimeseriesDao extends CassandraAbstra
         }
         return kvEntry;
     }
+    /**
+     * Convert result to ts kv entry list.
+     *
+     * @param rows rows ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected List<TsKvEntry> convertResultToTsKvEntryList(List<Row> rows) {
         List<TsKvEntry> entries = new ArrayList<>(rows.size());
@@ -88,6 +109,14 @@ public abstract class AbstractCassandraBaseTimeseriesDao extends CassandraAbstra
         long ts = row.getLong(ModelConstants.TS_COLUMN);
         return new BasicTsKvEntry(ts, toKvEntry(row, key));
     }
+    /**
+     * Convert result to ts kv entry.
+     *
+     * @param key attribute or cache key
+     * @param row row ({@link Row})
+     * @return {@link TsKvEntry}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected TsKvEntry convertResultToTsKvEntry(String key, Row row) {
         if (row != null) {
@@ -96,6 +125,14 @@ public abstract class AbstractCassandraBaseTimeseriesDao extends CassandraAbstra
             return new BasicTsKvEntry(System.currentTimeMillis(), new StringDataEntry(key, null));
         }
     }
+    /**
+     * Convert result to ts kv entry opt.
+     *
+     * @param key attribute or cache key
+     * @param row row ({@link Row})
+     * @return optional {@link TsKvEntry}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected Optional<TsKvEntry> convertResultToTsKvEntryOpt(String key, Row row) {
         if (row != null) {

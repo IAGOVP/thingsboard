@@ -20,8 +20,9 @@ import org.thingsboard.server.common.data.EntityType;
 import org.thingsboard.server.common.data.exception.AbstractRateLimitException;
 
 /**
- * Created by ashvayka on 22.10.18.
+ * Exception in message/actor pipeline: tb rate limits exception.
  */
+
 public class TbRateLimitsException extends AbstractRateLimitException {
     @Getter
     private final EntityType entityType;

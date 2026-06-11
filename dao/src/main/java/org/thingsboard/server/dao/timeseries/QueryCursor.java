@@ -21,11 +21,48 @@ import org.thingsboard.server.common.data.kv.TsKvQuery;
 import java.util.List;
 import java.util.UUID;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * Query cursor.
+
+
+
+
+
+ * Query cursor (Cassandra telemetry and latest-value DAO (Cassandra time-series DAO and latest-value caches)).
+
+
+
+
+
 
  */
+
+
+
+
+
+
 
 public class QueryCursor {
 
@@ -52,10 +89,22 @@ public class QueryCursor {
         this.partitions = partitions;
         this.partitionIndex = partitions.size() - 1;
     }
+    /**
+     * Has next partition.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean hasNextPartition() {
         return partitionIndex >= 0;
     }
+    /**
+     * Returns next partition.
+     *
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public long getNextPartition() {
         long partition = partitions.get(partitionIndex);

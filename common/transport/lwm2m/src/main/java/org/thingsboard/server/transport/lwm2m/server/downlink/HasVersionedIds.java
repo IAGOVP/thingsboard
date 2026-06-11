@@ -21,12 +21,18 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * has versioned ids contract.
+ * has versioned ids contract (LwM2M transport and object model (ThingsBoard common module)).
  */
 public interface HasVersionedIds {
 
     String[] getVersionedIds();
 
+    /**
+     * Returns object ids.
+     *
+     * @return the String[] value
+     * @throws Exception on processing failure
+     */
     default String[] getObjectIds() {
         Set<String> objectIds = ConcurrentHashMap.newKeySet();
         for (String versionedId : getVersionedIds()) {

@@ -31,19 +31,71 @@ import java.util.List;
  */
 public interface DomainService extends EntityDaoService {
 
+    /**
+     * Saves or persists domain.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param domain domain ({@link Domain})
+     * @return {@link Domain}
+     */
     Domain saveDomain(TenantId tenantId, Domain domain);
 
+    /**
+     * Deletes domain by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param domainId domain id ({@link DomainId})
+     */
     void deleteDomainById(TenantId tenantId, DomainId domainId);
 
+    /**
+     * Finds domain by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param domainId domain id ({@link DomainId})
+     * @return {@link Domain}
+     */
     Domain findDomainById(TenantId tenantId, DomainId domainId);
 
+    /**
+     * Finds domain infos by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<DomainInfo> findDomainInfosByTenantId(TenantId tenantId, PageLink pageLink);
 
+    /**
+     * Finds domain info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param domainId domain id ({@link DomainId})
+     * @return {@link DomainInfo}
+     */
     DomainInfo findDomainInfoById(TenantId tenantId, DomainId domainId);
 
+    /**
+     * Is oauth2enabled.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return the boolean result
+     */
     boolean isOauth2Enabled(TenantId tenantId);
 
+    /**
+     * Updates oauth2clients.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param domainId domain id ({@link DomainId})
+     * @param oAuth2ClientIds o auth2client ids ({@link List})
+     */
     void updateOauth2Clients(TenantId tenantId, DomainId domainId, List<OAuth2ClientId> oAuth2ClientIds);
 
+    /**
+     * Deletes domains by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     */
     void deleteDomainsByTenantId(TenantId tenantId);
 }

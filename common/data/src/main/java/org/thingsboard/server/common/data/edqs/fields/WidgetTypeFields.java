@@ -23,8 +23,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @SuperBuilder
 /**
- * Widget type fields.
+ * Lightweight widget type field selection for EDQS queries and events (EDQS data — lightweight entity field DTOs for EDQS).
  */
+
 public class WidgetTypeFields extends AbstractEntityFields {
 
     public WidgetTypeFields(UUID id, long createdTime, UUID tenantId, String name, Long version) {

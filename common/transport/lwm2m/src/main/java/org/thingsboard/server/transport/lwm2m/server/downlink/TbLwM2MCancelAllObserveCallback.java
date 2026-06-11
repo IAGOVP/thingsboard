@@ -30,6 +30,14 @@ public class TbLwM2MCancelAllObserveCallback extends AbstractTbLwM2MRequestCallb
     public TbLwM2MCancelAllObserveCallback(LwM2MTelemetryLogService logService, LwM2mClient client) {
         super(logService, client);
     }
+    /**
+     * Handles success.
+     *
+     * @param request request payload with operation parameters
+     * @param canceledSubscriptionsCount canceled subscriptions count ({@link Integer})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onSuccess(TbLwM2MCancelAllRequest request, Integer canceledSubscriptionsCount) {

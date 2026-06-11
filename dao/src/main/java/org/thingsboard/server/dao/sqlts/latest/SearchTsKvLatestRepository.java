@@ -24,8 +24,14 @@ import org.thingsboard.server.dao.util.SqlTsLatestAnyDao;
 import java.util.List;
 import java.util.UUID;
 /**
- * Search ts kv latest repository.
+ * Search ts kv latest repository (time-series SQL/Timescale persistence (SQL/Timescale time-series key-value storage)).
  */
+
+
+
+
+
+
 
 @SqlTsLatestAnyDao
 @Repository
@@ -53,12 +59,26 @@ public class SearchTsKvLatestRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
+    /**
+     * Finds all by entity id.
+     *
+     * @param entityId target entity identifier
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public List<TsKvLatestEntity> findAllByEntityId(UUID entityId) {
         return entityManager.createNamedQuery(FIND_ALL_BY_ENTITY_ID, TsKvLatestEntity.class)
                 .setParameter("id", entityId)
                 .getResultList();
     }
+    /**
+     * Finds latest by entity ids.
+     *
+     * @param entityIds entity ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public List<TsKvLatestEntity> findLatestByEntityIds(List<UUID> entityIds) {
         return entityManager.createNamedQuery(FIND_LATEST_BY_ENTITY_IDS, TsKvLatestEntity.class)

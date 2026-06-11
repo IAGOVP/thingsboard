@@ -64,8 +64,14 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 /**
- * Sql timeseries latest dao.
+ * Spring component for sql timeseries latest dao (time-series SQL/Timescale persistence (SQL/Timescale time-series key-value storage)).
  */
+
+
+
+
+
+
 
 @Slf4j
 @Component
@@ -111,6 +117,12 @@ public class SqlTimeseriesLatestDao extends BaseAbstractSqlTimeseriesDao impleme
 
     @Autowired
     private KeyDictionaryDao keyDictionaryDao;
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PostConstruct
     protected void init() {
@@ -141,6 +153,12 @@ public class SqlTimeseriesLatestDao extends BaseAbstractSqlTimeseriesDao impleme
                     return new ArrayList<>(trueLatest.values());
                 });
     }
+    /**
+     * Destroy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PreDestroy
     protected void destroy() {
@@ -148,32 +166,84 @@ public class SqlTimeseriesLatestDao extends BaseAbstractSqlTimeseriesDao impleme
             tsLatestQueue.destroy();
         }
     }
+    /**
+     * Saves or persists latest.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param tsKvEntry ts kv entry ({@link TsKvEntry})
+     * @return future completing with {@link Long}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<Long> saveLatest(TenantId tenantId, EntityId entityId, TsKvEntry tsKvEntry) {
         return getSaveLatestFuture(entityId, tsKvEntry);
     }
+    /**
+     * Removes latest.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param query filter and sort query definition
+     * @return future completing with {@link TsKvLatestRemovingResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<TsKvLatestRemovingResult> removeLatest(TenantId tenantId, EntityId entityId, DeleteTsKvQuery query) {
         return getRemoveLatestFuture(tenantId, entityId, query);
     }
+    /**
+     * Finds latest opt.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param key attribute or cache key
+     * @return future completing with optional {@link TsKvEntry}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<Optional<TsKvEntry>> findLatestOpt(TenantId tenantId, EntityId entityId, String key) {
         return service.submit(() -> Optional.ofNullable(doFindLatestSync(entityId, key)));
     }
+    /**
+     * Finds latest.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param key attribute or cache key
+     * @return future completing with {@link TsKvEntry}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<TsKvEntry> findLatest(TenantId tenantId, EntityId entityId, String key) {
         log.trace("findLatest [{}][{}][{}]", tenantId, entityId, key);
         return service.submit(() -> wrapNullTsKvEntry(key, doFindLatestSync(entityId, key)));
     }
+    /**
+     * Finds all latest.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<List<TsKvEntry>> findAllLatest(TenantId tenantId, EntityId entityId) {
         return getFindAllLatestFuture(entityId);
     }
+    /**
+     * Finds all keys by device profile id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfileId device profile id ({@link DeviceProfileId})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<String> findAllKeysByDeviceProfileId(TenantId tenantId, DeviceProfileId deviceProfileId) {
@@ -183,16 +253,40 @@ public class SqlTimeseriesLatestDao extends BaseAbstractSqlTimeseriesDao impleme
             return tsKvLatestRepository.getKeysByTenantId(tenantId.getId());
         }
     }
+    /**
+     * Finds all keys by entity ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityIds entity ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<String> findAllKeysByEntityIds(TenantId tenantId, List<EntityId> entityIds) {
         return tsKvLatestRepository.findAllKeysByEntityIds(entityIds.stream().map(EntityId::getId).toList());
     }
+    /**
+     * Finds all keys by entity ids async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityIds entity ids ({@link List})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<List<String>> findAllKeysByEntityIdsAsync(TenantId tenantId, List<EntityId> entityIds) {
         return service.submit(() -> findAllKeysByEntityIds(tenantId, entityIds));
     }
+    /**
+     * Finds latest by entity ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityIds entity ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<TsKvEntry> findLatestByEntityIds(TenantId tenantId, List<EntityId> entityIds) {
@@ -203,6 +297,14 @@ public class SqlTimeseriesLatestDao extends BaseAbstractSqlTimeseriesDao impleme
                 searchTsKvLatestRepository.findLatestByEntityIds(entityIds.stream().map(EntityId::getId).toList())
         );
     }
+    /**
+     * Finds latest by entity ids async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityIds entity ids ({@link List})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<List<TsKvEntry>> findLatestByEntityIdsAsync(TenantId tenantId, List<EntityId> entityIds) {
@@ -230,6 +332,14 @@ public class SqlTimeseriesLatestDao extends BaseAbstractSqlTimeseriesDao impleme
         return Futures.transform(aggregationTimeseriesDao.findAllAsync(tenantId, entityId, findNewLatestQuery),
                 ReadTsKvQueryResult::getData, MoreExecutors.directExecutor());
     }
+    /**
+     * Do find latest sync.
+     *
+     * @param entityId target entity identifier
+     * @param key attribute or cache key
+     * @return {@link TsKvEntry}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected TsKvEntry doFindLatestSync(EntityId entityId, String key) {
         TsKvLatestCompositeKey compositeKey =
@@ -245,6 +355,15 @@ public class SqlTimeseriesLatestDao extends BaseAbstractSqlTimeseriesDao impleme
             return null;
         }
     }
+    /**
+     * Returns remove latest future.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param query filter and sort query definition
+     * @return future completing with {@link TsKvLatestRemovingResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected ListenableFuture<TsKvLatestRemovingResult> getRemoveLatestFuture(TenantId tenantId, EntityId entityId, DeleteTsKvQuery query) {
         ListenableFuture<TsKvEntry> latestFuture = service.submit(() -> doFindLatestSync(entityId, query.getKey()));
@@ -267,12 +386,27 @@ public class SqlTimeseriesLatestDao extends BaseAbstractSqlTimeseriesDao impleme
             return Futures.immediateFuture(new TsKvLatestRemovingResult(query.getKey(), isRemoved, version));
         }, MoreExecutors.directExecutor());
     }
+    /**
+     * Returns find all latest future.
+     *
+     * @param entityId target entity identifier
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected ListenableFuture<List<TsKvEntry>> getFindAllLatestFuture(EntityId entityId) {
         return service.submit(() ->
                 DaoUtil.convertDataList(Lists.newArrayList(
                         searchTsKvLatestRepository.findAllByEntityId(entityId.getId()))));
     }
+    /**
+     * Returns save latest future.
+     *
+     * @param entityId target entity identifier
+     * @param tsKvEntry ts kv entry ({@link TsKvEntry})
+     * @return future completing with {@link Long}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected ListenableFuture<Long> getSaveLatestFuture(EntityId entityId, TsKvEntry tsKvEntry) {
         TsKvLatestEntity latestEntity = new TsKvLatestEntity();
@@ -287,6 +421,14 @@ public class SqlTimeseriesLatestDao extends BaseAbstractSqlTimeseriesDao impleme
 
         return tsLatestQueue.add(latestEntity);
     }
+    /**
+     * Wrap null ts kv entry.
+     *
+     * @param key attribute or cache key
+     * @param latest latest ({@link TsKvEntry})
+     * @return {@link TsKvEntry}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected TsKvEntry wrapNullTsKvEntry(final String key, final TsKvEntry latest) {
         if (latest == null) {

@@ -66,12 +66,22 @@ public class Rpc extends BaseData<RpcId> implements HasTenantId {
         this.status = rpc.getStatus();
         this.additionalInfo = rpc.getAdditionalInfo();
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link RpcId}
+     */
 
     @Schema(description = "JSON object with the rpc Id. Referencing non-existing rpc Id will cause error.")
     @Override
     public RpcId getId() {
         return super.getId();
     }
+    /**
+     * Returns created time.
+     *
+     * @return the long result
+     */
 
     @Schema(description = "Timestamp of the rpc creation, in milliseconds", example = "1609459200000", accessMode = Schema.AccessMode.READ_ONLY)
     @Override

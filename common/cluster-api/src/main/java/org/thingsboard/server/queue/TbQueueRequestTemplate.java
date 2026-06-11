@@ -19,19 +19,25 @@ import com.google.common.util.concurrent.ListenableFuture;
 import org.thingsboard.server.common.stats.MessagesStats;
 
 /**
- * tb queue request template contract.
+ * Contract for tb queue request template.
  */
 public interface TbQueueRequestTemplate<Request extends TbQueueMsg, Response extends TbQueueMsg> {
 
+    /** Invoked once after the actor is created; override to initialize state. */
     void init();
 
+    /** Send. */
     ListenableFuture<Response> send(Request request);
 
+    /** Send. */
     ListenableFuture<Response> send(Request request, long timeoutNs);
 
+    /** Send. */
     ListenableFuture<Response> send(Request request, Integer partition);
 
+    /** Stops the actor and releases its resources. */
     void stop();
 
+    /** Sets the messages stats. */
     void setMessagesStats(MessagesStats messagesStats);
 }

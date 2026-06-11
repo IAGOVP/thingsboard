@@ -16,10 +16,16 @@
 package org.thingsboard.server.dao.util;
 
 /**
- * db type info component contract.
+ * db type info component contract for the DAO layer.
  */
+
 public interface DbTypeInfoComponent {
 
+    /**
+     * Is latest ts dao stored to sql.
+     *
+     * @return the boolean result
+     */
     boolean isLatestTsDaoStoredToSql();
 
 }

@@ -17,8 +17,14 @@ package org.thingsboard.server.dao.device;
 
 import lombok.Data;
 /**
- * Device connectivity info.
+ * Device connectivity info (devices, credentials, profiles, and connectivity).
  */
+
+
+
+
+
+
 
 @Data
 public class DeviceConnectivityInfo {

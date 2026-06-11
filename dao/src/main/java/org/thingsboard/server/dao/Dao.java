@@ -26,43 +26,150 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Generic tenant-scoped CRUD for one domain type {@code T}.
+ * Generic tenant-scoped CRUD contract for a single domain entity type.
  *
  * <p>Implemented by {@code Jpa*Dao} (PostgreSQL) or Cassandra DAOs for telemetry-related types.
+ * Provides synchronous and asynchronous find/exists, save, remove, and batch id scan operations.
  */
+
 public interface Dao<T> {
 
-    /** All entities for tenant (use with care on large tenants). */
+    
+    /**
+     * Finds the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     List<T> find(TenantId tenantId);
+    /**
+     * Finds by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @return {@link T}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     T findById(TenantId tenantId, UUID id);
+    /**
+     * Finds by id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @return future completing with {@link T}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     ListenableFuture<T> findByIdAsync(TenantId tenantId, UUID id);
+    /**
+     * Finds entity infos by name prefix.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     default List<EntityInfo> findEntityInfosByNamePrefix(TenantId tenantId, String name) {
         throw new UnsupportedOperationException();
     }
+    /**
+     * Exists by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     boolean existsById(TenantId tenantId, UUID id);
+    /**
+     * Exists by id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @return future completing with {@link Boolean}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     ListenableFuture<Boolean> existsByIdAsync(TenantId tenantId, UUID id);
 
-    /** Insert or update; may not flush until transaction commit. */
+    
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param t t ({@link T})
+     * @return {@link T}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     T save(TenantId tenantId, T t);
 
-    /** Insert or update with immediate flush to the database. */
+    
+    /**
+     * Saves or persists and flush.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param t t ({@link T})
+     * @return {@link T}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     T saveAndFlush(TenantId tenantId, T t);
+    /**
+     * Removes by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void removeById(TenantId tenantId, UUID id);
+    /**
+     * Removes all by ids.
+     *
+     * @param ids ids ({@link Collection})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void removeAllByIds(Collection<UUID> ids);
 
-    /** Cursor-based id scan for batch jobs (TTL, migration). */
+    
+    /**
+     * Finds ids by tenant id and id offset.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param idOffset cursor for batch id scan (exclusive lower bound)
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     List<UUID> findIdsByTenantIdAndIdOffset(TenantId tenantId, UUID idOffset, int limit);
+    /**
+     * Finds next batch.
+     *
+     * @param id entity UUID primary key
+     * @param batchSize batch size
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     default List<? extends EntityFields> findNextBatch(UUID id, int batchSize) {
         throw new UnsupportedOperationException();
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     default EntityType getEntityType() {
         return null;

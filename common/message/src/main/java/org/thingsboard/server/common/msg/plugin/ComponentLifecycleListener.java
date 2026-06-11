@@ -16,8 +16,14 @@
 package org.thingsboard.server.common.msg.plugin;
 
 /**
- * component lifecycle listener contract.
+ * component lifecycle listener message contract.
  */
+
 public interface ComponentLifecycleListener {
+    /**
+     * Handles component lifecycle msg.
+     *
+     * @param componentLifecycleMsg component lifecycle msg ({@link ComponentLifecycleMsg})
+     */
     void onComponentLifecycleMsg(ComponentLifecycleMsg componentLifecycleMsg);
 }

@@ -28,11 +28,21 @@ public class BooleanDataEntry extends BasicKvEntry {
         super(key);
         this.value = value;
     }
+    /**
+     * Returns data type.
+     *
+     * @return {@link DataType}
+     */
 
     @Override
     public DataType getDataType() {
         return DataType.BOOLEAN;
     }
+    /**
+     * Returns boolean value.
+     *
+     * @return optional {@link Boolean}, empty if not found
+     */
 
     @Override
     public Optional<Boolean> getBooleanValue() {
@@ -47,6 +57,11 @@ public class BooleanDataEntry extends BasicKvEntry {
         BooleanDataEntry that = (BooleanDataEntry) o;
         return Objects.equals(value, that.value);
     }
+    /**
+     * Returns value.
+     *
+     * @return {@link Object}
+     */
 
     @Override
     public Object getValue() {
@@ -64,6 +79,11 @@ public class BooleanDataEntry extends BasicKvEntry {
                 "value=" + value +
                 "} " + super.toString();
     }
+    /**
+     * Returns value as string.
+     *
+     * @return {@link String}
+     */
 
     @Override
     public String getValueAsString() {

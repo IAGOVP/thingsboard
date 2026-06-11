@@ -22,21 +22,66 @@ import org.thingsboard.server.dao.model.sql.AdminSettingsEntity;
 
 import java.util.UUID;
 
+
 /**
 
- * admin settings repository contract.
+ * Spring Data JPA repository for admin settings entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
 
+
 public interface AdminSettingsRepository extends JpaRepository<AdminSettingsEntity, UUID> {
+    /**
+     * Finds by tenant id and key.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key attribute or cache key
+     * @return {@link AdminSettingsEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     AdminSettingsEntity findByTenantIdAndKey(UUID tenantId, String key);
+    /**
+     * Deletes by tenant id and key.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key attribute or cache key
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void deleteByTenantIdAndKey(UUID tenantId, String key);
+    /**
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void deleteByTenantId(UUID tenantId);
+    /**
+     * Exists by tenant id and key.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key attribute or cache key
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     boolean existsByTenantIdAndKey(UUID tenantId, String key);
+    /**
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     Page<AdminSettingsEntity> findByTenantId(UUID tenantId, Pageable pageable);
 

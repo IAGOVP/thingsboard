@@ -22,8 +22,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.thingsboard.server.dao.model.sql.AbstractTsKvEntity;
 /**
- * Ts kv entity.
+ * JPA/Cassandra row model for ts kv.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -95,6 +98,12 @@ public final class TsKvEntity extends AbstractTsKvEntity {
             }
         }
     }
+    /**
+     * Is not empty.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isNotEmpty() {

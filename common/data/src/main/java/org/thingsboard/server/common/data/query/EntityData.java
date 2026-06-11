@@ -39,6 +39,10 @@ public class EntityData {
     public EntityData(EntityId entityId, Map<EntityKeyType, Map<String, TsValue>> latest, Map<String, TsValue[]> timeseries) {
         this(entityId, latest, timeseries, null);
     }
+    /**
+     * Clear ts and agg data.
+     *
+     */
 
     @JsonIgnore
     public void clearTsAndAggData() {

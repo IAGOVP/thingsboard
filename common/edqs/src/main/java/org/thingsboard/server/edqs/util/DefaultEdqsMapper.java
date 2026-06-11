@@ -64,8 +64,9 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Protobuf/bytes to {@link EdqsObject} deserialization for Kafka messages.
+ * Default {@link EdqsMapper} using Jackson and Protobuf for EDQS Kafka messages.
  */
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -163,6 +164,14 @@ public class DefaultEdqsMapper implements EdqsMapper {
             }
         });
     }
+    /**
+     * To data point proto.
+     *
+     * @param ts ts
+     * @param kvEntry kv entry ({@link KvEntry})
+     * @return {@link DataPointProto}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public DataPointProto toDataPointProto(long ts, KvEntry kvEntry) {
         DataPointProto.Builder proto = DataPointProto.newBuilder();
@@ -190,6 +199,13 @@ public class DefaultEdqsMapper implements EdqsMapper {
         }
         return proto.build();
     }
+    /**
+     * From data point proto.
+     *
+     * @param proto proto ({@link DataPointProto})
+     * @return {@link DataPoint}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public DataPoint fromDataPointProto(DataPointProto proto) {
         long ts = proto.getTs();
@@ -237,6 +253,14 @@ public class DefaultEdqsMapper implements EdqsMapper {
         edqsStatsService.reportStringUncompressed();
         return value;
     }
+    /**
+     * To entity.
+     *
+     * @param entityType entity type ({@link EntityType})
+     * @param entity entity ({@link Object})
+     * @return {@link Entity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Entity toEntity(EntityType entityType, Object entity) {
         Entity edqsEntity = new Entity();
@@ -244,6 +268,13 @@ public class DefaultEdqsMapper implements EdqsMapper {
         edqsEntity.setFields(FieldsUtil.toFields(entity));
         return edqsEntity;
     }
+    /**
+     * Serialize.
+     *
+     * @param value value ({@link T})
+     * @return the byte[] value
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @SuppressWarnings("unchecked")
     @SneakyThrows
@@ -252,12 +283,28 @@ public class DefaultEdqsMapper implements EdqsMapper {
         Mapper<T> mapper = (Mapper<T>) mappers.getOrDefault(type, defaultMapper);
         return mapper.serialize(type, value);
     }
+    /**
+     * Deserialize.
+     *
+     * @param type type ({@link ObjectType})
+     * @param bytes bytes
+     * @param onlyKey only key
+     * @return {@link EdqsObject}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @SneakyThrows
     public EdqsObject deserialize(ObjectType type, byte[] bytes, boolean onlyKey) {
         Mapper<? extends EdqsObject> mapper = mappers.getOrDefault(type, defaultMapper);
         return mapper.deserialize(type, bytes, onlyKey);
     }
+    /**
+     * Returns key.
+     *
+     * @param object object ({@link T})
+     * @return {@link EdqsObjectKey}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @SuppressWarnings("unchecked")
     @SneakyThrows
@@ -265,6 +312,9 @@ public class DefaultEdqsMapper implements EdqsMapper {
         Mapper<T> mapper = (Mapper<T>) mappers.getOrDefault(object.type(), defaultMapper);
         return mapper.getKey(object);
     }
+    /**
+     * Spring component for EDQS json mapper (EDQS microservice — EDQS utilities (RocksDB, mapping, versions)).
+     */
 
     @RequiredArgsConstructor
     private static abstract class JsonMapper<T> implements Mapper<T> {
@@ -282,12 +332,29 @@ public class DefaultEdqsMapper implements EdqsMapper {
         }
 
         private final Class<T> type;
+        /**
+         * Serialize.
+         *
+         * @param objectType object type ({@link ObjectType})
+         * @param value value ({@link T})
+         * @return the byte[] value
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         @SneakyThrows
         @Override
         public byte[] serialize(ObjectType objectType, T value) {
             return mapper.writeValueAsBytes(value);
         }
+        /**
+         * Deserialize.
+         *
+         * @param objectType object type ({@link ObjectType})
+         * @param bytes bytes
+         * @param onlyKey only key
+         * @return {@link T}
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         @SneakyThrows
         @Override
@@ -297,15 +364,30 @@ public class DefaultEdqsMapper implements EdqsMapper {
 
     }
 
+    /**
+
+     * mapper contract (EDQS microservice — EDQS utilities (RocksDB, mapping, versions)).
+
+     */
+
     private interface Mapper<T> {
 
+        /** Serialize. */
         byte[] serialize(ObjectType type, T value) throws Exception;
 
+        /** Deserialize. */
         T deserialize(ObjectType type, byte[] bytes, boolean onlyKey) throws Exception;
 
+        /** Partition key for the queue message (often entity id). */
         EdqsObjectKey getKey(T object);
 
     }
+
+    /**
+
+     * Spring component for EDQS interning string deserializer (EDQS microservice — EDQS utilities (RocksDB, mapping, versions)).
+
+     */
 
     public static class InterningStringDeserializer extends StdDeserializer<String> {
 

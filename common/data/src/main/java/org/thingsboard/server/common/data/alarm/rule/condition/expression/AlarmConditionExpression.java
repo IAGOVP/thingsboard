@@ -40,9 +40,19 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * alarm condition expression contract.
  */
 public interface AlarmConditionExpression {
+    /**
+     * Returns type.
+     *
+     * @return {@link AlarmConditionExpressionType}
+     */
 
     @JsonIgnore
     AlarmConditionExpressionType getType();
+    /**
+     * Requires scheduled reevaluation.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     default boolean requiresScheduledReevaluation() {

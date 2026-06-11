@@ -33,8 +33,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.locks.ReentrantLock;
 /**
- * JPA implementation of key dictionary dao.
+ * JPA/PostgreSQL implementation of key dictionary dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Component
 @Slf4j
@@ -45,6 +48,13 @@ public class JpaKeyDictionaryDao extends JpaAbstractDaoListeningExecutorService 
 
     private final ConcurrentMap<String, Integer> keyDictionaryMap = new ConcurrentHashMap<>();
     private static final ReentrantLock creationLock = new ReentrantLock();
+    /**
+     * Returns or save key id.
+     *
+     * @param strKey str key ({@link String})
+     * @return {@link Integer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @Override
@@ -78,12 +88,26 @@ public class JpaKeyDictionaryDao extends JpaAbstractDaoListeningExecutorService 
             creationLock.unlock();
         }
     }
+    /**
+     * Returns key.
+     *
+     * @param keyId key id ({@link Integer})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String getKey(Integer keyId) {
         Optional<KeyDictionaryEntry> byKeyId = keyDictionaryRepository.findByKeyId(keyId);
         return byKeyId.map(KeyDictionaryEntry::getKey).orElse(null);
     }
+    /**
+     * Finds all.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<KeyDictionaryEntry> findAll(PageLink pageLink) {

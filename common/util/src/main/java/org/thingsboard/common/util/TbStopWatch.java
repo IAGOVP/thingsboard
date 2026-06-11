@@ -47,21 +47,25 @@ public class TbStopWatch extends StopWatch {
 
     public long stopAndGetTotalTimeMillis(){
         stop();
+        /** Returns the total time millis. */
         return getTotalTimeMillis();
     }
 
     public long stopAndGetTotalTimeNanos(){
         stop();
+        /** Returns the last task time nanos. */
         return getLastTaskTimeNanos();
     }
 
     public long stopAndGetLastTaskTimeMillis(){
         stop();
+        /** Returns the last task time millis. */
         return getLastTaskTimeMillis();
     }
 
     public long stopAndGetLastTaskTimeNanos(){
         stop();
+        /** Returns the last task time nanos. */
         return getLastTaskTimeNanos();
     }
 

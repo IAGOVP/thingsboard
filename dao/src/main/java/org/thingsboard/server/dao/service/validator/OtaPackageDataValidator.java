@@ -29,8 +29,11 @@ import org.thingsboard.server.dao.tenant.TbTenantProfileCache;
 
 import static org.thingsboard.server.common.data.EntityType.OTA_PACKAGE;
 /**
- * Ota package data validator.
+ * Validates ota package entities before persistence.
+ *
+ * <p>Enforces constraints, uniqueness, and referential integrity at the DAO layer.
  */
+
 
 @Component
 public class OtaPackageDataValidator extends BaseOtaPackageDataValidator<OtaPackage> {
@@ -46,11 +49,16 @@ public class OtaPackageDataValidator extends BaseOtaPackageDataValidator<OtaPack
     @Lazy
     private TbTenantProfileCache tenantProfileCache;
 
+    
     /**
-
-     * Validate create.
-
+     * Validates create.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param otaPackage ota package ({@link OtaPackage})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateCreate(TenantId tenantId, OtaPackage otaPackage) {
@@ -60,11 +68,16 @@ public class OtaPackageDataValidator extends BaseOtaPackageDataValidator<OtaPack
         validateMaxSumDataSizePerTenant(tenantId, otaPackageDao, maxOtaPackagesInBytes, otaPackage.getDataSize(), OTA_PACKAGE);
     }
 
+    
     /**
-
-     * Validate data impl.
-
+     * Validates data impl.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param otaPackage ota package ({@link OtaPackage})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateDataImpl(TenantId tenantId, OtaPackage otaPackage) {
@@ -100,11 +113,16 @@ public class OtaPackageDataValidator extends BaseOtaPackageDataValidator<OtaPack
         }
     }
 
+    
     /**
-
-     * Validate update.
-
+     * Validates update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param otaPackage ota package ({@link OtaPackage})
+     * @return {@link OtaPackage}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected OtaPackage validateUpdate(TenantId tenantId, OtaPackage otaPackage) {

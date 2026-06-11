@@ -35,11 +35,48 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * Kv utils.
+
+
+
+
+
+ * Kv utils (DAO utilities (KV conversion, rate executors, JSON mapping)).
+
+
+
+
+
 
  */
+
+
+
+
+
+
 
 public class KvUtils {
 
@@ -50,10 +87,26 @@ public class KvUtils {
                 .expireAfterAccess(24, TimeUnit.HOURS)
                 .maximumSize(50000).build();
     }
+    /**
+     * Validates the requested data.
+     *
+     * @param tsKvEntries ts kv entries ({@link List})
+     * @param valueNoXssValidation value no xss validation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static void validate(List<? extends KvEntry> tsKvEntries, boolean valueNoXssValidation) {
         tsKvEntries.forEach(tsKvEntry -> validate(tsKvEntry, valueNoXssValidation));
     }
+    /**
+     * Validates the requested data.
+     *
+     * @param tsKvEntry ts kv entry ({@link KvEntry})
+     * @param valueNoXssValidation value no xss validation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static void validate(KvEntry tsKvEntry, boolean valueNoXssValidation) {
         if (tsKvEntry == null) {
@@ -88,6 +141,13 @@ public class KvUtils {
             }
         }
     }
+    /**
+     * To ts kv entry list.
+     *
+     * @param tsKvMap ts kv map ({@link Map})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static List<TsKvEntry> toTsKvEntryList(Map<Long, List<KvEntry>> tsKvMap) {
         List<TsKvEntry> tsKvEntryList = new ArrayList<>();
@@ -98,6 +158,14 @@ public class KvUtils {
         }
         return tsKvEntryList;
     }
+    /**
+     * Filter changed attr.
+     *
+     * @param currentAttributes current attributes ({@link List})
+     * @param newAttributes new attributes ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static List<AttributeKvEntry> filterChangedAttr(List<AttributeKvEntry> currentAttributes, List<AttributeKvEntry> newAttributes) {
         if (currentAttributes == null || currentAttributes.isEmpty()) {

@@ -20,11 +20,11 @@ import lombok.Data;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.thingsboard.server.queue.TbQueueMsgMetadata;
 
+/**
+ * Kafka {@link TbQueueMsgMetadata} holding {@link RecordMetadata} from the producer send callback.
+ */
 @Data
 @AllArgsConstructor
-/**
- * Kafka tb queue msg metadata.
- */
 public class KafkaTbQueueMsgMetadata implements TbQueueMsgMetadata {
     private RecordMetadata metadata;
 }

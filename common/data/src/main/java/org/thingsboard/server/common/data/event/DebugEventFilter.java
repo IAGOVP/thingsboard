@@ -34,16 +34,31 @@ public abstract class DebugEventFilter implements EventFilter {
     protected boolean isError;
     @Schema(description = "The case insensitive 'contains' filter based on error message", example = "not present in the DB")
     protected String errorStr;
+    /**
+     * Is error.
+     *
+     * @return the boolean result
+     */
 
     @JsonProperty("isError")
     public boolean isError() {
         return isError;
     }
+    /**
+     * Set is error.
+     *
+     * @param isError is error
+     */
 
     @JsonProperty("isError")
     public void setIsError(boolean isError) {
         this.isError = isError;
     }
+    /**
+     * Is not empty.
+     *
+     * @return the boolean result
+     */
 
     @Override
     public boolean isNotEmpty() {

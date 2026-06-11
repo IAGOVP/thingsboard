@@ -21,16 +21,46 @@ package org.thingsboard.server.common.data.kv;
 public interface ReadTsKvQuery extends TsKvQuery {
 
     AggregationParams getAggParameters();
+/**
+ * Returns interval.
+ *
+ * @return the long result
+ */
 
     default long getInterval(){
+        /**
+         * Returns agg parameters.
+         *
+         * @return the return value
+         */
         return getAggParameters().getInterval();
     }
+/**
+ * Returns aggregation.
+ *
+ * @return {@link Aggregation}
+ */
 
     default Aggregation getAggregation() {
+        /**
+         * Returns agg parameters.
+         *
+         * @return the return value
+         */
         return getAggParameters().getAggregation();
     }
+/**
+ * Returns limit.
+ *
+ * @return the int result
+ */
 
     int getLimit();
+/**
+ * Returns order.
+ *
+ * @return {@link String}
+ */
 
     String getOrder();
 

@@ -31,6 +31,14 @@ public class TbLwM2MObserveCallback extends TbLwM2MUplinkTargetedCallback<Observ
     public TbLwM2MObserveCallback(LwM2mUplinkMsgHandler handler, LwM2MTelemetryLogService logService, LwM2mClient client, String targetId) {
         super(handler, logService, client, targetId);
     }
+    /**
+     * Handles success.
+     *
+     * @param request request payload with operation parameters
+     * @param response response ({@link ObserveResponse})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onSuccess(ObserveRequest request, ObserveResponse response) {

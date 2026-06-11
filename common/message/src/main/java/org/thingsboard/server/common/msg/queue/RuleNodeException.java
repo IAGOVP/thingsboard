@@ -21,11 +21,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.thingsboard.server.common.data.id.RuleChainId;
 import org.thingsboard.server.common.data.id.RuleNodeId;
 import org.thingsboard.server.common.data.rule.RuleNode;
+/**
+ * Exception in message/actor pipeline: rule node exception.
+ */
 
 @Slf4j
-/**
- * Exception: rule node exception.
- */
 public class RuleNodeException extends RuleEngineException {
 
     private static final long serialVersionUID = -1776681087370749776L;

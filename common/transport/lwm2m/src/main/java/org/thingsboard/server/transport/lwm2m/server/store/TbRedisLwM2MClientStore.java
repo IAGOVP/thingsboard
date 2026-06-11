@@ -44,6 +44,13 @@ public class TbRedisLwM2MClientStore implements TbLwM2MClientStore {
     public TbRedisLwM2MClientStore(RedisConnectionFactory redisConnectionFactory) {
         this.connectionFactory = redisConnectionFactory;
     }
+    /**
+     * Returns the requested data.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return {@link LwM2mClient}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public LwM2mClient get(String endpoint) {
@@ -61,6 +68,12 @@ public class TbRedisLwM2MClientStore implements TbLwM2MClientStore {
             }
         }
     }
+    /**
+     * Returns all.
+     *
+     * @return {@link Set}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public Set<LwM2mClient> getAll() {
@@ -91,6 +104,13 @@ public class TbRedisLwM2MClientStore implements TbLwM2MClientStore {
             return clients;
         }
     }
+    /**
+     * Put.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void put(LwM2mClient client) {
@@ -107,6 +127,13 @@ public class TbRedisLwM2MClientStore implements TbLwM2MClientStore {
             }
         }
     }
+    /**
+     * Removes the requested data.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void remove(String endpoint) {

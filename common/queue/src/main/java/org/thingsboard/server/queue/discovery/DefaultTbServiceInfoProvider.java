@@ -16,6 +16,15 @@
 package org.thingsboard.server.queue.discovery;
 
 import jakarta.annotation.PostConstruct;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,20 +36,11 @@ import org.thingsboard.server.common.data.TbTransportService;
 import org.thingsboard.server.common.data.job.JobType;
 import org.thingsboard.server.common.data.util.CollectionsUtil;
 import org.thingsboard.server.common.msg.queue.ServiceType;
-import org.thingsboard.server.gen.transport.TransportProtos;
 import org.thingsboard.server.gen.transport.TransportProtos.ServiceInfo;
+import org.thingsboard.server.gen.transport.TransportProtos;
 import org.thingsboard.server.queue.edqs.EdqsConfig;
 import org.thingsboard.server.queue.task.TaskProcessor;
 import org.thingsboard.server.queue.util.AfterContextReady;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static org.thingsboard.common.util.SystemUtil.getCpuCount;
 import static org.thingsboard.common.util.SystemUtil.getCpuUsage;
@@ -49,12 +49,11 @@ import static org.thingsboard.common.util.SystemUtil.getMemoryUsage;
 import static org.thingsboard.common.util.SystemUtil.getTotalDiscSpace;
 import static org.thingsboard.common.util.SystemUtil.getTotalMemory;
 
-
+/**
+ * Supplies local service metadata (type, label, assigned partitions) to discovery components.
+ */
 @Component
 @Slf4j
-/**
- * Default tb service info provider.
- */
 public class DefaultTbServiceInfoProvider implements TbServiceInfoProvider {
 
     @Getter

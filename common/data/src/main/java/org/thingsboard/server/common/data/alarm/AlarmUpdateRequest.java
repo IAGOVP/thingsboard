@@ -30,7 +30,7 @@ import org.thingsboard.server.common.data.validation.NoXss;
 @Data
 @Builder
 /**
- * Alarm update request.
+ * REST request body for acknowledging, clearing, or assigning an alarm.
  */
 public class AlarmUpdateRequest implements AlarmModificationRequest {
 
@@ -61,10 +61,23 @@ public class AlarmUpdateRequest implements AlarmModificationRequest {
     private AlarmPropagationInfo propagation;
 
     private UserId userId;
+    /**
+     * From alarm.
+     *
+     * @param a a ({@link Alarm})
+     * @return {@link AlarmUpdateRequest}
+     */
 
     public static AlarmUpdateRequest fromAlarm(Alarm a) {
         return fromAlarm(a, null);
     }
+    /**
+     * From alarm.
+     *
+     * @param a a ({@link Alarm})
+     * @param userId user id ({@link UserId})
+     * @return {@link AlarmUpdateRequest}
+     */
 
     public static AlarmUpdateRequest fromAlarm(Alarm a, UserId userId) {
         return AlarmUpdateRequest.builder()

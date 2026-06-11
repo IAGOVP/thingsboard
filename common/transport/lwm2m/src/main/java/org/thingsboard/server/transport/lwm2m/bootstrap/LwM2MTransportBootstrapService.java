@@ -68,6 +68,12 @@ public class LwM2MTransportBootstrapService implements SmartInitializingSingleto
     private final TransportService transportService;
     private final TbLwM2MDtlsBootstrapCertificateVerifier certificateVerifier;
     private volatile LeshanBootstrapServer server;
+    /**
+     * After singletons instantiated.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void afterSingletonsInstantiated() {
@@ -81,6 +87,12 @@ public class LwM2MTransportBootstrapService implements SmartInitializingSingleto
             }
         });
     }
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @PostConstruct
     public void init() {
@@ -89,6 +101,12 @@ public class LwM2MTransportBootstrapService implements SmartInitializingSingleto
         this.server.start();
         log.info("Started LwM2M transport bootstrap server.");
     }
+    /**
+     * Shutdown.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @PreDestroy
     public void shutdown() {
@@ -100,7 +118,12 @@ public class LwM2MTransportBootstrapService implements SmartInitializingSingleto
             log.error("Failed to gracefully stop the LwM2M transport bootstrap server!", e);
         }
     }
-
+    /**
+     * Returns lh bootstrap server.
+     *
+     * @return {@link LeshanBootstrapServer}
+     * @throws Exception on processing failure
+     */
     public LeshanBootstrapServer getLhBootstrapServer() {
         LeshanBootstrapServerBuilder builder = new LeshanBootstrapServerBuilder();
 
@@ -139,7 +162,7 @@ public class LwM2MTransportBootstrapService implements SmartInitializingSingleto
             setDtlsConnectorConfigCidLength(serverCoapConfig, serverConfig.getDtlsCidLength());
         }
 
-        /* Create DTLS Config */
+          */
         this.setServerWithCredentials(builder);
 
         // Set Californium Configuration
@@ -155,17 +178,17 @@ public class LwM2MTransportBootstrapService implements SmartInitializingSingleto
         InetSocketAddress coapsAddr = new InetSocketAddress(bootstrapConfig.getSecureHost(), bootstrapConfig.getSecurePort());
         endpointsBuilder.addEndpoint(coapsAddr, Protocol.COAPS);
 
-        /* Set securityStore with new ConfigStore */
+          */
         builder.setConfigStore(lwM2MInMemoryBootstrapConfigStore);
 
-        /* SecurityStore */
+          */
         builder.setSecurityStore(lwM2MBootstrapSecurityStore);
 
 
         BootstrapSessionManager sessionManager = new LwM2mDefaultBootstrapSessionManager(lwM2MBootstrapSecurityStore, lwM2MInMemoryBootstrapConfigStore, transportService);
         builder.setSessionManager(sessionManager);
 
-        /* Create BootstrapServer */
+          */
         builder.setEndpointsProviders(endpointsBuilder.build());
         return builder.build();
     }
@@ -177,7 +200,7 @@ public class LwM2MTransportBootstrapService implements SmartInitializingSingleto
             builder.setPrivateKey(sslCredentials.getPrivateKey());
             builder.setCertificateChain(sslCredentials.getCertificateChain());
         } else {
-            /* by default trust all */
+              */
             builder.setTrustedCertificates(new X509Certificate[0]);
         }
     }

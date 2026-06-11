@@ -31,7 +31,10 @@ import org.thingsboard.server.common.data.page.PageLink;
 import org.thingsboard.server.dao.entity.AbstractCachedEntityService;
 /**
  * Default DAO-layer service implementation for related edges.
+ *
+ * <p>Coordinates validation, caching, cluster events, and {@code *Dao} persistence (edge instances, events, sessions, and synchronization).
  */
+
 
 @Service
 @Slf4j
@@ -44,11 +47,15 @@ public class BaseRelatedEdgesService extends AbstractCachedEntityService<Related
     @Lazy
     private EdgeService edgeService;
 
+    
     /**
-
-     * Handle evict event.
-
+     * Handles evict event.
+     *
+     * @param event event ({@link RelatedEdgesEvictEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @TransactionalEventListener(classes = RelatedEdgesEvictEvent.class)
     @Override
@@ -56,11 +63,17 @@ public class BaseRelatedEdgesService extends AbstractCachedEntityService<Related
         cache.evict(new RelatedEdgesCacheKey(event.getTenantId(), event.getEntityId()));
     }
 
+    
     /**
-
-     * Loads edge ids by entity id.
-
+     * Finds edge ids by entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EdgeId> findEdgeIdsByEntityId(TenantId tenantId, EntityId entityId, PageLink pageLink) {
@@ -72,11 +85,16 @@ public class BaseRelatedEdgesService extends AbstractCachedEntityService<Related
                 () -> new RelatedEdgesCacheValue(edgeService.findEdgeIdsByTenantIdAndEntityId(tenantId, entityId, pageLink)), false).getPageData();
     }
 
+    
     /**
-
      * Publish related edge ids evict event.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void publishRelatedEdgeIdsEvictEvent(TenantId tenantId, EntityId entityId) {

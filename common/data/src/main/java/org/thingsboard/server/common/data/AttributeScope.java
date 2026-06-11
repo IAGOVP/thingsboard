@@ -38,6 +38,12 @@ public enum AttributeScope {
     AttributeScope(int id) {
         this.id = id;
     }
+    /**
+     * Value of.
+     *
+     * @param id id
+     * @return {@link AttributeScope}
+     */
 
     public static AttributeScope valueOf(int id) {
         return values.get(id);

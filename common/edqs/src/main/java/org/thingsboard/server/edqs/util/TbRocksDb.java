@@ -28,8 +28,9 @@ import java.nio.file.Path;
 import java.util.function.BiConsumer;
 
 /**
- * RocksDB wrapper for EDQS local persistence (state, versions, key dictionary).
+ * Tb rocks db (EDQS microservice — EDQS utilities (RocksDB, mapping, versions)).
  */
+
 @Slf4j
 public class TbRocksDb {
 
@@ -47,6 +48,12 @@ public class TbRocksDb {
         this.dbOptions = dbOptions;
         this.writeOptions = writeOptions;
     }
+    /**
+     * Starts Kafka consumers and wires partition/state services.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @SneakyThrows
     public void init() {
@@ -54,11 +61,26 @@ public class TbRocksDb {
         Files.createDirectories(Path.of(path).getParent());
         db = RocksDB.open(dbOptions, path);
     }
+    /**
+     * Put.
+     *
+     * @param key key ({@link String})
+     * @param value value
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @SneakyThrows
     public void put(String key, byte[] value) {
         db.put(writeOptions, key.getBytes(StandardCharsets.UTF_8), value);
     }
+    /**
+     * For each.
+     *
+     * @param processor processor ({@link BiConsumer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void forEach(BiConsumer<String, byte[]> processor) {
         try (RocksIterator iterator = db.newIterator()) {
@@ -68,11 +90,24 @@ public class TbRocksDb {
             }
         }
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @param key key ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @SneakyThrows
     public void delete(String key) {
         db.delete(writeOptions, key.getBytes(StandardCharsets.UTF_8));
     }
+    /**
+     * Close.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void close() {
         if (db != null) {

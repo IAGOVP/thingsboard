@@ -21,10 +21,10 @@ import java.io.Serializable;
 
 @Data
 /**
- * Api usage  /**
-  * state.
-  */
-record state.
+ * Snapshot of a single {@link ApiUsageRecordKey} counter versus its configured threshold.
+ *
+ * <p>Returned by usage reporting APIs to show current consumption and limit proximity
+ * for a tenant feature (transport, rule engine, email, etc.).
  */
 public class ApiUsageRecordState implements Serializable {
 
@@ -32,10 +32,20 @@ public class ApiUsageRecordState implements Serializable {
     private final ApiUsageRecordKey key;
     private final long threshold;
     private final long value;
+    /**
+     * Returns value as string.
+     *
+     * @return {@link String}
+     */
 
     public String getValueAsString() {
         return valueAsString(value);
     }
+    /**
+     * Returns threshold as string.
+     *
+     * @return {@link String}
+     */
 
     public String getThresholdAsString() {
         return valueAsString(threshold);

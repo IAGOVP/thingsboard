@@ -51,9 +51,18 @@ import java.io.Serializable;
  * device transport configuration contract.
  */
 public interface DeviceTransportConfiguration extends Serializable {
+    /**
+     * Returns type.
+     *
+     * @return {@link DeviceTransportType}
+     */
 
     @JsonIgnore
     DeviceTransportType getType();
+/**
+ * Validates the requested data.
+ *
+ */
 
     default void validate() {
     }

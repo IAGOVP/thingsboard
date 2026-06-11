@@ -18,9 +18,11 @@ package org.thingsboard.server.edqs.data.dp;
 import lombok.Getter;
 import org.thingsboard.server.common.data.edqs.DataPoint;
 import org.thingsboard.server.common.data.kv.DataType;
+
 /**
- * Typed attribute/latest-TS value stored in EDQS (double data point).
+ * Typed attribute or latest-TS value stored in the EDQS index (double data point).
  */
+
 public class DoubleDataPoint extends AbstractDataPoint {
 
     @Getter
@@ -30,21 +32,46 @@ public class DoubleDataPoint extends AbstractDataPoint {
         super(ts);
         this.value = value;
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link DataType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public DataType getType() {
         return DataType.DOUBLE;
     }
+    /**
+     * Returns double.
+     *
+     * @return the double result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public double getDouble() {
         return value;
     }
+    /**
+     * Value to string.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String valueToString() {
         return Double.toString(value);
     }
+    /**
+     * Compares to.
+     *
+     * @param dataPoint data point ({@link DataPoint})
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public int compareTo(DataPoint dataPoint) {

@@ -24,6 +24,11 @@ import org.thingsboard.server.common.data.transport.snmp.config.MultipleMappings
 public class ToDeviceRpcRequestSnmpCommunicationConfig extends MultipleMappingsSnmpCommunicationConfig {
 
     private static final long serialVersionUID = -8607312598073845460L;
+    /**
+     * Returns spec.
+     *
+     * @return {@link SnmpCommunicationSpec}
+     */
 
     @Override
     public SnmpCommunicationSpec getSpec() {

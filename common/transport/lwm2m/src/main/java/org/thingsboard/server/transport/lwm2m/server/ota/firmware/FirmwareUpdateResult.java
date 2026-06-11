@@ -54,7 +54,13 @@ public enum FirmwareUpdateResult {
         this.type = type;
         this.again = isAgain;
     }
-
+    /**
+     * From update result fw by type.
+     *
+     * @param type type ({@link String})
+     * @return {@link FirmwareUpdateResult}
+     * @throws Exception on processing failure
+     */
     public static FirmwareUpdateResult fromUpdateResultFwByType(String type) {
         for (FirmwareUpdateResult to : FirmwareUpdateResult.values()) {
             if (to.type.equals(type)) {
@@ -63,7 +69,13 @@ public enum FirmwareUpdateResult {
         }
         throw new IllegalArgumentException(String.format("Unsupported FW Update Result type  : %s", type));
     }
-
+    /**
+     * From update result fw by code.
+     *
+     * @param code code
+     * @return {@link FirmwareUpdateResult}
+     * @throws Exception on processing failure
+     */
     public static FirmwareUpdateResult fromUpdateResultFwByCode(int code) {
         for (FirmwareUpdateResult to : FirmwareUpdateResult.values()) {
             if (to.code == code) {

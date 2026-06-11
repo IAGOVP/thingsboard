@@ -22,6 +22,11 @@ import lombok.Data;
  * Single entity filter.
  */
 public class SingleEntityFilter implements EntityFilter {
+    /**
+     * Returns type.
+     *
+     * @return {@link EntityFilterType}
+     */
     @Override
     public EntityFilterType getType() {
         return EntityFilterType.SINGLE_ENTITY;

@@ -24,8 +24,11 @@ import org.thingsboard.server.common.data.alarm.AlarmCommentInfo;
 
 import static org.thingsboard.server.dao.model.ModelConstants.ALARM_COMMENT_TABLE_NAME;
 /**
- * Alarm comment entity.
+ * JPA/Cassandra row model for alarm comment.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -44,6 +47,12 @@ public class AlarmCommentEntity extends AbstractAlarmCommentEntity<AlarmComment>
     public AlarmCommentEntity(AlarmComment alarmComment) {
         super(alarmComment);
     }
+    /**
+     * To data.
+     *
+     * @return {@link AlarmComment}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AlarmComment toData() {

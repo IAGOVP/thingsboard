@@ -24,8 +24,11 @@ import org.thingsboard.server.exception.DataValidationException;
 import org.thingsboard.server.dao.service.DataValidator;
 import org.thingsboard.server.dao.tenant.TenantService;
 /**
- * Dashboard data validator.
+ * Validates dashboard entities before persistence.
+ *
+ * <p>Enforces constraints, uniqueness, and referential integrity at the DAO layer.
  */
+
 
 @Component
 public class DashboardDataValidator extends DataValidator<Dashboard> {
@@ -33,22 +36,32 @@ public class DashboardDataValidator extends DataValidator<Dashboard> {
     @Autowired
     private TenantService tenantService;
 
+    
     /**
-
-     * Validate create.
-
+     * Validates create.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param data data ({@link Dashboard})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateCreate(TenantId tenantId, Dashboard data) {
         validateNumberOfEntitiesPerTenant(tenantId, EntityType.DASHBOARD);
     }
 
+    
     /**
-
-     * Validate data impl.
-
+     * Validates data impl.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param dashboard dashboard ({@link Dashboard})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateDataImpl(TenantId tenantId, Dashboard dashboard) {

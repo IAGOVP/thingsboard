@@ -19,13 +19,26 @@ import org.springframework.data.domain.Pageable;
 import org.thingsboard.server.common.data.cf.CalculatedField;
 import org.thingsboard.server.common.data.page.PageData;
 
+
 /**
 
- * native calculated field repository contract.
+ * Spring Data JPA repository for native calculated field entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
 
+
 public interface NativeCalculatedFieldRepository {
+    /**
+     * Finds calculated fields.
+     *
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<CalculatedField> findCalculatedFields(Pageable pageable);
 

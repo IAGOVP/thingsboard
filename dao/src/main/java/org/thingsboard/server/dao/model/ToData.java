@@ -15,18 +15,50 @@
  */
 package org.thingsboard.server.dao.model;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
- * The interface To dto.
- *
- * @param <T> the type parameter
+
+
+
+
+
+ * to data contract (JPA/Cassandra entity mappings (database row models)).
+
+
+
+
+
  */
+
+
+
+
+
+
 public interface ToData<T> {
 
+    
     /**
-     * This method convert domain model object to data transfer object.
+     * To data.
      *
-     * @return the dto object
+     * @return {@link T}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     T toData();
 
 }

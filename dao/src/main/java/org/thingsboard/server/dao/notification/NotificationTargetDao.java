@@ -28,21 +28,67 @@ import org.thingsboard.server.dao.TenantEntityDao;
 
 import java.util.List;
 
+
 /**
 
- * Persistence contract for notification target (see JPA/Cassandra implementations).
+ * Persistence contract for notification target.
+
+ *
+
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (notification templates, targets, rules, and delivery requests).
 
  */
 
+
 public interface NotificationTargetDao extends Dao<NotificationTarget>, TenantEntityDao<NotificationTarget>, ExportableEntityDao<NotificationTargetId, NotificationTarget> {
+    /**
+     * Finds by tenant id and page link.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<NotificationTarget> findByTenantIdAndPageLink(TenantId tenantId, PageLink pageLink);
+    /**
+     * Finds by tenant id and supported notification type and page link.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param notificationType notification type ({@link NotificationType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<NotificationTarget> findByTenantIdAndSupportedNotificationTypeAndPageLink(TenantId tenantId, NotificationType notificationType, PageLink pageLink);
+    /**
+     * Finds by tenant id and ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ids ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<NotificationTarget> findByTenantIdAndIds(TenantId tenantId, List<NotificationTargetId> ids);
+    /**
+     * Finds by tenant id and users filter type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param filterType filter type ({@link UsersFilterType})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<NotificationTarget> findByTenantIdAndUsersFilterType(TenantId tenantId, UsersFilterType filterType);
+    /**
+     * Removes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void removeByTenantId(TenantId tenantId);
 

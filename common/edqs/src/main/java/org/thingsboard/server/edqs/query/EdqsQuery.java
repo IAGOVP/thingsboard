@@ -23,8 +23,9 @@ import java.util.List;
 
 @Data
 /**
- * EDQS component: edqs query.
+ * Edqs query (EDQS microservice).
  */
+
 public abstract class EdqsQuery {
 
     private final EntityFilter entityFilter;

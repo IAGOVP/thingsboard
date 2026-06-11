@@ -17,14 +17,13 @@ package org.thingsboard.server.common.msg.timeout;
 
 import lombok.Data;
 import org.thingsboard.server.common.msg.TbActorMsg;
+/**
+ * Internal actor or queue message: timeout msg.
+ *
+ * <p>Serialized between tb-core, rule-engine, transport, and edge services.
+ */
 
-/**
- * @author Andrew Shvayka
- */
 @Data
-/**
- * Message: timeout msg.
- */
 public abstract class TimeoutMsg<T> implements TbActorMsg {
     private final T id;
     private final long timeout;

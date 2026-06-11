@@ -29,6 +29,11 @@ public class CustomTimeSchedule implements AlarmSchedule {
 
     private String timezone;
     private List<CustomTimeScheduleItem> items;
+    /**
+     * Returns type.
+     *
+     * @return {@link AlarmScheduleType}
+     */
 
     @Override
     public AlarmScheduleType getType() {

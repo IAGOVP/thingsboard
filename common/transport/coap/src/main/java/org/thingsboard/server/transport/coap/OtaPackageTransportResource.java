@@ -53,6 +53,13 @@ public class OtaPackageTransportResource extends AbstractCoapTransportResource {
 
         this.setObservable(true);
     }
+    /**
+     * Processes handle get.
+     *
+     * @param exchange exchange ({@link CoapExchange})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected void processHandleGet(CoapExchange exchange) {
@@ -62,6 +69,13 @@ public class OtaPackageTransportResource extends AbstractCoapTransportResource {
         Request request = advanced.getRequest();
         processAccessTokenRequest(exchange, request);
     }
+    /**
+     * Processes handle post.
+     *
+     * @param exchange exchange ({@link CoapExchange})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected void processHandlePost(CoapExchange exchange) {
@@ -100,6 +114,13 @@ public class OtaPackageTransportResource extends AbstractCoapTransportResource {
             return Optional.empty();
         }
     }
+    /**
+     * Returns child.
+     *
+     * @param name name ({@link String})
+     * @return {@link Resource}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public Resource getChild(String name) {
@@ -112,6 +133,13 @@ public class OtaPackageTransportResource extends AbstractCoapTransportResource {
         OtaPackageCallback(CoapExchange exchange) {
             this.exchange = exchange;
         }
+        /**
+         * Handles success.
+         *
+         * @param msg msg
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onSuccess(TransportProtos.GetOtaPackageResponseMsg msg) {
@@ -132,6 +160,13 @@ public class OtaPackageTransportResource extends AbstractCoapTransportResource {
                 exchange.respond(CoAP.ResponseCode.NOT_FOUND);
             }
         }
+        /**
+         * Handles error.
+         *
+         * @param e e ({@link Throwable})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onError(Throwable e) {

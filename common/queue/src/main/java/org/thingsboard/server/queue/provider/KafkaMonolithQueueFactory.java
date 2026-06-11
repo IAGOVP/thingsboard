@@ -17,6 +17,10 @@ package org.thingsboard.server.queue.provider;
 
 import com.google.protobuf.util.JsonFormat;
 import jakarta.annotation.PreDestroy;
+import java.nio.charset.StandardCharsets;
+import java.util.concurrent.atomic.AtomicLong;
+
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -75,14 +79,11 @@ import org.thingsboard.server.queue.settings.TbQueueTransportApiSettings;
 import org.thingsboard.server.queue.settings.TbQueueTransportNotificationSettings;
 import org.thingsboard.server.queue.settings.TbQueueVersionControlSettings;
 
-import java.nio.charset.StandardCharsets;
-import java.util.concurrent.atomic.AtomicLong;
-
+/**
+ * Creates all Kafka queue beans for monolith deployment (core + rule engine + transport).
+ */
 @Component
 @ConditionalOnExpression("'${queue.type:null}'=='kafka' && '${service.type:null}'=='monolith'")
-/**
- * Factory for kafka monolith queue.
- */
 public class KafkaMonolithQueueFactory implements TbCoreQueueFactory, TbRuleEngineQueueFactory, TbVersionControlQueueFactory {
 
     private final TopicService topicService;

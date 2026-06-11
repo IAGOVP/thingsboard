@@ -20,8 +20,14 @@ import org.thingsboard.server.common.data.id.TenantId;
 
 import java.util.concurrent.atomic.AtomicLong;
 /**
- * Msg counters.
+ * Msg counters (edge message counters and statistics (edge instances, events, sessions, and synchronization)).
  */
+
+
+
+
+
+
 
 @Data
 public class MsgCounters {
@@ -32,6 +38,12 @@ public class MsgCounters {
     private final AtomicLong msgsPermanentlyFailed = new AtomicLong();
     private final AtomicLong msgsTmpFailed = new AtomicLong();
     private final AtomicLong msgsLag = new AtomicLong();
+    /**
+     * Clear.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void clear() {
         msgsAdded.set(0);

@@ -48,23 +48,76 @@ public abstract class AbstractActivityManager<Key, Metadata> implements Activity
         private volatile ActivityStrategy strategy;
 
     }
-
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     protected void init() {
         var reportingPeriodMillis = getReportingPeriodMillis();
         scheduler.scheduleAtFixedRate(this::onReportingPeriodEnd, new Random().nextInt((int) reportingPeriodMillis), reportingPeriodMillis, TimeUnit.MILLISECONDS);
     }
-
+    /**
+     * Returns reporting period millis.
+     *
+     * @return the long result
+     * @throws Exception on processing failure
+     */
     protected abstract long getReportingPeriodMillis();
-
+    /**
+     * Returns strategy.
+     *
+     * @return {@link ActivityStrategy}
+     * @throws Exception on processing failure
+     */
     protected abstract ActivityStrategy getStrategy();
-
+    /**
+     * Updates state.
+     *
+     * @param key key ({@link Key})
+     * @param state state ({@link ActivityState})
+     * @return {@link ActivityState}
+     * @throws Exception on processing failure
+     */
     protected abstract ActivityState<Metadata> updateState(Key key, ActivityState<Metadata> state);
-
+    /**
+     * Has expired.
+     *
+     * @param lastRecordedTime last recorded time
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     protected abstract boolean hasExpired(long lastRecordedTime);
-
+    /**
+     * Handles state expiry.
+     *
+     * @param key key ({@link Key})
+     * @param metadata metadata ({@link Metadata})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     protected abstract void onStateExpiry(Key key, Metadata metadata);
-
+    /**
+     * Report activity.
+     *
+     * @param key key ({@link Key})
+     * @param metadata metadata ({@link Metadata})
+     * @param timeToReport time to report
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     protected abstract void reportActivity(Key key, Metadata metadata, long timeToReport, ActivityReportCallback<Key> callback);
+    /**
+     * Handles activity.
+     *
+     * @param key key ({@link Key})
+     * @param metadata metadata ({@link Metadata})
+     * @param newLastRecordedTime new last recorded time
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onActivity(Key key, Metadata metadata, long newLastRecordedTime) {
@@ -99,10 +152,26 @@ public abstract class AbstractActivityManager<Key, Metadata> implements Activity
         if (shouldReport.get() && lastReportedTime.get() < lastRecordedTime.get()) {
             log.debug("Going to report first activity event for key: [{}]. Event time: [{}].", key, lastRecordedTime.get());
             reportActivity(key, metadata, lastRecordedTime.get(), new ActivityReportCallback<>() {
+                /**
+                 * Handles success.
+                 *
+                 * @param key key ({@link Key})
+                 * @param reportedTime reported time
+                 * @return nothing
+                 * @throws Exception on processing failure
+                 */
                 @Override
                 public void onSuccess(Key key, long reportedTime) {
                     updateLastReportedTime(key, reportedTime);
                 }
+                /**
+                 * Handles failure.
+                 *
+                 * @param key key ({@link Key})
+                 * @param t t ({@link Throwable})
+                 * @return nothing
+                 * @throws Exception on processing failure
+                 */
 
                 @Override
                 public void onFailure(Key key, Throwable t) {
@@ -111,6 +180,12 @@ public abstract class AbstractActivityManager<Key, Metadata> implements Activity
             });
         }
     }
+    /**
+     * Handles reporting period end.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onReportingPeriodEnd() {
@@ -159,10 +234,26 @@ public abstract class AbstractActivityManager<Key, Metadata> implements Activity
             long timeToReport = lastRecordedTime;
             log.debug("Going to report last activity event for key: [{}]. Event time: [{}].", key, timeToReport);
             reportActivity(key, metadata, timeToReport, new ActivityReportCallback<>() {
+                /**
+                 * Handles success.
+                 *
+                 * @param key key ({@link Key})
+                 * @param reportedTime reported time
+                 * @return nothing
+                 * @throws Exception on processing failure
+                 */
                 @Override
                 public void onSuccess(Key key, long reportedTime) {
                     updateLastReportedTime(key, reportedTime);
                 }
+                /**
+                 * Handles failure.
+                 *
+                 * @param key key ({@link Key})
+                 * @param t t ({@link Throwable})
+                 * @return nothing
+                 * @throws Exception on processing failure
+                 */
 
                 @Override
                 public void onFailure(Key key, Throwable t) {
@@ -171,6 +262,13 @@ public abstract class AbstractActivityManager<Key, Metadata> implements Activity
             });
         }
     }
+    /**
+     * Returns last recorded time.
+     *
+     * @param key key ({@link Key})
+     * @return the long result
+     * @throws Exception on processing failure
+     */
 
     @Override
     public long getLastRecordedTime(Key key) {

@@ -26,8 +26,22 @@ import org.thingsboard.server.common.data.page.PageLink;
  */
 public interface RelatedEdgesService {
 
+    /**
+     * Finds edge ids by entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId entity id ({@link EntityId})
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<EdgeId> findEdgeIdsByEntityId(TenantId tenantId, EntityId entityId, PageLink pageLink);
 
+    /**
+     * Publish related edge ids evict event.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId entity id ({@link EntityId})
+     */
     void publishRelatedEdgeIdsEvictEvent(TenantId tenantId, EntityId entityId);
 
 }

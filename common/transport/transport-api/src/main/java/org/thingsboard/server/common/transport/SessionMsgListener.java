@@ -31,32 +31,111 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * session msg listener contract.
+ * Callback interface for messages pushed from core to an active transport session (attributes, RPC, OTA chunks).
  */
 public interface SessionMsgListener {
 
     void onGetAttributesResponse(GetAttributeResponseMsg getAttributesResponse);
 
+    /**
+     * Handles attribute update.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param attributeUpdateNotification attribute update notification ({@link AttributeUpdateNotificationMsg})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void onAttributeUpdate(UUID sessionId, AttributeUpdateNotificationMsg attributeUpdateNotification);
 
+    /**
+     * Handles remote session close command.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param sessionCloseNotification session close notification ({@link SessionCloseNotificationProto})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void onRemoteSessionCloseCommand(UUID sessionId, SessionCloseNotificationProto sessionCloseNotification);
 
+    /**
+     * Handles to device rpc request.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param toDeviceRequest to device request ({@link ToDeviceRpcRequestMsg})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void onToDeviceRpcRequest(UUID sessionId, ToDeviceRpcRequestMsg toDeviceRequest);
 
+    /**
+     * Handles to server rpc response.
+     *
+     * @param toServerResponse to server response ({@link ToServerRpcResponseMsg})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void onToServerRpcResponse(ToServerRpcResponseMsg toServerResponse);
 
+    /**
+     * Handles device deleted.
+     *
+     * @param deviceId target device identifier
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void onDeviceDeleted(DeviceId deviceId);
 
+    /**
+     * Handles uplink notification.
+     *
+     * @param notificationMsg notification msg ({@link UplinkNotificationMsg})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     default void onUplinkNotification(UplinkNotificationMsg notificationMsg){};
 
+    /**
+     * Handles to transport update credentials.
+     *
+     * @param toTransportUpdateCredentials to transport update credentials ({@link ToTransportUpdateCredentialsProto})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     default void onToTransportUpdateCredentials(ToTransportUpdateCredentialsProto toTransportUpdateCredentials){}
-
+/**
+ * Handles device profile update.
+ *
+ * @param newSessionInfo new session info
+ * @param deviceProfile device profile ({@link DeviceProfile})
+ * @return nothing
+ * @throws Exception on processing failure
+ */
     default void onDeviceProfileUpdate(TransportProtos.SessionInfoProto newSessionInfo, DeviceProfile deviceProfile) {}
-
+/**
+ * Handles device update.
+ *
+ * @param sessionInfo session info
+ * @param device device ({@link Device})
+ * @param deviceProfileOpt device profile opt ({@link Optional})
+ * @return nothing
+ * @throws Exception on processing failure
+ */
     default void onDeviceUpdate(TransportProtos.SessionInfoProto sessionInfo, Device device,
                                 Optional<DeviceProfile> deviceProfileOpt) {}
-
+/**
+ * Handles resource update.
+ *
+ * @param resourceUpdateMsgOpt resource update msg opt
+ * @return nothing
+ * @throws Exception on processing failure
+ */
     default void onResourceUpdate(TransportProtos.ResourceUpdateMsg resourceUpdateMsgOpt) {}
-
+/**
+ * Handles resource delete.
+ *
+ * @param resourceUpdateMsgOpt resource update msg opt
+ * @return nothing
+ * @throws Exception on processing failure
+ */
     default void onResourceDelete(TransportProtos.ResourceDeleteMsg resourceUpdateMsgOpt) {}
 }

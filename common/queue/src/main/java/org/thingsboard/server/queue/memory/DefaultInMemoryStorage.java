@@ -15,10 +15,6 @@
  */
 package org.thingsboard.server.queue.memory;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-import org.thingsboard.server.queue.TbQueueMsg;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -28,11 +24,17 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import org.thingsboard.server.queue.TbQueueMsg;
+
+
+/**
+ * Default {@link InMemoryStorage} using concurrent queues per topic partition.
+ */
 @Component
 @Slf4j
-/**
- * Default in memory storage.
- */
 public final class DefaultInMemoryStorage implements InMemoryStorage {
     private final ConcurrentHashMap<String, BlockingQueue<TbQueueMsg>> storage = new ConcurrentHashMap<>();
 

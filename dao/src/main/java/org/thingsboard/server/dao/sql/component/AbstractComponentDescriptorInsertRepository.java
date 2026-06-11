@@ -28,8 +28,14 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.thingsboard.server.dao.model.sql.ComponentDescriptorEntity;
 /**
- * Abstract component descriptor insert repository.
+ * Abstract component descriptor insert repository (JPA/PostgreSQL persistence layer (JPA repositories and PostgreSQL DAO implementations)).
  */
+
+
+
+
+
+
 
 @Slf4j
 public abstract class AbstractComponentDescriptorInsertRepository implements ComponentDescriptorInsertRepository {
@@ -40,11 +46,17 @@ public abstract class AbstractComponentDescriptorInsertRepository implements Com
     @Autowired
     protected PlatformTransactionManager transactionManager;
 
+    
     /**
-
-     * Persists and get.
-
+     * Saves or persists and get.
+     *
+     * @param entity domain entity to persist or validate
+     * @param insertOrUpdateOnPrimaryKeyConflict insert or update on primary key conflict ({@link String})
+     * @param insertOrUpdateOnUniqueKeyConflict insert or update on unique key conflict ({@link String})
+     * @return {@link ComponentDescriptorEntity}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected ComponentDescriptorEntity saveAndGet(ComponentDescriptorEntity entity, String insertOrUpdateOnPrimaryKeyConflict, String insertOrUpdateOnUniqueKeyConflict) {
         ComponentDescriptorEntity componentDescriptorEntity = null;
@@ -70,15 +82,28 @@ public abstract class AbstractComponentDescriptorInsertRepository implements Com
         }
         return componentDescriptorEntity;
     }
+    /**
+     * Do process save or update.
+     *
+     * @param entity domain entity to persist or validate
+     * @param query filter and sort query definition
+     * @return {@link ComponentDescriptorEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Modifying
     protected abstract ComponentDescriptorEntity doProcessSaveOrUpdate(ComponentDescriptorEntity entity, String query);
 
+    
     /**
-
-     * Get query.
-
+     * Returns query.
+     *
+     * @param entity domain entity to persist or validate
+     * @param query filter and sort query definition
+     * @return {@link Query}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected Query getQuery(ComponentDescriptorEntity entity, String query) {
         return entityManager.createNativeQuery(query, ComponentDescriptorEntity.class)

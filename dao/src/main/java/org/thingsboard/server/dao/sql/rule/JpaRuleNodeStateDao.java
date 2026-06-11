@@ -31,8 +31,11 @@ import org.thingsboard.server.dao.util.SqlDao;
 
 import java.util.UUID;
 /**
- * JPA implementation of rule node state dao.
+ * JPA/PostgreSQL implementation of rule node state dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Slf4j
 @Component
@@ -41,32 +44,75 @@ public class JpaRuleNodeStateDao extends JpaAbstractDao<RuleNodeStateEntity, Rul
 
     @Autowired
     private RuleNodeStateRepository ruleNodeStateRepository;
+    /**
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Class<RuleNodeStateEntity> getEntityClass() {
         return RuleNodeStateEntity.class;
     }
+    /**
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected JpaRepository<RuleNodeStateEntity, UUID> getRepository() {
         return ruleNodeStateRepository;
     }
+    /**
+     * Finds by rule node id.
+     *
+     * @param ruleNodeId rule node id ({@link UUID})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<RuleNodeState> findByRuleNodeId(UUID ruleNodeId, PageLink pageLink) {
         return DaoUtil.toPageData(ruleNodeStateRepository.findByRuleNodeId(ruleNodeId, DaoUtil.toPageable(pageLink)));
     }
+    /**
+     * Finds by rule node id and entity id.
+     *
+     * @param ruleNodeId rule node id ({@link UUID})
+     * @param entityId target entity identifier
+     * @return {@link RuleNodeState}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleNodeState findByRuleNodeIdAndEntityId(UUID ruleNodeId, UUID entityId) {
         return DaoUtil.getData(ruleNodeStateRepository.findByRuleNodeIdAndEntityId(ruleNodeId, entityId));
     }
+    /**
+     * Removes by rule node id.
+     *
+     * @param ruleNodeId rule node id ({@link UUID})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Transactional
     @Override
     public void removeByRuleNodeId(UUID ruleNodeId) {
         ruleNodeStateRepository.removeByRuleNodeId(ruleNodeId);
     }
+    /**
+     * Removes by rule node id and entity id.
+     *
+     * @param ruleNodeId rule node id ({@link UUID})
+     * @param entityId target entity identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Transactional
     @Override

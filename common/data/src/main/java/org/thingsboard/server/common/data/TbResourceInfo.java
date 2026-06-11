@@ -99,6 +99,11 @@ public class TbResourceInfo extends BaseData<TbResourceId> implements HasName, H
         this.descriptor = resourceInfo.descriptor != null ? resourceInfo.descriptor.deepCopy() : null;
         this.externalId = resourceInfo.externalId;
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link TbResourceId}
+     */
 
     @Schema(description = "JSON object with the Resource Id. " +
             "Specify this field to update the Resource. " +
@@ -108,18 +113,33 @@ public class TbResourceInfo extends BaseData<TbResourceId> implements HasName, H
     public TbResourceId getId() {
         return super.getId();
     }
+    /**
+     * Returns created time.
+     *
+     * @return the long result
+     */
 
     @Schema(description = "Timestamp of the resource creation, in milliseconds", example = "1609459200000", accessMode = Schema.AccessMode.READ_ONLY)
     @Override
     public long getCreatedTime() {
         return super.getCreatedTime();
     }
+    /**
+     * Returns name.
+     *
+     * @return {@link String}
+     */
 
     @Override
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     public String getName() {
         return title;
     }
+    /**
+     * Returns link.
+     *
+     * @return {@link String}
+     */
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     public String getLink() {
@@ -130,6 +150,11 @@ public class TbResourceInfo extends BaseData<TbResourceId> implements HasName, H
             return "/api/resource/" + resourceType.name().toLowerCase() + "/" + scope + "/" + resourceKey;
         }
     }
+    /**
+     * Returns public link.
+     *
+     * @return {@link String}
+     */
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     public String getPublicLink() {
@@ -138,22 +163,44 @@ public class TbResourceInfo extends BaseData<TbResourceId> implements HasName, H
         }
         return null;
     }
+    /**
+     * Returns search text.
+     *
+     * @return {@link String}
+     */
 
     @JsonIgnore
     public String getSearchText() {
         return title;
     }
+    /**
+     * Returns descriptor.
+     *
+     * @param type type ({@link Class})
+     * @return {@link T}
+     */
 
     @SneakyThrows
     public <T> T getDescriptor(Class<T> type) {
         return descriptor != null ? mapper.treeToValue(descriptor, type) : null;
     }
+    /**
+     * Updates descriptor.
+     *
+     * @param type type ({@link Class})
+     * @param updater updater ({@link UnaryOperator})
+     */
 
     public <T> void updateDescriptor(Class<T> type, UnaryOperator<T> updater) {
         T descriptor = getDescriptor(type);
         descriptor = updater.apply(descriptor);
         setDescriptorValue(descriptor);
     }
+    /**
+     * Set descriptor value.
+     *
+     * @param value value ({@link Object})
+     */
 
     @JsonIgnore
     public void setDescriptorValue(Object value) {

@@ -18,8 +18,11 @@ package org.thingsboard.server.common.msg.timeout;
 import org.thingsboard.server.common.msg.MsgType;
 
 /**
- * @author Andrew Shvayka
+ * Internal actor or queue message: device actor server side rpc timeout msg.
+ *
+ * <p>Serialized between tb-core, rule-engine, transport, and edge services.
  */
+
 public final class DeviceActorServerSideRpcTimeoutMsg extends TimeoutMsg<Integer> {
 
     public DeviceActorServerSideRpcTimeoutMsg(Integer id, long timeout) {

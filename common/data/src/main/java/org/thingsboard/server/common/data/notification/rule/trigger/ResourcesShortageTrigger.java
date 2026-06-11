@@ -39,31 +39,61 @@ public class ResourcesShortageTrigger implements NotificationRuleTrigger {
     private Long usage;
     private String serviceId;
     private String serviceType;
+    /**
+     * Returns tenant id.
+     *
+     * @return {@link TenantId}
+     */
 
     @Override
     public TenantId getTenantId() {
         return TenantId.SYS_TENANT_ID;
     }
+    /**
+     * Returns originator entity id.
+     *
+     * @return {@link EntityId}
+     */
 
     @Override
     public EntityId getOriginatorEntityId() {
         return TenantId.SYS_TENANT_ID;
     }
+    /**
+     * Returns deduplication strategy.
+     *
+     * @return {@link DeduplicationStrategy}
+     */
 
     @Override
     public DeduplicationStrategy getDeduplicationStrategy() {
         return DeduplicationStrategy.ONLY_MATCHING;
     }
+    /**
+     * Returns deduplication key.
+     *
+     * @return {@link String}
+     */
 
     @Override
     public String getDeduplicationKey() {
         return String.join(":", resource.name(), serviceId, serviceType);
     }
+    /**
+     * Returns default deduplication duration.
+     *
+     * @return the long result
+     */
 
     @Override
     public long getDefaultDeduplicationDuration() {
         return TimeUnit.HOURS.toMillis(1);
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     */
 
     @Override
     public NotificationRuleTriggerType getType() {

@@ -30,17 +30,65 @@ import org.thingsboard.server.dao.entity.EntityDaoService;
  */
 public interface RpcService extends EntityDaoService {
 
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param rpc rpc ({@link Rpc})
+     * @return {@link Rpc}
+     */
     Rpc save(Rpc rpc);
 
+    /**
+     * Deletes rpc.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id id ({@link RpcId})
+     */
     void deleteRpc(TenantId tenantId, RpcId id);
 
+    /**
+     * Deletes all rpc by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     */
     void deleteAllRpcByTenantId(TenantId tenantId);
 
+    /**
+     * Finds by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id id ({@link RpcId})
+     * @return {@link Rpc}
+     */
     Rpc findById(TenantId tenantId, RpcId id);
 
+    /**
+     * Finds rpc by id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id id ({@link RpcId})
+     * @return future completing with {@link Rpc}
+     */
     ListenableFuture<Rpc> findRpcByIdAsync(TenantId tenantId, RpcId id);
 
+    /**
+     * Finds all by device id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<Rpc> findAllByDeviceId(TenantId tenantId, DeviceId deviceId, PageLink pageLink);
 
+    /**
+     * Finds all by device id and status.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @param rpcStatus rpc status ({@link RpcStatus})
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<Rpc> findAllByDeviceIdAndStatus(TenantId tenantId, DeviceId deviceId, RpcStatus rpcStatus, PageLink pageLink);
 }

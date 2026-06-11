@@ -19,8 +19,9 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
+
 /**
- * Abstract tb queue template.
+ * Shared base for queue templates providing topic name and lifecycle helpers.
  */
 public class AbstractTbQueueTemplate {
     protected static final String REQUEST_ID_HEADER = "requestId";

@@ -15,13 +15,6 @@
  */
 package org.thingsboard.server.queue.common.state;
 
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-import org.thingsboard.server.common.msg.queue.TopicPartitionInfo;
-import org.thingsboard.server.queue.TbQueueMsg;
-import org.thingsboard.server.queue.common.consumer.PartitionedQueueConsumerManager;
-import org.thingsboard.server.queue.discovery.QueueKey;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,12 +24,19 @@ import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.thingsboard.server.common.msg.queue.TopicPartitionInfo;
+import org.thingsboard.server.queue.TbQueueMsg;
+import org.thingsboard.server.queue.common.consumer.PartitionedQueueConsumerManager;
+import org.thingsboard.server.queue.discovery.QueueKey;
+
 import static org.thingsboard.server.common.msg.queue.TopicPartitionInfo.withTopic;
 
-@Slf4j
 /**
- * Queue state service.
+ * Persists and restores per-queue consumer state (offsets, processing markers) across restarts.
  */
+@Slf4j
 public abstract class QueueStateService<E extends TbQueueMsg, S extends TbQueueMsg> {
 
     protected final PartitionedQueueConsumerManager<E> eventConsumer;

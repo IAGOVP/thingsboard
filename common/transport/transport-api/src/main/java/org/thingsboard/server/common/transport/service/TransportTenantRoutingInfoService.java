@@ -37,6 +37,13 @@ public class TransportTenantRoutingInfoService implements TenantRoutingInfoServi
     public TransportTenantRoutingInfoService(TransportTenantProfileCache tenantProfileCache) {
         this.tenantProfileCache = tenantProfileCache;
     }
+    /**
+     * Returns routing info.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link TenantRoutingInfo}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public TenantRoutingInfo getRoutingInfo(TenantId tenantId) {

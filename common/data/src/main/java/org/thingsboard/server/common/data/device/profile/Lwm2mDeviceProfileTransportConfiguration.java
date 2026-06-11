@@ -51,6 +51,11 @@ public class Lwm2mDeviceProfileTransportConfiguration implements DeviceProfileTr
     public Lwm2mDeviceProfileTransportConfiguration() {
         updateDefault();
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link DeviceTransportType}
+     */
 
     @Override
     public DeviceTransportType getType() {

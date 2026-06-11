@@ -22,8 +22,11 @@ import org.thingsboard.server.cache.CaffeineTbTransactionalCache;
 import org.thingsboard.server.common.data.CacheConstants;
 import org.thingsboard.server.common.data.id.TenantId;
 /**
- * Tenant exists caffeine cache.
+ * in-process Caffeine cache for tenant exists (tenants, tenant profiles, and profile caching).
+ *
+ * <p>Implements {@link org.thingsboard.server.cache.TbTransactionalCache} with DAO-specific key types.
  */
+
 
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "caffeine", matchIfMissing = true)
 @Service("TenantExistsCache")

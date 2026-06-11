@@ -38,8 +38,9 @@ import java.util.Set;
 import static org.thingsboard.server.common.msg.queue.TopicPartitionInfo.withTopic;
 
 /**
- * File-based EDQS state store for single-node or dev deployments (RocksDB via {@link EdqsRocksDb}).
+ * File-based EDQS state store for single-node or development deployments.
  */
+
 @Service
 @RequiredArgsConstructor
 @InMemoryEdqsComponent
@@ -55,12 +56,27 @@ public class LocalEdqsStateService implements EdqsStateService {
     private List<PartitionedQueueConsumerManager<?>> otherConsumers;
 
     private boolean ready = false;
+    /**
+     * Starts Kafka consumers and wires partition/state services.
+     *
+     * @param eventConsumer event consumer ({@link PartitionedQueueConsumerManager})
+     * @param otherConsumers other consumers ({@link List})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void init(PartitionedQueueConsumerManager<TbProtoQueueMsg<ToEdqsMsg>> eventConsumer, List<PartitionedQueueConsumerManager<?>> otherConsumers) {
         this.eventConsumer = eventConsumer;
         this.otherConsumers = otherConsumers;
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param partitions partitions ({@link Set})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void process(Set<TopicPartitionInfo> partitions) {
@@ -84,6 +100,17 @@ public class LocalEdqsStateService implements EdqsStateService {
             consumer.update(withTopic(partitions, consumer.getTopic()));
         }
     }
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param tenantId tenant that owns the indexed entities
+     * @param type type ({@link ObjectType})
+     * @param key key ({@link String})
+     * @param eventType event type ({@link EdqsEventType})
+     * @param msg Kafka queue message wrapper
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void save(TenantId tenantId, ObjectType type, String key, EdqsEventType eventType, ToEdqsMsg msg) {
@@ -98,11 +125,23 @@ public class LocalEdqsStateService implements EdqsStateService {
             log.error("[{}] Failed to save event {}", key, msg, e);
         }
     }
+    /**
+     * Returns true when all assigned Kafka partitions have been restored and the index is queryable.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isReady() {
         return ready;
     }
+    /**
+     * Shuts down EDQS consumers and flushes pending state.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void stop() {

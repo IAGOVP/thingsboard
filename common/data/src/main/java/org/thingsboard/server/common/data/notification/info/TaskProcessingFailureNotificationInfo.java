@@ -42,6 +42,11 @@ public class TaskProcessingFailureNotificationInfo implements RuleOriginatedNoti
     private String taskDescription;
     private String error;
     private int attempt;
+    /**
+     * Returns template data.
+     *
+     * @return {@link Map}
+     */
 
     @Override
     public Map<String, String> getTemplateData() {
@@ -55,6 +60,11 @@ public class TaskProcessingFailureNotificationInfo implements RuleOriginatedNoti
                 "attempt", String.valueOf(attempt)
         );
     }
+    /**
+     * Returns affected tenant id.
+     *
+     * @return {@link TenantId}
+     */
 
     @Override
     public TenantId getAffectedTenantId() {

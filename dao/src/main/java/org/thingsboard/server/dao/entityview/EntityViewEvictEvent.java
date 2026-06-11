@@ -23,8 +23,11 @@ import org.thingsboard.server.common.data.id.EntityId;
 import org.thingsboard.server.common.data.id.EntityViewId;
 import org.thingsboard.server.common.data.id.TenantId;
 /**
- * Entity view evict event.
+ * Cache eviction event published when entity view data changes.
+ *
+ * <p>Consumed by cache listeners to invalidate stale entries cluster-wide.
  */
+
 
 @Data
 @RequiredArgsConstructor

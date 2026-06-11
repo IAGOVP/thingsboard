@@ -26,7 +26,7 @@ import org.thingsboard.server.common.data.page.TimePageLink;
 @Builder
 @AllArgsConstructor
 /**
- * Alarm query.
+ * Query parameters for listing alarms (status, severity, time range, originator).
  */
 public class AlarmQuery {
 

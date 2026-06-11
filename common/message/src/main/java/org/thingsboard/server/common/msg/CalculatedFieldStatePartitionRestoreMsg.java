@@ -18,11 +18,13 @@ package org.thingsboard.server.common.msg;
 import lombok.Data;
 import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.msg.queue.TopicPartitionInfo;
+/**
+ * Internal actor or queue message: calculated field state partition restore msg.
+ *
+ * <p>Serialized between tb-core, rule-engine, transport, and edge services.
+ */
 
 @Data
-/**
- * Message: calculated field state partition restore msg.
- */
 public class CalculatedFieldStatePartitionRestoreMsg implements ToCalculatedFieldSystemMsg {
 
     private final TopicPartitionInfo partition;

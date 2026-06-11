@@ -35,6 +35,13 @@ public class RpcObserveResponseCompositeCallback<R extends LwM2mRequest<T>, T ex
     public RpcObserveResponseCompositeCallback(TransportService transportService, LwM2mClient client, TransportProtos.ToDeviceRpcRequestMsg requestMsg, DownlinkRequestCallback<R, T> callback) {
         super(transportService, client, requestMsg, callback);
     }
+    /**
+     * Serialize successful response.
+     *
+     * @param response response ({@link T})
+     * @return optional {@link String}, empty if not found
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected Optional<String> serializeSuccessfulResponse(T response) {

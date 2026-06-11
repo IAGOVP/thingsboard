@@ -34,6 +34,11 @@ import org.thingsboard.server.common.data.security.DeviceCredentials;
  * Device export data.
  */
 public class DeviceExportData extends EntityExportData<Device> {
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Override
     public EntityType getEntityType() { return EntityType.DEVICE; }
@@ -41,6 +46,11 @@ public class DeviceExportData extends EntityExportData<Device> {
     @JsonProperty(index = 3)
     @JsonIgnoreProperties({"id", "deviceId", "createdTime", "version"})
     private DeviceCredentials credentials;
+    /**
+     * Has credentials.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     @Override

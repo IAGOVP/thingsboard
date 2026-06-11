@@ -25,6 +25,11 @@ import org.thingsboard.server.common.data.id.CustomerId;
 public class ApiUsageStateFilter implements EntityFilter {
 
     private CustomerId customerId;
+    /**
+     * Returns type.
+     *
+     * @return {@link EntityFilterType}
+     */
 
     @Override
     public EntityFilterType getType() {

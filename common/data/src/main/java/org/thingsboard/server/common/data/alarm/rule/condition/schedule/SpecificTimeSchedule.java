@@ -31,6 +31,11 @@ public class SpecificTimeSchedule implements AlarmSchedule {
     private Set<Integer> daysOfWeek;
     private long startsOn;
     private long endsOn;
+    /**
+     * Returns type.
+     *
+     * @return {@link AlarmScheduleType}
+     */
 
     @Override
     public AlarmScheduleType getType() {

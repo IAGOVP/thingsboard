@@ -35,9 +35,6 @@ import org.thingsboard.server.common.data.validation.NoXss;
 @Data
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-/**
- * Entity view.
- */
 public class EntityView extends BaseDataWithAdditionalInfo<EntityViewId>
         implements HasName, HasTenantId, HasCustomerId, HasVersion, ExportableEntity<EntityViewId> {
 
@@ -86,23 +83,43 @@ public class EntityView extends BaseDataWithAdditionalInfo<EntityViewId>
         this.externalId = entityView.getExternalId();
         this.version = entityView.getVersion();
     }
+    /**
+     * Returns customer id.
+     *
+     * @return {@link CustomerId}
+     */
 
     @Schema(description = "JSON object with Customer Id. Use 'assignEntityViewToCustomer' to change the Customer Id.", accessMode = Schema.AccessMode.READ_ONLY)
     @Override
     public CustomerId getCustomerId() {
         return customerId;
     }
+    /**
+     * Returns name.
+     *
+     * @return {@link String}
+     */
 
     @Override
     public String getName() {
         return name;
     }
+    /**
+     * Returns tenant id.
+     *
+     * @return {@link TenantId}
+     */
 
     @Schema(description = "JSON object with Tenant Id.", accessMode = Schema.AccessMode.READ_ONLY)
     @Override
     public TenantId getTenantId() {
         return tenantId;
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link EntityViewId}
+     */
 
     @Schema(description = "JSON object with the Entity View Id. " +
             "Specify this field to update the Entity View. " +
@@ -112,6 +129,11 @@ public class EntityView extends BaseDataWithAdditionalInfo<EntityViewId>
     public EntityViewId getId() {
         return super.getId();
     }
+    /**
+     * Returns created time.
+     *
+     * @return the long result
+     */
 
     @Schema(description = "Timestamp of the Entity View creation, in milliseconds", example = "1609459200000", accessMode = Schema.AccessMode.READ_ONLY)
     @Override
@@ -123,6 +145,11 @@ public class EntityView extends BaseDataWithAdditionalInfo<EntityViewId>
             "May include: 'description' (string).",
             implementation = com.fasterxml.jackson.databind.JsonNode.class,
             example = "{\"description\":\"Temperature readings view\"}")
+    /**
+     * Returns additional info.
+     *
+     * @return {@link JsonNode}
+     */
     @Override
     public JsonNode getAdditionalInfo() {
         return super.getAdditionalInfo();

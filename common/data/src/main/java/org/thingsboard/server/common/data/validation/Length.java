@@ -31,14 +31,39 @@ public @/**
  */
 interface Length {
     String message() default "length must be equal or less than {max}";
+/**
+ * Field name.
+ *
+ * @return {@link String}
+ */
 
     String fieldName() default "";
+/**
+ * Max.
+ *
+ * @return the int result
+ */
 
     int max() default 255;
+/**
+ * Min.
+ *
+ * @return the int result
+ */
 
     int min() default 0;
+/**
+ * Groups.
+ *
+ * @return {@link Class}
+ */
 
     Class<?>[] groups() default {};
+/**
+ * Payload.
+ *
+ * @return {@link Class}
+ */
 
     Class<? extends Payload>[] payload() default {};
 }

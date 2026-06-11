@@ -18,9 +18,11 @@ package org.thingsboard.server.edqs.data.dp;
 import lombok.Getter;
 import org.thingsboard.server.common.data.kv.DataType;
 import org.thingsboard.common.util.TbStringPool;
+
 /**
- * Typed attribute/latest-TS value stored in EDQS (string data point).
+ * Typed attribute or latest-TS value stored in the EDQS index (string data point).
  */
+
 public class StringDataPoint extends AbstractDataPoint {
 
     @Getter
@@ -34,31 +36,67 @@ public class StringDataPoint extends AbstractDataPoint {
         super(ts);
         this.value = deduplicate ? TbStringPool.intern(value) : value;
     }
+    /**
+     * Returns bool.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean getBool() {
         return Boolean.parseBoolean(value);
     }
+    /**
+     * Returns double.
+     *
+     * @return the double result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public double getDouble() {
         return Double.parseDouble(value);
     }
+    /**
+     * Returns long.
+     *
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public long getLong() {
         return Long.parseLong(value);
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link DataType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public DataType getType() {
         return DataType.STRING;
     }
+    /**
+     * Returns str.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String getStr() {
         return value;
     }
+    /**
+     * Value to string.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String valueToString() {

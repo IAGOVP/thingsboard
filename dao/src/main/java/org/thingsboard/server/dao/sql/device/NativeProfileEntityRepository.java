@@ -21,15 +21,36 @@ import org.thingsboard.server.common.data.page.PageData;
 
 import java.util.UUID;
 
+
 /**
 
- * native profile entity repository contract.
+ * Spring Data JPA repository for native profile entity entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
 
+
 public interface NativeProfileEntityRepository {
+    /**
+     * Finds profile entity id infos.
+     *
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<ProfileEntityIdInfo> findProfileEntityIdInfos(Pageable pageable);
+    /**
+     * Finds profile entity id infos by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<ProfileEntityIdInfo> findProfileEntityIdInfosByTenantId(UUID tenantId, Pageable pageable);
 

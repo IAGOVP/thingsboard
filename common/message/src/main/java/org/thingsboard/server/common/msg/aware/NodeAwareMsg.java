@@ -18,10 +18,16 @@ package org.thingsboard.server.common.msg.aware;
 import org.thingsboard.server.common.data.id.NodeId;
 
 /**
- * node aware msg contract.
+ * Message contract: node aware msg.
  */
+
 public interface NodeAwareMsg {
 
+    /**
+     * Returns node id.
+     *
+     * @return {@link NodeId}
+     */
 	NodeId getNodeId();
 	
 }

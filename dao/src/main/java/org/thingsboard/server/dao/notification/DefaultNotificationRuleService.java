@@ -38,8 +38,14 @@ import java.util.Optional;
 
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
 /**
- * Default notification rule service.
+ * Spring component for default notification rule service (notification templates, targets, rules, and delivery requests).
  */
+
+
+
+
+
+
 
 @Service
 @RequiredArgsConstructor
@@ -47,11 +53,16 @@ public class DefaultNotificationRuleService extends AbstractEntityService implem
 
     private final NotificationRuleDao notificationRuleDao;
 
+    
     /**
-
-     * Persists notification rule.
-
+     * Saves or persists notification rule.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param notificationRule notification rule ({@link NotificationRule})
+     * @return {@link NotificationRule}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public NotificationRule saveNotificationRule(TenantId tenantId, NotificationRule notificationRule) {
@@ -72,66 +83,96 @@ public class DefaultNotificationRuleService extends AbstractEntityService implem
         }
     }
 
+    
     /**
-
-     * Loads notification rule by id.
-
+     * Finds notification rule by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @return {@link NotificationRule}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public NotificationRule findNotificationRuleById(TenantId tenantId, NotificationRuleId id) {
         return notificationRuleDao.findById(tenantId, id.getId());
     }
 
+    
     /**
-
-     * Loads notification rule info by id.
-
+     * Finds notification rule info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @return {@link NotificationRuleInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public NotificationRuleInfo findNotificationRuleInfoById(TenantId tenantId, NotificationRuleId id) {
         return notificationRuleDao.findInfoById(tenantId, id);
     }
 
+    
     /**
-
-     * Loads notification rules infos by tenant id.
-
+     * Finds notification rules infos by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<NotificationRuleInfo> findNotificationRulesInfosByTenantId(TenantId tenantId, PageLink pageLink) {
         return notificationRuleDao.findInfosByTenantIdAndPageLink(tenantId, pageLink);
     }
 
+    
     /**
-
-     * Loads notification rules by tenant id.
-
+     * Finds notification rules by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<NotificationRule> findNotificationRulesByTenantId(TenantId tenantId, PageLink pageLink) {
         return notificationRuleDao.findByTenantIdAndPageLink(tenantId, pageLink);
     }
 
+    
     /**
-
-     * Loads enabled notification rules by tenant id and trigger type.
-
+     * Finds enabled notification rules by tenant id and trigger type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param triggerType trigger type ({@link NotificationRuleTriggerType})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<NotificationRule> findEnabledNotificationRulesByTenantIdAndTriggerType(TenantId tenantId, NotificationRuleTriggerType triggerType) {
         return notificationRuleDao.findByTenantIdAndTriggerTypeAndEnabled(tenantId, triggerType, true);
     }
 
+    
     /**
-
-     * Removes notification rule by id.
-
+     * Deletes notification rule by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteNotificationRuleById(TenantId tenantId, NotificationRuleId id) {
@@ -139,55 +180,79 @@ public class DefaultNotificationRuleService extends AbstractEntityService implem
         eventPublisher.publishEvent(DeleteEntityEvent.builder().tenantId(tenantId).entityId(id).build());
     }
 
+    
     /**
-
-     * Removes entity.
-
+     * Deletes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteEntity(TenantId tenantId, EntityId id, boolean force) {
         deleteNotificationRuleById(tenantId, (NotificationRuleId) id);
     }
 
+    
     /**
-
-     * Removes notification rules by tenant id.
-
+     * Deletes notification rules by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteNotificationRulesByTenantId(TenantId tenantId) {
         notificationRuleDao.removeByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Removes by tenant id.
-
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteByTenantId(TenantId tenantId) {
         deleteNotificationRulesByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Loads entity.
-
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findNotificationRuleById(tenantId, new NotificationRuleId(entityId.getId())));
     }
 
+    
     /**
-
-     * Loads entity async.
-
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
@@ -195,11 +260,14 @@ public class DefaultNotificationRuleService extends AbstractEntityService implem
                 .transform(Optional::ofNullable, directExecutor());
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

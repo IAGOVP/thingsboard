@@ -19,6 +19,12 @@ package org.thingsboard.server.common.data.limit;
  * rate limit entry.
  */
 public record RateLimitEntry(long capacity, long durationSeconds) {
+    /**
+     * Parse.
+     *
+     * @param s s ({@link String})
+     * @return {@link RateLimitEntry}
+     */
 
     public static RateLimitEntry parse(String s) {
         String[] parts = s.split(":");

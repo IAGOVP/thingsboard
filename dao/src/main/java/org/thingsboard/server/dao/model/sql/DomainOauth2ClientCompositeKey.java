@@ -23,8 +23,14 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.util.UUID;
 /**
- * Domain oauth2client composite key.
+ * Domain oauth2client composite key (JPA entity row mappings for PostgreSQL (JPA/Cassandra entity mappings (database row models))).
  */
+
+
+
+
+
+
 
 @NoArgsConstructor
 @AllArgsConstructor

@@ -28,9 +28,6 @@ import static org.thingsboard.server.transport.mqtt.util.sparkplug.SparkplugTopi
  * Created by nickAS21 on 12.12.22
  * A Sparkplug MQTT Topic
  */
-/**
- * Sparkplug topic.
- */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SparkplugTopic {
 
@@ -194,7 +191,13 @@ public class SparkplugTopic {
         this.edgeNodeId = null;
         this.deviceId = null;
     }
-
+    /**
+     * Parse topic.
+     *
+     * @param topicString topic string ({@link String})
+     * @return {@link SparkplugTopic}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
     public static SparkplugTopic parseTopic(String topicString) throws ThingsboardException {
         try {
             if (isValidIdElementToUTF8(topicString)) {
@@ -225,77 +228,99 @@ public class SparkplugTopic {
 
     }
 
+    
     /**
-     * Returns the Sparkplug namespace version.
+     * Returns namespace.
      *
-     * @return the namespace
+     * @return {@link String}
+     * @throws Exception on processing failure
      */
     public String getNamespace() {
         return namespace;
     }
 
+    
     /**
-     * Returns the {@link SparkplugDescriptor}
+     * Returns sparkplug descriptor.
      *
-     * @return the SparkplugDescriptor
+     * @return {@link SparkplugDescriptor}
+     * @throws Exception on processing failure
      */
     public SparkplugDescriptor getSparkplugDescriptor() {
         return sparkplugDescriptor;
     }
 
+    
     /**
-     * Returns the {@link EdgeNodeDescriptor}
+     * Returns edge node descriptor.
      *
-     * @return the EdgeNodeDescriptor
+     * @return {@link EdgeNodeDescriptor}
+     * @throws Exception on processing failure
      */
     public EdgeNodeDescriptor getEdgeNodeDescriptor() {
         return edgeNodeDescriptor;
     }
 
+    
     /**
-     * Returns the ID of the logical grouping of Edge of Network (EoN) Nodes and devices.
+     * Returns group id.
      *
-     * @return the group ID
+     * @return {@link String}
+     * @throws Exception on processing failure
      */
     public String getGroupId() {
         return groupId;
     }
 
+    
     /**
-     * Returns the ID of the Edge of Network (EoN) Node.
+     * Returns edge node id.
      *
-     * @return the edge node ID
+     * @return {@link String}
+     * @throws Exception on processing failure
      */
     public String getEdgeNodeId() {
         return edgeNodeId;
     }
 
+    
     /**
-     * Returns the ID of the device.
+     * Returns device id.
      *
-     * @return the device ID
+     * @return {@link String}
+     * @throws Exception on processing failure
      */
     public String getDeviceId() {
         return deviceId;
     }
-
+    /**
+     * Updates device id plus.
+     *
+     * @param deviceIdNew device id new ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void updateDeviceIdPlus(String deviceIdNew) {
         this.deviceId = this.deviceId.equals("+") ? deviceIdNew : this.deviceId;
     }
 
+    
     /**
-     * Returns the Host Application ID if this is a Host topic
+     * Returns host application id.
      *
-     * @return the Host Application ID
+     * @return {@link String}
+     * @throws Exception on processing failure
      */
     public String getHostApplicationId() {
         return hostApplicationId;
     }
 
+    
     /**
-     * Returns the message type.
+     * Returns type.
      *
-     * @return the message type
+     * @return {@link SparkplugMessageType}
+     * @throws Exception on processing failure
      */
     public SparkplugMessageType getType() {
         return type;
@@ -316,22 +341,42 @@ public class SparkplugTopic {
         return sb.toString();
     }
 
+    
     /**
-     * @param type the type to check
-     * @return true if this topic's type matches the passes in type, false otherwise
+     * Is type.
+     *
+     * @param type type ({@link SparkplugMessageType})
+     * @return the boolean result
+     * @throws Exception on processing failure
      */
     public boolean isType(SparkplugMessageType type) {
         return this.type != null && this.type.equals(type);
     }
-
+    /**
+     * Is node.
+     *
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     public boolean isNode() {
         return this.deviceId == null;
     }
-
+    /**
+     * Returns node device name.
+     *
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
     public String getNodeDeviceName() {
         return isNode() ? edgeNodeId : deviceId;
     }
-
+    /**
+     * Is valid id element to utf8.
+     *
+     * @param deviceIdElement device id element ({@link String})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     public static boolean isValidIdElementToUTF8(String deviceIdElement) {
         if (deviceIdElement == null) {
             return false;

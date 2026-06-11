@@ -16,6 +16,12 @@
 package org.thingsboard.server.queue.kafka;
 
 import jakarta.annotation.PostConstruct;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -36,22 +42,13 @@ import org.thingsboard.server.common.data.TbProperty;
 import org.thingsboard.server.queue.util.PropertyUtils;
 import org.thingsboard.server.queue.util.TbKafkaComponent;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
 /**
- * Created by ashvayka on 25.09.18.
+ * Kafka client properties (brokers, SSL, consumer/producer tuning) loaded from configuration.
  */
 @Slf4j
 @TbKafkaComponent
 @ConfigurationProperties(prefix = "queue.kafka")
 @Component
-/**
- * Tb kafka settings.
- */
 public class TbKafkaSettings {
 
     @Value("${queue.kafka.bootstrap.servers}")

@@ -15,18 +15,19 @@
  */
 package org.thingsboard.server.queue.common.state;
 
+import java.util.Collections;
+import java.util.Set;
+
 import org.thingsboard.server.common.msg.queue.TopicPartitionInfo;
 import org.thingsboard.server.queue.TbQueueMsg;
 import org.thingsboard.server.queue.common.consumer.PartitionedQueueConsumerManager;
 import org.thingsboard.server.queue.discovery.QueueKey;
 
-import java.util.Collections;
-import java.util.Set;
-
 import static org.thingsboard.server.common.msg.queue.TopicPartitionInfo.withTopic;
 
+
 /**
- * Default queue state service.
+ * In-memory {@link QueueStateService} for single-node deployments.
  */
 public class DefaultQueueStateService<E extends TbQueueMsg, S extends TbQueueMsg> extends QueueStateService<E, S> {
 

@@ -29,7 +29,13 @@ public enum LwM2mTypeServer {
         this.code = code;
         this.type = type;
     }
-
+    /**
+     * From lw m2m type server.
+     *
+     * @param type type ({@link String})
+     * @return {@link LwM2mTypeServer}
+     * @throws Exception on processing failure
+     */
     public static LwM2mTypeServer fromLwM2mTypeServer(String type) {
         for (LwM2mTypeServer sm : LwM2mTypeServer.values()) {
             if (sm.type.equals(type)) {

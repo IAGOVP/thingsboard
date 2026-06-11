@@ -41,8 +41,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 /**
- * JPA implementation of calculated field dao.
+ * JPA/PostgreSQL implementation of calculated field dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Slf4j
 @Component
@@ -53,66 +56,93 @@ public class JpaCalculatedFieldDao extends JpaAbstractDao<CalculatedFieldEntity,
     private final CalculatedFieldRepository calculatedFieldRepository;
     private final NativeCalculatedFieldRepository nativeCalculatedFieldRepository;
 
+    
     /**
-
-     * Loads all by tenant id.
-
+     * Finds all by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<CalculatedField> findAllByTenantId(TenantId tenantId) {
         return DaoUtil.convertDataList(calculatedFieldRepository.findAllByTenantId(tenantId.getId()));
     }
 
+    
     /**
-
-     * Loads calculated field ids by entity id.
-
+     * Finds calculated field ids by entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<CalculatedFieldId> findCalculatedFieldIdsByEntityId(TenantId tenantId, EntityId entityId) {
         return calculatedFieldRepository.findCalculatedFieldIdsByTenantIdAndEntityId(tenantId.getId(), entityId.getId());
     }
 
+    
     /**
-
-     * Loads calculated fields by entity id.
-
+     * Finds calculated fields by entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<CalculatedField> findCalculatedFieldsByEntityId(TenantId tenantId, EntityId entityId) {
         return DaoUtil.convertDataList(calculatedFieldRepository.findAllByTenantIdAndEntityId(tenantId.getId(), entityId.getId()));
     }
 
+    
     /**
-
-     * Loads all.
-
+     * Finds all.
+     *
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<CalculatedField> findAll() {
         return DaoUtil.convertDataList(calculatedFieldRepository.findAll());
     }
 
+    
     /**
-
-     * Loads by entity id and type and name.
-
+     * Finds by entity id and type and name.
+     *
+     * @param entityId target entity identifier
+     * @param type type ({@link CalculatedFieldType})
+     * @param name entity or attribute name
+     * @return {@link CalculatedField}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public CalculatedField findByEntityIdAndTypeAndName(EntityId entityId, CalculatedFieldType type, String name) {
         return DaoUtil.getData(calculatedFieldRepository.findByEntityIdAndTypeAndName(entityId.getId(), type.name(), name));
     }
 
+    
     /**
-
-     * Loads all.
-
+     * Finds all.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<CalculatedField> findAll(PageLink pageLink) {
@@ -120,11 +150,16 @@ public class JpaCalculatedFieldDao extends JpaAbstractDao<CalculatedFieldEntity,
         return nativeCalculatedFieldRepository.findCalculatedFields(DaoUtil.toPageable(pageLink));
     }
 
+    
     /**
-
-     * Loads all by tenant id.
-
+     * Finds all by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<CalculatedField> findAllByTenantId(TenantId tenantId, PageLink pageLink) {
@@ -132,11 +167,18 @@ public class JpaCalculatedFieldDao extends JpaAbstractDao<CalculatedFieldEntity,
         return DaoUtil.toPageData(calculatedFieldRepository.findAllByTenantId(tenantId.getId(), DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads by entity id and types.
-
+     * Finds by entity id and types.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param types types ({@link Set})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<CalculatedField> findByEntityIdAndTypes(TenantId tenantId, EntityId entityId, Set<CalculatedFieldType> types, PageLink pageLink) {
@@ -145,11 +187,16 @@ public class JpaCalculatedFieldDao extends JpaAbstractDao<CalculatedFieldEntity,
                 types.stream().map(Enum::name).toList(), pageLink.getTextSearch(), DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
      * Removes all by entity id.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -157,22 +204,34 @@ public class JpaCalculatedFieldDao extends JpaAbstractDao<CalculatedFieldEntity,
         return DaoUtil.convertDataList(calculatedFieldRepository.removeAllByTenantIdAndEntityId(tenantId.getId(), entityId.getId()));
     }
 
+    
     /**
-
      * Counts by entity id and type not.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param type type ({@link CalculatedFieldType})
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public long countByEntityIdAndTypeNot(TenantId tenantId, EntityId entityId, CalculatedFieldType type) {
         return calculatedFieldRepository.countByTenantIdAndEntityIdAndTypeNot(tenantId.getId(), entityId.getId(), type.name());
     }
 
+    
     /**
-
-     * Loads by tenant id and filter.
-
+     * Finds by tenant id and filter.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param filter filter ({@link CalculatedFieldFilter})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<CalculatedField> findByTenantIdAndFilter(TenantId tenantId, CalculatedFieldFilter filter, PageLink pageLink) {
@@ -184,11 +243,17 @@ public class JpaCalculatedFieldDao extends JpaAbstractDao<CalculatedFieldEntity,
                 pageLink.getTextSearch(), DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads names by tenant id and type.
-
+     * Finds names by tenant id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link CalculatedFieldType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<String> findNamesByTenantIdAndType(TenantId tenantId, CalculatedFieldType type, PageLink pageLink) {
@@ -196,33 +261,42 @@ public class JpaCalculatedFieldDao extends JpaAbstractDao<CalculatedFieldEntity,
                 Strings.emptyToNull(pageLink.getTextSearch()), DaoUtil.toPageable(pageLink, false)));
     }
 
+    
     /**
-
-     * Get entity class.
-
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected Class<CalculatedFieldEntity> getEntityClass() {
         return CalculatedFieldEntity.class;
     }
 
+    
     /**
-
-     * Get repository.
-
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected JpaRepository<CalculatedFieldEntity, UUID> getRepository() {
         return calculatedFieldRepository;
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

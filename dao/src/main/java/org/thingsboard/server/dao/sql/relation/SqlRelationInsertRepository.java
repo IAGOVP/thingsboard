@@ -37,8 +37,14 @@ import java.util.List;
 
 import static org.thingsboard.server.dao.model.ModelConstants.VERSION_COLUMN;
 /**
- * Sql relation insert repository.
+ * Sql relation insert repository (JPA/PostgreSQL persistence layer (JPA repositories and PostgreSQL DAO implementations)).
  */
+
+
+
+
+
+
 
 @Repository
 @Transactional
@@ -57,6 +63,14 @@ public class SqlRelationInsertRepository implements RelationInsertRepository {
 
     @Autowired
     protected JdbcTemplate jdbcTemplate;
+    /**
+     * Returns query.
+     *
+     * @param entity domain entity to persist or validate
+     * @param query filter and sort query definition
+     * @return {@link Query}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected Query getQuery(RelationEntity entity, String query) {
         Query nativeQuery = entityManager.createNativeQuery(query, RelationEntity.class);
@@ -73,11 +87,25 @@ public class SqlRelationInsertRepository implements RelationInsertRepository {
                 .setParameter("relationTypeGroup", entity.getRelationTypeGroup())
                 .setParameter("relationType", entity.getRelationType());
     }
+    /**
+     * Saves or updates the requested data.
+     *
+     * @param entity domain entity to persist or validate
+     * @return {@link RelationEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RelationEntity saveOrUpdate(RelationEntity entity) {
         return (RelationEntity) getQuery(entity, INSERT_ON_CONFLICT_DO_UPDATE_JPA).getSingleResult();
     }
+    /**
+     * Saves or updates the requested data.
+     *
+     * @param entities entities ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<RelationEntity> saveOrUpdate(List<RelationEntity> entities) {
@@ -119,14 +147,66 @@ public class SqlRelationInsertRepository implements RelationInsertRepository {
         return entities;
     }
 
+    
+
+    
+
+
+    
+
+
+
+    
+
+
+
+
+    
+
+
+
+
+
+    /**
+
+
+
+
+
+     * Sequence prepared statement creator (JPA/PostgreSQL persistence layer (JPA repositories and PostgreSQL DAO implementations)).
+
+
+
+
+
+     */
+
+
+
+
+
+
     private record SequencePreparedStatementCreator(String sql) implements PreparedStatementCreator, SqlProvider {
 
         private static final String[] COLUMNS = {VERSION_COLUMN};
+        /**
+         * Creates prepared statement.
+         *
+         * @param con con ({@link Connection})
+         * @return {@link PreparedStatement}
+         * @throws SQLException if sqlexception is thrown during processing
+         */
 
         @Override
         public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
             return con.prepareStatement(sql, COLUMNS);
         }
+        /**
+         * Returns sql.
+         *
+         * @return {@link String}
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         @Override
         public String getSql() {

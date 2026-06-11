@@ -23,8 +23,11 @@ import org.thingsboard.server.common.data.CacheConstants;
 import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.data.mobile.qrCodeSettings.QrCodeSettings;
 /**
- * Qr code settings caffeine cache.
+ * in-process Caffeine cache for qr code settings (mobile apps, bundles, and QR code settings).
+ *
+ * <p>Implements {@link org.thingsboard.server.cache.TbTransactionalCache} with DAO-specific key types.
  */
+
 
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "caffeine", matchIfMissing = true)
 @Service("QrCodeSettingsCache")

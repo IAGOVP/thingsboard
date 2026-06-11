@@ -62,10 +62,10 @@ import java.util.function.BiFunction;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
-@Slf4j
 /**
  * Jackson util.
  */
+@Slf4j
 public class JacksonUtil {
 
     public static final ObjectMapper OBJECT_MAPPER = JsonMapper.builder()
@@ -118,6 +118,7 @@ public class JacksonUtil {
 
     @Contract("null, _ -> null") // so that IDE doesn't show NPE warning when input is not null
     public static <T> T fromString(String string, Class<T> clazz) {
+        /** From string. */
         return fromString(string, clazz, "The given string value cannot be transformed to Json object: " + string);
     }
 
@@ -255,6 +256,7 @@ public class JacksonUtil {
     }
 
     public static JsonNode toJsonNode(String value) {
+        /** To json node. */
         return toJsonNode(value, OBJECT_MAPPER);
     }
 
@@ -328,6 +330,7 @@ public class JacksonUtil {
     }
 
     public static ObjectNode newObjectNode() {
+        /** New object node. */
         return newObjectNode(OBJECT_MAPPER);
     }
 
@@ -336,6 +339,7 @@ public class JacksonUtil {
     }
 
     public static ArrayNode newArrayNode() {
+        /** New array node. */
         return newArrayNode(OBJECT_MAPPER);
     }
 

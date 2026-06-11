@@ -20,12 +20,14 @@ import org.thingsboard.server.common.data.id.CustomerId;
 import org.thingsboard.server.common.data.id.TenantId;
 
 /**
- * tb api usage report client contract.
+ * Contract for tb api usage report client.
  */
 public interface TbApiUsageReportClient {
 
+    /** Report. */
     void report(TenantId tenantId, CustomerId customerId, ApiUsageRecordKey key, long value);
 
+    /** Report. */
     void report(TenantId tenantId, CustomerId customerId, ApiUsageRecordKey key);
 
 }

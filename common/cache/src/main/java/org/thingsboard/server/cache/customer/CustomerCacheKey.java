@@ -23,20 +23,30 @@ import org.thingsboard.server.common.data.id.TenantId;
 import java.io.Serial;
 import java.io.Serializable;
 
+/**
+ * Composite cache key for {@link org.thingsboard.server.common.data.Customer} by tenant and title.
+ *
+ * <p>String form: {@code tenantUuid_title}. Used by {@link CustomerCaffeineCache}
+ * and {@link CustomerRedisCache}.
+ *
+ * @see CustomerCacheEvictEvent
+ */
 @EqualsAndHashCode
 @RequiredArgsConstructor
-/**
- * Customer cache key.
- */
 public class CustomerCacheKey implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 5706958428811356925L;
 
     @NonNull
+    /** Owning tenant; required. */
     private final TenantId tenantId;
+    /** Customer title used as lookup dimension. */
     private final String title;
 
+/**
+         * @return {@code tenantId + "_" + title} key suffix
+         */
     @Override
     public String toString() {
         return tenantId.getId() + "_" + title;

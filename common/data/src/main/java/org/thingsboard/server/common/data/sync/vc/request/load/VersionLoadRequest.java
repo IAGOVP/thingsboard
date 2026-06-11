@@ -43,6 +43,11 @@ import static com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 public abstract class VersionLoadRequest {
 
     private String versionId;
+    /**
+     * Returns type.
+     *
+     * @return {@link VersionLoadRequestType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Type of the version to load")
     public abstract VersionLoadRequestType getType();

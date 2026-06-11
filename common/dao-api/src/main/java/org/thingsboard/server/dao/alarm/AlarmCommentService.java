@@ -41,8 +41,22 @@ public interface AlarmCommentService {
     /** Paged comments for an alarm, newest first (per {@link PageLink}). */
     PageData<AlarmCommentInfo> findAlarmComments(TenantId tenantId, AlarmId alarmId, PageLink pageLink);
 
+    /**
+     * Finds alarm comment by id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alarmCommentId alarm comment id ({@link AlarmCommentId})
+     * @return future completing with {@link AlarmComment}
+     */
     ListenableFuture<AlarmComment> findAlarmCommentByIdAsync(TenantId tenantId, AlarmCommentId alarmCommentId);
 
+    /**
+     * Finds alarm comment by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alarmCommentId alarm comment id ({@link AlarmCommentId})
+     * @return {@link AlarmComment}
+     */
     AlarmComment findAlarmCommentById(TenantId tenantId, AlarmCommentId alarmCommentId);
 
 }

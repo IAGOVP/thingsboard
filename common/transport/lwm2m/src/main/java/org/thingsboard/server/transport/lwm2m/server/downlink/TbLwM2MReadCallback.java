@@ -34,6 +34,14 @@ public class TbLwM2MReadCallback extends TbLwM2MUplinkTargetedCallback<ReadReque
     public TbLwM2MReadCallback(LwM2mUplinkMsgHandler handler, LwM2MTelemetryLogService logService, LwM2mClient client, String targetId) {
         super(handler, logService, client, targetId);
     }
+    /**
+     * Handles success.
+     *
+     * @param request request payload with operation parameters
+     * @param response response ({@link ReadResponse})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onSuccess(ReadRequest request, ReadResponse response) {

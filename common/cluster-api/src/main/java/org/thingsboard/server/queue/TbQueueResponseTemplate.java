@@ -20,15 +20,19 @@ import org.thingsboard.server.common.msg.queue.TopicPartitionInfo;
 import java.util.Set;
 
 /**
- * tb queue response template contract.
+ * Contract for tb queue response template.
  */
 public interface TbQueueResponseTemplate<Request extends TbQueueMsg, Response extends TbQueueMsg> {
 
+    /** Subscribe. */
     void subscribe();
 
+    /** Subscribe. */
     void subscribe(Set<TopicPartitionInfo> partitions);
 
+    /** Launch. */
     void launch(TbQueueHandler<Request, Response> handler);
 
+    /** Stops the actor and releases its resources. */
     void stop();
 }

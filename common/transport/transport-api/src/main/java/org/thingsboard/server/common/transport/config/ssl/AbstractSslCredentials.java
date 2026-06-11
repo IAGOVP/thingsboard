@@ -54,12 +54,28 @@ public abstract class AbstractSslCredentials implements SslCredentials {
     ) {}
 
     private final AtomicReference<SslState> state = new AtomicReference<>();
+    /**
+     * Init.
+     *
+     * @param trustsOnly trusts only
+     * @return nothing
+     * @throws IOException if ioexception is thrown during processing
+     * @throws GeneralSecurityException if general security exception is thrown during processing
+     */
 
     @Override
     public void init(boolean trustsOnly) throws IOException, GeneralSecurityException {
         SslState newState = buildState(trustsOnly);
         state.set(newState);
     }
+    /**
+     * Reload.
+     *
+     * @param trustsOnly trusts only
+     * @return nothing
+     * @throws IOException if ioexception is thrown during processing
+     * @throws GeneralSecurityException if general security exception is thrown during processing
+     */
 
     @Override
     public void reload(boolean trustsOnly) throws IOException, GeneralSecurityException {
@@ -115,31 +131,68 @@ public abstract class AbstractSslCredentials implements SslCredentials {
         }
         return s;
     }
+    /**
+     * Returns key store.
+     *
+     * @return {@link KeyStore}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public KeyStore getKeyStore() {
         return getState().keyStore;
     }
+    /**
+     * Returns private key.
+     *
+     * @return {@link PrivateKey}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public PrivateKey getPrivateKey() {
         return getState().privateKey;
     }
+    /**
+     * Returns public key.
+     *
+     * @return {@link PublicKey}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public PublicKey getPublicKey() {
         return getState().publicKey;
     }
+    /**
+     * Returns certificate chain.
+     *
+     * @return the X509Certificate[] value
+     * @throws Exception on processing failure
+     */
 
     @Override
     public X509Certificate[] getCertificateChain() {
         return getState().chain;
     }
+    /**
+     * Returns trusted certificates.
+     *
+     * @return the X509Certificate[] value
+     * @throws Exception on processing failure
+     */
 
     @Override
     public X509Certificate[] getTrustedCertificates() {
         return getState().trusts;
     }
+    /**
+     * Creates trust manager factory.
+     *
+     * @return {@link TrustManagerFactory}
+     * @throws NoSuchAlgorithmException if no such algorithm exception is thrown during processing
+     * @throws KeyStoreException if key store exception is thrown during processing
+     */
 
     @Override
     public TrustManagerFactory createTrustManagerFactory() throws NoSuchAlgorithmException, KeyStoreException {
@@ -148,6 +201,14 @@ public abstract class AbstractSslCredentials implements SslCredentials {
         tmFactory.init(s.keyStore);
         return tmFactory;
     }
+    /**
+     * Creates key manager factory.
+     *
+     * @return {@link KeyManagerFactory}
+     * @throws NoSuchAlgorithmException if no such algorithm exception is thrown during processing
+     * @throws UnrecoverableKeyException if unrecoverable key exception is thrown during processing
+     * @throws KeyStoreException if key store exception is thrown during processing
+     */
 
     @Override
     public KeyManagerFactory createKeyManagerFactory() throws NoSuchAlgorithmException, UnrecoverableKeyException, KeyStoreException {
@@ -156,6 +217,14 @@ public abstract class AbstractSslCredentials implements SslCredentials {
         kmf.init(s.keyStore, s.keyPasswordArray);
         return kmf;
     }
+    /**
+     * Returns value from subject name by key.
+     *
+     * @param subjectName subject name ({@link String})
+     * @param key key ({@link String})
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public String getValueFromSubjectNameByKey(String subjectName, String key) {
@@ -164,11 +233,30 @@ public abstract class AbstractSslCredentials implements SslCredentials {
         String value = cn.map(s -> s.replace(key + "=", "")).orElse(null);
         return StringUtils.isNotEmpty(value) ? value : null;
     }
-
+    /**
+     * Can use.
+     *
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     protected abstract boolean canUse();
-
+    /**
+     * Loads key store.
+     *
+     * @param isPrivateKeyRequired is private key required
+     * @param keyPasswordArray key password array
+     * @return {@link KeyStore}
+     * @throws IOException if ioexception is thrown during processing
+     * @throws GeneralSecurityException if general security exception is thrown during processing
+     */
     protected abstract KeyStore loadKeyStore(boolean isPrivateKeyRequired, char[] keyPasswordArray) throws IOException, GeneralSecurityException;
-
+    /**
+     * Updates key alias.
+     *
+     * @param keyAlias key alias ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     protected abstract void updateKeyAlias(String keyAlias);
 
     private static X509Certificate[] asX509Certificates(Certificate[] certificates) {

@@ -27,11 +27,17 @@ import org.thingsboard.server.dao.model.sqlts.ts.TsKvEntity;
 import java.util.List;
 import java.util.UUID;
 
+
 /**
 
- * ts kv repository contract.
+ * Spring Data JPA repository for ts kv entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
+
 
 public interface TsKvRepository extends JpaRepository<TsKvEntity, TsKvCompositeKey> {
 
@@ -44,6 +50,17 @@ public interface TsKvRepository extends JpaRepository<TsKvEntity, TsKvCompositeK
      * */
     @Query(value = "SELECT * FROM ts_kv WHERE entity_id = :entityId " +
             "AND key = :entityKey AND ts >= :startTs AND ts < :endTs ", nativeQuery = true)
+    /**
+     * Finds all with limit.
+     *
+     * @param entityId target entity identifier
+     * @param key attribute or cache key
+     * @param startTs interval start timestamp (epoch ms)
+     * @param endTs interval end timestamp (epoch ms)
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     List<TsKvEntity> findAllWithLimit(@Param("entityId") UUID entityId,
                                       @Param("entityKey") int key,
                                       @Param("startTs") long startTs,
@@ -54,6 +71,16 @@ public interface TsKvRepository extends JpaRepository<TsKvEntity, TsKvCompositeK
     @Modifying
     @Query("DELETE FROM TsKvEntity tskv WHERE tskv.entityId = :entityId " +
             "AND tskv.key = :entityKey AND tskv.ts >= :startTs AND tskv.ts < :endTs")
+    /**
+     * Deletes the requested data.
+     *
+     * @param entityId target entity identifier
+     * @param key attribute or cache key
+     * @param startTs interval start timestamp (epoch ms)
+     * @param endTs interval end timestamp (epoch ms)
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
     void delete(@Param("entityId") UUID entityId,
                 @Param("entityKey") int key,
                 @Param("startTs") long startTs,
@@ -62,6 +89,16 @@ public interface TsKvRepository extends JpaRepository<TsKvEntity, TsKvCompositeK
     @Query("SELECT new TsKvEntity(MAX(tskv.strValue), MAX(tskv.ts)) FROM TsKvEntity tskv " +
             "WHERE tskv.strValue IS NOT NULL " +
             "AND tskv.entityId = :entityId AND tskv.key = :entityKey AND tskv.ts >= :startTs AND tskv.ts < :endTs")
+    /**
+     * Finds string max.
+     *
+     * @param entityId target entity identifier
+     * @param entityKey entity key
+     * @param startTs interval start timestamp (epoch ms)
+     * @param endTs interval end timestamp (epoch ms)
+     * @return {@link TsKvEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     TsKvEntity findStringMax(@Param("entityId") UUID entityId,
                              @Param("entityKey") int entityKey,
                              @Param("startTs") long startTs,
@@ -75,6 +112,16 @@ public interface TsKvRepository extends JpaRepository<TsKvEntity, TsKvCompositeK
             "SUM(CASE WHEN tskv.doubleValue IS NULL THEN 0 ELSE 1 END), " +
             "'MAX', MAX(tskv.ts)) FROM TsKvEntity tskv " +
             "WHERE tskv.entityId = :entityId AND tskv.key = :entityKey AND tskv.ts >= :startTs AND tskv.ts < :endTs")
+    /**
+     * Finds numeric max.
+     *
+     * @param entityId target entity identifier
+     * @param entityKey entity key
+     * @param startTs interval start timestamp (epoch ms)
+     * @param endTs interval end timestamp (epoch ms)
+     * @return {@link TsKvEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     TsKvEntity findNumericMax(@Param("entityId") UUID entityId,
                               @Param("entityKey") int entityKey,
                               @Param("startTs") long startTs,
@@ -84,6 +131,16 @@ public interface TsKvRepository extends JpaRepository<TsKvEntity, TsKvCompositeK
     @Query("SELECT new TsKvEntity(MIN(tskv.strValue), MAX(tskv.ts)) FROM TsKvEntity tskv " +
             "WHERE tskv.strValue IS NOT NULL " +
             "AND tskv.entityId = :entityId AND tskv.key = :entityKey AND tskv.ts >= :startTs AND tskv.ts < :endTs")
+    /**
+     * Finds string min.
+     *
+     * @param entityId target entity identifier
+     * @param entityKey entity key
+     * @param startTs interval start timestamp (epoch ms)
+     * @param endTs interval end timestamp (epoch ms)
+     * @return {@link TsKvEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     TsKvEntity findStringMin(@Param("entityId") UUID entityId,
                              @Param("entityKey") int entityKey,
                              @Param("startTs") long startTs,
@@ -95,6 +152,16 @@ public interface TsKvRepository extends JpaRepository<TsKvEntity, TsKvCompositeK
             "SUM(CASE WHEN tskv.doubleValue IS NULL THEN 0 ELSE 1 END), " +
             "'MIN', MAX(tskv.ts)) FROM TsKvEntity tskv " +
             "WHERE tskv.entityId = :entityId AND tskv.key = :entityKey AND tskv.ts >= :startTs AND tskv.ts < :endTs")
+    /**
+     * Finds numeric min.
+     *
+     * @param entityId target entity identifier
+     * @param entityKey entity key
+     * @param startTs interval start timestamp (epoch ms)
+     * @param endTs interval end timestamp (epoch ms)
+     * @return {@link TsKvEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     TsKvEntity findNumericMin(
             @Param("entityId") UUID entityId,
             @Param("entityKey") int entityKey,
@@ -107,6 +174,16 @@ public interface TsKvRepository extends JpaRepository<TsKvEntity, TsKvCompositeK
             "SUM(CASE WHEN tskv.doubleValue IS NULL THEN 0 ELSE 1 END), " +
             "SUM(CASE WHEN tskv.jsonValue IS NULL THEN 0 ELSE 1 END), MAX(tskv.ts)) FROM TsKvEntity tskv " +
             "WHERE tskv.entityId = :entityId AND tskv.key = :entityKey AND tskv.ts >= :startTs AND tskv.ts < :endTs")
+    /**
+     * Finds count.
+     *
+     * @param entityId target entity identifier
+     * @param entityKey entity key
+     * @param startTs interval start timestamp (epoch ms)
+     * @param endTs interval end timestamp (epoch ms)
+     * @return {@link TsKvEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     TsKvEntity findCount(@Param("entityId") UUID entityId,
                          @Param("entityKey") int entityKey,
                          @Param("startTs") long startTs,
@@ -118,6 +195,16 @@ public interface TsKvRepository extends JpaRepository<TsKvEntity, TsKvCompositeK
             "SUM(CASE WHEN tskv.doubleValue IS NULL THEN 0 ELSE 1 END), " +
             "'AVG', MAX(tskv.ts)) FROM TsKvEntity tskv " +
             "WHERE tskv.entityId = :entityId AND tskv.key = :entityKey AND tskv.ts >= :startTs AND tskv.ts < :endTs")
+    /**
+     * Finds avg.
+     *
+     * @param entityId target entity identifier
+     * @param entityKey entity key
+     * @param startTs interval start timestamp (epoch ms)
+     * @param endTs interval end timestamp (epoch ms)
+     * @return {@link TsKvEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     TsKvEntity findAvg(@Param("entityId") UUID entityId,
                        @Param("entityKey") int entityKey,
                        @Param("startTs") long startTs,
@@ -129,6 +216,16 @@ public interface TsKvRepository extends JpaRepository<TsKvEntity, TsKvCompositeK
             "SUM(CASE WHEN tskv.doubleValue IS NULL THEN 0 ELSE 1 END), " +
             "'SUM', MAX(tskv.ts)) FROM TsKvEntity tskv " +
             "WHERE tskv.entityId = :entityId AND tskv.key = :entityKey AND tskv.ts >= :startTs AND tskv.ts < :endTs")
+    /**
+     * Finds sum.
+     *
+     * @param entityId target entity identifier
+     * @param entityKey entity key
+     * @param startTs interval start timestamp (epoch ms)
+     * @param endTs interval end timestamp (epoch ms)
+     * @return {@link TsKvEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     TsKvEntity findSum(@Param("entityId") UUID entityId,
                        @Param("entityKey") int entityKey,
                        @Param("startTs") long startTs,

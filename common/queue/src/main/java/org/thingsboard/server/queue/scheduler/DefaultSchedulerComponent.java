@@ -17,20 +17,22 @@ package org.thingsboard.server.queue.scheduler;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-import org.thingsboard.common.util.ThingsBoardExecutors;
-
 import java.util.concurrent.Callable;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import org.thingsboard.common.util.ThingsBoardExecutors;
+
+
+/**
+ * Default {@link SchedulerComponent} using a Spring task scheduler.
+ */
 @Slf4j
 @Component
-/**
- * Default scheduler component.
- */
 public class DefaultSchedulerComponent implements SchedulerComponent {
 
     private ScheduledExecutorService schedulerExecutor;

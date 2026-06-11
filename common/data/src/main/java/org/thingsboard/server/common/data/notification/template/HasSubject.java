@@ -21,6 +21,11 @@ package org.thingsboard.server.common.data.notification.template;
 public interface HasSubject {
 
     String getSubject();
+/**
+ * Set subject.
+ *
+ * @param subject subject ({@link String})
+ */
 
     void setSubject(String subject);
 

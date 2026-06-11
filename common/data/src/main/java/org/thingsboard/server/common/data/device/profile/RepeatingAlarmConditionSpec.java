@@ -31,6 +31,11 @@ public class RepeatingAlarmConditionSpec implements AlarmConditionSpec {
 
     @Schema(description = "Repeating predicate")
     private FilterPredicateValue<Integer> predicate;
+    /**
+     * Returns type.
+     *
+     * @return {@link AlarmConditionSpecType}
+     */
 
     @Override
     @Schema(description = "Type of the Alarm Condition Specification", requiredMode = Schema.RequiredMode.REQUIRED)

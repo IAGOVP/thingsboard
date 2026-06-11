@@ -28,6 +28,11 @@ import java.util.List;
  * Device search query filter.
  */
 public class DeviceSearchQueryFilter extends EntitySearchQueryFilter {
+    /**
+     * Returns type.
+     *
+     * @return {@link EntityFilterType}
+     */
 
     @Override
     public EntityFilterType getType() {

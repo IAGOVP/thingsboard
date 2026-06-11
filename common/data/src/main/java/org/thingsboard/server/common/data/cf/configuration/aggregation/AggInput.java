@@ -43,6 +43,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * agg input contract.
  */
 public interface AggInput {
+    /**
+     * Returns type.
+     *
+     * @return {@link String}
+     */
 
     @JsonIgnore
     String getType();

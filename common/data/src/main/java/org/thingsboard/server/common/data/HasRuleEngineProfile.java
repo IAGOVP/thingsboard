@@ -23,6 +23,11 @@ import org.thingsboard.server.common.data.id.RuleChainId;
 public interface HasRuleEngineProfile {
 
     RuleChainId getDefaultRuleChainId();
+/**
+ * Returns default queue name.
+ *
+ * @return {@link String}
+ */
 
     String getDefaultQueueName();
 

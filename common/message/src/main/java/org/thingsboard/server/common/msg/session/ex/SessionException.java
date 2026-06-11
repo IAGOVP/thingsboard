@@ -16,8 +16,9 @@
 package org.thingsboard.server.common.msg.session.ex;
 
 /**
- * Exception: session exception.
+ * Exception in message/actor pipeline: session exception.
  */
+
 public class SessionException extends Exception {
 
     private static final long serialVersionUID = 1L;

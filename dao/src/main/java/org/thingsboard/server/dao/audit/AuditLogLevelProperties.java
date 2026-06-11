@@ -21,8 +21,14 @@ import org.springframework.context.annotation.Configuration;
 import java.util.HashMap;
 import java.util.Map;
 /**
- * Audit log level properties.
+ * Audit log level properties (audit log persistence and log-level configuration).
  */
+
+
+
+
+
+
 
 @Configuration
 @ConfigurationProperties(prefix = "audit-log.logging-level")
@@ -33,10 +39,23 @@ public class AuditLogLevelProperties {
     public AuditLogLevelProperties() {
         super();
     }
+    /**
+     * Set mask.
+     *
+     * @param mask mask ({@link Map})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void setMask(Map<String, String> mask) {
         this.mask = mask;
     }
+    /**
+     * Returns mask.
+     *
+     * @return {@link Map}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Map<String, String> getMask() {
         return this.mask;

@@ -33,8 +33,14 @@ import org.thingsboard.server.dao.util.NoSqlAnyDao;
 import org.thingsboard.server.queue.discovery.TbServiceInfoProvider;
 
 /**
- * Created by ashvayka on 24.10.18.
+ * Spring component for cassandra buffered rate write executor (Cassandra async DAO infrastructure (Cassandra async DAO base classes)).
  */
+
+
+
+
+
+
 @Component
 @Slf4j
 @NoSqlAnyDao
@@ -56,27 +62,60 @@ public class CassandraBufferedRateWriteExecutor extends AbstractBufferedRateExec
         super(queueLimit, concurrencyLimit, maxWaitTime, dispatcherThreads, callbackThreads, pollMs, printQueriesFreq,
                 BufferedRateExecutorType.WRITE, serviceInfoProvider, rateLimitService, statsFactory, entityService, printTenantNames);
     }
+    /**
+     * Print stats.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Scheduled(fixedDelayString = "${cassandra.query.rate_limit_print_interval_ms}")
     @Override
     public void printStats() {
         super.printStats();
     }
+    /**
+     * Stop.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PreDestroy
     public void stop() {
         super.stop();
     }
+    /**
+     * Creates the requested data.
+     *
+     * @return {@link SettableFuture}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected SettableFuture<TbResultSet> create() {
         return SettableFuture.create();
     }
+    /**
+     * Wrap.
+     *
+     * @param task task ({@link CassandraStatementTask})
+     * @param future future ({@link SettableFuture})
+     * @return {@link TbResultSetFuture}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TbResultSetFuture wrap(CassandraStatementTask task, SettableFuture<TbResultSet> future) {
         return new TbResultSetFuture(future);
     }
+    /**
+     * Executes the requested data.
+     *
+     * @param taskCtx task ctx ({@link AsyncTaskContext})
+     * @return future completing with {@link TbResultSet}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected ListenableFuture<TbResultSet> execute(AsyncTaskContext<CassandraStatementTask, TbResultSet> taskCtx) {

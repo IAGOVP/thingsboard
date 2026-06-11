@@ -19,9 +19,11 @@ package org.thingsboard.server.actors;
 public interface TbActorCreator {
 
     /** Stable id used as key in {@link DefaultTbActorSystem#actors}. */
+    /** Create actor id. */
     TbActorId createActorId();
 
     /** New actor instance (init not yet called). */
+    /** Create actor. */
     TbActor createActor();
 
 }

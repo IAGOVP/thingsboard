@@ -16,7 +16,7 @@
 package org.thingsboard.server.transport.mqtt.util;
 
 /**
- * mqtt topic filter contract.
+ * mqtt topic filter contract (MQTT transport adaptor and topic handling (ThingsBoard common module)).
  */
 public interface MqttTopicFilter {
 

@@ -22,24 +22,48 @@ import org.thingsboard.server.edqs.query.EdqsQuery;
 import org.thingsboard.server.edqs.repo.TenantRepo;
 
 import java.util.List;
+
 /**
  * EDQS query processor for device type entity filters.
+ *
+ * <p>Evaluates {@link org.thingsboard.server.common.data.query.EntityFilter} against a {@link org.thingsboard.server.edqs.repo.TenantRepo} (EDQS microservice — entity filter query processors).
  */
+
 public class DeviceTypeQueryProcessor extends AbstractEntityProfileQueryProcessor<DeviceTypeFilter> {
 
     public DeviceTypeQueryProcessor(TenantRepo repo, QueryContext ctx, EdqsQuery query) {
         super(repo, ctx, query, (DeviceTypeFilter) query.getEntityFilter(), EntityType.DEVICE);
     }
+    /**
+     * Returns entity name filter.
+     *
+     * @param filter entity filter definition (type, relations, search text, etc.)
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected String getEntityNameFilter(DeviceTypeFilter filter) {
         return filter.getDeviceNameFilter();
     }
+    /**
+     * Returns profile names.
+     *
+     * @param filter entity filter definition (type, relations, search text, etc.)
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected List<String> getProfileNames(DeviceTypeFilter filter) {
         return filter.getDeviceTypes();
     }
+    /**
+     * Returns profile entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected EntityType getProfileEntityType() {

@@ -34,11 +34,12 @@ import org.thingsboard.server.queue.kafka.TbKafkaSettings;
 import org.thingsboard.server.queue.kafka.TbKafkaTopicConfigs;
 import org.thingsboard.server.queue.settings.TasksQueueConfig;
 
+
+/**
+ * Kafka implementation of {@link TaskProcessorQueueFactory}.
+ */
 @Component
 @ConditionalOnExpression("'${queue.type:null}'=='kafka'")
-/**
- * Factory for kafka task processor queue.
- */
 public class KafkaTaskProcessorQueueFactory implements TaskProcessorQueueFactory {
 
     private final TopicService topicService;

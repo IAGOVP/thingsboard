@@ -39,6 +39,11 @@ public class EdgeConnectionNotificationRuleTriggerConfig implements Notification
     private Set<UUID> edges; // if empty - all edges
     @ArraySchema(schema = @Schema(implementation = EdgeConnectivityEvent.class))
     private Set<EdgeConnectivityEvent> notifyOn;
+    /**
+     * Returns trigger type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     */
 
     @Override
     public NotificationRuleTriggerType getTriggerType() {

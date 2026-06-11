@@ -29,26 +29,82 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by Valerii Sosliuk on 5/6/2017.
+ * Spring Data JPA repository for dashboard entities.
+ *
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
  */
+
 public interface DashboardRepository extends JpaRepository<DashboardEntity, UUID>, ExportableEntityRepository<DashboardEntity> {
+    /**
+     * Counts by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link Long}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     Long countByTenantId(UUID tenantId);
+    /**
+     * Finds by tenant id and title.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param title title ({@link String})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<DashboardEntity> findByTenantIdAndTitle(UUID tenantId, String title);
+    /**
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     Page<DashboardEntity> findByTenantId(UUID tenantId, Pageable pageable);
+    /**
+     * Returns external id by id.
+     *
+     * @param id entity UUID primary key
+     * @return {@link UUID}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Query("SELECT externalId FROM DashboardEntity WHERE id = :id")
     UUID getExternalIdById(@Param("id") UUID id);
+    /**
+     * Finds ids by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Query("SELECT d.id FROM DashboardEntity d WHERE d.tenantId = :tenantId")
     Page<UUID> findIdsByTenantId(@Param("tenantId") UUID tenantId, Pageable pageable);
+    /**
+     * Finds all ids.
+     *
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Query("SELECT d.id FROM DashboardEntity d")
     Page<UUID> findAllIds(Pageable pageable);
 
     @Query("SELECT new org.thingsboard.server.common.data.edqs.fields.DashboardFields(d.id, d.createdTime, d.tenantId, " +
             "d.assignedCustomers, d.title, d.version) FROM DashboardEntity d WHERE d.id > :id ORDER BY d.id")
+    /**
+     * Finds next batch.
+     *
+     * @param id entity UUID primary key
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     List<DashboardFields> findNextBatch(@Param("id") UUID id, Limit limit);
 }

@@ -24,11 +24,48 @@ import org.thingsboard.server.common.data.mobile.app.StoreInfo;
 
 import java.util.UUID;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * Model constants.
+
+
+
+
+
+ * Model constants (JPA/Cassandra entity mappings (database row models)).
+
+
+
+
+
 
  */
+
+
+
+
+
+
 
 public class ModelConstants {
 
@@ -781,22 +818,57 @@ public class ModelConstants {
     protected static final String[] SUM_AGGREGATION_COLUMNS =
             ArrayUtils.addAll(COUNT_AGGREGATION_COLUMNS, new String[]{sum(LONG_VALUE_COLUMN), sum(DOUBLE_VALUE_COLUMN)});
     protected static final String[] AVG_AGGREGATION_COLUMNS = SUM_AGGREGATION_COLUMNS;
+    /**
+     * Min.
+     *
+     * @param s s ({@link String})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String min(String s) {
         return "min(" + s + ")";
     }
+    /**
+     * Max.
+     *
+     * @param s s ({@link String})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String max(String s) {
         return "max(" + s + ")";
     }
+    /**
+     * Sum.
+     *
+     * @param s s ({@link String})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String sum(String s) {
         return "sum(" + s + ")";
     }
+    /**
+     * Counts the requested data.
+     *
+     * @param s s ({@link String})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String count(String s) {
         return "count(" + s + ")";
     }
+    /**
+     * Returns fetch column names.
+     *
+     * @param aggregation aggregation ({@link Aggregation})
+     * @return the String[] value
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String[] getFetchColumnNames(Aggregation aggregation) {
         switch (aggregation) {

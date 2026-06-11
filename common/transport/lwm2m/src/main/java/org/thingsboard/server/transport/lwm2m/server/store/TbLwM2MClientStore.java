@@ -20,15 +20,35 @@ import org.thingsboard.server.transport.lwm2m.server.client.LwM2mClient;
 import java.util.Set;
 
 /**
- * tb lw m2mclient store contract.
+ * tb lw m2mclient store contract (LwM2M transport and object model (ThingsBoard common module)).
  */
 public interface TbLwM2MClientStore {
 
     LwM2mClient get(String endpoint);
 
+    /**
+     * Returns all.
+     *
+     * @return {@link Set}
+     * @throws Exception on processing failure
+     */
     Set<LwM2mClient> getAll();
 
+    /**
+     * Put.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void put(LwM2mClient client);
 
+    /**
+     * Removes the requested data.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void remove(String endpoint);
 }

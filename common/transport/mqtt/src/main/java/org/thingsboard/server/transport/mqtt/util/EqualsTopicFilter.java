@@ -24,6 +24,13 @@ import lombok.Data;
 public class EqualsTopicFilter implements MqttTopicFilter {
 
     private final String filter;
+    /**
+     * Filter.
+     *
+     * @param topic topic ({@link String})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     public boolean filter(String topic) {

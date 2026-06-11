@@ -22,19 +22,37 @@ import org.thingsboard.server.edqs.query.EdqsQuery;
 import org.thingsboard.server.edqs.repo.TenantRepo;
 
 import java.util.List;
+
 /**
  * EDQS query processor for entity view type entity filters.
+ *
+ * <p>Evaluates {@link org.thingsboard.server.common.data.query.EntityFilter} against a {@link org.thingsboard.server.edqs.repo.TenantRepo} (EDQS microservice — entity filter query processors).
  */
+
 public class EntityViewTypeQueryProcessor extends AbstractEntityProfileNameQueryProcessor<EntityViewTypeFilter> {
 
     public EntityViewTypeQueryProcessor(TenantRepo repo, QueryContext ctx, EdqsQuery query) {
         super(repo, ctx, query, (EntityViewTypeFilter) query.getEntityFilter(), EntityType.ENTITY_VIEW);
     }
+    /**
+     * Returns entity name filter.
+     *
+     * @param filter entity filter definition (type, relations, search text, etc.)
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected String getEntityNameFilter(EntityViewTypeFilter filter) {
         return filter.getEntityViewNameFilter();
     }
+    /**
+     * Returns profile names.
+     *
+     * @param filter entity filter definition (type, relations, search text, etc.)
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected List<String> getProfileNames(EntityViewTypeFilter filter) {

@@ -35,11 +35,21 @@ public class EscalatedNotificationRuleRecipientsConfig implements NotificationRu
 
     @NotEmpty
     private Map<Integer, List<UUID>> escalationTable;
+    /**
+     * Returns trigger type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     */
 
     @Override
     public NotificationRuleTriggerType getTriggerType() {
         return NotificationRuleTriggerType.ALARM;
     }
+    /**
+     * Returns targets table.
+     *
+     * @return {@link Map}
+     */
 
     @Override
     public Map<Integer, List<UUID>> getTargetsTable() {

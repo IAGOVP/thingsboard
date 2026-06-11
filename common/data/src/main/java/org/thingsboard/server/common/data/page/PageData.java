@@ -31,7 +31,11 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode
 @ToString
 /**
- * Page data.
+ * Generic paginated REST/DAO response wrapper holding a page of results.
+ *
+ * <p>Fields: {@code data} (current page items), {@code totalElements}, {@code totalPages},
+ * {@code hasNext}. Constructed by DAO services from {@link PageLink} queries. Returned by most
+ * list endpoints (devices, alarms, users, etc.).
  */
 public class PageData<T> implements Serializable {
 
@@ -56,32 +60,63 @@ public class PageData<T> implements Serializable {
         this.totalElements = totalElements;
         this.hasNext = hasNext;
     }
+    /**
+     * Empty page data.
+     *
+     * @return {@link PageData}
+     */
 
     @SuppressWarnings("unchecked")
     public static <T> PageData<T> emptyPageData() {
         return (PageData<T>) EMPTY_PAGE_DATA;
     }
+    /**
+     * Returns data.
+     *
+     * @return {@link List}
+     */
 
     @Schema(description = "Array of the entities", accessMode = Schema.AccessMode.READ_ONLY)
     public List<T> getData() {
         return data;
     }
+    /**
+     * Returns total pages.
+     *
+     * @return the int result
+     */
 
     @Schema(description = "Total number of available pages. Calculated based on the 'pageSize' request parameter and total number of entities that match search criteria", accessMode = Schema.AccessMode.READ_ONLY)
     public int getTotalPages() {
         return totalPages;
     }
+    /**
+     * Returns total elements.
+     *
+     * @return the long result
+     */
 
     @Schema(description = "Total number of elements in all available pages", accessMode = Schema.AccessMode.READ_ONLY)
     public long getTotalElements() {
         return totalElements;
     }
+    /**
+     * Has next.
+     *
+     * @return the boolean result
+     */
 
     @Schema(description = "'false' value indicates the end of the result set", accessMode = Schema.AccessMode.READ_ONLY)
     @JsonProperty("hasNext")
     public boolean hasNext() {
         return hasNext;
     }
+    /**
+     * Map data.
+     *
+     * @param mapper mapper ({@link Function})
+     * @return {@link PageData}
+     */
 
     public <D> PageData<D> mapData(Function<T, D> mapper) {
         return new PageData<>(getData().stream().map(mapper).collect(Collectors.toList()), getTotalPages(), getTotalElements(), hasNext());

@@ -29,88 +29,173 @@ import org.thingsboard.server.dao.TenantEntityDao;
 import java.util.List;
 import java.util.UUID;
 
+
 /**
 
- * Persistence contract for user (see JPA/Cassandra implementations).
+ * Persistence contract for user.
+
+ *
+
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (users, credentials, and user settings).
 
  */
 
+
 public interface UserDao extends Dao<User>, TenantEntityDao<User> {
 
+    
     /**
-     * Save or update user object
+     * Saves or persists the requested data.
      *
-     * @param user the user object
-     * @return saved user entity
+     * @param tenantId tenant that owns the entity or operation
+     * @param user authenticated user performing the action
+     * @return {@link User}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     User save(TenantId tenantId, User user);
 
+    
     /**
-     * Find user by email.
+     * Finds by email.
      *
-     * @param email the email
-     * @return the user entity
+     * @param tenantId tenant that owns the entity or operation
+     * @param email email ({@link String})
+     * @return {@link User}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     User findByEmail(TenantId tenantId, String email);
 
+    
     /**
-     * Find user by tenant id and email.
+     * Finds by tenant id and email.
      *
-     * @param tenantId the tenant id
-     * @param email the email
-     * @return the user entity
+     * @param tenantId tenant that owns the entity or operation
+     * @param email email ({@link String})
+     * @return {@link User}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     User findByTenantIdAndEmail(TenantId tenantId, String email);
 
+    
     /**
-     * Find users by tenantId and page link.
+     * Finds by tenant id.
      *
-     * @param tenantId the tenantId
-     * @param pageLink the page link
-     * @return the list of user entities
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<User> findByTenantId(UUID tenantId, PageLink pageLink);
 
+    
     /**
-     * Find tenant admin users by tenantId and page link.
+     * Finds tenant admins.
      *
-     * @param tenantId the tenantId
-     * @param pageLink the page link
-     * @return the list of user entities
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<User> findTenantAdmins(UUID tenantId, PageLink pageLink);
 
+    
     /**
-     * Find customer users by tenantId, customerId and page link.
+     * Finds customer users.
      *
-     * @param tenantId the tenantId
-     * @param customerId the customerId
-     * @param pageLink the page link
-     * @return the list of user entities
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<User> findCustomerUsers(UUID tenantId, UUID customerId, PageLink pageLink);
 
+    
     /**
-     * Find users for alarm assignment by tenantId, customerId and page link.
+     * Finds users by customer ids.
      *
-     * @param tenantId the tenantId
-     * @param customerId the customerId
-     * @param pageLink the page link
-     * @return the list of user entities
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerIds customer ids ({@link List})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<User> findUsersByCustomerIds(UUID tenantId, List<CustomerId> customerIds, PageLink pageLink);
+    /**
+     * Finds all.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<User> findAll(PageLink pageLink);
+    /**
+     * Finds all by authority.
+     *
+     * @param authority authority ({@link Authority})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<User> findAllByAuthority(Authority authority, PageLink pageLink);
+    /**
+     * Finds by authority and tenants ids.
+     *
+     * @param authority authority ({@link Authority})
+     * @param tenantsIds tenants ids ({@link List})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<User> findByAuthorityAndTenantsIds(Authority authority, List<TenantId> tenantsIds, PageLink pageLink);
+    /**
+     * Finds by authority and tenant profiles ids.
+     *
+     * @param authority authority ({@link Authority})
+     * @param tenantProfilesIds tenant profiles ids ({@link List})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<User> findByAuthorityAndTenantProfilesIds(Authority authority, List<TenantProfileId> tenantProfilesIds, PageLink pageLink);
+    /**
+     * Counts tenant admins.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     int countTenantAdmins(UUID tenantId);
+    /**
+     * Finds user auth details by user id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @return {@link UserAuthDetails}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     UserAuthDetails findUserAuthDetailsByUserId(UUID tenantId, UUID userId);
+    /**
+     * Finds users by tenant id and ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userIds user ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<User> findUsersByTenantIdAndIds(UUID tenantId, List<UUID> userIds);
 

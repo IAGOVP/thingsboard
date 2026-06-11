@@ -23,6 +23,11 @@ import org.thingsboard.server.common.data.device.credentials.lwm2m.LwM2MSecurity
 public class X509LwM2MBootstrapServerCredential extends AbstractLwM2MBootstrapServerCredential {
 
     private static final long serialVersionUID = -3740860424558547405L;
+    /**
+     * Returns security mode.
+     *
+     * @return {@link LwM2MSecurityMode}
+     */
 
     @Override
     public LwM2MSecurityMode getSecurityMode() {

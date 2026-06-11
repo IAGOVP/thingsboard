@@ -25,20 +25,28 @@ import org.thingsboard.server.common.data.query.EntityDataQuery;
  */
 public interface EdqsStatsService {
 
+    /** Report added. */
     void reportAdded(ObjectType objectType);
 
+    /** Report removed. */
     void reportRemoved(ObjectType objectType);
 
+    /** Report entity data query. */
     void reportEntityDataQuery(TenantId tenantId, EntityDataQuery query, long timingNanos);
 
+    /** Report entity count query. */
     void reportEntityCountQuery(TenantId tenantId, EntityCountQuery query, long timingNanos);
 
+    /** Report edqs data query. */
     void reportEdqsDataQuery(TenantId tenantId, EntityDataQuery query, long timingNanos);
 
+    /** Report edqs count query. */
     void reportEdqsCountQuery(TenantId tenantId, EntityCountQuery query, long timingNanos);
 
+    /** Report string compressed. */
     void reportStringCompressed();
 
+    /** Report string uncompressed. */
     void reportStringUncompressed();
 
 }

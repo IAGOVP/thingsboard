@@ -24,7 +24,7 @@ import java.util.UUID;
 
 @Schema(allOf = EntityId.class)
 /**
- * Typed identifier for alarm.
+ * Typed identifier for an {@link Alarm} entity ({@link org.thingsboard.server.common.data.EntityType#ALARM}).
  */
 public class AlarmId extends UUIDBased implements EntityId {
 
@@ -34,10 +34,21 @@ public class AlarmId extends UUIDBased implements EntityId {
     public AlarmId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * From string.
+     *
+     * @param alarmId alarm id ({@link String})
+     * @return {@link AlarmId}
+     */
 
     public static AlarmId fromString(String alarmId) {
         return new AlarmId(UUID.fromString(alarmId));
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY, description = "string", example = "ALARM", allowableValues = "ALARM")
     @Override

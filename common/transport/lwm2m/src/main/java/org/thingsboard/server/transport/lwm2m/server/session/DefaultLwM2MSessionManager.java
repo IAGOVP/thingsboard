@@ -32,7 +32,7 @@ import static org.thingsboard.server.common.transport.service.DefaultTransportSe
 import static org.thingsboard.server.common.transport.service.DefaultTransportService.SUBSCRIBE_TO_RPC_ASYNC_MSG;
 
 /**
- * Default lw m2msession manager.
+ * Default {@link LwM2MSessionManager}: registration store integration and session event reporting.
  */
 @Slf4j
 @Service
@@ -53,6 +53,13 @@ public class DefaultLwM2MSessionManager implements LwM2MSessionManager {
         this.rpcHandler = rpcHandler;
         this.uplinkHandler = uplinkHandler;
     }
+    /**
+     * Register.
+     *
+     * @param sessionInfo session info
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void register(TransportProtos.SessionInfoProto sessionInfo) {
@@ -65,6 +72,13 @@ public class DefaultLwM2MSessionManager implements LwM2MSessionManager {
                 .build();
         transportService.process(msg, null);
     }
+    /**
+     * Deregister.
+     *
+     * @param sessionInfo session info
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void deregister(TransportProtos.SessionInfoProto sessionInfo) {

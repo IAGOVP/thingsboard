@@ -21,15 +21,88 @@ import static java.util.Objects.requireNonNull;
 import static org.thingsboard.server.dao.ai.AiModelCacheEvictEvent.Deleted;
 import static org.thingsboard.server.dao.ai.AiModelCacheEvictEvent.Saved;
 
+
 /**
 
- * ai model cache evict event contract.
+ * Cache eviction event published when ai model cache data changes.
+
+ *
+
+ * <p>Consumed by cache listeners to invalidate stale entries cluster-wide.
 
  */
 
+
 sealed interface AiModelCacheEvictEvent permits Saved, Deleted {
+    /**
+     * Cache key.
+     *
+     * @return {@link AiModelCacheKey}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     AiModelCacheKey cacheKey();
+
+    
+    
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+
+
+    
+    
+
+
+
+
+
+
+
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+    
+    /**
+     * Saved.
+     *
+     * @param cacheKey cache key ({@link AiModelCacheKey})
+     * @param savedModel saved model ({@link AiModel})
+     * @return the record value
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
+
+
+
+
+
+
+
+
+
+
 
     record Saved(AiModelCacheKey cacheKey, AiModel savedModel) implements AiModelCacheEvictEvent {
 
@@ -39,6 +112,66 @@ sealed interface AiModelCacheEvictEvent permits Saved, Deleted {
         }
 
     }
+
+    
+    
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+
+
+    
+    
+
+
+
+
+
+
+
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+    
+    /**
+     * Deleted.
+     *
+     * @param cacheKey cache key ({@link AiModelCacheKey})
+     * @return the record value
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
+
+
+
+
+
+
+
+
+
+
 
     record Deleted(AiModelCacheKey cacheKey) implements AiModelCacheEvictEvent {
 

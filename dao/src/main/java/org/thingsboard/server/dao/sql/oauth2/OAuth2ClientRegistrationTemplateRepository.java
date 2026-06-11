@@ -20,13 +20,26 @@ import org.thingsboard.server.dao.model.sql.OAuth2ClientRegistrationTemplateEnti
 
 import java.util.UUID;
 
+
 /**
 
- * oauth2client registration template repository contract.
+ * Spring Data JPA repository for oauth2client registration template entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
 
+
 public interface OAuth2ClientRegistrationTemplateRepository extends JpaRepository<OAuth2ClientRegistrationTemplateEntity, UUID> {
+    /**
+     * Finds by provider id.
+     *
+     * @param providerId provider id ({@link String})
+     * @return {@link OAuth2ClientRegistrationTemplateEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     OAuth2ClientRegistrationTemplateEntity findByProviderId(String providerId);
 

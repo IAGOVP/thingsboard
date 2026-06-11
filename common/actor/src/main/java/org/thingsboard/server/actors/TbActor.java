@@ -25,22 +25,26 @@ import org.thingsboard.server.common.msg.TbActorStopReason;
  */
 public interface TbActor {
 
-    /** Handle one message; return value meaning is actor-specific (often ignored). */
+    /** Handles one mailbox message; return value meaning is actor-specific (often ignored). */
     boolean process(TbActorMsg msg);
 
     /** Reference used to enqueue messages to this actor. */
     TbActorRef getActorRef();
 
+    /** Invoked once after the actor is created; override to initialize state. */
     default void init(TbActorCtx ctx) throws TbActorException {
     }
 
+    /** Invoked when the actor stops; override to release resources. */
     default void destroy(TbActorStopReason stopReason, Throwable cause) throws TbActorException {
     }
 
+    /** Defines retry behavior after {@link #init} failure. */
     default InitFailureStrategy onInitFailure(int attempt, Throwable t) {
         return InitFailureStrategy.retryWithDelay(5000L * attempt);
     }
 
+    /** Defines behavior after an uncaught error in {@link #process}. */
     default ProcessFailureStrategy onProcessFailure(TbActorMsg msg, Throwable t) {
         if (t instanceof Error) {
             return ProcessFailureStrategy.stop();

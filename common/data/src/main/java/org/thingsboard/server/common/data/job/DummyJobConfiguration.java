@@ -47,6 +47,11 @@ public class DummyJobConfiguration extends JobConfiguration {
 
     private String generalError;
     private int submittedTasksBeforeGeneralError;
+    /**
+     * Returns type.
+     *
+     * @return {@link JobType}
+     */
 
     @Override
     public JobType getType() {

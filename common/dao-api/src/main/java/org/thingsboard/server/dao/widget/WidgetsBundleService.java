@@ -31,30 +31,114 @@ import java.util.stream.Stream;
  */
 public interface WidgetsBundleService extends EntityDaoService {
 
+    /**
+     * Finds widgets bundle by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetsBundleId widgets bundle id ({@link WidgetsBundleId})
+     * @return {@link WidgetsBundle}
+     */
     WidgetsBundle findWidgetsBundleById(TenantId tenantId, WidgetsBundleId widgetsBundleId);
 
+    /**
+     * Saves or persists widgets bundle.
+     *
+     * @param widgetsBundle widgets bundle ({@link WidgetsBundle})
+     * @return {@link WidgetsBundle}
+     */
     WidgetsBundle saveWidgetsBundle(WidgetsBundle widgetsBundle);
 
+    /**
+     * Deletes widgets bundle.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetsBundleId widgets bundle id ({@link WidgetsBundleId})
+     */
     void deleteWidgetsBundle(TenantId tenantId, WidgetsBundleId widgetsBundleId);
 
+    /**
+     * Finds widgets bundle by tenant id and alias.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alias alias ({@link String})
+     * @return {@link WidgetsBundle}
+     */
     WidgetsBundle findWidgetsBundleByTenantIdAndAlias(TenantId tenantId, String alias);
 
+    /**
+     * Finds system widgets bundles by page link.
+     *
+     * @param widgetsBundleFilter widgets bundle filter ({@link WidgetsBundleFilter})
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<WidgetsBundle> findSystemWidgetsBundlesByPageLink(WidgetsBundleFilter widgetsBundleFilter, PageLink pageLink);
 
+    /**
+     * Finds system widgets bundles.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link List}
+     */
     List<WidgetsBundle> findSystemWidgetsBundles(TenantId tenantId);
 
+    /**
+     * Finds tenant widgets bundles by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<WidgetsBundle> findTenantWidgetsBundlesByTenantId(TenantId tenantId, PageLink pageLink);
 
+    /**
+     * Finds all tenant widgets bundles by tenant id and page link.
+     *
+     * @param widgetsBundleFilter widgets bundle filter ({@link WidgetsBundleFilter})
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<WidgetsBundle> findAllTenantWidgetsBundlesByTenantIdAndPageLink(WidgetsBundleFilter widgetsBundleFilter, PageLink pageLink);
 
+    /**
+     * Finds tenant widgets bundles by tenant id and page link.
+     *
+     * @param widgetsBundleFilter widgets bundle filter ({@link WidgetsBundleFilter})
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<WidgetsBundle> findTenantWidgetsBundlesByTenantIdAndPageLink(WidgetsBundleFilter widgetsBundleFilter, PageLink pageLink);
 
+    /**
+     * Finds all tenant widgets bundles by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link List}
+     */
     List<WidgetsBundle> findAllTenantWidgetsBundlesByTenantId(TenantId tenantId);
 
+    /**
+     * Deletes widgets bundles by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     */
     void deleteWidgetsBundlesByTenantId(TenantId tenantId);
 
+    /**
+     * Updates system widgets.
+     *
+     * @param bundles bundles ({@link Stream})
+     * @param widgets widgets ({@link Stream})
+     */
     void updateSystemWidgets(Stream<String> bundles, Stream<String> widgets);
 
+    /**
+     * Finds system or tenant widgets bundles by ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetsBundleIds widgets bundle ids ({@link List})
+     * @return {@link List}
+     */
     List<WidgetsBundle> findSystemOrTenantWidgetsBundlesByIds(TenantId tenantId, List<WidgetsBundleId> widgetsBundleIds);
 
 }

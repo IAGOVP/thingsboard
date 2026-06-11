@@ -21,8 +21,11 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.Map;
 /**
- * Oauth2configuration.
+ * Spring configuration for oauth2uration DAO beans.
+ *
+ * <p>Registers entity managers, repositories, and datasource routing.
  */
+
 
 @Configuration
 @ConfigurationProperties(prefix = "security.oauth2")

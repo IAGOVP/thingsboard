@@ -45,6 +45,11 @@ import java.io.Serializable;
  * alarm schedule contract.
  */
 public interface AlarmSchedule extends Serializable {
+    /**
+     * Returns type.
+     *
+     * @return {@link AlarmScheduleType}
+     */
 
     @JsonIgnore
     AlarmScheduleType getType();

@@ -41,8 +41,11 @@ import static org.thingsboard.server.dao.model.ModelConstants.EDGE_SECRET_PROPER
 import static org.thingsboard.server.dao.model.ModelConstants.EDGE_TENANT_ID_PROPERTY;
 import static org.thingsboard.server.dao.model.ModelConstants.EDGE_TYPE_PROPERTY;
 /**
- * Abstract edge entity.
+ * JPA/Cassandra row model for abstract edge.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -112,6 +115,12 @@ public abstract class AbstractEdgeEntity<T extends Edge> extends BaseVersionedEn
         this.secret = edgeEntity.getSecret();
         this.additionalInfo = edgeEntity.getAdditionalInfo();
     }
+    /**
+     * To edge.
+     *
+     * @return {@link Edge}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected Edge toEdge() {
         Edge edge = new Edge(new EdgeId(getUuid()));

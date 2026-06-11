@@ -23,10 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.thingsboard.server.edqs.state.EdqsStateService;
 
 /**
- * HTTP readiness probe for EDQS. Business traffic is Kafka-based ({@link org.thingsboard.server.edqs.processor.EdqsProcessor}).
+ * HTTP readiness probe for the EDQS microservice.
  *
- * @see <a href="../../../../../../HTTP_ENDPOINTS.md">HTTP_ENDPOINTS.md</a>
+ * <p>Business entity queries are served over Kafka ({@link org.thingsboard.server.edqs.processor.EdqsProcessor}), not REST. This controller exposes {@code GET /api/edqs/ready} for Kubernetes/Docker health checks.
  */
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/edqs")
@@ -35,9 +36,12 @@ public class EdqsController {
     private final EdqsStateService edqsStateService;
 
     /**
-     * Readiness check used by Kubernetes/Docker health probes.
+     * Returns true when all assigned Kafka partitions have been restored and the index is queryable.
      *
-     * @return 200 when {@link EdqsStateService#isReady()} (state replay finished); 400 otherwise
+     * <p>HTTP: GET {@code /api/edqs/ready}
+     *
+     * @return {@link ResponseEntity} — 200 when ready, 400 while state is still replaying
+     * @throws Exception if an unexpected error occurs during processing
      */
     @GetMapping("/ready")
     public ResponseEntity<Void> isReady() {

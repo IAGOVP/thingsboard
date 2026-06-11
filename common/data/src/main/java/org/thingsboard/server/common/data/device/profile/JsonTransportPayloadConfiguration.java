@@ -25,6 +25,11 @@ import org.thingsboard.server.common.data.TransportPayloadType;
  * Configuration for json transport payloaduration.
  */
 public class JsonTransportPayloadConfiguration implements TransportPayloadTypeConfiguration {
+    /**
+     * Returns transport payload type.
+     *
+     * @return {@link TransportPayloadType}
+     */
 
     @Override
     public TransportPayloadType getTransportPayloadType() {

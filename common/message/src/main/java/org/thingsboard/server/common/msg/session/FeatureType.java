@@ -16,8 +16,9 @@
 package org.thingsboard.server.common.msg.session;
 
 /**
- * feature type values.
+ * Enumerates feature type values for message routing or payloads.
  */
+
 public enum FeatureType {
     ATTRIBUTES, TELEMETRY, RPC, CLAIM, PROVISION
 }

@@ -21,11 +21,13 @@ import org.thingsboard.server.common.data.id.EdgeId;
 import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.msg.MsgType;
 import org.thingsboard.server.common.msg.ToDeviceActorNotificationMsg;
+/**
+ * Internal actor or queue message: device edge update msg.
+ *
+ * <p>Serialized between tb-core, rule-engine, transport, and edge services.
+ */
 
 @Data
-/**
- * Message: device edge update msg.
- */
 public class DeviceEdgeUpdateMsg implements ToDeviceActorNotificationMsg {
 
     private static final long serialVersionUID = 4679029228395462172L;

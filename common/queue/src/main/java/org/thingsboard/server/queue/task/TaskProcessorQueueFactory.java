@@ -22,8 +22,9 @@ import org.thingsboard.server.queue.TbQueueConsumer;
 import org.thingsboard.server.queue.TbQueueProducer;
 import org.thingsboard.server.queue.common.TbProtoQueueMsg;
 
+
 /**
- * task processor queue factory contract.
+ * Factory for task processor queue consumers and producers.
  */
 public interface TaskProcessorQueueFactory {
 

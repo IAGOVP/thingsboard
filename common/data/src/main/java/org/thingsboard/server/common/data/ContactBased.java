@@ -70,66 +70,146 @@ public abstract class ContactBased<I extends UUIDBased> extends BaseDataWithAddi
         this.phone = contact.getPhone();
         this.email = contact.getEmail();
     }
+    /**
+     * Returns country.
+     *
+     * @return {@link String}
+     */
 
     public String getCountry() {
         return country;
     }
+    /**
+     * Set country.
+     *
+     * @param country country ({@link String})
+     */
 
     public void setCountry(String country) {
         this.country = country;
     }
+    /**
+     * Returns state.
+     *
+     * @return {@link String}
+     */
 
     public String getState() {
         return state;
     }
+    /**
+     * Set state.
+     *
+     * @param state state ({@link String})
+     */
 
     public void setState(String state) {
         this.state = state;
     }
+    /**
+     * Returns city.
+     *
+     * @return {@link String}
+     */
 
     public String getCity() {
         return city;
     }
+    /**
+     * Set city.
+     *
+     * @param city city ({@link String})
+     */
 
     public void setCity(String city) {
         this.city = city;
     }
+    /**
+     * Returns address.
+     *
+     * @return {@link String}
+     */
 
     public String getAddress() {
         return address;
     }
+    /**
+     * Set address.
+     *
+     * @param address address ({@link String})
+     */
 
     public void setAddress(String address) {
         this.address = address;
     }
+    /**
+     * Returns address2.
+     *
+     * @return {@link String}
+     */
 
     public String getAddress2() {
         return address2;
     }
+    /**
+     * Set address2.
+     *
+     * @param address2 address2 ({@link String})
+     */
 
     public void setAddress2(String address2) {
         this.address2 = address2;
     }
+    /**
+     * Returns zip.
+     *
+     * @return {@link String}
+     */
 
     public String getZip() {
         return zip;
     }
+    /**
+     * Set zip.
+     *
+     * @param zip zip ({@link String})
+     */
 
     public void setZip(String zip) {
         this.zip = zip;
     }
+    /**
+     * Returns phone.
+     *
+     * @return {@link String}
+     */
 
     public String getPhone() {
         return phone;
     }
+    /**
+     * Set phone.
+     *
+     * @param phone phone ({@link String})
+     */
 
     public void setPhone(String phone) {
         this.phone = phone;
     }
+    /**
+     * Returns email.
+     *
+     * @return {@link String}
+     */
 
     public String getEmail() {
         return email;
     }
+    /**
+     * Set email.
+     *
+     * @param email email ({@link String})
+     */
 
     public void setEmail(String email) {
         this.email = email;

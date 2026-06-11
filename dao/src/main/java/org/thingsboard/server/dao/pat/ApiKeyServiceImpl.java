@@ -49,8 +49,11 @@ import static org.thingsboard.server.dao.service.Validator.validateId;
 import static org.thingsboard.server.dao.user.UserServiceImpl.INCORRECT_TENANT_ID;
 import static org.thingsboard.server.dao.user.UserServiceImpl.INCORRECT_USER_ID;
 /**
- * Spring service implementing api key API.
+ * Spring {@code @Service} implementing the api key DAO API.
+ *
+ * <p>Delegates to {@code *Dao} implementations and manages cache eviction (personal access tokens (API keys)).
  */
+
 
 @Slf4j
 @Service
@@ -71,11 +74,15 @@ public class ApiKeyServiceImpl extends AbstractCachedEntityService<ApiKeyCacheKe
     @Value("${security.api_key.value_bytes_size:64}")
     private int valueBytesSize;
 
+    
     /**
-
-     * Handle evict event.
-
+     * Handles evict event.
+     *
+     * @param event event ({@link ApiKeyEvictEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @TransactionalEventListener
@@ -83,22 +90,34 @@ public class ApiKeyServiceImpl extends AbstractCachedEntityService<ApiKeyCacheKe
         cache.evict(ApiKeyCacheKey.of(event.value()));
     }
 
+    
     /**
-
-     * Persists api key.
-
+     * Saves or persists api key.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param apiKeyInfo api key info ({@link ApiKeyInfo})
+     * @return {@link ApiKey}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ApiKey saveApiKey(TenantId tenantId, ApiKeyInfo apiKeyInfo) {
         return saveApiKey(tenantId, apiKeyInfo, null, true);
     }
 
+    
     /**
-
-     * Persists api key.
-
+     * Saves or persists api key.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param apiKeyInfo api key info ({@link ApiKeyInfo})
+     * @param value value ({@link String})
+     * @param doValidate do validate
+     * @return {@link ApiKey}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ApiKey saveApiKey(TenantId tenantId, ApiKeyInfo apiKeyInfo, String value, boolean doValidate) {
@@ -126,11 +145,16 @@ public class ApiKeyServiceImpl extends AbstractCachedEntityService<ApiKeyCacheKe
         }
     }
 
+    
     /**
-
-     * Loads api key by id.
-
+     * Finds api key by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param apiKeyId api key id ({@link ApiKeyId})
+     * @return {@link ApiKey}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ApiKey findApiKeyById(TenantId tenantId, ApiKeyId apiKeyId) {
@@ -139,11 +163,17 @@ public class ApiKeyServiceImpl extends AbstractCachedEntityService<ApiKeyCacheKe
         return apiKeyDao.findById(tenantId, apiKeyId.getId());
     }
 
+    
     /**
-
-     * Loads api keys by user id.
-
+     * Finds api keys by user id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<ApiKeyInfo> findApiKeysByUserId(TenantId tenantId, UserId userId, PageLink pageLink) {
@@ -152,11 +182,16 @@ public class ApiKeyServiceImpl extends AbstractCachedEntityService<ApiKeyCacheKe
         return apiKeyInfoDao.findByUserId(tenantId, userId, pageLink);
     }
 
+    
     /**
-
-     * Loads api keys by user id.
-
+     * Finds api keys by user id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<ApiKey> findApiKeysByUserId(TenantId tenantId, UserId userId) {
@@ -165,22 +200,32 @@ public class ApiKeyServiceImpl extends AbstractCachedEntityService<ApiKeyCacheKe
         return apiKeyDao.findByTenantIdAndUserId(tenantId, userId);
     }
 
+    
     /**
-
-     * Loads entity.
-
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findApiKeyById(tenantId, new ApiKeyId(entityId.getId())));
     }
 
+    
     /**
-
-     * Loads entity async.
-
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
@@ -188,11 +233,17 @@ public class ApiKeyServiceImpl extends AbstractCachedEntityService<ApiKeyCacheKe
                 .transform(Optional::ofNullable, directExecutor());
     }
 
+    
     /**
-
-     * Removes api key.
-
+     * Deletes api key.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param apiKey api key ({@link ApiKey})
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteApiKey(TenantId tenantId, ApiKey apiKey, boolean force) {
@@ -203,11 +254,17 @@ public class ApiKeyServiceImpl extends AbstractCachedEntityService<ApiKeyCacheKe
         eventPublisher.publishEvent(DeleteEntityEvent.builder().tenantId(tenantId).entityId(apiKey.getId()).build());
     }
 
+    
     /**
-
-     * Removes entity.
-
+     * Deletes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteEntity(TenantId tenantId, EntityId id, boolean force) {
@@ -222,11 +279,15 @@ public class ApiKeyServiceImpl extends AbstractCachedEntityService<ApiKeyCacheKe
         deleteApiKey(tenantId, apiKey, force);
     }
 
+    
     /**
-
-     * Removes by tenant id.
-
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteByTenantId(TenantId tenantId) {
@@ -236,11 +297,16 @@ public class ApiKeyServiceImpl extends AbstractCachedEntityService<ApiKeyCacheKe
         values.forEach(value -> publishEvictEvent(new ApiKeyEvictEvent(value)));
     }
 
+    
     /**
-
-     * Removes by user id.
-
+     * Deletes by user id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteByUserId(TenantId tenantId, UserId userId) {
@@ -250,11 +316,16 @@ public class ApiKeyServiceImpl extends AbstractCachedEntityService<ApiKeyCacheKe
         values.forEach(value -> publishEvictEvent(new ApiKeyEvictEvent(value)));
     }
 
+    
     /**
-
-     * Loads api keys by tenant id.
-
+     * Finds api keys by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<ApiKey> findApiKeysByTenantId(TenantId tenantId, PageLink pageLink) {
@@ -263,11 +334,15 @@ public class ApiKeyServiceImpl extends AbstractCachedEntityService<ApiKeyCacheKe
         return apiKeyDao.findByTenantId(tenantId, pageLink);
     }
 
+    
     /**
-
-     * Loads api key by value.
-
+     * Finds api key by value.
+     *
+     * @param value value ({@link String})
+     * @return {@link ApiKey}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ApiKey findApiKeyByValue(String value) {
@@ -280,11 +355,14 @@ public class ApiKeyServiceImpl extends AbstractCachedEntityService<ApiKeyCacheKe
         return prefix + StringUtils.generateSafeToken(Math.min(valueBytesSize, MAX_API_KEY_VALUE_LENGTH));
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

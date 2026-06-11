@@ -45,8 +45,11 @@ import org.thingsboard.server.dao.util.mapping.JsonConverter;
 
 import java.util.UUID;
 /**
- * Device profile entity.
+ * JPA/Cassandra row model for device profile.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -149,6 +152,12 @@ public final class DeviceProfileEntity extends BaseVersionedEntity<DeviceProfile
             this.externalId = deviceProfile.getExternalId().getId();
         }
     }
+    /**
+     * To data.
+     *
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public DeviceProfile toData() {

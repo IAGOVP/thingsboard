@@ -35,7 +35,11 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode(callSuper = true)
 @JsonPropertyOrder({"id", "createdTime", "tenantId", "title", "name", "image", "mobileHide", "mobileOrder", "assignedCustomers", "configuration", "resources", "version"})
 /**
- * Dashboard.
+ * Visual dashboard definition with widget layout and entity aliases.
+ *
+ * <p>Extends {@link DashboardInfo} with full {@code configuration} JSON (widgets, layouts,
+ * settings) and optional {@code resources} for export/import. Assigned to customers for shared
+ * access. Versioned for Git-based sync. REST: {@code /api/dashboard}.
  */
 public class Dashboard extends DashboardInfo implements ExportableEntity<DashboardId> {
 
@@ -69,6 +73,11 @@ public class Dashboard extends DashboardInfo implements ExportableEntity<Dashboa
         this.externalId = dashboard.getExternalId();
         this.resources = dashboard.getResources() != null ? new ArrayList<>(dashboard.getResources()) : null;
     }
+    /**
+     * Returns configuration.
+     *
+     * @return {@link JsonNode}
+     */
 
     @Schema(description = "JSON object with main configuration of the dashboard: layouts, widgets, aliases, etc. " +
                           "The JSON structure of the dashboard configuration is quite complex. " +
@@ -77,15 +86,30 @@ public class Dashboard extends DashboardInfo implements ExportableEntity<Dashboa
     public JsonNode getConfiguration() {
         return configuration;
     }
+    /**
+     * Set configuration.
+     *
+     * @param configuration configuration ({@link JsonNode})
+     */
 
     public void setConfiguration(JsonNode configuration) {
         this.configuration = configuration;
     }
+    /**
+     * Returns entity aliases config.
+     *
+     * @return {@link List}
+     */
 
     @JsonIgnore
     public List<ObjectNode> getEntityAliasesConfig() {
         return getChildObjects("entityAliases");
     }
+    /**
+     * Returns widgets config.
+     *
+     * @return {@link List}
+     */
 
     @JsonIgnore
     public List<ObjectNode> getWidgetsConfig() {

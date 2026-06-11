@@ -20,12 +20,26 @@ import org.thingsboard.server.transport.lwm2m.server.model.LwM2MModelConfig;
 import java.util.List;
 
 /**
- * tb lw m2mmodel config store contract.
+ * tb lw m2mmodel config store contract (LwM2M transport and object model (ThingsBoard common module)).
  */
 public interface TbLwM2MModelConfigStore {
     List<LwM2MModelConfig> getAll();
 
+    /**
+     * Put.
+     *
+     * @param modelConfig model config ({@link LwM2MModelConfig})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void put(LwM2MModelConfig modelConfig);
 
+    /**
+     * Removes the requested data.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void remove(String endpoint);
 }

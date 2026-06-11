@@ -34,11 +34,21 @@ public class LifeCycleEventFilter implements EventFilter {
     protected String status;
     @Schema(description = "The case insensitive 'contains' filter based on error message", example = "not present in the DB")
     protected String errorStr;
+    /**
+     * Returns event type.
+     *
+     * @return {@link EventType}
+     */
 
     @Override
     public EventType getEventType() {
         return EventType.LC_EVENT;
     }
+    /**
+     * Is not empty.
+     *
+     * @return the boolean result
+     */
 
     @Override
     public boolean isNotEmpty() {

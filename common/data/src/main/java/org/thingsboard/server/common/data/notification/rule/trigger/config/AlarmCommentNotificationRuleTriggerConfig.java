@@ -50,6 +50,11 @@ public class AlarmCommentNotificationRuleTriggerConfig implements NotificationRu
     private boolean onlyUserComments;
     @Schema
     private boolean notifyOnCommentUpdate;
+    /**
+     * Returns trigger type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     */
 
     @Override
     public NotificationRuleTriggerType getTriggerType() {

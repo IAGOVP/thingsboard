@@ -22,6 +22,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * Any time schedule.
  */
 public class AnyTimeSchedule implements AlarmSchedule {
+    /**
+     * Returns type.
+     *
+     * @return {@link AlarmScheduleType}
+     */
 
     @Override
     public AlarmScheduleType getType() {

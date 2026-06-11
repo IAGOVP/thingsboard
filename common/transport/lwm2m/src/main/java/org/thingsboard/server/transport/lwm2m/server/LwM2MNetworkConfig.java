@@ -29,10 +29,20 @@ import static org.eclipse.californium.core.config.CoapConfig.DEFAULT_BLOCKWISE_S
  * Configuration for lw m2mnetwork.
  */
 public class LwM2MNetworkConfig {
-
+    /**
+     * Returns coap config.
+     *
+     * @param coapConfig coap config ({@link Configuration})
+     * @param serverPortNoSec server port no sec ({@link Integer})
+     * @param serverSecurePort server secure port ({@link Integer})
+     * @param config config ({@link LwM2MTransportServerConfig})
+     * @return {@link Configuration}
+     * @throws Exception on processing failure
+     */
     public static Configuration getCoapConfig(Configuration coapConfig, Integer serverPortNoSec, Integer serverSecurePort, LwM2MTransportServerConfig config) {
         coapConfig.set(CoapConfig.COAP_PORT, serverPortNoSec);
         coapConfig.set(CoapConfig.COAP_SECURE_PORT, serverSecurePort);
+
         /**
          Property to indicate if the response should always include the Block2 option \
          when client request early blockwise negociation but the response can be sent on one packet.
@@ -42,6 +52,7 @@ public class LwM2MNetworkConfig {
          or adapt the block size when receiving a 4.13 Entity too large response code
          */
         coapConfig.set(CoapConfig.BLOCKWISE_STRICT_BLOCK2_OPTION, true);
+
         /**
          Property to indicate if the response should always include the Block2 option \
          when client request early blockwise negociation but the response can be sent on one packet.
@@ -49,6 +60,7 @@ public class LwM2MNetworkConfig {
          - value of true indicate that the server will response with block2 option event if no further blocks are required.
          */
         coapConfig.set(CoapConfig.BLOCKWISE_ENTITY_TOO_LARGE_AUTO_FAILOVER, true);
+
         /**
          * The maximum amount of time (in milliseconds) allowed between
          * transfers of individual blocks in a blockwise transfer before the
@@ -58,6 +70,7 @@ public class LwM2MNetworkConfig {
          * {@link NetworkConfigDefaults#DEFAULT_BLOCKWISE_STATUS_LIFETIME} = 5 * 60 * 1000; // 5 mins [ms].
          */
         coapConfig.set(CoapConfig.BLOCKWISE_STATUS_LIFETIME, DEFAULT_BLOCKWISE_STATUS_LIFETIME_IN_SECONDS, TimeUnit.SECONDS);
+
         /**
          !!! REQUEST_ENTITY_TOO_LARGE CODE=4.13
          The maximum size of a resource body (in bytes) that will be accepted
@@ -66,13 +79,14 @@ public class LwM2MNetworkConfig {
          This option serves as a safeguard against excessive memory
          consumption when many resources contain large bodies that cannot be
          transferred in a single CoAP message. This option has no impact on
-         *manually* managed blockwise transfers in which the blocks are handled individually.
+         * manually* managed blockwise transfers in which the blocks are handled individually.
          Note that this option does not prevent local clients or resource
          implementations from sending large bodies as part of a request or response to a peer.
          The default value of this property is DEFAULT_MAX_RESOURCE_BODY_SIZE = 8192
          A value of {@code 0} turns off transparent handling of blockwise transfers altogether.
          */
         coapConfig.set(CoapConfig.MAX_RESOURCE_BODY_SIZE, 256 * 1024 * 1024);
+
         /**
          The default DTLS response matcher.
          Supported values are STRICT, RELAXED, or PRINCIPAL.
@@ -84,12 +98,14 @@ public class LwM2MNetworkConfig {
          - false, without
          */
         coapConfig.set(CoapConfig.RESPONSE_MATCHING, CoapConfig.MatcherMode.RELAXED);
+
         /**
          https://tools.ietf.org/html/rfc7959#section-2.9.3
          The block size (number of bytes) to use when doing a blockwise transfer. \
          This value serves as the upper limit for block size in blockwise transfers
          */
         coapConfig.set(CoapConfig.PREFERRED_BLOCK_SIZE, 1024);
+
         /**
          The maximum payload size (in bytes) that can be transferred in a
          single message, i.e. without requiring a blockwise transfer.

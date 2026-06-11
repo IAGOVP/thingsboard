@@ -28,12 +28,19 @@ import java.util.Collection;
 import java.util.Random;
 
 /**
- * Lw m2mjson adaptor.
+ * JSON serialization adaptor for LwM2M observe/read results sent to the rule engine.
  */
 @Slf4j
 @Component("LwM2MJsonAdaptor")
 @TbLwM2mTransportComponent
 public class LwM2MJsonAdaptor implements LwM2MTransportAdaptor  {
+    /**
+     * Convert to post telemetry.
+     *
+     * @param jsonElement json element ({@link JsonElement})
+     * @return the TransportProtos.PostTelemetryMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public TransportProtos.PostTelemetryMsg convertToPostTelemetry(JsonElement jsonElement) throws AdaptorException {
@@ -43,6 +50,13 @@ public class LwM2MJsonAdaptor implements LwM2MTransportAdaptor  {
             throw new AdaptorException(ex);
         }
     }
+    /**
+     * Convert to post attributes.
+     *
+     * @param jsonElement json element ({@link JsonElement})
+     * @return the TransportProtos.PostAttributeMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public TransportProtos.PostAttributeMsg convertToPostAttributes(JsonElement jsonElement) throws AdaptorException {
@@ -52,6 +66,14 @@ public class LwM2MJsonAdaptor implements LwM2MTransportAdaptor  {
             throw new AdaptorException(ex);
         }
     }
+    /**
+     * Convert to get attributes.
+     *
+     * @param clientKeys client keys ({@link Collection})
+     * @param sharedKeys shared keys ({@link Collection})
+     * @return the TransportProtos.GetAttributeRequestMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public TransportProtos.GetAttributeRequestMsg convertToGetAttributes(Collection<String> clientKeys, Collection<String> sharedKeys) throws AdaptorException {

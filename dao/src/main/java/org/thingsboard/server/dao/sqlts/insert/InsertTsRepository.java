@@ -19,13 +19,26 @@ import org.thingsboard.server.dao.model.sql.AbstractTsKvEntity;
 
 import java.util.List;
 
+
 /**
 
- * insert ts repository contract.
+ * Spring Data JPA repository for insert ts entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
 
+
 public interface InsertTsRepository<T extends AbstractTsKvEntity> {
+    /**
+     * Saves or updates the requested data.
+     *
+     * @param entities entities ({@link List})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void saveOrUpdate(List<T> entities);
 

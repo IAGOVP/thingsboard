@@ -70,8 +70,14 @@ import static java.util.function.Predicate.not;
 import static org.thingsboard.common.util.JacksonUtil.newObjectNode;
 import static org.thingsboard.server.dao.DaoUtil.toUUIDs;
 /**
- * Default notifications.
+ * Spring component for default notifications (notification templates, targets, rules, and delivery requests).
  */
+
+
+
+
+
+
 
 @Service
 @RequiredArgsConstructor
@@ -428,6 +434,15 @@ public class DefaultNotifications {
 
     private final NotificationTemplateService templateService;
     private final NotificationRuleService ruleService;
+    /**
+     * Creates the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param defaultNotification default notification ({@link DefaultNotification})
+     * @param targets targets
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public final void create(TenantId tenantId, DefaultNotification defaultNotification, NotificationTargetId... targets) {
         NotificationTemplate template = defaultNotification.toTemplate();
@@ -440,6 +455,19 @@ public class DefaultNotifications {
             ruleService.saveNotificationRule(tenantId, rule);
         }
     }
+    
+    
+    
+    
+    
+    /**
+     * Spring component for default notification (notification templates, targets, rules, and delivery requests).
+     */
+
+
+
+
+
 
     @Data
     @Builder(toBuilder = true)
@@ -457,6 +485,12 @@ public class DefaultNotifications {
         private final DefaultEmailTemplate emailTemplate;
 
         private final DefaultRule rule;
+        /**
+         * To template.
+         *
+         * @return {@link NotificationTemplate}
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         public NotificationTemplate toTemplate() {
             NotificationTemplate template = new NotificationTemplate();
@@ -503,6 +537,14 @@ public class DefaultNotifications {
             template.setConfiguration(templateConfig);
             return template;
         }
+        /**
+         * To rule.
+         *
+         * @param templateId template id ({@link NotificationTemplateId})
+         * @param targets targets
+         * @return {@link NotificationRule}
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         public NotificationRule toRule(NotificationTemplateId templateId, NotificationTargetId... targets) {
             DefaultRule defaultRule = this.rule;
@@ -528,6 +570,19 @@ public class DefaultNotifications {
         }
 
     }
+    
+    
+    
+    
+    
+    /**
+     * Spring component for default email template (notification templates, targets, rules, and delivery requests).
+     */
+
+
+
+
+
 
     @Data
     @Builder(toBuilder = true)
@@ -535,6 +590,19 @@ public class DefaultNotifications {
         private final String subject;
         private final String body;
     }
+    
+    
+    
+    
+    
+    /**
+     * Spring component for default rule (notification templates, targets, rules, and delivery requests).
+     */
+
+
+
+
+
 
     @Data
     @Builder(toBuilder = true)

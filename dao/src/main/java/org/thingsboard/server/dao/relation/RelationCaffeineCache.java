@@ -21,8 +21,11 @@ import org.springframework.stereotype.Service;
 import org.thingsboard.server.cache.CaffeineTbTransactionalCache;
 import org.thingsboard.server.common.data.CacheConstants;
 /**
- * Relation caffeine cache.
+ * in-process Caffeine cache for relation (entity-to-entity relation graph persistence).
+ *
+ * <p>Implements {@link org.thingsboard.server.cache.TbTransactionalCache} with DAO-specific key types.
  */
+
 
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "caffeine", matchIfMissing = true)
 @Service("RelationCache")

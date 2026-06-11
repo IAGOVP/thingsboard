@@ -31,8 +31,11 @@ import org.thingsboard.server.dao.tenant.TenantService;
 
 import static org.thingsboard.server.dao.model.ModelConstants.NULL_UUID;
 /**
- * Asset data validator.
+ * Validates asset entities before persistence.
+ *
+ * <p>Enforces constraints, uniqueness, and referential integrity at the DAO layer.
  */
+
 
 @Component
 public class AssetDataValidator extends DataValidator<Asset> {
@@ -47,22 +50,32 @@ public class AssetDataValidator extends DataValidator<Asset> {
     @Autowired
     private CustomerDao customerDao;
 
+    
     /**
-
-     * Validate create.
-
+     * Validates create.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param asset asset ({@link Asset})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateCreate(TenantId tenantId, Asset asset) {
         validateNumberOfEntitiesPerTenant(tenantId, EntityType.ASSET);
     }
 
+    
     /**
-
-     * Validate update.
-
+     * Validates update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param asset asset ({@link Asset})
+     * @return {@link Asset}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected Asset validateUpdate(TenantId tenantId, Asset asset) {
@@ -73,11 +86,16 @@ public class AssetDataValidator extends DataValidator<Asset> {
         return old;
     }
 
+    
     /**
-
-     * Validate data impl.
-
+     * Validates data impl.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param asset asset ({@link Asset})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateDataImpl(TenantId tenantId, Asset asset) {

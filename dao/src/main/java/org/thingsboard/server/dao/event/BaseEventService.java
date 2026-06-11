@@ -44,7 +44,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 /**
  * Default DAO-layer service implementation for event.
+ *
+ * <p>Coordinates validation, caching, cluster events, and {@code *Dao} persistence (lifecycle and debug event persistence).
  */
+
 
 @Service
 @Slf4j
@@ -59,11 +62,15 @@ public class BaseEventService implements EventService {
     @Autowired
     private DataValidator<Event> eventValidator;
 
+    
     /**
-
-     * Persists async.
-
+     * Saves or persists async.
+     *
+     * @param event event ({@link Event})
+     * @return future completing with {@link Void}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<Void> saveAsync(Event event) {
@@ -107,77 +114,124 @@ public class BaseEventService implements EventService {
         setter.accept(event, str);
     }
 
+    
     /**
-
-     * Loads events.
-
+     * Finds events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param eventType event type ({@link EventType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EventInfo> findEvents(TenantId tenantId, EntityId entityId, EventType eventType, TimePageLink pageLink) {
         return convert(entityId.getEntityType(), eventDao.findEvents(tenantId.getId(), entityId.getId(), eventType, pageLink));
     }
 
+    
     /**
-
-     * Loads latest events.
-
+     * Finds latest events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param eventType event type ({@link EventType})
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<EventInfo> findLatestEvents(TenantId tenantId, EntityId entityId, EventType eventType, int limit) {
         return convert(entityId.getEntityType(), eventDao.findLatestEvents(tenantId.getId(), entityId.getId(), eventType, limit));
     }
 
+    
     /**
-
-     * Loads latest debug rule node in event.
-
+     * Finds latest debug rule node in event.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link EventInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EventInfo findLatestDebugRuleNodeInEvent(TenantId tenantId, EntityId entityId) {
         return convert(entityId.getEntityType(), eventDao.findLatestDebugRuleNodeInEvent(tenantId.getId(), entityId.getId()));
     }
 
+    
     /**
-
-     * Loads events by filter.
-
+     * Finds events by filter.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param eventFilter event filter ({@link EventFilter})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EventInfo> findEventsByFilter(TenantId tenantId, EntityId entityId, EventFilter eventFilter, TimePageLink pageLink) {
         return convert(entityId.getEntityType(), eventDao.findEventByFilter(tenantId.getId(), entityId.getId(), eventFilter, pageLink));
     }
 
+    
     /**
-
      * Removes events.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void removeEvents(TenantId tenantId, EntityId entityId) {
         removeEvents(tenantId, entityId, null, null);
     }
 
+    
     /**
-
      * Removes events.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @param types types
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void removeEvents(TenantId tenantId, EntityId entityId, Long startTime, Long endTime, EventType... types) {
         eventDao.removeEvents(tenantId.getId(), entityId.getId(), startTime, endTime, types);
     }
 
+    
     /**
-
      * Removes events.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param eventFilter event filter ({@link EventFilter})
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void removeEvents(TenantId tenantId, EntityId entityId, EventFilter eventFilter, Long startTime, Long endTime) {
@@ -188,11 +242,17 @@ public class BaseEventService implements EventService {
         }
     }
 
+    
     /**
-
      * Cleanup events.
-
+     *
+     * @param regularEventExpTs regular event exp ts
+     * @param debugEventExpTs debug event exp ts
+     * @param cleanupDb cleanup db
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void cleanupEvents(long regularEventExpTs, long debugEventExpTs, boolean cleanupDb) {

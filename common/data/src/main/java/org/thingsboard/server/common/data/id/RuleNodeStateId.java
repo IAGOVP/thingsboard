@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.UUID;
 
 /**
- * Typed identifier for rule node state.
+ * Typed identifier for persisted rule node state.
  */
 public class RuleNodeStateId extends UUIDBased {
 
@@ -31,6 +31,12 @@ public class RuleNodeStateId extends UUIDBased {
     public RuleNodeStateId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * From string.
+     *
+     * @param eventId event id ({@link String})
+     * @return {@link RuleNodeStateId}
+     */
 
     public static RuleNodeStateId fromString(String eventId) {
         return new RuleNodeStateId(UUID.fromString(eventId));

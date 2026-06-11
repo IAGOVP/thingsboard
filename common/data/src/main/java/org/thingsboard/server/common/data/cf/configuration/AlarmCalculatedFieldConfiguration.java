@@ -54,22 +54,42 @@ public class AlarmCalculatedFieldConfiguration implements ArgumentsBasedCalculat
     private boolean propagateToOwner;
     private boolean propagateToTenant;
     private List<String> propagateRelationTypes;
+    /**
+     * Returns type.
+     *
+     * @return {@link CalculatedFieldType}
+     */
 
     @Override
     public CalculatedFieldType getType() {
         return CalculatedFieldType.ALARM;
     }
+    /**
+     * Returns output.
+     *
+     * @return {@link Output}
+     */
 
     @Override
     public Output getOutput() {
         return null;
     }
+    /**
+     * Requires scheduled reevaluation.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     @Override
     public boolean requiresScheduledReevaluation() {
         return getAllRules().anyMatch(entry -> entry.getValue().requiresScheduledReevaluation());
     }
+    /**
+     * Returns all rules.
+     *
+     * @return {@link Stream}
+     */
 
     @JsonIgnore
     public Stream<Pair<AlarmSeverity, AlarmRule>> getAllRules() {
@@ -80,6 +100,13 @@ public class AlarmCalculatedFieldConfiguration implements ArgumentsBasedCalculat
         }
         return rules.sorted(comparingByKey(Comparator.nullsLast(Comparator.naturalOrder())));
     }
+    /**
+     * Rules equal.
+     *
+     * @param other other ({@link AlarmCalculatedFieldConfiguration})
+     * @param equalityCheck equality check ({@link BiPredicate})
+     * @return the boolean result
+     */
 
     public boolean rulesEqual(AlarmCalculatedFieldConfiguration other, BiPredicate<AlarmRule, AlarmRule> equalityCheck) {
         List<Pair<AlarmSeverity, AlarmRule>> thisRules = this.getAllRules().toList();
@@ -91,6 +118,12 @@ public class AlarmCalculatedFieldConfiguration implements ArgumentsBasedCalculat
             return equalityCheck.test(thisRule.getValue(), otherRule.getValue());
         });
     }
+    /**
+     * Propagation settings equal.
+     *
+     * @param other other ({@link AlarmCalculatedFieldConfiguration})
+     * @return the boolean result
+     */
 
     public boolean propagationSettingsEqual(AlarmCalculatedFieldConfiguration other) {
         return this.propagate == other.propagate &&

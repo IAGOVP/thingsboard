@@ -56,9 +56,11 @@ import static org.thingsboard.server.common.data.ObjectType.LATEST_TS_KV;
 import static org.thingsboard.server.common.data.ObjectType.RELATION;
 import static org.thingsboard.server.common.data.ObjectType.edqsTenantTypes;
 
-    /**
-     * Edqs sync service (Entity Data Query Service integration from tb-core).
-     */
+    
+/**
+ * Service API for synchronizing entity changes from tb-core to EDQS (Kafka or local).
+ */
+
 
 @Slf4j
 public abstract class EdqsSyncService {
@@ -324,14 +326,19 @@ public abstract class EdqsSyncService {
         }
         return strKey;
     }
+    
+
+    
     /**
      * Entity id info.
      *
      * @param entityType entity type ({@link EntityType})
-     * @param tenantId tenant that owns the entity or operation
+     * @param tenantId tenant that owns the indexed entities
      * @return the record value
      * @throws Exception if an unexpected error occurs during processing
      */
+
+
 
     public record EntityIdInfo(EntityType entityType, TenantId tenantId) {
     }

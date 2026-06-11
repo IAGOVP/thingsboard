@@ -29,7 +29,10 @@ import org.thingsboard.server.dao.entity.AbstractEntityService;
 import org.thingsboard.server.exception.DataValidationException;
 /**
  * Default DAO-layer service implementation for rule node state.
+ *
+ * <p>Coordinates validation, caching, cluster events, and {@code *Dao} persistence (rule chains, nodes, and node state).
  */
+
 
 @Service
 @Slf4j
@@ -38,11 +41,17 @@ public class BaseRuleNodeStateService extends AbstractEntityService implements R
     @Autowired
     private RuleNodeStateDao ruleNodeStateDao;
 
+    
     /**
-
-     * Loads by rule node id.
-
+     * Finds by rule node id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleNodeId rule node id ({@link RuleNodeId})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<RuleNodeState> findByRuleNodeId(TenantId tenantId, RuleNodeId ruleNodeId, PageLink pageLink) {
@@ -55,11 +64,17 @@ public class BaseRuleNodeStateService extends AbstractEntityService implements R
         return ruleNodeStateDao.findByRuleNodeId(ruleNodeId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads by rule node id and entity id.
-
+     * Finds by rule node id and entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleNodeId rule node id ({@link RuleNodeId})
+     * @param entityId target entity identifier
+     * @return {@link RuleNodeState}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public RuleNodeState findByRuleNodeIdAndEntityId(TenantId tenantId, RuleNodeId ruleNodeId, EntityId entityId) {
@@ -75,11 +90,16 @@ public class BaseRuleNodeStateService extends AbstractEntityService implements R
         return ruleNodeStateDao.findByRuleNodeIdAndEntityId(ruleNodeId.getId(), entityId.getId());
     }
 
+    
     /**
-
-     * Persists .
-
+     * Saves or persists the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleNodeState rule node state ({@link RuleNodeState})
+     * @return {@link RuleNodeState}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public RuleNodeState save(TenantId tenantId, RuleNodeState ruleNodeState) {
@@ -89,11 +109,16 @@ public class BaseRuleNodeStateService extends AbstractEntityService implements R
         return saveOrUpdate(tenantId, ruleNodeState, false);
     }
 
+    
     /**
-
      * Removes by rule node id.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleNodeId rule node id ({@link RuleNodeId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void removeByRuleNodeId(TenantId tenantId, RuleNodeId ruleNodeId) {
@@ -106,11 +131,17 @@ public class BaseRuleNodeStateService extends AbstractEntityService implements R
         ruleNodeStateDao.removeByRuleNodeId(ruleNodeId.getId());
     }
 
+    
     /**
-
      * Removes by rule node id and entity id.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleNodeId rule node id ({@link RuleNodeId})
+     * @param entityId target entity identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void removeByRuleNodeIdAndEntityId(TenantId tenantId, RuleNodeId ruleNodeId, EntityId entityId) {
@@ -126,11 +157,17 @@ public class BaseRuleNodeStateService extends AbstractEntityService implements R
         ruleNodeStateDao.removeByRuleNodeIdAndEntityId(ruleNodeId.getId(), entityId.getId());
     }
 
+    
     /**
-
-     * Persists or update.
-
+     * Saves or updates the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleNodeState rule node state ({@link RuleNodeState})
+     * @param update update
+     * @return {@link RuleNodeState}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     public RuleNodeState saveOrUpdate(TenantId tenantId, RuleNodeState ruleNodeState, boolean update) {
         try {

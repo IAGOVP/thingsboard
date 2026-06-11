@@ -59,11 +59,20 @@ public class SnmpDeviceTransportConfiguration implements DeviceTransportConfigur
         this.protocolVersion = SnmpProtocolVersion.V2C;
         this.community = "public";
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link DeviceTransportType}
+     */
 
     @Override
     public DeviceTransportType getType() {
         return DeviceTransportType.SNMP;
     }
+    /**
+     * Validates the requested data.
+     *
+     */
 
     @Override
     public void validate() {

@@ -23,7 +23,7 @@ import org.thingsboard.server.common.transport.TransportServiceCallback;
 import org.thingsboard.server.gen.transport.TransportProtos;
 
 /**
- * Abstract coap transport resource.
+ * Base Californium resource for the device API: token auth from URI path, delegates to {@link TransportService}.
  */
 @Slf4j
 public abstract class AbstractCoapTransportResource extends CoapResource {
@@ -36,21 +36,55 @@ public abstract class AbstractCoapTransportResource extends CoapResource {
         this.transportContext = context;
         this.transportService = context.getTransportService();
     }
+    /**
+     * Handles get.
+     *
+     * @param exchange exchange ({@link CoapExchange})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void handleGET(CoapExchange exchange) {
         processHandleGet(exchange);
     }
+    /**
+     * Handles post.
+     *
+     * @param exchange exchange ({@link CoapExchange})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void handlePOST(CoapExchange exchange) {
         processHandlePost(exchange);
     }
-
+    /**
+     * Processes handle get.
+     *
+     * @param exchange exchange ({@link CoapExchange})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     protected abstract void processHandleGet(CoapExchange exchange);
-
+    /**
+     * Processes handle post.
+     *
+     * @param exchange exchange ({@link CoapExchange})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     protected abstract void processHandlePost(CoapExchange exchange);
-
+    /**
+     * Report subscription info.
+     *
+     * @param sessionInfo session info
+     * @param hasAttributeSubscription has attribute subscription
+     * @param hasRpcSubscription has rpc subscription
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     protected void reportSubscriptionInfo(TransportProtos.SessionInfoProto sessionInfo, boolean hasAttributeSubscription, boolean hasRpcSubscription) {
         transportContext.getTransportService().process(sessionInfo, TransportProtos.SubscriptionInfoProto.newBuilder()
                 .setAttributeSubscription(hasAttributeSubscription)

@@ -15,18 +15,15 @@
  */
 package org.thingsboard.server.queue.discovery;
 
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.concurrent.ConcurrentNavigableMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
- * Created by ashvayka on 23.09.18.
+ * Consistent hash ring used by {@link HashPartitionService} for partition assignment.
  */
 @Slf4j
-/**
- * Consistent hash circle.
- */
 public class ConsistentHashCircle<T> {
     private final ConcurrentNavigableMap<Long, T> circle = new ConcurrentSkipListMap<>();
 

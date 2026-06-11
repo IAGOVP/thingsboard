@@ -25,15 +25,12 @@ import org.thingsboard.server.common.msg.TbMsg;
 import org.thingsboard.server.common.msg.TbRuleEngineActorMsg;
 
 import java.util.Set;
-
 /**
- * Created by ashvayka on 15.03.18.
+ * Wraps a {@link TbMsg} consumed from the rule-engine input queue.
  */
+
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-/**
- * Message: queue to rule engine msg.
- */
 public final class QueueToRuleEngineMsg extends TbRuleEngineActorMsg {
 
     @Getter

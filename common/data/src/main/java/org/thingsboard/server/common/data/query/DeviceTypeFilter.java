@@ -43,6 +43,11 @@ public class DeviceTypeFilter implements EntityFilter {
     private String deviceType;
 
     private List<String> deviceTypes;
+    /**
+     * Returns device types.
+     *
+     * @return {@link List}
+     */
 
     public List<String> getDeviceTypes() {
         return !CollectionUtils.isEmpty(deviceTypes) ? deviceTypes : Collections.singletonList(deviceType);
@@ -55,6 +60,11 @@ public class DeviceTypeFilter implements EntityFilter {
         this.deviceTypes = deviceTypes;
         this.deviceNameFilter = deviceNameFilter;
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link EntityFilterType}
+     */
 
     @Override
     public EntityFilterType getType() {

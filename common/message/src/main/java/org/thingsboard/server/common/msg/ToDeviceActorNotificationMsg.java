@@ -21,8 +21,12 @@ import org.thingsboard.server.common.msg.aware.TenantAwareMsg;
 import java.io.Serializable;
 
 /**
- * @author Andrew Shvayka
+ * Notification sent to a device actor (tenant- and device-scoped).
+ *
+ * <p>Combines {@link TbActorMsg}, {@link org.thingsboard.server.common.msg.aware.TenantAwareMsg},
+ * and {@link org.thingsboard.server.common.msg.aware.DeviceAwareMsg}.
  */
+
 public interface ToDeviceActorNotificationMsg extends TbActorMsg, TenantAwareMsg, DeviceAwareMsg, Serializable {
 
 }

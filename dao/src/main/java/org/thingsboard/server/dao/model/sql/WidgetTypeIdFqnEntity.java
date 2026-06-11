@@ -20,8 +20,11 @@ import lombok.Data;
 
 import java.util.UUID;
 /**
- * Widget type id fqn entity.
+ * JPA/Cassandra row model for widget type id fqn.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @AllArgsConstructor

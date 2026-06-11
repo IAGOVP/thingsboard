@@ -47,6 +47,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * two fa provider config contract.
  */
 public interface TwoFaProviderConfig {
+    /**
+     * Returns provider type.
+     *
+     * @return {@link TwoFaProviderType}
+     */
 
     @JsonIgnore
     TwoFaProviderType getProviderType();

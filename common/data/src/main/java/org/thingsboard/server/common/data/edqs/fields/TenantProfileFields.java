@@ -26,8 +26,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @SuperBuilder
 /**
- * Tenant profile fields.
+ * Lightweight tenant profile field selection for EDQS queries and events (EDQS data — lightweight entity field DTOs for EDQS).
  */
+
 public class TenantProfileFields extends AbstractEntityFields {
 
     private boolean isDefault;

@@ -18,8 +18,11 @@ package org.thingsboard.server.dao.tenant;
 import lombok.Data;
 import org.thingsboard.server.common.data.id.TenantProfileId;
 /**
- * Tenant profile evict event.
+ * Cache eviction event published when tenant profile data changes.
+ *
+ * <p>Consumed by cache listeners to invalidate stale entries cluster-wide.
  */
+
 
 @Data
 public class TenantProfileEvictEvent {

@@ -72,14 +72,23 @@ import static org.thingsboard.server.dao.model.ModelConstants.VERSION_COLUMN;
                 resultSetMapping = "tsKvLatestFindMapping",
                 resultClass = TsKvLatestEntity.class
 /**
- * Ts kv latest entity.
+ * JPA/Cassandra row model for ts kv latest.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
         )
 })
 public final class TsKvLatestEntity extends AbstractTsKvEntity {
 
     @Column(name = VERSION_COLUMN)
     private Long version;
+    /**
+     * Is not empty.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isNotEmpty() {
@@ -101,6 +110,12 @@ public final class TsKvLatestEntity extends AbstractTsKvEntity {
         this.strKey = strKey;
         this.version = version;
     }
+    /**
+     * To data.
+     *
+     * @return {@link TsKvEntry}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TsKvEntry toData() {

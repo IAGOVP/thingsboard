@@ -27,7 +27,7 @@ import java.io.Serial;
 @ToString(callSuper = true)
 @Schema
 /**
- * Alarm info.
+ * Alarm entity enriched with originator name and customer title for UI display.
  */
 public class AlarmInfo extends Alarm {
 
@@ -60,6 +60,11 @@ public class AlarmInfo extends Alarm {
     public AlarmInfo(Alarm alarm) {
         super(alarm);
     }
+    /**
+     * Returns originator display name.
+     *
+     * @return {@link String}
+     */
 
     public String getOriginatorDisplayName() {
         return originatorDisplayName != null ? originatorDisplayName : (originatorLabel != null ? originatorLabel : originatorName);

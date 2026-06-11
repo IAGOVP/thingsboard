@@ -20,15 +20,38 @@ import org.thingsboard.server.common.data.id.TenantId;
 
 import java.util.List;
 
+
 /**
 
- * Persistence contract for image container (see JPA/Cassandra implementations).
+ * Persistence contract for image container.
+
+ *
+
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (ThingsBoard DAO layer).
 
  */
 
+
 public interface ImageContainerDao<T extends HasId<?>> {
+    /**
+     * Finds by tenant and image link.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param imageUrl image url ({@link String})
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<T> findByTenantAndImageLink(TenantId tenantId, String imageUrl, int limit);
+    /**
+     * Finds by image link.
+     *
+     * @param imageUrl image url ({@link String})
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<T> findByImageLink(String imageUrl, int limit);
 

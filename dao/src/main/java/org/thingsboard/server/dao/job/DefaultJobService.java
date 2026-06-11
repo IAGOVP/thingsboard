@@ -53,8 +53,14 @@ import static org.thingsboard.server.common.data.job.JobStatus.PENDING;
 import static org.thingsboard.server.common.data.job.JobStatus.QUEUED;
 import static org.thingsboard.server.common.data.job.JobStatus.RUNNING;
 /**
- * Default job service.
+ * Spring component for default job service (background job persistence and scheduling metadata).
  */
+
+
+
+
+
+
 
 @Service
 @RequiredArgsConstructor
@@ -64,11 +70,16 @@ public class DefaultJobService extends AbstractEntityService implements JobServi
     private final JobDao jobDao;
     private final EntityService entityService;
 
+    
     /**
-
-     * Persists job.
-
+     * Saves or persists job.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param job job ({@link Job})
+     * @return {@link Job}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional
     @Override
@@ -84,22 +95,32 @@ public class DefaultJobService extends AbstractEntityService implements JobServi
         return saveJob(tenantId, job, true, null);
     }
 
+    
     /**
-
-     * Loads job by id.
-
+     * Finds job by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param jobId job id ({@link JobId})
+     * @return {@link Job}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Job findJobById(TenantId tenantId, JobId jobId) {
         return jobDao.findById(tenantId, jobId.getId());
     }
 
+    
     /**
-
      * Cancel job.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param jobId job id ({@link JobId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional
     @Override
@@ -114,11 +135,17 @@ public class DefaultJobService extends AbstractEntityService implements JobServi
         saveJob(tenantId, job, true, prevStatus);
     }
 
+    
     /**
-
      * Mark as failed.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param jobId job id ({@link JobId})
+     * @param error error ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional
     @Override
@@ -130,11 +157,17 @@ public class DefaultJobService extends AbstractEntityService implements JobServi
         saveJob(tenantId, job, true, prevStatus);
     }
 
+    
     /**
-
-     * Process stats.
-
+     * Processes stats.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param jobId job id ({@link JobId})
+     * @param jobStats job stats ({@link JobStats})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional
     @Override
@@ -234,11 +267,17 @@ public class DefaultJobService extends AbstractEntityService implements JobServi
         saveJob(tenantId, queuedJob, true, QUEUED);
     }
 
+    
     /**
-
-     * Loads jobs by filter.
-
+     * Finds jobs by filter.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param filter filter ({@link JobFilter})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Job> findJobsByFilter(TenantId tenantId, JobFilter filter, PageLink pageLink) {
@@ -257,22 +296,32 @@ public class DefaultJobService extends AbstractEntityService implements JobServi
         return jobs;
     }
 
+    
     /**
-
-     * Loads latest job by key.
-
+     * Finds latest job by key.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key attribute or cache key
+     * @return {@link Job}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Job findLatestJobByKey(TenantId tenantId, String key) {
         return jobDao.findLatestByTenantIdAndKey(tenantId, key);
     }
 
+    
     /**
-
-     * Removes job.
-
+     * Deletes job.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param jobId job id ({@link JobId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteJob(TenantId tenantId, JobId jobId) {
@@ -283,11 +332,16 @@ public class DefaultJobService extends AbstractEntityService implements JobServi
         jobDao.removeById(tenantId, jobId.getId());
     }
 
+    
     /**
-
-     * Removes jobs by entity id.
-
+     * Deletes jobs by entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public int deleteJobsByEntityId(TenantId tenantId, EntityId entityId) { // TODO: cancel all jobs for this entity
@@ -298,22 +352,32 @@ public class DefaultJobService extends AbstractEntityService implements JobServi
         return jobDao.findByIdForUpdate(tenantId, jobId);
     }
 
+    
     /**
-
-     * Loads entity.
-
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findJobById(tenantId, (JobId) entityId));
     }
 
+    
     /**
-
-     * Loads entity async.
-
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
@@ -321,33 +385,46 @@ public class DefaultJobService extends AbstractEntityService implements JobServi
                 .transform(Optional::ofNullable, directExecutor());
     }
 
+    
     /**
-
-     * Removes entity.
-
+     * Deletes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteEntity(TenantId tenantId, EntityId id, boolean force) {
         jobDao.removeById(tenantId, id.getId());
     }
 
+    
     /**
-
-     * Removes by tenant id.
-
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteByTenantId(TenantId tenantId) {
         jobDao.removeByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

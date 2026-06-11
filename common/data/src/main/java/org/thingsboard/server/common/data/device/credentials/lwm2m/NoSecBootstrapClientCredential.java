@@ -19,6 +19,11 @@ package org.thingsboard.server.common.data.device.credentials.lwm2m;
  * No sec bootstrap client credential.
  */
 public class NoSecBootstrapClientCredential implements LwM2MBootstrapClientCredential {
+    /**
+     * Returns security mode.
+     *
+     * @return {@link LwM2MSecurityMode}
+     */
 
     @Override
     public LwM2MSecurityMode getSecurityMode() {

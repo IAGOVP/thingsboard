@@ -35,6 +35,12 @@ import java.util.List;
 public class TbRedisLwM2MModelConfigStore implements TbLwM2MModelConfigStore {
     private static final String MODEL_EP = "MODEL#EP#";
     private final RedisConnectionFactory connectionFactory;
+    /**
+     * Returns all.
+     *
+     * @return {@link List}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public List<LwM2MModelConfig> getAll() {
@@ -61,6 +67,13 @@ public class TbRedisLwM2MModelConfigStore implements TbLwM2MModelConfigStore {
             return configs;
         }
     }
+    /**
+     * Put.
+     *
+     * @param modelConfig model config ({@link LwM2MModelConfig})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void put(LwM2MModelConfig modelConfig) {
@@ -69,6 +82,13 @@ public class TbRedisLwM2MModelConfigStore implements TbLwM2MModelConfigStore {
             connection.getSet(getKey(modelConfig.getEndpoint()), clientSerialized);
         }
     }
+    /**
+     * Removes the requested data.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void remove(String endpoint) {

@@ -96,12 +96,14 @@ public class DefaultTbActorSystem implements TbActorSystem {
     /** Creates a top-level actor (no parent in {@link #parentChildMap}). */
     @Override
     public TbActorRef createRootActor(String dispatcherId, TbActorCreator creator) {
+        /** Create actor. */
         return createActor(dispatcherId, creator, null);
     }
 
     /** Creates an actor and registers it as a child of {@code parent}. */
     @Override
     public TbActorRef createChildActor(String dispatcherId, TbActorCreator creator, TbActorId parent) {
+        /** Create actor. */
         return createActor(dispatcherId, creator, parent);
     }
 
@@ -178,7 +180,6 @@ public class DefaultTbActorSystem implements TbActorSystem {
             mailbox.tell(actorMsg);
         }
     }
-
 
     /** Sends {@code msg} to every registered child of {@code parent} (normal priority). */
     @Override

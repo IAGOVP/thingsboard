@@ -21,6 +21,11 @@ package org.thingsboard.server.common.data;
 public interface HasImage extends HasTenantId, HasName {
 
     String getImage();
+/**
+ * Set image.
+ *
+ * @param image image ({@link String})
+ */
 
     void setImage(String image);
 

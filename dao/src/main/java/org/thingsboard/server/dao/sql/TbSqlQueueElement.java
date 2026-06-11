@@ -19,8 +19,14 @@ import com.google.common.util.concurrent.SettableFuture;
 import lombok.Getter;
 import lombok.ToString;
 /**
- * Tb sql queue element.
+ * Tb sql queue element (JPA/PostgreSQL persistence layer (JPA repositories and PostgreSQL DAO implementations)).
  */
+
+
+
+
+
+
 
 @ToString(exclude = "future")
 public final class TbSqlQueueElement<E, R> {

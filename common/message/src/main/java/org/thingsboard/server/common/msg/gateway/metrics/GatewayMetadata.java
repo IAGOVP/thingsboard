@@ -16,7 +16,8 @@
 package org.thingsboard.server.common.msg.gateway.metrics;
 
 /**
- * gateway metadata.
+ * Gateway metadata.
  */
+
 public record GatewayMetadata(String connector, long receivedTs, long publishedTs) {
 }

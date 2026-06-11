@@ -22,21 +22,43 @@ import org.springframework.data.redis.connection.RedisConnection;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * Redis WATCH/MULTI/EXEC transaction wrapping a {@link RedisTbTransactionalCache}.
+ *
+ * <p>Each {@link #put} stages a SET command on the watched connection opened by
+ * {@link RedisTbTransactionalCache#watch}. {@link #commit()} executes EXEC;
+ * {@link #rollback()} sends DISCARD. The connection is always closed afterward.
+ *
+ * @param <K> cache key type
+ * @param <V> cache value type
+ * @see RedisTbTransactionalCache#newTransactionForKey
+ */
 @Slf4j
 @RequiredArgsConstructor
-/**
- * Redis tb cache transaction.
- */
 public class RedisTbCacheTransaction<K extends Serializable, V extends Serializable> implements TbCacheTransaction<K, V> {
 
+    /** Parent cache providing serialization and key prefixing. */
+
     private final RedisTbTransactionalCache<K, V> cache;
+    /** WATCH/MULTI connection; closed on commit or rollback. */
     private final RedisConnection connection;
 
+/**
+         * Stages a SET on the open MULTI connection.
+         *
+         * @param key   cache key
+         * @param value value to store when the transaction commits
+         */
     @Override
     public void put(K key, V value) {
         cache.put(key, value, connection);
     }
 
+/**
+         * Executes the Redis transaction and closes the connection.
+         *
+         * @return {@code true} when EXEC returns at least one non-null result
+         */
     @Override
     public boolean commit() {
         try {
@@ -48,6 +70,9 @@ public class RedisTbCacheTransaction<K extends Serializable, V extends Serializa
         }
     }
 
+/**
+         * Discards staged commands and closes the connection.
+         */
     @Override
     public void rollback() {
         try {

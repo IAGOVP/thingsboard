@@ -37,8 +37,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 /**
- * Basic usage info service.
+ * Spring component for basic usage info service (ThingsBoard DAO layer).
  */
+
+
+
+
+
+
 
 @Service
 @Slf4j
@@ -50,6 +56,13 @@ public class BasicUsageInfoService implements UsageInfoService {
     private final TimeseriesService tsService;
     @Lazy
     private final TbTenantProfileCache tenantProfileCache;
+    /**
+     * Returns usage info.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link UsageInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UsageInfo getUsageInfo(TenantId tenantId) {

@@ -22,13 +22,24 @@ import org.thingsboard.server.cache.CaffeineTbTransactionalCache;
 import org.thingsboard.server.common.data.CacheConstants;
 import org.thingsboard.server.common.data.User;
 
+/**
+ * Caffeine {@link CaffeineTbTransactionalCache} for {@link org.thingsboard.server.common.data.User} entities.
+ *
+ * <p>Spring bean {@code "UserCache"} activated when
+ * {@code cache.type=caffeine} (default). Cache name: {@link org.thingsboard.server.common.data.CacheConstants#USER_CACHE}.
+ *
+ * @see UserCacheKey
+ * @see CaffeineTbTransactionalCache
+ */
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "caffeine", matchIfMissing = true)
 @Service("UserCache")
-/**
- * User caffeine cache.
- */
 public class UserCaffeineCache extends CaffeineTbTransactionalCache<UserCacheKey, User> {
 
+    /**
+     * Wires the cache from the Spring {@link org.springframework.cache.CacheManager}.
+     *
+     * @param cacheManager manager built by {@link TbCaffeineCacheConfiguration}
+     */
     public UserCaffeineCache(CacheManager cacheManager) {
         super(cacheManager, CacheConstants.USER_CACHE);
     }

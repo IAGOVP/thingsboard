@@ -22,8 +22,11 @@ import org.thingsboard.server.cache.VersionedCaffeineTbCache;
 import org.thingsboard.server.common.data.CacheConstants;
 import org.thingsboard.server.common.data.ai.AiModel;
 /**
- * Ai model caffeine cache.
+ * in-process Caffeine cache for ai model (ThingsBoard DAO layer).
+ *
+ * <p>Implements {@link org.thingsboard.server.cache.TbTransactionalCache} with DAO-specific key types.
  */
+
 
 @Component("AiModelCache")
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "caffeine", matchIfMissing = true)

@@ -27,8 +27,14 @@ import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
 /**
- * Jpa abstract dao listening executor service.
+ * Jpa abstract dao listening executor service (JPA/PostgreSQL persistence layer (JPA repositories and PostgreSQL DAO implementations)).
  */
+
+
+
+
+
+
 
 @Slf4j
 public abstract class JpaAbstractDaoListeningExecutorService {
@@ -45,6 +51,13 @@ public abstract class JpaAbstractDaoListeningExecutorService {
 
     @Autowired
     protected TransactionTemplate transactionTemplate;
+    /**
+     * Print warnings.
+     *
+     * @param statement statement ({@link Statement})
+     * @return nothing
+     * @throws SQLException if sqlexception is thrown during processing
+     */
 
     protected void printWarnings(Statement statement) throws SQLException {
         SQLWarning warnings = statement.getWarnings();

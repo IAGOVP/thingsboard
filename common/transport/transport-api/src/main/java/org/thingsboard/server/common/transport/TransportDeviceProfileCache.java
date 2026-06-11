@@ -26,12 +26,40 @@ public interface TransportDeviceProfileCache {
 
     DeviceProfile getOrCreate(DeviceProfileId id, TransportProtos.DeviceProfileProto proto);
 
+    /**
+     * Returns the requested data.
+     *
+     * @param id id ({@link DeviceProfileId})
+     * @return {@link DeviceProfile}
+     * @throws Exception on processing failure
+     */
     DeviceProfile get(DeviceProfileId id);
 
+    /**
+     * Put.
+     *
+     * @param profile profile ({@link DeviceProfile})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void put(DeviceProfile profile);
 
+    /**
+     * Put.
+     *
+     * @param proto proto
+     * @return {@link DeviceProfile}
+     * @throws Exception on processing failure
+     */
     DeviceProfile put(TransportProtos.DeviceProfileProto proto);
 
+    /**
+     * Evict.
+     *
+     * @param id id ({@link DeviceProfileId})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void evict(DeviceProfileId id);
 
 }

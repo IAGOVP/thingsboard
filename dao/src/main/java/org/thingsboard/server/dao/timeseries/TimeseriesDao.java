@@ -26,17 +26,65 @@ import org.thingsboard.server.common.data.kv.TsKvEntry;
 import java.util.List;
 
 /**
- * @author Andrew Shvayka
+ * Persistence contract for timeseries.
+ *
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (Cassandra telemetry and latest-value DAO (Cassandra time-series DAO and latest-value caches)).
  */
+
 public interface TimeseriesDao {
+    /**
+     * Finds all async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param queries queries ({@link List})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     ListenableFuture<List<ReadTsKvQueryResult>> findAllAsync(TenantId tenantId, EntityId entityId, List<ReadTsKvQuery> queries);
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param tsKvEntry ts kv entry ({@link TsKvEntry})
+     * @param ttl ttl
+     * @return future completing with {@link Integer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     ListenableFuture<Integer> save(TenantId tenantId, EntityId entityId, TsKvEntry tsKvEntry, long ttl);
+    /**
+     * Saves or persists partition.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param tsKvEntryTs ts kv entry ts
+     * @param key attribute or cache key
+     * @return future completing with {@link Integer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     ListenableFuture<Integer> savePartition(TenantId tenantId, EntityId entityId, long tsKvEntryTs, String key);
+    /**
+     * Removes the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param query filter and sort query definition
+     * @return future completing with {@link Void}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     ListenableFuture<Void> remove(TenantId tenantId, EntityId entityId, DeleteTsKvQuery query);
+    /**
+     * Cleanup.
+     *
+     * @param systemTtl system ttl
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void cleanup(long systemTtl);
 }

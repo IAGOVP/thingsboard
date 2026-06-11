@@ -15,11 +15,48 @@
  */
 package org.thingsboard.server.dao.eventsourcing;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * Action cause.
+
+
+
+
+
+ * Enumerates action cause values used in entity lifecycle action cause tracking.
+
+
+
+
+
 
  */
+
+
+
+
+
+
 
 public enum ActionCause {
     TENANT_DELETION

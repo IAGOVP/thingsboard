@@ -131,6 +131,11 @@ public class DeviceProfile extends BaseData<DeviceProfileId> implements HasName,
         this.externalId = deviceProfile.getExternalId();
         this.version = deviceProfile.getVersion();
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link DeviceProfileId}
+     */
 
     @Schema(description = "JSON object with the device profile Id. " +
             "Specify this field to update the device profile. " +
@@ -140,17 +145,32 @@ public class DeviceProfile extends BaseData<DeviceProfileId> implements HasName,
     public DeviceProfileId getId() {
         return super.getId();
     }
+    /**
+     * Returns created time.
+     *
+     * @return the long result
+     */
 
     @Schema(description = "Timestamp of the profile creation, in milliseconds", example = "1609459200000", accessMode = Schema.AccessMode.READ_ONLY)
     @Override
     public long getCreatedTime() {
         return super.getCreatedTime();
     }
+    /**
+     * Is default.
+     *
+     * @return the boolean result
+     */
 
     @Schema(description = "Used to mark the default profile. Default profile is used when the device profile is not specified during device creation.")
     public boolean isDefault() {
         return isDefault;
     }
+    /**
+     * Returns profile data.
+     *
+     * @return {@link DeviceProfileData}
+     */
 
     @Schema(description = "Complex JSON object that includes addition device profile configuration (transport, alarm rules, etc).")
     public DeviceProfileData getProfileData() {
@@ -170,6 +190,11 @@ public class DeviceProfile extends BaseData<DeviceProfileId> implements HasName,
             }
         }
     }
+    /**
+     * Set profile data.
+     *
+     * @param data data ({@link DeviceProfileData})
+     */
 
     public void setProfileData(DeviceProfileData data) {
         this.profileData = data;

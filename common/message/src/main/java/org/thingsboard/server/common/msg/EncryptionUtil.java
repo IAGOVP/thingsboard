@@ -18,14 +18,10 @@ package org.thingsboard.server.common.msg;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.crypto.digests.SHA3Digest;
 import org.bouncycastle.util.encoders.Hex;
-
-/**
- * @author Valerii Sosliuk
- */
-@Slf4j
 /**
  * Encryption util.
  */
+@Slf4j
 public class EncryptionUtil {
 
     private EncryptionUtil() {

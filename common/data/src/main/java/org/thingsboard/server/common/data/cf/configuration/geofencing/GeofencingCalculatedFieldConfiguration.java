@@ -58,17 +58,32 @@ public class GeofencingCalculatedFieldConfiguration implements ArgumentsBasedCal
 
     @NotNull
     private Output output;
+    /**
+     * Is use latest ts.
+     *
+     * @return the boolean result
+     */
 
     @Override
     @JsonIgnore
     public boolean isUseLatestTs() {
         return output.getType() == OutputType.TIME_SERIES;
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link CalculatedFieldType}
+     */
 
     @Override
     public CalculatedFieldType getType() {
         return CalculatedFieldType.GEOFENCING;
     }
+    /**
+     * Returns arguments.
+     *
+     * @return {@link Map}
+     */
 
     @Override
     @JsonIgnore
@@ -77,6 +92,11 @@ public class GeofencingCalculatedFieldConfiguration implements ArgumentsBasedCal
         zoneGroups.forEach((zgName, zgConfig) -> args.put(zgName, zgConfig.toArgument()));
         return args;
     }
+    /**
+     * Returns referenced entities.
+     *
+     * @return {@link Set}
+     */
 
 
     @Override
@@ -86,11 +106,20 @@ public class GeofencingCalculatedFieldConfiguration implements ArgumentsBasedCal
                 .filter(Objects::nonNull)
                 .collect(toSet());
     }
+    /**
+     * Returns output.
+     *
+     * @return {@link Output}
+     */
 
     @Override
     public Output getOutput() {
         return output;
     }
+    /**
+     * Validates the requested data.
+     *
+     */
 
     @Override
     public void validate() {

@@ -24,7 +24,7 @@ import java.util.UUID;
 
 @Schema(allOf = EntityId.class)
 /**
- * Typed identifier for widgets bundle.
+ * Typed identifier for a widgets bundle grouping widget types.
  */
 public final class WidgetsBundleId extends UUIDBased implements EntityId {
 
@@ -34,6 +34,11 @@ public final class WidgetsBundleId extends UUIDBased implements EntityId {
     public WidgetsBundleId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY, description = "string", example = "WIDGETS_BUNDLE", allowableValues = "WIDGETS_BUNDLE")
     @Override

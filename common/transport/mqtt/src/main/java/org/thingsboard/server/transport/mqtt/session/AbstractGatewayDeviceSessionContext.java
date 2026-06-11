@@ -73,16 +73,35 @@ public abstract class AbstractGatewayDeviceSessionContext<T extends AbstractGate
         setDeviceProfile(deviceProfile);
         this.transportService = transportService;
     }
+    /**
+     * Returns session id.
+     *
+     * @return {@link UUID}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public UUID getSessionId() {
         return sessionId;
     }
+    /**
+     * Next msg id.
+     *
+     * @return monotonically increasing MQTT packet identifier
+     * @throws Exception on processing failure
+     */
 
     @Override
     public int nextMsgId() {
         return parent.nextMsgId();
     }
+    /**
+     * Handles get attributes response.
+     *
+     * @param response response
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onGetAttributesResponse(TransportProtos.GetAttributeResponseMsg response) {
@@ -92,6 +111,14 @@ public abstract class AbstractGatewayDeviceSessionContext<T extends AbstractGate
             log.trace("[{}] Failed to convert device attributes response to MQTT msg", sessionId, e);
         }
     }
+    /**
+     * Handles attribute update.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param notification notification
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onAttributeUpdate(UUID sessionId, TransportProtos.AttributeUpdateNotificationMsg notification) {
@@ -102,6 +129,14 @@ public abstract class AbstractGatewayDeviceSessionContext<T extends AbstractGate
             log.trace("[{}] Failed to convert device attributes response to MQTT msg", sessionId, e);
         }
     }
+    /**
+     * Handles to device rpc request.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param request request payload with operation parameters
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onToDeviceRpcRequest(UUID sessionId, TransportProtos.ToDeviceRpcRequestMsg request) {
@@ -131,17 +166,39 @@ public abstract class AbstractGatewayDeviceSessionContext<T extends AbstractGate
             log.trace("[{}] Failed to convert device attributes response to MQTT msg", sessionId, e);
         }
     }
+    /**
+     * Handles remote session close command.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param sessionCloseNotification session close notification
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onRemoteSessionCloseCommand(UUID sessionId, TransportProtos.SessionCloseNotificationProto sessionCloseNotification) {
         log.trace("[{}] Received the remote command to close the session: {}", sessionId, sessionCloseNotification.getMessage());
         parent.deregisterSession(getDeviceInfo().getDeviceName());
     }
+    /**
+     * Handles to server rpc response.
+     *
+     * @param toServerResponse to server response
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onToServerRpcResponse(TransportProtos.ToServerRpcResponseMsg toServerResponse) {
         // This feature is not supported in the TB IoT Gateway yet.
     }
+    /**
+     * Handles device deleted.
+     *
+     * @param deviceId target device identifier
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onDeviceDeleted(DeviceId deviceId) {

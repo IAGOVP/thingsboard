@@ -25,6 +25,13 @@ import java.io.IOException;
  * Transport api response decoder.
  */
 public class TransportApiResponseDecoder implements TbKafkaDecoder<TransportApiResponseMsg> {
+    /**
+     * Decode.
+     *
+     * @param msg msg ({@link TbQueueMsg})
+     * @return {@link TransportApiResponseMsg}
+     * @throws IOException if ioexception is thrown during processing
+     */
 
     @Override
     public TransportApiResponseMsg decode(TbQueueMsg msg) throws IOException {

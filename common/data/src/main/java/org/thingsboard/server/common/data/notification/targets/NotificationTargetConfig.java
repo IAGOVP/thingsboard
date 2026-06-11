@@ -52,6 +52,11 @@ public abstract class NotificationTargetConfig {
     @NoXss
     @Length(max = 500, message = "cannot be longer than 500 chars")
     private String description;
+    /**
+     * Returns type.
+     *
+     * @return {@link NotificationTargetType}
+     */
 
     @JsonIgnore
     public abstract NotificationTargetType getType();

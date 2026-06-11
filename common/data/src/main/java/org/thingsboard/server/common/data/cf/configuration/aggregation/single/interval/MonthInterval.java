@@ -29,6 +29,11 @@ import java.time.temporal.ChronoUnit;
  * Month interval.
  */
 public class MonthInterval extends BaseAggInterval {
+    /**
+     * Returns type.
+     *
+     * @return {@link AggIntervalType}
+     */
 
     @Override
     public AggIntervalType getType() {
@@ -38,11 +43,23 @@ public class MonthInterval extends BaseAggInterval {
     public MonthInterval(String tz, Long offsetSec) {
         super(tz, offsetSec);
     }
+    /**
+     * Align to interval start.
+     *
+     * @param reference reference ({@link ZonedDateTime})
+     * @return {@link ZonedDateTime}
+     */
 
     @Override
     protected ZonedDateTime alignToIntervalStart(ZonedDateTime reference) {
         return reference.withDayOfMonth(1).truncatedTo(ChronoUnit.DAYS);
     }
+    /**
+     * Returns next interval start.
+     *
+     * @param currentStart current start ({@link ZonedDateTime})
+     * @return {@link ZonedDateTime}
+     */
 
     @Override
     public ZonedDateTime getNextIntervalStart(ZonedDateTime currentStart) {

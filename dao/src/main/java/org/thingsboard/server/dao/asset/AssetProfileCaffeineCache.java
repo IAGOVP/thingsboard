@@ -22,8 +22,11 @@ import org.thingsboard.server.cache.VersionedCaffeineTbCache;
 import org.thingsboard.server.common.data.CacheConstants;
 import org.thingsboard.server.common.data.asset.AssetProfile;
 /**
- * Asset profile caffeine cache.
+ * in-process Caffeine cache for asset profile (asset and asset-profile DAO services and caches).
+ *
+ * <p>Implements {@link org.thingsboard.server.cache.TbTransactionalCache} with DAO-specific key types.
  */
+
 
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "caffeine", matchIfMissing = true)
 @Service("AssetProfileCache")

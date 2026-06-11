@@ -20,12 +20,23 @@ import org.thingsboard.server.common.msg.TbActorMsg;
 import org.thingsboard.server.common.msg.queue.TbCallback;
 
 /**
- * tenant aware msg contract.
+ * Message carrying {@link org.thingsboard.server.common.data.id.TenantId}.
  */
+
 public interface TenantAwareMsg extends TbActorMsg {
 
+    /**
+     * Returns tenant id.
+     *
+     * @return {@link TenantId}
+     */
 	TenantId getTenantId();
 
+    /**
+     * Returns callback.
+     *
+     * @return {@link TbCallback}
+     */
 	default TbCallback getCallback() {
 		return TbCallback.EMPTY;
 	}

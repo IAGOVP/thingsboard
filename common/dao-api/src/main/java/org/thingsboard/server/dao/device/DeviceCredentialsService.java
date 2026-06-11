@@ -25,20 +25,70 @@ import org.thingsboard.server.common.data.security.DeviceCredentials;
  */
 public interface DeviceCredentialsService {
 
+    /**
+     * Finds device credentials by device id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @return {@link DeviceCredentials}
+     */
     DeviceCredentials findDeviceCredentialsByDeviceId(TenantId tenantId, DeviceId deviceId);
 
+    /**
+     * Finds device credentials by credentials id.
+     *
+     * @param credentialsId credentials id ({@link String})
+     * @return {@link DeviceCredentials}
+     */
     DeviceCredentials findDeviceCredentialsByCredentialsId(String credentialsId);
 
+    /**
+     * Updates device credentials.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceCredentials device credentials ({@link DeviceCredentials})
+     * @return {@link DeviceCredentials}
+     */
     DeviceCredentials updateDeviceCredentials(TenantId tenantId, DeviceCredentials deviceCredentials);
 
+    /**
+     * Creates device credentials.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceCredentials device credentials ({@link DeviceCredentials})
+     * @return {@link DeviceCredentials}
+     */
     DeviceCredentials createDeviceCredentials(TenantId tenantId, DeviceCredentials deviceCredentials);
 
+    /**
+     * Format credentials.
+     *
+     * @param deviceCredentials device credentials ({@link DeviceCredentials})
+     */
     void formatCredentials(DeviceCredentials deviceCredentials);
 
+    /**
+     * To credentials info.
+     *
+     * @param deviceCredentials device credentials ({@link DeviceCredentials})
+     * @return {@link JsonNode}
+     */
     JsonNode toCredentialsInfo(DeviceCredentials deviceCredentials);
 
+    /**
+     * Deletes device credentials.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceCredentials device credentials ({@link DeviceCredentials})
+     */
     void deleteDeviceCredentials(TenantId tenantId, DeviceCredentials deviceCredentials);
 
+    /**
+     * Deletes device credentials by device id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     */
     void deleteDeviceCredentialsByDeviceId(TenantId tenantId, DeviceId deviceId);
 
 }

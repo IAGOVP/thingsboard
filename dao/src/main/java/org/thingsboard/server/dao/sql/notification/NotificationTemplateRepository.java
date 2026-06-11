@@ -31,8 +31,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 /**
- * notification template repository contract.
+ * Spring Data JPA repository for notification template entities.
+ *
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
  */
+
 
 @Repository
 public interface NotificationTemplateRepository extends JpaRepository<NotificationTemplateEntity, UUID>, ExportableEntityRepository<NotificationTemplateEntity> {
@@ -41,6 +44,16 @@ public interface NotificationTemplateRepository extends JpaRepository<Notificati
             "t.notificationType IN :notificationTypes " +
             "AND (:searchText is NULL OR ilike(t.name, concat('%', :searchText, '%')) = true " +
             "OR ilike(t.notificationType, concat('%', :searchText, '%')) = true)")
+    /**
+     * Finds by tenant id and notification types and search text.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param notificationTypes notification types ({@link List})
+     * @param searchText search text ({@link String})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<NotificationTemplateEntity> findByTenantIdAndNotificationTypesAndSearchText(@Param("tenantId") UUID tenantId,
                                                                                      @Param("notificationTypes") List<NotificationType> notificationTypes,
                                                                                      @Param("searchText") String searchText,
@@ -48,17 +61,55 @@ public interface NotificationTemplateRepository extends JpaRepository<Notificati
 
     @Query("SELECT count(t) FROM NotificationTemplateEntity t WHERE t.tenantId = :tenantId AND " +
             "t.notificationType IN :notificationTypes")
+    /**
+     * Counts by tenant id and notification types.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param notificationTypes notification types ({@link Collection})
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
     int countByTenantIdAndNotificationTypes(@Param("tenantId") UUID tenantId,
+    /**
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
                                             @Param("notificationTypes") Collection<NotificationType> notificationTypes);
 
     @Transactional
     @Modifying
     @Query("DELETE FROM NotificationTemplateEntity t WHERE t.tenantId = :tenantId")
     void deleteByTenantId(@Param("tenantId") UUID tenantId);
+    /**
+     * Finds by tenant id and name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return {@link NotificationTemplateEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     NotificationTemplateEntity findByTenantIdAndName(UUID tenantId, String name);
+    /**
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     Page<NotificationTemplateEntity> findByTenantId(UUID tenantId, Pageable pageable);
+    /**
+     * Returns external id by internal.
+     *
+     * @param internalId internal id ({@link UUID})
+     * @return {@link UUID}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Query("SELECT externalId FROM NotificationTemplateEntity WHERE id = :id")
     UUID getExternalIdByInternal(@Param("id") UUID internalId);

@@ -70,6 +70,13 @@ public class LwM2MBootstrapSecurityStore implements BootstrapSecurityStore {
         this.context = context;
         this.helper = helper;
     }
+    /**
+     * Returns all by endpoint.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return {@link Iterator}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public Iterator<SecurityInfo> getAllByEndpoint(String endpoint) {
@@ -77,13 +84,20 @@ public class LwM2MBootstrapSecurityStore implements BootstrapSecurityStore {
             SecurityInfo securityInfo = this.addValueToStore(store, endpoint);
             return securityInfo == null ? null : Collections.singletonList(store.getSecurityInfo()).iterator();
     }
+    /**
+     * Returns by identity.
+     *
+     * @param identity identity ({@link String})
+     * @return {@link SecurityInfo}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public SecurityInfo getByIdentity(String identity) {
         try {
             TbLwM2MSecurityInfo store = lwM2MCredentialsSecurityInfoValidator.getEndpointSecurityInfoByCredentialsId(identity, BOOTSTRAP);
             if (store.getBootstrapCredentialConfig() != null && store.getSecurityMode() != null) {
-                /* add value to store  from BootstrapJson */
+                  */
                 this.setBootstrapConfigSecurityInfo(store);
                 BootstrapConfig bsConfig = store.getBootstrapConfig();
                 if (bsConfig.security != null) {
@@ -101,12 +115,25 @@ public class LwM2MBootstrapSecurityStore implements BootstrapSecurityStore {
             return null;
         }
     }
+    /**
+     * Returns by oscore identity.
+     *
+     * @param oscoreIdentity oscore identity ({@link OscoreIdentity})
+     * @return {@link SecurityInfo}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public SecurityInfo getByOscoreIdentity(OscoreIdentity oscoreIdentity) {
         return null;
     }
-
+    /**
+     * Returns x509by endpoint.
+     *
+     * @param endPoint end point ({@link String})
+     * @return {@link TbLwM2MSecurityInfo}
+     * @throws Exception on processing failure
+     */
     public TbLwM2MSecurityInfo getX509ByEndpoint(String endPoint) {
             TbLwM2MSecurityInfo store = lwM2MCredentialsSecurityInfoValidator.getEndpointSecurityInfoByCredentialsId(endPoint, BOOTSTRAP);
             this.addValueToStore(store, store.getEndpoint());
@@ -115,7 +142,7 @@ public class LwM2MBootstrapSecurityStore implements BootstrapSecurityStore {
 
 
     private void setBootstrapConfigSecurityInfo(TbLwM2MSecurityInfo store) {
-        /* BootstrapConfig */
+          */
         LwM2MBootstrapConfig lwM2MBootstrapConfig = this.getParametersBootstrap(store);
         if (lwM2MBootstrapConfig != null) {
             BootstrapConfig bootstrapConfig = lwM2MBootstrapConfig.getLwM2MBootstrapConfig();
@@ -168,21 +195,46 @@ public class LwM2MBootstrapSecurityStore implements BootstrapSecurityStore {
         });
         return validBs.get() && validLw.get();
     }
-
+    /**
+     * Returns session by endpoint.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return the TransportProtos.SessionInfoProto value
+     * @throws Exception on processing failure
+     */
     public TransportProtos.SessionInfoProto getSessionByEndpoint(String endpoint) {
         return bsSessions.get(endpoint);
     }
-
+    /**
+     * Removes session by endpoint.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return the TransportProtos.SessionInfoProto value
+     * @throws Exception on processing failure
+     */
     public TransportProtos.SessionInfoProto removeSessionByEndpoint(String endpoint) {
         return bsSessions.remove(endpoint);
     }
-
+    /**
+     * Returns bootstrap config by endpoint.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return {@link BootstrapConfig}
+     * @throws Exception on processing failure
+     */
     public BootstrapConfig getBootstrapConfigByEndpoint(String endpoint) {
         return bootstrapConfigStore.getAll().get(endpoint);
     }
-
+    /**
+     * Add value to store.
+     *
+     * @param store store ({@link TbLwM2MSecurityInfo})
+     * @param endpoint endpoint ({@link String})
+     * @return {@link SecurityInfo}
+     * @throws Exception on processing failure
+     */
     public SecurityInfo addValueToStore(TbLwM2MSecurityInfo store, String endpoint) {
-        /* add value to store  from BootstrapJson */
+          */
         SecurityInfo securityInfo = null;
         if (store != null && store.getBootstrapCredentialConfig() != null && store.getSecurityMode() != null) {
             securityInfo = store.getSecurityInfo();

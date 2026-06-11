@@ -21,7 +21,14 @@ import org.eclipse.californium.core.coap.MediaTypeRegistry;
  * Tb coap content format util.
  */
 public class TbCoapContentFormatUtil {
-
+    /**
+     * Returns content format.
+     *
+     * @param requestFormat request format
+     * @param adaptorFormat adaptor format
+     * @return monotonically increasing MQTT packet identifier
+     * @throws Exception on processing failure
+     */
     public static int getContentFormat(int requestFormat, int adaptorFormat) {
         if (isStrict(adaptorFormat)) {
             return adaptorFormat;
@@ -29,7 +36,13 @@ public class TbCoapContentFormatUtil {
             return requestFormat != MediaTypeRegistry.UNDEFINED ? requestFormat : adaptorFormat;
         }
     }
-
+    /**
+     * Is strict.
+     *
+     * @param contentFormat content format
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     public static boolean isStrict(int contentFormat) {
         return contentFormat == MediaTypeRegistry.APPLICATION_OCTET_STREAM;
     }

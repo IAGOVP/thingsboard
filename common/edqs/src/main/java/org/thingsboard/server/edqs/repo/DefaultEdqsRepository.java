@@ -36,8 +36,11 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
 
 /**
- * Default {@link EdqsRepository}: one {@link TenantRepo} per tenant, with stats and eviction on tenant delete.
+ * Default {@link EdqsRepository} with one {@link org.thingsboard.server.edqs.repo.TenantRepo} per tenant.
+ *
+ * <p>Evicts tenant indexes on delete events or Kafka partition reassignment; supports OOM recovery via {@link #clear()}.
  */
+
 @EdqsComponent
 @AllArgsConstructor
 @Service
@@ -49,12 +52,28 @@ public class DefaultEdqsRepository implements EdqsRepository {
     private final static ConcurrentMap<TenantId, TenantRepo> repos = new ConcurrentHashMap<>();
     private final EdqsStatsService statsService;
 
-    /** Returns or creates the in-memory index for the tenant. */
-    public TenantRepo get(TenantId tenantId) {
+    
+        /**
+         * Returns the requested data.
+         *
+         * @param tenantId tenant that owns the indexed entities
+         * @return {@link TenantRepo}
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
+public TenantRepo get(TenantId tenantId) {
         return repos.computeIfAbsent(tenantId, id -> new TenantRepo(id, statsService));
     }
 
-    /** Routes tenant deletion to {@link #repos} removal; otherwise delegates to {@link TenantRepo#processEvent}. */
+    
+        /**
+         * Applies create/update/delete of an entity, relation, attribute, or latest telemetry key in the index.
+         *
+         * @param event EDQS create/update/delete event from Kafka
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
     @Override
     public void processEvent(EdqsEvent event) {
         if (event.getEventType() == EdqsEventType.DELETED && event.getObjectType() == ObjectType.TENANT) {
@@ -66,7 +85,18 @@ public class DefaultEdqsRepository implements EdqsRepository {
         }
     }
 
-    /** Counts entities matching the filter; records latency via {@link EdqsStatsService}. */
+    
+    /**
+     * Returns entity count for the filter without loading full entity rows.
+     *
+     * @param tenantId tenant that owns the indexed entities
+     * @param customerId customer scope for permission filtering (may be null)
+     * @param query entity count or data query with filter, sort, and key selections
+     * @param ignorePermissionCheck when true, skips customer/user permission filtering (system use only)
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     @Override
     public long countEntitiesByQuery(TenantId tenantId, CustomerId customerId, EntityCountQuery query, boolean ignorePermissionCheck) {
         long startNs = System.nanoTime();
@@ -75,7 +105,18 @@ public class DefaultEdqsRepository implements EdqsRepository {
         return result;
     }
 
-    /** Returns a page of entity rows with selected keys; records latency via {@link EdqsStatsService}. */
+    
+     /**
+      * Returns a page of entities matching filter, sort, and selected keys.
+      *
+      * @param tenantId tenant that owns the indexed entities
+      * @param customerId customer scope for permission filtering (may be null)
+      * @param query entity count or data query with filter, sort, and key selections
+      * @param ignorePermissionCheck when true, skips customer/user permission filtering (system use only)
+      * @return {@link PageData}
+      * @throws Exception if an unexpected error occurs during processing
+      */
+
     @Override
     public PageData<QueryResult> findEntityDataByQuery(TenantId tenantId, CustomerId customerId,
                                                        EntityDataQuery query, boolean ignorePermissionCheck) {
@@ -84,11 +125,24 @@ public class DefaultEdqsRepository implements EdqsRepository {
         statsService.reportEdqsDataQuery(tenantId, query, System.nanoTime() - startNs);
         return result;
     }
+    /**
+     * Removes tenant repos matching the predicate (e.g. lost Kafka partitions).
+     *
+     * @param predicate tenant id predicate selecting which repos to evict
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void clearIf(Predicate<TenantId> predicate) {
         repos.keySet().removeIf(predicate);
     }
+    /**
+     * Clears all tenant indexes (used on OOM recovery or full resync).
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void clear() {

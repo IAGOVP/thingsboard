@@ -26,11 +26,17 @@ import org.thingsboard.server.dao.model.sql.WidgetTypeInfoEntity;
 import java.util.List;
 import java.util.UUID;
 
+
 /**
 
- * widget type info repository contract.
+ * Spring Data JPA repository for widget type info entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
+
 
 public interface WidgetTypeInfoRepository extends JpaRepository<WidgetTypeInfoEntity, UUID>  {
 
@@ -65,6 +71,21 @@ public interface WidgetTypeInfoRepository extends JpaRepository<WidgetTypeInfoEn
                             "OR :searchText ILIKE '% ' || currentTag || ' %')" +
                     "))))"
     )
+    /**
+     * Finds system widget types.
+     *
+     * @param systemTenantId system tenant id ({@link UUID})
+     * @param searchText search text ({@link String})
+     * @param fullSearch full search
+     * @param deprecatedFilterEnabled deprecated filter enabled
+     * @param deprecatedFilter deprecated filter
+     * @param widgetTypesEmpty widget types empty
+     * @param widgetTypes widget types ({@link List})
+     * @param scadaFirst scada first
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<WidgetTypeInfoEntity> findSystemWidgetTypes(@Param("systemTenantId") UUID systemTenantId,
                                                           @Param("searchText") String searchText,
                                                           @Param("fullSearch") boolean fullSearch,
@@ -106,6 +127,22 @@ public interface WidgetTypeInfoRepository extends JpaRepository<WidgetTypeInfoEn
                             "OR :searchText ILIKE '% ' || currentTag || ' %')" +
                     "))))"
     )
+    /**
+     * Finds all tenant widget types by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param nullTenantId null tenant id ({@link UUID})
+     * @param searchText search text ({@link String})
+     * @param fullSearch full search
+     * @param deprecatedFilterEnabled deprecated filter enabled
+     * @param deprecatedFilter deprecated filter
+     * @param widgetTypesEmpty widget types empty
+     * @param widgetTypes widget types ({@link List})
+     * @param scadaFirst scada first
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<WidgetTypeInfoEntity> findAllTenantWidgetTypesByTenantId(@Param("tenantId") UUID tenantId,
                                                                   @Param("nullTenantId") UUID nullTenantId,
                                                                   @Param("searchText") String searchText,
@@ -148,6 +185,21 @@ public interface WidgetTypeInfoRepository extends JpaRepository<WidgetTypeInfoEn
                             "OR :searchText ILIKE '% ' || currentTag || ' %')" +
                     "))))"
     )
+    /**
+     * Finds tenant widget types by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param searchText search text ({@link String})
+     * @param fullSearch full search
+     * @param deprecatedFilterEnabled deprecated filter enabled
+     * @param deprecatedFilter deprecated filter
+     * @param widgetTypesEmpty widget types empty
+     * @param widgetTypes widget types ({@link List})
+     * @param scadaFirst scada first
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<WidgetTypeInfoEntity> findTenantWidgetTypesByTenantId(@Param("tenantId") UUID tenantId,
                                                                @Param("searchText") String searchText,
                                                                @Param("fullSearch") boolean fullSearch,
@@ -161,6 +213,13 @@ public interface WidgetTypeInfoRepository extends JpaRepository<WidgetTypeInfoEn
     @Query("SELECT wti FROM WidgetTypeInfoEntity wti, WidgetsBundleWidgetEntity wbw " +
             "WHERE wbw.widgetsBundleId = :widgetsBundleId " +
             "AND wbw.widgetTypeId = wti.id ORDER BY wbw.widgetTypeOrder")
+    /**
+     * Finds widget types infos by widgets bundle id.
+     *
+     * @param widgetsBundleId widgets bundle id ({@link UUID})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     List<WidgetTypeInfoEntity> findWidgetTypesInfosByWidgetsBundleId(@Param("widgetsBundleId") UUID widgetsBundleId);
 
     @Query(nativeQuery = true,
@@ -198,6 +257,20 @@ public interface WidgetTypeInfoRepository extends JpaRepository<WidgetTypeInfoEn
                             "OR :searchText ILIKE '% ' || currentTag || ' %')" +
                     "))))"
     )
+    /**
+     * Finds widget types infos by widgets bundle id.
+     *
+     * @param widgetsBundleId widgets bundle id ({@link UUID})
+     * @param searchText search text ({@link String})
+     * @param fullSearch full search
+     * @param deprecatedFilterEnabled deprecated filter enabled
+     * @param deprecatedFilter deprecated filter
+     * @param widgetTypesEmpty widget types empty
+     * @param widgetTypes widget types ({@link List})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<WidgetTypeInfoEntity> findWidgetTypesInfosByWidgetsBundleId(@Param("widgetsBundleId") UUID widgetsBundleId,
                                                                      @Param("searchText") String searchText,
                                                                      @Param("fullSearch") boolean fullSearch,
@@ -213,22 +286,56 @@ public interface WidgetTypeInfoRepository extends JpaRepository<WidgetTypeInfoEn
                     "(select id from widget_type where tenant_id = :tenantId " +
                     "and (image = :imageLink or descriptor ILIKE CONCAT('%\"', :imageLink, '\"%')) limit :limit)"
     )
+    /**
+     * Finds by tenant and image url.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param imageLink image link ({@link String})
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     List<WidgetTypeInfoEntity> findByTenantAndImageUrl(@Param("tenantId") UUID tenantId, @Param("imageLink") String imageLink, @Param("limit") int limit);
 
     @Query(nativeQuery = true,
             value = "SELECT * FROM widget_type_info_view wti WHERE wti.id IN " +
                     "(select id from widget_type where image = :imageLink or descriptor ILIKE CONCAT('%', :imageLink, '%') limit :limit)"
     )
+    /**
+     * Finds by image url.
+     *
+     * @param imageLink image link ({@link String})
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     List<WidgetTypeInfoEntity> findByImageUrl(@Param("imageLink") String imageLink, @Param("limit") int limit);
 
     @Query("SELECT new org.thingsboard.server.common.data.EntityInfo(w.id, 'WIDGET_TYPE', w.name) " +
             "FROM WidgetTypeEntity w WHERE w.tenantId = :tenantId AND ilike(cast(w.descriptor as string), CONCAT('%', :link, '%')) = true")
+    /**
+     * Finds widget type infos by tenant id and resource link.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param link link ({@link String})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     List<EntityInfo> findWidgetTypeInfosByTenantIdAndResourceLink(@Param("tenantId") UUID tenantId,
                                                                   @Param("link") String link,
                                                                   Pageable pageable);
 
     @Query("SELECT new org.thingsboard.server.common.data.EntityInfo(w.id, 'WIDGET_TYPE', w.name) " +
             "FROM WidgetTypeEntity w WHERE ilike(cast(w.descriptor as string), CONCAT('%', :link, '%')) = true")
+    /**
+     * Finds widget type infos by resource link.
+     *
+     * @param link link ({@link String})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     List<EntityInfo> findWidgetTypeInfosByResourceLink(@Param("link") String link,
                                                        Pageable pageable);
 }

@@ -27,18 +27,42 @@ public class TbLwM2MLatchCallback<R, T> implements DownlinkRequestCallback<R, T>
 
     private final CountDownLatch countDownLatch;
     private final DownlinkRequestCallback<R, T> callback;
+    /**
+     * Handles success.
+     *
+     * @param request request payload with operation parameters
+     * @param response response ({@link T})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onSuccess(R request, T response) {
         callback.onSuccess(request, response);
         countDownLatch.countDown();
     }
+    /**
+     * Handles validation error.
+     *
+     * @param params params ({@link String})
+     * @param msg msg ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onValidationError(String params, String msg) {
         callback.onValidationError(params, msg);
         countDownLatch.countDown();
     }
+    /**
+     * Handles error.
+     *
+     * @param params params ({@link String})
+     * @param e e ({@link Exception})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onError(String params, Exception e) {

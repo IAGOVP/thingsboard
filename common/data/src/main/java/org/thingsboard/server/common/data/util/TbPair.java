@@ -26,6 +26,13 @@ import lombok.Data;
 public class TbPair<S, T> {
     private S first;
     private T second;
+    /**
+     * Of.
+     *
+     * @param first first ({@link S})
+     * @param second second ({@link T})
+     * @return {@link TbPair}
+     */
 
     public static <S, T> TbPair<S, T> of(S first, T second) {
         return new TbPair<>(first, second);

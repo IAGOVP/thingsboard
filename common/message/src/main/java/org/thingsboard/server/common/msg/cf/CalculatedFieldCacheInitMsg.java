@@ -19,11 +19,13 @@ import lombok.Data;
 import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.msg.MsgType;
 import org.thingsboard.server.common.msg.ToCalculatedFieldSystemMsg;
+/**
+ * Internal actor or queue message: calculated field cache init msg.
+ *
+ * <p>Serialized between tb-core, rule-engine, transport, and edge services.
+ */
 
 @Data
-/**
- * Message: calculated field cache init msg.
- */
 public class CalculatedFieldCacheInitMsg implements ToCalculatedFieldSystemMsg {
 
     private final TenantId tenantId;

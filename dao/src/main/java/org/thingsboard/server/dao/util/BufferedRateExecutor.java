@@ -17,10 +17,48 @@ package org.thingsboard.server.dao.util;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
- * Created by ashvayka on 24.10.18.
+
+
+
+
+
+ * buffered rate executor contract (DAO utilities (KV conversion, rate executors, JSON mapping)).
+
+
+
+
+
  */
+
+
+
+
+
+
 public interface BufferedRateExecutor<T extends AsyncTask, F extends ListenableFuture> {
+    /**
+     * Submit.
+     *
+     * @param task task ({@link T})
+     * @return {@link F}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     F submit(T task);
 

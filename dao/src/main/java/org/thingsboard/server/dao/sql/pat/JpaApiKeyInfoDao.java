@@ -32,8 +32,11 @@ import org.thingsboard.server.dao.util.SqlDao;
 
 import java.util.UUID;
 /**
- * JPA implementation of api key info dao.
+ * JPA/PostgreSQL implementation of api key info dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Slf4j
 @SqlDao
@@ -42,16 +45,37 @@ public class JpaApiKeyInfoDao extends JpaAbstractDao<ApiKeyInfoEntity, ApiKeyInf
 
     @Autowired
     private ApiKeyInfoRepository apiKeyInfoRepository;
+    /**
+     * Finds by user id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<ApiKeyInfo> findByUserId(TenantId tenantId, UserId userId, PageLink pageLink) {
         return DaoUtil.toPageData(apiKeyInfoRepository.findByUserId(tenantId.getId(), userId.getId(), pageLink.getTextSearch(), DaoUtil.toPageable(pageLink)));
     }
+    /**
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Class<ApiKeyInfoEntity> getEntityClass() {
         return ApiKeyInfoEntity.class;
     }
+    /**
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected JpaRepository<ApiKeyInfoEntity, UUID> getRepository() {

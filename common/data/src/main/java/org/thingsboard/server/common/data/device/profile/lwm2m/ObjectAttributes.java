@@ -43,10 +43,20 @@ public class ObjectAttributes implements Serializable {
     private Double st;
     private Long epmin;
     private Long epmax;
+    /**
+     * Returns ver.
+     *
+     * @return the LwM2m.Version value
+     */
 
     public LwM2m.Version getVer(){
         return  ver != null ? new LwM2m.Version(ver) : null;
     }
+    /**
+     * Returns lwm2m.
+     *
+     * @return the LwM2m.LwM2mVersion value
+     */
 
     public LwM2m.LwM2mVersion getLwm2m(){
         return lwm2m != null ?  LwM2m.LwM2mVersion.get(lwm2m) : null;

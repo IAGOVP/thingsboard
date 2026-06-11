@@ -29,7 +29,7 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 @AllArgsConstructor
 @Data
 /**
- * Alarm assignee.
+ * User assigned as responsible for handling an alarm.
  */
 public class AlarmAssignee implements Serializable {
 
@@ -39,6 +39,11 @@ public class AlarmAssignee implements Serializable {
     private final String firstName;
     private final String lastName;
     private final String email;
+    /**
+     * Returns title.
+     *
+     * @return {@link String}
+     */
 
     @JsonIgnore
     public String getTitle() {

@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.UUID;
 
 /**
- * Typed identifier for event.
+ * Typed identifier for a lifecycle or debug event record.
  */
 public class EventId extends UUIDBased {
 
@@ -31,6 +31,12 @@ public class EventId extends UUIDBased {
     public EventId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * From string.
+     *
+     * @param eventId event id ({@link String})
+     * @return {@link EventId}
+     */
 
     public static EventId fromString(String eventId) {
         return new EventId(UUID.fromString(eventId));

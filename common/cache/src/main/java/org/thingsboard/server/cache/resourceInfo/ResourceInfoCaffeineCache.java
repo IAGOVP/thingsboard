@@ -23,13 +23,24 @@ import org.thingsboard.server.common.data.CacheConstants;
 import org.thingsboard.server.common.data.TbResourceInfo;
 
 
+/**
+ * Caffeine {@link CaffeineTbTransactionalCache} for {@link org.thingsboard.server.common.data.TbResourceInfo} entities.
+ *
+ * <p>Spring bean {@code "ResourceInfoCache"} activated when
+ * {@code cache.type=caffeine} (default). Cache name: {@link org.thingsboard.server.common.data.CacheConstants#RESOURCE_INFO_CACHE}.
+ *
+ * @see ResourceInfoCacheKey
+ * @see CaffeineTbTransactionalCache
+ */
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "caffeine", matchIfMissing = true)
 @Service("ResourceInfoCache")
-/**
- * Resource info caffeine cache.
- */
 public class ResourceInfoCaffeineCache extends CaffeineTbTransactionalCache<ResourceInfoCacheKey, TbResourceInfo> {
 
+    /**
+     * Wires the cache from the Spring {@link org.springframework.cache.CacheManager}.
+     *
+     * @param cacheManager manager built by {@link TbCaffeineCacheConfiguration}
+     */
     public ResourceInfoCaffeineCache(CacheManager cacheManager) {
         super(cacheManager, CacheConstants.RESOURCE_INFO_CACHE);
     }

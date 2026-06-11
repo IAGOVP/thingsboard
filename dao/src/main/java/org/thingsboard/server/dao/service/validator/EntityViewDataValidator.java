@@ -29,8 +29,11 @@ import org.thingsboard.server.dao.tenant.TenantService;
 
 import static org.thingsboard.server.dao.model.ModelConstants.NULL_UUID;
 /**
- * Entity view data validator.
+ * Validates entity view entities before persistence.
+ *
+ * <p>Enforces constraints, uniqueness, and referential integrity at the DAO layer.
  */
+
 
 @Component
 @AllArgsConstructor
@@ -40,11 +43,16 @@ public class EntityViewDataValidator extends DataValidator<EntityView> {
     private final TenantService tenantService;
     private final CustomerDao customerDao;
 
+    
     /**
-
-     * Validate create.
-
+     * Validates create.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityView entity view ({@link EntityView})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateCreate(TenantId tenantId, EntityView entityView) {
@@ -54,11 +62,16 @@ public class EntityViewDataValidator extends DataValidator<EntityView> {
                 });
     }
 
+    
     /**
-
-     * Validate update.
-
+     * Validates update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityView entity view ({@link EntityView})
+     * @return {@link EntityView}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected EntityView validateUpdate(TenantId tenantId, EntityView entityView) {
@@ -71,11 +84,16 @@ public class EntityViewDataValidator extends DataValidator<EntityView> {
         return opt.orElse(null);
     }
 
+    
     /**
-
-     * Validate data impl.
-
+     * Validates data impl.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityView entity view ({@link EntityView})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateDataImpl(TenantId tenantId, EntityView entityView) {

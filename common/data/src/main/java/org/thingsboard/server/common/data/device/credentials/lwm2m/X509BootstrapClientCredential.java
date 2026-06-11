@@ -19,6 +19,11 @@ package org.thingsboard.server.common.data.device.credentials.lwm2m;
  * X509bootstrap client credential.
  */
 public class X509BootstrapClientCredential extends AbstractLwM2MBootstrapClientCredentialWithKeys {
+    /**
+     * Returns security mode.
+     *
+     * @return {@link LwM2MSecurityMode}
+     */
 
     @Override
     public LwM2MSecurityMode getSecurityMode() {

@@ -108,6 +108,11 @@ public class SmppSmsProviderConfiguration implements SmsProviderConfiguration {
                     "13 - Extended Kanji JIS (X 0212-1990)\n" +
                     "14 - Korean Graphic Character Set (KS C 5601/KS X 1001)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Byte codingScheme;
+    /**
+     * Returns type.
+     *
+     * @return {@link SmsProviderType}
+     */
 
     @Override
     public SmsProviderType getType() {

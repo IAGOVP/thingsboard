@@ -58,6 +58,12 @@ public class LwM2MTransportBootstrapConfig implements LwM2MSecureServerConfig {
     @Getter
     @Value("${transport.lwm2m.bootstrap.security.bind_port:}")
     private Integer securePort;
+    /**
+     * Lwm2m bootstrap credentials.
+     *
+     * @return {@link SslCredentialsConfig}
+     * @throws Exception on processing failure
+     */
 
     @Bean
     @ConfigurationProperties(prefix = "transport.lwm2m.bootstrap.security.credentials")
@@ -70,6 +76,12 @@ public class LwM2MTransportBootstrapConfig implements LwM2MSecureServerConfig {
     private SslCredentialsConfig credentialsConfig;
 
     private final List<Runnable> serverReloadCallbacks = new CopyOnWriteArrayList<>();
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @PostConstruct
     public void init() {
@@ -78,7 +90,13 @@ public class LwM2MTransportBootstrapConfig implements LwM2MSecureServerConfig {
             notifyServerReload();
         });
     }
-
+    /**
+     * Register server reload callback.
+     *
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void registerServerReloadCallback(Runnable callback) {
         serverReloadCallbacks.add(callback);
     }
@@ -92,6 +110,12 @@ public class LwM2MTransportBootstrapConfig implements LwM2MSecureServerConfig {
             }
         }
     }
+    /**
+     * Returns ssl credentials.
+     *
+     * @return {@link SslCredentials}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public SslCredentials getSslCredentials() {

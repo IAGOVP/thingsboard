@@ -22,6 +22,11 @@ import lombok.Data;
  * Configuration for current owner dynamic sourceuration.
  */
 public class CurrentOwnerDynamicSourceConfiguration implements CfArgumentDynamicSourceConfiguration {
+    /**
+     * Returns type.
+     *
+     * @return {@link CFArgumentDynamicSourceType}
+     */
 
     @Override
     public CFArgumentDynamicSourceType getType() {

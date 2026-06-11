@@ -26,23 +26,33 @@ import java.util.function.Supplier;
 public interface TbActorCtx extends TbActorRef {
 
     /** This actor's id. */
+    /** Returns the self. */
     TbActorId getSelf();
 
+    /** Returns the parent ref. */
     TbActorRef getParentRef();
 
+    /** Enqueues a message on the target actor's mailbox (normal priority). */
     void tell(TbActorId target, TbActorMsg msg);
 
+    /** Stops the actor and releases its resources. */
     void stop(TbActorId target);
 
+    /** Returns the or create child actor. */
     TbActorRef getOrCreateChildActor(TbActorId actorId, Supplier<String> dispatcher, Supplier<TbActorCreator> creator, Supplier<Boolean> createCondition);
 
+    /** Broadcasts a message to child actors. */
     void broadcastToChildren(TbActorMsg msg);
 
+    /** Broadcasts a message to child actors. */
     void broadcastToChildren(TbActorMsg msg, boolean highPriority);
 
+    /** Broadcast to children by type. */
     void broadcastToChildrenByType(TbActorMsg msg, EntityType entityType);
 
+    /** Broadcasts a message to child actors. */
     void broadcastToChildren(TbActorMsg msg, Predicate<TbActorId> childFilter);
 
+    /** Returns child actor ids matching {@code childFilter}. */
     List<TbActorId> filterChildren(Predicate<TbActorId> childFilter);
 }

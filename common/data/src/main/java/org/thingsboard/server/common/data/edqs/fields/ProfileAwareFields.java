@@ -18,11 +18,25 @@ package org.thingsboard.server.common.data.edqs.fields;
 import java.util.UUID;
 
 /**
- * profile aware fields contract.
+ * Lightweight profile aware field selection for EDQS queries and events (EDQS data — lightweight entity field DTOs for EDQS).
  */
+
 public interface ProfileAwareFields extends EntityFields {
+    /**
+     * Returns profile name.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     String getProfileName();
+    /**
+     * Returns profile id.
+     *
+     * @return {@link UUID}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     UUID getProfileId();
 

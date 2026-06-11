@@ -18,7 +18,7 @@ package org.thingsboard.server.common.data.alarm;
 import lombok.Getter;
 
 /**
- * alarm comment sub type values.
+ * Further classification of alarm comment content.
  */
 public enum AlarmCommentSubType {
 

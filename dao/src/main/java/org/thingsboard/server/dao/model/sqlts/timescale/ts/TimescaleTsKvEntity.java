@@ -109,8 +109,11 @@ import static org.thingsboard.server.dao.sqlts.timescale.AggregationRepository.F
                 query = FIND_COUNT_QUERY + FROM_WHERE_CLAUSE,
                 resultSetMapping = "timescaleCountMapping"
 /**
- * Timescale ts kv entity.
+ * JPA/Cassandra row model for timescale ts kv.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
         )
 })
 public final class TimescaleTsKvEntity extends AbstractTsKvEntity {
@@ -178,6 +181,12 @@ public final class TimescaleTsKvEntity extends AbstractTsKvEntity {
             }
         }
     }
+    /**
+     * Is not empty.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isNotEmpty() {

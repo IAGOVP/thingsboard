@@ -21,14 +21,13 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.data.security.DeviceCredentials;
 import org.thingsboard.server.common.msg.MsgType;
 import org.thingsboard.server.common.msg.ToDeviceActorNotificationMsg;
+/**
+ * Internal actor or queue message: device credentials update notification msg.
+ *
+ * <p>Serialized between tb-core, rule-engine, transport, and edge services.
+ */
 
-/**
- * @author Andrew Shvayka
- */
 @Data
-/**
- * Message: device credentials update notification msg.
- */
 public class DeviceCredentialsUpdateNotificationMsg implements ToDeviceActorNotificationMsg {
 
     private static final long serialVersionUID = -3956907402411126990L;
@@ -36,10 +35,6 @@ public class DeviceCredentialsUpdateNotificationMsg implements ToDeviceActorNoti
     private final TenantId tenantId;
     private final DeviceId deviceId;
 
-    /**
-     * LwM2M
-     * @return
-     */
     private final DeviceCredentials deviceCredentials;
 
     @Override

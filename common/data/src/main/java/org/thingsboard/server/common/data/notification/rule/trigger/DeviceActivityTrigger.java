@@ -38,11 +38,21 @@ public class DeviceActivityTrigger implements NotificationRuleTrigger {
     private final String deviceName;
     private final String deviceType;
     private final String deviceLabel;
+    /**
+     * Returns originator entity id.
+     *
+     * @return {@link EntityId}
+     */
 
     @Override
     public EntityId getOriginatorEntityId() {
         return deviceId;
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     */
 
     @Override
     public NotificationRuleTriggerType getType() {

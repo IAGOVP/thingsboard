@@ -23,11 +23,11 @@ import org.thingsboard.server.common.stats.StatsCounter;
 
 import java.util.concurrent.TimeoutException;
 
-@Slf4j
-@AllArgsConstructor
 /**
  * Script stat callback.
  */
+@Slf4j
+@AllArgsConstructor
 public class ScriptStatCallback<T> implements FutureCallback<T> {
 
     private final StatsCounter successMsgs;

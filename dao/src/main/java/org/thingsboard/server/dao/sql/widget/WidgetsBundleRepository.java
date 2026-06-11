@@ -28,18 +28,41 @@ import org.thingsboard.server.dao.model.sql.WidgetsBundleEntity;
 import java.util.List;
 import java.util.UUID;
 
+
 /**
 
- * widgets bundle repository contract.
+ * Spring Data JPA repository for widgets bundle entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
 
+
 public interface WidgetsBundleRepository extends JpaRepository<WidgetsBundleEntity, UUID>, ExportableEntityRepository<WidgetsBundleEntity> {
+    /**
+     * Finds widgets bundle by tenant id and alias.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alias alias ({@link String})
+     * @return {@link WidgetsBundleEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     WidgetsBundleEntity findWidgetsBundleByTenantIdAndAlias(UUID tenantId, String alias);
 
     @Query("SELECT wb FROM WidgetsBundleEntity wb WHERE wb.tenantId = :systemTenantId " +
             "AND (:textSearch is NULL OR ilike(wb.title, CONCAT('%', :textSearch, '%')) = true)")
+    /**
+     * Finds system widgets bundles.
+     *
+     * @param systemTenantId system tenant id ({@link UUID})
+     * @param textSearch text search ({@link String})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<WidgetsBundleEntity> findSystemWidgetsBundles(@Param("systemTenantId") UUID systemTenantId,
                                                        @Param("textSearch") String textSearch,
                                                        Pageable pageable);
@@ -78,18 +101,45 @@ public interface WidgetsBundleRepository extends JpaRepository<WidgetsBundleEnti
                         "OR :textSearch ILIKE '% ' || currentTag || ' %')" +
                 "))))"
     )
+    /**
+     * Finds system widgets bundles full search.
+     *
+     * @param systemTenantId system tenant id ({@link UUID})
+     * @param textSearch text search ({@link String})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<WidgetsBundleEntity> findSystemWidgetsBundlesFullSearch(@Param("systemTenantId") UUID systemTenantId,
                                                                  @Param("textSearch") String textSearch,
                                                                  Pageable pageable);
 
     @Query("SELECT wb FROM WidgetsBundleEntity wb WHERE wb.tenantId = :tenantId " +
             "AND (:textSearch IS NULL OR ilike(wb.title, CONCAT('%', :textSearch, '%')) = true)")
+    /**
+     * Finds tenant widgets bundles by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param textSearch text search ({@link String})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<WidgetsBundleEntity> findTenantWidgetsBundlesByTenantId(@Param("tenantId") UUID tenantId,
                                                                  @Param("textSearch") String textSearch,
                                                                  Pageable pageable);
 
     @Query("SELECT wb FROM WidgetsBundleEntity wb WHERE wb.tenantId IN (:tenantIds) " +
             "AND (:textSearch IS NULL OR ilike(wb.title, CONCAT('%', :textSearch, '%')) = true)")
+    /**
+     * Finds all tenant widgets bundles by tenant ids.
+     *
+     * @param tenantIds tenant ids ({@link List})
+     * @param textSearch text search ({@link String})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<WidgetsBundleEntity> findAllTenantWidgetsBundlesByTenantIds(@Param("tenantIds") List<UUID> tenantIds,
                                                                     @Param("textSearch") String textSearch,
                                                                     Pageable pageable);
@@ -129,28 +179,87 @@ public interface WidgetsBundleRepository extends JpaRepository<WidgetsBundleEnti
                             "OR :textSearch ILIKE '% ' || currentTag || ' %')" +
                     "))))"
     )
+    /**
+     * Finds all tenant widgets bundles by tenant ids full search.
+     *
+     * @param tenantIds tenant ids ({@link List})
+     * @param textSearch text search ({@link String})
+     * @param scadaFirst scada first
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<WidgetsBundleEntity> findAllTenantWidgetsBundlesByTenantIdsFullSearch(@Param("tenantIds") List<UUID> tenantIds,
                                                                                @Param("textSearch") String textSearch,
                                                                                @Param("scadaFirst") boolean scadaFirst,
                                                                                Pageable pageable);
+    /**
+     * Finds first by tenant id and title.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param title title ({@link String})
+     * @return {@link WidgetsBundleEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     WidgetsBundleEntity findFirstByTenantIdAndTitle(UUID tenantId, String title);
+    /**
+     * Returns external id by id.
+     *
+     * @param id entity UUID primary key
+     * @return {@link UUID}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Query("SELECT externalId FROM WidgetsBundleEntity WHERE id = :id")
     UUID getExternalIdById(@Param("id") UUID id);
+    /**
+     * Finds by tenant and image url.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param imageLink image link ({@link String})
+     * @param lmt lmt
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Query(nativeQuery = true, value = "SELECT * FROM widgets_bundle wb WHERE wb.tenant_id = :tenantId and wb.image = :imageLink limit :lmt")
     List<WidgetsBundleEntity> findByTenantAndImageUrl(@Param("tenantId") UUID tenantId, @Param("imageLink") String imageLink, @Param("lmt") int lmt);
+    /**
+     * Finds by image url.
+     *
+     * @param imageLink image link ({@link String})
+     * @param lmt lmt
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Query(nativeQuery = true, value = "SELECT * FROM widgets_bundle wb WHERE wb.image = :imageLink limit :lmt")
     List<WidgetsBundleEntity> findByImageUrl(@Param("imageLink") String imageLink, @Param("lmt") int lmt);
 
     @Query("SELECT new org.thingsboard.server.common.data.edqs.fields.WidgetsBundleFields(w.id, w.createdTime, w.tenantId," +
             "w.alias, w.version) FROM WidgetsBundleEntity w WHERE w.id > :id ORDER BY w.id")
+    /**
+     * Finds next batch.
+     *
+     * @param id entity UUID primary key
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     List<WidgetsBundleFields> findNextBatch(@Param("id") UUID id, Limit limit);
 
     @Query("SELECT wb FROM WidgetsBundleEntity wb WHERE " +
             "wb.id IN (:widgetsBundleIds) AND (wb.tenantId = :tenantId OR wb.tenantId = :systemTenantId)")
+    /**
+     * Finds system or tenant widgets bundles by id in.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param systemTenantId system tenant id ({@link UUID})
+     * @param widgetsBundleIds widgets bundle ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     List<WidgetsBundleEntity> findSystemOrTenantWidgetsBundlesByIdIn(@Param("tenantId") UUID tenantId,
                                                                      @Param("systemTenantId") UUID systemTenantId,
                                                                      @Param("widgetsBundleIds") List<UUID> widgetsBundleIds);

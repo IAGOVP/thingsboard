@@ -20,15 +20,25 @@ import org.thingsboard.server.common.data.EntityType;
 import org.thingsboard.server.common.data.edqs.fields.AssetFields;
 
 import java.util.UUID;
+
 /**
- * In-memory EDQS projection of asset entity fields and metadata.
+ * In-memory EDQS projection of asset entity fields.
+ *
+ * <p>Updated from {@link org.thingsboard.server.common.data.edqs.EdqsEvent} and used during query execution.
  */
+
 @ToString(callSuper = true)
 public class AssetData extends ProfileAwareData<AssetFields> {
 
     public AssetData(UUID id) {
         super(id);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

@@ -57,13 +57,28 @@ public abstract class LwM2MClientOtaInfo<Strategy, State, Result> {
         this.baseUrl = baseUrl;
         this.strategy = strategy;
     }
-
+    /**
+     * Updates target.
+     *
+     * @param targetName target name ({@link String})
+     * @param targetVersion target version ({@link String})
+     * @param newTargetUrl new target url ({@link Optional})
+     * @param newTargetTag new target tag ({@link Optional})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void updateTarget(String targetName, String targetVersion, Optional<String> newTargetUrl, Optional<String> newTargetTag) {
         this.targetName = targetName;
         this.targetVersion = targetVersion;
         this.targetUrl = newTargetUrl.orElse(null);
         this.targetTag = newTargetTag.orElse(null);
     }
+    /**
+     * Is update required.
+     *
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @JsonIgnore
     public boolean isUpdateRequired() {
@@ -90,24 +105,60 @@ public abstract class LwM2MClientOtaInfo<Strategy, State, Result> {
             }
         }
     }
+    /**
+     * Is supported.
+     *
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @JsonIgnore
     public boolean isSupported() {
         return StringUtils.isNotEmpty(currentName) || StringUtils.isNotEmpty(currentVersion) || StringUtils.isNotEmpty(currentVersion3);
     }
+    /**
+     * Is assigned.
+     *
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @JsonIgnore
     public boolean isAssigned() {
         return StringUtils.isNotEmpty(targetName) && StringUtils.isNotEmpty(targetVersion);
     }
-
+    /**
+     * Updates the requested data.
+     *
+     * @param result result ({@link Result})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public abstract void update(Result result);
-
+    /**
+     * Returns package id.
+     *
+     * @param name name ({@link String})
+     * @param version version ({@link String})
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
     protected static String getPackageId(String name, String version) {
         return (StringUtils.isNotEmpty(name) ? name : "") + (StringUtils.isNotEmpty(version) ? version : "");
     }
-
+    /**
+     * Returns type.
+     *
+     * @return {@link OtaPackageType}
+     * @throws Exception on processing failure
+     */
     public abstract OtaPackageType getType();
+    /**
+     * Returns target package id.
+     *
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
 
     @JsonIgnore
     public String getTargetPackageId() {

@@ -58,27 +58,74 @@ import java.time.ZonedDateTime;
  * agg interval contract.
  */
 public interface AggInterval {
+    /**
+     * Returns type.
+     *
+     * @return {@link AggIntervalType}
+     */
 
     @JsonIgnore
     AggIntervalType getType();
+    /**
+     * Returns zone id.
+     *
+     * @return {@link ZoneId}
+     */
 
     @JsonIgnore
     ZoneId getZoneId();
+    /**
+     * Returns current interval duration millis.
+     *
+     * @return the long result
+     */
 
     @JsonIgnore
     long getCurrentIntervalDurationMillis();
+    /**
+     * Returns current interval start ts.
+     *
+     * @return the long result
+     */
 
     @JsonIgnore
     long getCurrentIntervalStartTs();
+/**
+ * Returns date time interval start ts.
+ *
+ * @param dateTime date time ({@link ZonedDateTime})
+ * @return the long result
+ */
 
     long getDateTimeIntervalStartTs(ZonedDateTime dateTime);
+    /**
+     * Returns current interval end ts.
+     *
+     * @return the long result
+     */
 
     @JsonIgnore
     long getCurrentIntervalEndTs();
+/**
+ * Returns date time interval end ts.
+ *
+ * @param dateTime date time ({@link ZonedDateTime})
+ * @return the long result
+ */
 
     long getDateTimeIntervalEndTs(ZonedDateTime dateTime);
+/**
+ * Returns next interval start.
+ *
+ * @param currentStart current start ({@link ZonedDateTime})
+ * @return {@link ZonedDateTime}
+ */
 
     ZonedDateTime getNextIntervalStart(ZonedDateTime currentStart);
+/**
+ * Validates the requested data.
+ *
+ */
 
     void validate();
 

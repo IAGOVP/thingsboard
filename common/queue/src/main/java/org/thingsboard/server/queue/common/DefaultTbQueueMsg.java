@@ -15,15 +15,16 @@
  */
 package org.thingsboard.server.queue.common;
 
+import java.util.UUID;
+
+
 import lombok.Data;
 import org.thingsboard.server.queue.TbQueueMsg;
 
-import java.util.UUID;
-
-@Data
 /**
- * Message: default tb queue msg.
+ * Default {@link TbQueueMsg} implementation with byte-keyed headers and byte array payload.
  */
+@Data
 public class DefaultTbQueueMsg implements TbQueueMsg {
     private final UUID key;
     private final byte[] data;

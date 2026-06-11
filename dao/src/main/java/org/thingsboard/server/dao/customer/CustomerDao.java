@@ -29,55 +29,79 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * The Interface CustomerDao.
+ * Persistence contract for customer.
+ *
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (customer entity persistence and caching).
  */
+
 public interface CustomerDao extends Dao<Customer>, TenantEntityDao<Customer>, ExportableEntityDao<CustomerId, Customer> {
 
+    
     /**
-     * Save or update customer object
+     * Saves or persists the requested data.
      *
-     * @param customer the customer object
-     * @return saved customer object
+     * @param tenantId tenant that owns the entity or operation
+     * @param customer customer ({@link Customer})
+     * @return {@link Customer}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     Customer save(TenantId tenantId, Customer customer);
 
+    
     /**
-     * Find customers by tenant id and page link.
+     * Finds customers by tenant id.
      *
-     * @param tenantId the tenant id
-     * @param pageLink the page link
-     * @return the page of customer objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<Customer> findCustomersByTenantId(UUID tenantId, PageLink pageLink);
 
+    
     /**
-     * Find customer by tenantId and customer title.
+     * Finds customer by tenant id and title.
      *
-     * @param tenantId the tenantId
-     * @param title the customer title
-     * @return the optional customer object
+     * @param tenantId tenant that owns the entity or operation
+     * @param title title ({@link String})
+     * @return optional {@link Customer}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     Optional<Customer> findCustomerByTenantIdAndTitle(UUID tenantId, String title);
 
+    
     /**
-     * Find public customer by tenantId.
+     * Finds public customer by tenant id.
      *
-     * @param tenantId the tenantId
-     * @return the optional public customer object
+     * @param tenantId tenant that owns the entity or operation
+     * @return optional {@link Customer}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     Optional<Customer> findPublicCustomerByTenantId(UUID tenantId);
 
 
+    
     /**
-     * Find customers with the same title within the same tenant.
-     * This method was created to upgrade customers with the same title before creation of
-     * CONSTRAINT customer_title_unq_key UNIQUE (tenant_id, title).
-     * If constraint already exists this method will return nothing.
+     * Finds customers with the same title.
      *
-     * @param pageLink the page link
-     * @return the page of customer objects
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<Customer> findCustomersWithTheSameTitle(PageLink pageLink);
+    /**
+     * Finds customers by tenant id and ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerIds customer ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<Customer> findCustomersByTenantIdAndIds(UUID tenantId, List<UUID> customerIds);
 

@@ -89,12 +89,22 @@ public class AlarmRuleDefinition extends BaseData<CalculatedFieldId> implements 
         this.version = alarmRuleDefinition.version;
         this.additionalInfo = alarmRuleDefinition.additionalInfo;
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link CalculatedFieldId}
+     */
 
     @Schema(description = "JSON object with the Alarm Rule Id. Referencing non-existing Alarm Rule Id will cause error.")
     @Override
     public CalculatedFieldId getId() {
         return super.getId();
     }
+    /**
+     * Returns created time.
+     *
+     * @return the long result
+     */
 
     @Schema(description = "Timestamp of the alarm rule creation, in milliseconds", example = "1609459200000", accessMode = Schema.AccessMode.READ_ONLY)
     @Override
@@ -103,16 +113,31 @@ public class AlarmRuleDefinition extends BaseData<CalculatedFieldId> implements 
     }
 
     // Getter is ignored for serialization
+    /**
+     * Is debug mode.
+     *
+     * @return the boolean result
+     */
     @JsonIgnore
     public boolean isDebugMode() {
         return debugMode;
     }
 
     // Setter is annotated for deserialization
+    /**
+     * Set debug mode.
+     *
+     * @param debugMode debug mode
+     */
     @JsonSetter
     public void setDebugMode(boolean debugMode) {
         this.debugMode = debugMode;
     }
+    /**
+     * To calculated field.
+     *
+     * @return {@link CalculatedField}
+     */
 
     public CalculatedField toCalculatedField() {
         CalculatedField cf = new CalculatedField();
@@ -130,6 +155,12 @@ public class AlarmRuleDefinition extends BaseData<CalculatedFieldId> implements 
         cf.setAdditionalInfo(this.additionalInfo);
         return cf;
     }
+    /**
+     * From calculated field.
+     *
+     * @param cf cf ({@link CalculatedField})
+     * @return {@link AlarmRuleDefinition}
+     */
 
     public static AlarmRuleDefinition fromCalculatedField(CalculatedField cf) {
         AlarmRuleDefinition def = new AlarmRuleDefinition();

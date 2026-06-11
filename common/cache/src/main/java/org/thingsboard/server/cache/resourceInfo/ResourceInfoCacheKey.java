@@ -24,13 +24,16 @@ import org.thingsboard.server.common.data.id.TbResourceId;
 import java.io.Serial;
 import java.io.Serializable;
 
+/**
+ * Cache key for {@link org.thingsboard.server.common.data.TbResourceInfo} by tenant and resource key.
+ *
+ * @see ResourceInfoCaffeineCache
+ * @see ResourceInfoRedisCache
+ */
 @Getter
 @EqualsAndHashCode
 @RequiredArgsConstructor
 @Builder
-/**
- * Resource info cache key.
- */
 public class ResourceInfoCacheKey implements Serializable {
 
     @Serial

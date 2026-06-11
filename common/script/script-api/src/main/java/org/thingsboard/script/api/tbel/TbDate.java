@@ -118,6 +118,7 @@ public class TbDate implements Serializable, Cloneable {
     }
 
     public ZonedDateTime getZonedDateTime() {
+        /** Returns the zoned date time. */
         return getZonedDateTime(zoneIdUTC);
     }
     public ZonedDateTime getZonedDateTime(ZoneId zoneId) {
@@ -155,6 +156,7 @@ public class TbDate implements Serializable, Cloneable {
         return instant.toString();
     }
     public String toJSON() {
+        /** To iso string. */
         return toISOString();
     }
     public String toUTCString() {
@@ -255,21 +257,27 @@ public class TbDate implements Serializable, Cloneable {
     }
 
     public static long UTC(int year) {
+        /** Utc. */
         return UTC(year, 0, 0, 0, 0, 0, 0);
     }
     public static long UTC(int year, int month) {
+        /** Utc. */
         return UTC(year, month, 0, 0, 0, 0, 0);
     }
     public static long UTC(int year, int month, int date) {
+        /** Utc. */
         return UTC(year, month, date, 0, 0, 0, 0);
     }
     public static long UTC(int year, int month, int date, int hrs) {
+        /** Utc. */
         return UTC(year, month, date, hrs, 0, 0, 0);
     }
     public static long UTC(int year, int month, int date, int hrs, int min) {
+        /** Utc. */
         return UTC(year, month, date, hrs, min, 0, 0);
     }
     public static long UTC(int year, int month, int date, int hrs, int min, int sec) {
+        /** Utc. */
         return UTC(year, month, date, hrs, min, sec, 0);
     }
     public static long UTC(int year, int month, int date, int hrs, int min, int sec, int ms) {
@@ -406,6 +414,7 @@ public class TbDate implements Serializable, Cloneable {
         return instant.toEpochMilli();
     }
     public long valueOf(){
+        /** Returns the time. */
         return getTime() ;
     }
     public void setFullYear(int year) {
@@ -550,8 +559,10 @@ public class TbDate implements Serializable, Cloneable {
     private static Instant parseInstant(String s) {
         boolean isIsoFormat = s.length() > 0 && Character.isDigit(s.charAt(0));
         if (isIsoFormat) {
+            /** Returns the instant_iso_offset_date_time. */
             return getInstant_ISO_OFFSET_DATE_TIME(s);
         } else {
+            /** Returns the instant_rfc_1123. */
             return getInstant_RFC_1123(s);
         }
     }
@@ -612,6 +623,7 @@ public class TbDate implements Serializable, Cloneable {
             return Instant.from(formatter.parse(s));
         } catch (DateTimeParseException ex) {
             try {
+                /** Returns the instant with local zone offset id_rfc_1123. */
                 return getInstantWithLocalZoneOffsetId_RFC_1123(s);
             } catch (final DateTimeParseException e) {
                 throw new ConversionException("Cannot parse value [" + s + "] as instant");

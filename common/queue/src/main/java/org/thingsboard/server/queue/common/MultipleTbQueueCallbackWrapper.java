@@ -15,14 +15,15 @@
  */
 package org.thingsboard.server.queue.common;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
+
 import org.thingsboard.server.common.msg.queue.RuleEngineException;
 import org.thingsboard.server.queue.TbQueueCallback;
 import org.thingsboard.server.queue.TbQueueMsgMetadata;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 /**
- * Multiple tb queue callback wrapper.
+ * Aggregates multiple {@link TbQueueCallback} instances and fires once all complete.
  */
 public class MultipleTbQueueCallbackWrapper implements TbQueueCallback {
 

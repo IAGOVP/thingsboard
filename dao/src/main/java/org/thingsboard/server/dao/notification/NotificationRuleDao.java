@@ -28,23 +28,77 @@ import org.thingsboard.server.dao.ExportableEntityDao;
 
 import java.util.List;
 
+
 /**
 
- * Persistence contract for notification rule (see JPA/Cassandra implementations).
+ * Persistence contract for notification rule.
+
+ *
+
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (notification templates, targets, rules, and delivery requests).
 
  */
 
+
 public interface NotificationRuleDao extends Dao<NotificationRule>, ExportableEntityDao<NotificationRuleId, NotificationRule> {
+    /**
+     * Finds by tenant id and page link.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<NotificationRule> findByTenantIdAndPageLink(TenantId tenantId, PageLink pageLink);
+    /**
+     * Finds infos by tenant id and page link.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<NotificationRuleInfo> findInfosByTenantIdAndPageLink(TenantId tenantId, PageLink pageLink);
+    /**
+     * Exists by tenant id and target id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param targetId target id ({@link NotificationTargetId})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     boolean existsByTenantIdAndTargetId(TenantId tenantId, NotificationTargetId targetId);
+    /**
+     * Finds by tenant id and trigger type and enabled.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param triggerType trigger type ({@link NotificationRuleTriggerType})
+     * @param enabled enabled
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<NotificationRule> findByTenantIdAndTriggerTypeAndEnabled(TenantId tenantId, NotificationRuleTriggerType triggerType, boolean enabled);
+    /**
+     * Finds info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @return {@link NotificationRuleInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     NotificationRuleInfo findInfoById(TenantId tenantId, NotificationRuleId id);
+    /**
+     * Removes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void removeByTenantId(TenantId tenantId);
 

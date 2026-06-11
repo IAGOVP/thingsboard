@@ -82,22 +82,42 @@ public class NotificationRequest extends BaseData<NotificationRequestId> impleme
         this.status = other.status;
         this.stats = other.stats;
     }
+    /**
+     * Returns name.
+     *
+     * @return {@link String}
+     */
 
     @JsonIgnore
     @Override
     public String getName() {
         return "To targets " + targets;
     }
+    /**
+     * Returns sender id.
+     *
+     * @return {@link UserId}
+     */
 
     @JsonIgnore
     public UserId getSenderId() {
         return originatorEntityId instanceof UserId ? (UserId) originatorEntityId : null;
     }
+    /**
+     * Is sent.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     public boolean isSent() {
         return status == NotificationRequestStatus.SENT;
     }
+    /**
+     * Is scheduled.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     public boolean isScheduled() {

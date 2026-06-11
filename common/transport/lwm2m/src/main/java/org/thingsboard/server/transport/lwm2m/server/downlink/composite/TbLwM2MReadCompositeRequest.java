@@ -41,11 +41,23 @@ public class TbLwM2MReadCompositeRequest extends AbstractTbLwM2MTargetedDownlink
         this.requestContentFormatOpt = Optional.ofNullable(requestContentFormat);
         this.responseContentFormat = responseContentFormat;
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link LwM2MOperationType}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public LwM2MOperationType getType() {
         return LwM2MOperationType.READ_COMPOSITE;
     }
+    /**
+     * Returns request content format.
+     *
+     * @return optional {@link ContentFormat}, empty if not found
+     * @throws Exception on processing failure
+     */
 
     @Override
     public Optional<ContentFormat> getRequestContentFormat() {

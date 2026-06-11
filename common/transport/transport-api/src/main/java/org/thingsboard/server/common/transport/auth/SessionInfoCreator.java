@@ -26,11 +26,27 @@ import java.util.UUID;
  */
 @Slf4j
 public class SessionInfoCreator {
-
+    /**
+     * Creates the requested data.
+     *
+     * @param msg msg ({@link ValidateDeviceCredentialsResponse})
+     * @param context context ({@link TransportContext})
+     * @param sessionId session id ({@link UUID})
+     * @return the TransportProtos.SessionInfoProto value
+     * @throws Exception on processing failure
+     */
     public static TransportProtos.SessionInfoProto create(ValidateDeviceCredentialsResponse msg, TransportContext context, UUID sessionId) {
         return getSessionInfoProto(msg, context.getNodeId(), sessionId);
     }
-
+    /**
+     * Creates the requested data.
+     *
+     * @param msg msg ({@link ValidateDeviceCredentialsResponse})
+     * @param nodeId node id ({@link String})
+     * @param sessionId session id ({@link UUID})
+     * @return the TransportProtos.SessionInfoProto value
+     * @throws Exception on processing failure
+     */
     public static TransportProtos.SessionInfoProto create(ValidateDeviceCredentialsResponse msg, String nodeId, UUID sessionId) {
         return getSessionInfoProto(msg, nodeId, sessionId);
     }

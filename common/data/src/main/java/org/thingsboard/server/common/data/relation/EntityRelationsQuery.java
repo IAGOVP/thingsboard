@@ -25,9 +25,6 @@ import java.util.List;
  */
 @Data
 @Schema
-/**
- * Entity relations query.
- */
 public class EntityRelationsQuery {
 
     @Schema(description = "Main search parameters.")

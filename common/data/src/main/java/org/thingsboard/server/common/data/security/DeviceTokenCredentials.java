@@ -25,11 +25,21 @@ public class DeviceTokenCredentials implements DeviceCredentialsFilter {
     public DeviceTokenCredentials(String token) {
         this.token = token;
     }
+    /**
+     * Returns credentials type.
+     *
+     * @return {@link DeviceCredentialsType}
+     */
 
     @Override
     public DeviceCredentialsType getCredentialsType() {
         return DeviceCredentialsType.ACCESS_TOKEN;
     }
+    /**
+     * Returns credentials id.
+     *
+     * @return {@link String}
+     */
 
     @Override
     public String getCredentialsId() {

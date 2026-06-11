@@ -19,12 +19,25 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.thingsboard.server.common.data.audit.AuditLog;
 /**
- * Dummy audit log sink.
+ * Spring component for dummy audit log sink (audit log persistence and log-level configuration).
  */
+
+
+
+
+
+
 
 @Component
 @ConditionalOnProperty(prefix = "audit-log.sink", value = "type", havingValue = "none")
 public class DummyAuditLogSink implements AuditLogSink {
+    /**
+     * Log action.
+     *
+     * @param auditLogEntry audit log entry ({@link AuditLog})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void logAction(AuditLog auditLogEntry) {

@@ -27,8 +27,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 import java.util.function.Function;
 /**
- * Tb sql blocking queue wrapper.
+ * Tb sql blocking queue wrapper (JPA/PostgreSQL persistence layer (JPA repositories and PostgreSQL DAO implementations)).
  */
+
+
+
+
+
+
 
 @Slf4j
 @Data
@@ -39,17 +45,30 @@ public class TbSqlBlockingQueueWrapper<E, R> {
     private final int maxThreads;
     private final StatsFactory statsFactory;
 
+    
     /**
-     * Starts TbSqlBlockingQueues.
+     * Init.
      *
-     * @param  logExecutor  executor that will be printing logs and statistics
-     * @param  saveFunction function to save entities in database
-     * @param  batchUpdateComparator comparator to sort entities by primary key to avoid deadlocks in cluster mode
-     *                               NOTE: you must use all of primary key parts in your comparator
+     * @param logExecutor log executor ({@link ScheduledLogExecutorComponent})
+     * @param saveFunction save function ({@link Consumer})
+     * @param batchUpdateComparator batch update comparator ({@link Comparator})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     public void init(ScheduledLogExecutorComponent logExecutor, Consumer<List<E>> saveFunction, Comparator<E> batchUpdateComparator) {
         init(logExecutor, l -> { saveFunction.accept(l); return null; }, batchUpdateComparator, l -> l);
     }
+    /**
+     * Init.
+     *
+     * @param logExecutor log executor ({@link ScheduledLogExecutorComponent})
+     * @param saveFunction save function ({@link Function})
+     * @param batchUpdateComparator batch update comparator ({@link Comparator})
+     * @param filter filter ({@link Function})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void init(ScheduledLogExecutorComponent logExecutor, Function<List<E>, List<R>> saveFunction, Comparator<E> batchUpdateComparator, Function<List<TbSqlQueueElement<E, R>>, List<TbSqlQueueElement<E, R>>> filter) {
         for (int i = 0; i < maxThreads; i++) {
@@ -59,11 +78,24 @@ public class TbSqlBlockingQueueWrapper<E, R> {
             queue.init(logExecutor, saveFunction, batchUpdateComparator, filter, i);
         }
     }
+    /**
+     * Add.
+     *
+     * @param element element ({@link E})
+     * @return future completing with {@link R}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public ListenableFuture<R> add(E element) {
         int queueIndex = element != null ? (hashCodeFunction.apply(element) & 0x7FFFFFFF) % maxThreads : 0;
         return queues.get(queueIndex).add(element);
     }
+    /**
+     * Destroy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void destroy() {
         queues.forEach(TbSqlBlockingQueue::destroy);

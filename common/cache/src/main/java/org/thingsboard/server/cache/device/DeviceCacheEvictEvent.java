@@ -20,16 +20,29 @@ import org.thingsboard.server.common.data.Device;
 import org.thingsboard.server.common.data.id.DeviceId;
 import org.thingsboard.server.common.data.id.TenantId;
 
-@Data
 /**
- * Device cache evict event.
+ * Cluster broadcast event evicting Device cache entries after create/update/delete.
+ *
+ * <p>Published to all ThingsBoard nodes so {@link DeviceCaffeineCache} and
+ * {@link DeviceRedisCache} stay consistent. Handlers evict old and new key variants
+ * when identifiers change (e.g. rename).
  */
+@Data
 public class DeviceCacheEvictEvent {
 
+    /** Tenant scope of the evicted device. */
     private final TenantId tenantId;
+
+    /** Device identifier whose cache entry is invalidated. */
     private final DeviceId deviceId;
+
+    /** New device name after rename; used to evict the updated name-based key. */
     private final String newName;
+
+    /** Previous device name; used to evict the stale name-based key. */
     private final String oldName;
+
+    /** Optionally carries the saved device for repopulating cache on the handling node. */
     private Device savedDevice;
 
 }

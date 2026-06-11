@@ -69,8 +69,11 @@ import static org.thingsboard.server.dao.service.Validator.validateId;
 import static org.thingsboard.server.dao.service.Validator.validatePageLink;
 import static org.thingsboard.server.dao.service.Validator.validateString;
 /**
- * Spring service implementing entity view API.
+ * Spring {@code @Service} implementing the entity view DAO API.
+ *
+ * <p>Delegates to {@code *Dao} implementations and manages cache eviction (ThingsBoard DAO layer).
  */
+
 
 @Service("EntityViewDaoService")
 @Slf4j
@@ -90,11 +93,15 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
     @Autowired
     protected JpaExecutorService service;
 
+    
     /**
-
-     * Handle evict event.
-
+     * Handles evict event.
+     *
+     * @param event event ({@link EntityViewEvictEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @TransactionalEventListener(classes = EntityViewEvictEvent.class)
     @Override
@@ -116,33 +123,47 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
         cache.evict(toEvict);
     }
 
+    
     /**
-
-     * Persists entity view.
-
+     * Saves or persists entity view.
+     *
+     * @param entityView entity view ({@link EntityView})
+     * @return {@link EntityView}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityView saveEntityView(EntityView entityView) {
         return saveEntityView(entityView, true);
     }
 
+    
     /**
-
-     * Persists entity view.
-
+     * Saves or persists entity view.
+     *
+     * @param entityView entity view ({@link EntityView})
+     * @param nameConflictStrategy name conflict strategy ({@link NameConflictStrategy})
+     * @return {@link EntityView}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityView saveEntityView(EntityView entityView, NameConflictStrategy nameConflictStrategy) {
         return saveEntityView(entityView, true, nameConflictStrategy);
     }
 
+    
     /**
-
-     * Persists entity view.
-
+     * Saves or persists entity view.
+     *
+     * @param entityView entity view ({@link EntityView})
+     * @param doValidate do validate
+     * @return {@link EntityView}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityView saveEntityView(EntityView entityView, boolean doValidate) {
@@ -171,11 +192,17 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
         }
     }
 
+    
     /**
-
-     * Assign entity view to customer.
-
+     * Assigns entity view to customer.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityViewId entity view id ({@link EntityViewId})
+     * @param customerId target customer identifier
+     * @return {@link EntityView}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityView assignEntityViewToCustomer(TenantId tenantId, EntityViewId entityViewId, CustomerId customerId) {
@@ -187,11 +214,16 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
         return saveEntityView(entityView);
     }
 
+    
     /**
-
-     * Unassign entity view from customer.
-
+     * Unassigns entity view from customer.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityViewId entity view id ({@link EntityViewId})
+     * @return {@link EntityView}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityView unassignEntityViewFromCustomer(TenantId tenantId, EntityViewId entityViewId) {
@@ -203,11 +235,16 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
         return saveEntityView(entityView);
     }
 
+    
     /**
-
-     * Unassign customer entity views.
-
+     * Unassigns customer entity views.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void unassignCustomerEntityViews(TenantId tenantId, CustomerId customerId) {
@@ -217,11 +254,16 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
         customerEntityViewsRemover.removeEntities(tenantId, customerId);
     }
 
+    
     /**
-
-     * Loads entity view info by id.
-
+     * Finds entity view info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityViewId entity view id ({@link EntityViewId})
+     * @return {@link EntityViewInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityViewInfo findEntityViewInfoById(TenantId tenantId, EntityViewId entityViewId) {
@@ -230,22 +272,33 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
         return entityViewDao.findEntityViewInfoById(tenantId, entityViewId.getId());
     }
 
+    
     /**
-
-     * Loads entity view by id.
-
+     * Finds entity view by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityViewId entity view id ({@link EntityViewId})
+     * @return {@link EntityView}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityView findEntityViewById(TenantId tenantId, EntityViewId entityViewId) {
         return findEntityViewById(tenantId, entityViewId, true);
     }
 
+    
     /**
-
-     * Loads entity view by id.
-
+     * Finds entity view by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityViewId entity view id ({@link EntityViewId})
+     * @param putInCache put in cache
+     * @return {@link EntityView}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityView findEntityViewById(TenantId tenantId, EntityViewId entityViewId, boolean putInCache) {
@@ -254,11 +307,16 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
         return findEntityViewByIdInternal(tenantId, entityViewId, putInCache);
     }
 
+    
     /**
-
-     * Loads entity view by id async.
-
+     * Finds entity view by id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityViewId entity view id ({@link EntityViewId})
+     * @return future completing with {@link EntityView}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<EntityView> findEntityViewByIdAsync(TenantId tenantId, EntityViewId entityViewId) {
@@ -275,11 +333,16 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
         return value != null ? value.getEntityView() : null;
     }
 
+    
     /**
-
-     * Loads entity view by tenant id and name.
-
+     * Finds entity view by tenant id and name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return {@link EntityView}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityView findEntityViewByTenantIdAndName(TenantId tenantId, String name) {
@@ -290,11 +353,16 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
                 , EntityViewCacheValue::getEntityView, v -> new EntityViewCacheValue(v, null), true);
     }
 
+    
     /**
-
-     * Loads entity view by tenant id and name async.
-
+     * Finds entity view by tenant id and name async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return future completing with {@link EntityView}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<EntityView> findEntityViewByTenantIdAndNameAsync(TenantId tenantId, String name) {
@@ -303,11 +371,16 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
         return service.submit(() -> findEntityViewByTenantIdAndName(tenantId, name));
     }
 
+    
     /**
-
-     * Loads entity view by tenant id.
-
+     * Finds entity view by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EntityView> findEntityViewByTenantId(TenantId tenantId, PageLink pageLink) {
@@ -317,11 +390,16 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
         return entityViewDao.findEntityViewsByTenantId(tenantId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads entity view infos by tenant id.
-
+     * Finds entity view infos by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EntityViewInfo> findEntityViewInfosByTenantId(TenantId tenantId, PageLink pageLink) {
@@ -331,11 +409,17 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
         return entityViewDao.findEntityViewInfosByTenantId(tenantId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads entity view by tenant id and type.
-
+     * Finds entity view by tenant id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @param type type ({@link String})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EntityView> findEntityViewByTenantIdAndType(TenantId tenantId, PageLink pageLink, String type) {
@@ -346,11 +430,17 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
         return entityViewDao.findEntityViewsByTenantIdAndType(tenantId.getId(), type, pageLink);
     }
 
+    
     /**
-
-     * Loads entity view infos by tenant id and type.
-
+     * Finds entity view infos by tenant id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EntityViewInfo> findEntityViewInfosByTenantIdAndType(TenantId tenantId, String type, PageLink pageLink) {
@@ -361,11 +451,17 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
         return entityViewDao.findEntityViewInfosByTenantIdAndType(tenantId.getId(), type, pageLink);
     }
 
+    
     /**
-
-     * Loads entity views by tenant id and customer id.
-
+     * Finds entity views by tenant id and customer id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EntityView> findEntityViewsByTenantIdAndCustomerId(TenantId tenantId, CustomerId customerId,
@@ -379,11 +475,16 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
                 customerId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads entity views by tenant id and ids.
-
+     * Finds entity views by tenant id and ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityViewIds entity view ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<EntityView> findEntityViewsByTenantIdAndIds(TenantId tenantId, List<EntityViewId> entityViewIds) {
@@ -391,11 +492,17 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
         return entityViewDao.findEntityViewsByTenantIdAndIds(tenantId.getId(), toUUIDs(entityViewIds));
     }
 
+    
     /**
-
-     * Loads entity view infos by tenant id and customer id.
-
+     * Finds entity view infos by tenant id and customer id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EntityViewInfo> findEntityViewInfosByTenantIdAndCustomerId(TenantId tenantId, CustomerId customerId, PageLink pageLink) {
@@ -408,11 +515,18 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
                 customerId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads entity views by tenant id and customer id and type.
-
+     * Finds entity views by tenant id and customer id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @param type type ({@link String})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EntityView> findEntityViewsByTenantIdAndCustomerIdAndType(TenantId tenantId, CustomerId customerId, PageLink pageLink, String type) {
@@ -426,11 +540,18 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
                 customerId.getId(), type, pageLink);
     }
 
+    
     /**
-
-     * Loads entity view infos by tenant id and customer id and type.
-
+     * Finds entity view infos by tenant id and customer id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EntityViewInfo> findEntityViewInfosByTenantIdAndCustomerIdAndType(TenantId tenantId, CustomerId customerId, String type, PageLink pageLink) {
@@ -444,11 +565,16 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
                 customerId.getId(), type, pageLink);
     }
 
+    
     /**
-
-     * Loads entity views by query.
-
+     * Finds entity views by query.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param query filter and sort query definition
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<EntityView>> findEntityViewsByQuery(TenantId tenantId, EntityViewSearchQuery query) {
@@ -479,11 +605,16 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
         return entityViews;
     }
 
+    
     /**
-
-     * Loads entity views by tenant id and entity id async.
-
+     * Finds entity views by tenant id and entity id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<EntityView>> findEntityViewsByTenantIdAndEntityIdAsync(TenantId tenantId, EntityId entityId) {
@@ -496,11 +627,16 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
                 EntityViewCacheValue::getEntityViews, v -> new EntityViewCacheValue(null, v), true));
     }
 
+    
     /**
-
-     * Loads entity views by tenant id and entity id.
-
+     * Finds entity views by tenant id and entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<EntityView> findEntityViewsByTenantIdAndEntityId(TenantId tenantId, EntityId entityId) {
@@ -513,22 +649,32 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
                 EntityViewCacheValue::getEntityViews, v -> new EntityViewCacheValue(null, v), true);
     }
 
+    
     /**
-
-     * Checks whether by tenant id and entity id exists.
-
+     * Exists by tenant id and entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public boolean existsByTenantIdAndEntityId(TenantId tenantId, EntityId entityId) {
         return entityViewDao.existsByTenantIdAndEntityId(tenantId.getId(), entityId.getId());
     }
 
+    
     /**
-
-     * Removes entity view.
-
+     * Deletes entity view.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityViewId entity view id ({@link EntityViewId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -544,11 +690,17 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
         eventPublisher.publishEvent(DeleteEntityEvent.builder().tenantId(tenantId).entityId(entityViewId).build());
     }
 
+    
     /**
-
-     * Removes entity.
-
+     * Deletes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -556,11 +708,15 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
         deleteEntityView(tenantId, (EntityViewId) id);
     }
 
+    
     /**
-
-     * Removes entity views by tenant id.
-
+     * Deletes entity views by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteEntityViewsByTenantId(TenantId tenantId) {
@@ -569,22 +725,30 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
         tenantEntityViewRemover.removeEntities(tenantId, tenantId);
     }
 
+    
     /**
-
-     * Removes by tenant id.
-
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteByTenantId(TenantId tenantId) {
         deleteEntityViewsByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Loads entity view types by tenant id.
-
+     * Finds entity view types by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<EntitySubtype>> findEntityViewTypesByTenantId(TenantId tenantId) {
@@ -598,11 +762,17 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
                 }, MoreExecutors.directExecutor());
     }
 
+    
     /**
-
-     * Assign entity view to edge.
-
+     * Assigns entity view to edge.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityViewId entity view id ({@link EntityViewId})
+     * @param edgeId edge id ({@link EdgeId})
+     * @return {@link EntityView}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityView assignEntityViewToEdge(TenantId tenantId, EntityViewId entityViewId, EdgeId edgeId) {
@@ -632,11 +802,17 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
         return entityView;
     }
 
+    
     /**
-
-     * Unassign entity view from edge.
-
+     * Unassigns entity view from edge.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityViewId entity view id ({@link EntityViewId})
+     * @param edgeId edge id ({@link EdgeId})
+     * @return {@link EntityView}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityView unassignEntityViewFromEdge(TenantId tenantId, EntityViewId entityViewId, EdgeId edgeId) {
@@ -656,11 +832,17 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
         return entityView;
     }
 
+    
     /**
-
-     * Loads entity views by tenant id and edge id.
-
+     * Finds entity views by tenant id and edge id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link EdgeId})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EntityView> findEntityViewsByTenantIdAndEdgeId(TenantId tenantId, EdgeId edgeId, PageLink pageLink) {
@@ -671,11 +853,18 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
         return entityViewDao.findEntityViewsByTenantIdAndEdgeId(tenantId.getId(), edgeId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads entity views by tenant id and edge id and type.
-
+     * Finds entity views by tenant id and edge id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link EdgeId})
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EntityView> findEntityViewsByTenantIdAndEdgeIdAndType(TenantId tenantId, EdgeId edgeId, String type, PageLink pageLink) {
@@ -729,22 +918,32 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
         }
     };
 
+    
     /**
-
-     * Loads entity.
-
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findEntityViewById(tenantId, new EntityViewId(entityId.getId())));
     }
 
+    
     /**
-
-     * Loads entity async.
-
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
@@ -752,11 +951,14 @@ public class EntityViewServiceImpl extends CachedVersionedEntityService<EntityVi
                 .transform(Optional::ofNullable, directExecutor());
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

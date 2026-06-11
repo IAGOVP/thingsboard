@@ -34,11 +34,21 @@ public class EntitiesLimitTrigger implements NotificationRuleTrigger {
 
     private long limit;
     private long currentCount;
+    /**
+     * Returns type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     */
 
     @Override
     public NotificationRuleTriggerType getType() {
         return NotificationRuleTriggerType.ENTITIES_LIMIT;
     }
+    /**
+     * Returns originator entity id.
+     *
+     * @return {@link EntityId}
+     */
 
     @Override
     public EntityId getOriginatorEntityId() {

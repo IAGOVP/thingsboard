@@ -22,11 +22,13 @@ import org.thingsboard.server.common.msg.MsgType;
 import org.thingsboard.server.common.msg.ToCalculatedFieldSystemMsg;
 
 import java.util.Set;
+/**
+ * Internal actor or queue message: calculated field partition change msg.
+ *
+ * <p>Serialized between tb-core, rule-engine, transport, and edge services.
+ */
 
 @Data
-/**
- * Message: calculated field partition change msg.
- */
 public class CalculatedFieldPartitionChangeMsg implements ToCalculatedFieldSystemMsg {
 
     @Override

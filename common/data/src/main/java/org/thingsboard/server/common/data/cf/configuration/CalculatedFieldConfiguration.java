@@ -67,29 +67,79 @@ import java.util.stream.Collectors;
  * calculated field configuration contract.
  */
 public interface CalculatedFieldConfiguration {
+    /**
+     * Returns type.
+     *
+     * @return {@link CalculatedFieldType}
+     */
 
     @JsonIgnore
     CalculatedFieldType getType();
+/**
+ * Returns output.
+ *
+ * @return {@link Output}
+ */
 
     Output getOutput();
+/**
+ * Validates the requested data.
+ *
+ */
 
     default void validate() {}
+    /**
+     * Returns referenced entities.
+     *
+     * @return {@link Set}
+     */
 
     @JsonIgnore
     default Set<EntityId> getReferencedEntities() {
         return Collections.emptySet();
     }
+/**
+ * Build calculated field link.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param referencedEntityId referenced entity id ({@link EntityId})
+ * @param calculatedFieldId calculated field id ({@link CalculatedFieldId})
+ * @return {@link CalculatedFieldLink}
+ */
 
     default CalculatedFieldLink buildCalculatedFieldLink(TenantId tenantId, EntityId referencedEntityId, CalculatedFieldId calculatedFieldId) {
+        /**
+         * Calculated field link.
+         *
+         * @return the return new value
+         */
         return new CalculatedFieldLink(tenantId, referencedEntityId, calculatedFieldId);
     }
+/**
+ * Build calculated field links.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param cfEntityId cf entity id ({@link EntityId})
+ * @param calculatedFieldId calculated field id ({@link CalculatedFieldId})
+ * @return {@link List}
+ */
 
     default List<CalculatedFieldLink> buildCalculatedFieldLinks(TenantId tenantId, EntityId cfEntityId, CalculatedFieldId calculatedFieldId) {
+        /**
+         * Returns referenced entities.
+         *
+         * @return the return value
+         */
         return getReferencedEntities().stream()
                 .filter(referencedEntity -> !referencedEntity.equals(cfEntityId))
                 .map(referencedEntityId -> buildCalculatedFieldLink(tenantId, referencedEntityId, calculatedFieldId))
                 .collect(Collectors.toList());
     }
+    /**
+     * Requires scheduled reevaluation.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     default boolean requiresScheduledReevaluation() {

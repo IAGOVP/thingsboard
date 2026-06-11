@@ -36,12 +36,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-@TbCoreComponent
-@Service
-@Slf4j
 /**
  * Default git sync service.
  */
+@TbCoreComponent
+@Service
+@Slf4j
 public class DefaultGitSyncService implements GitSyncService {
 
     @Value("${vc.git.repositories-folder:${java.io.tmpdir}/repositories}")
@@ -94,7 +94,6 @@ public class DefaultGitSyncService implements GitSyncService {
                 .filter(file -> type == null || file.type() == type)
                 .toList();
     }
-
 
     @Override
     public byte[] getFileContent(String key, String path) {

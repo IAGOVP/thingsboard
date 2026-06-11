@@ -25,9 +25,11 @@ import org.thingsboard.server.queue.kafka.KafkaAdmin;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-    /**
-     * Spring service component for kafka edqs sync service (Entity Data Query Service integration from tb-core).
-     */
+    
+/**
+ * Spring component for EDQS kafka edqs sync service (EDQS tb-core).
+ */
+
 
 @Service
 @ConditionalOnExpression("'${queue.edqs.sync.enabled:true}' == 'true' && '${queue.type:null}' == 'kafka'")

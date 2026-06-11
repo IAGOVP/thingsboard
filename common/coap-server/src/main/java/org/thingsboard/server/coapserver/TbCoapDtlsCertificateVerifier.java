@@ -51,11 +51,11 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-@Slf4j
-@Data
 /**
  * Tb coap dtls certificate verifier.
  */
+@Slf4j
+@Data
 public class TbCoapDtlsCertificateVerifier implements NewAdvancedCertificateVerifier {
 
     private final TbCoapDtlsSessionInMemoryStorage tbCoapDtlsSessionInMemoryStorage;

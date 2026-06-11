@@ -37,24 +37,98 @@ import java.util.Set;
  */
 public interface EntityService {
 
+    /**
+     * Fetches entity name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId entity id ({@link EntityId})
+     * @return optional {@link String}, empty if not found
+     */
     Optional<String> fetchEntityName(TenantId tenantId, EntityId entityId);
 
+    /**
+     * Fetches entity label.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId entity id ({@link EntityId})
+     * @return optional {@link String}, empty if not found
+     */
     Optional<String> fetchEntityLabel(TenantId tenantId, EntityId entityId);
 
+    /**
+     * Fetches entity customer id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId entity id ({@link EntityId})
+     * @return optional {@link CustomerId}, empty if not found
+     */
     Optional<CustomerId> fetchEntityCustomerId(TenantId tenantId, EntityId entityId);
 
+    /**
+     * Fetches entity customer id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId entity id ({@link EntityId})
+     * @return {@link FluentFuture}
+     */
     FluentFuture<Optional<CustomerId>> fetchEntityCustomerIdAsync(TenantId tenantId, EntityId entityId);
 
+    /**
+     * Fetches entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId entity id ({@link EntityId})
+     * @return optional {@link HasId}, empty if not found
+     */
     Optional<HasId<?>> fetchEntity(TenantId tenantId, EntityId entityId);
 
+    /**
+     * Fetches entity infos.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId customer to assign or filter by
+     * @param entityIds entity ids ({@link Set})
+     * @return {@link Map}
+     */
     Map<EntityId, EntityInfo> fetchEntityInfos(TenantId tenantId, CustomerId customerId, Set<EntityId> entityIds);
 
+    /**
+     * Fetches name label and customer details.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId entity id ({@link EntityId})
+     * @return optional {@link NameLabelAndCustomerDetails}, empty if not found
+     */
     Optional<NameLabelAndCustomerDetails> fetchNameLabelAndCustomerDetails(TenantId tenantId, EntityId entityId);
 
+    /**
+     * Counts entities by query.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId customer to assign or filter by
+     * @param query query ({@link EntityCountQuery})
+     * @return the long result
+     */
     long countEntitiesByQuery(TenantId tenantId, CustomerId customerId, EntityCountQuery query);
 
+    /**
+     * Finds entity data by query.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId customer to assign or filter by
+     * @param query query ({@link EntityDataQuery})
+     * @return {@link PageData}
+     */
     PageData<EntityData> findEntityDataByQuery(TenantId tenantId, CustomerId customerId, EntityDataQuery query);
 
+    /**
+     * Finds entity data by query async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId customer to assign or filter by
+     * @param query query ({@link EntityDataQuery})
+     * @return future completing with {@link PageData}
+     */
     ListenableFuture<PageData<EntityData>> findEntityDataByQueryAsync(TenantId tenantId, CustomerId customerId, EntityDataQuery query);
 
 }

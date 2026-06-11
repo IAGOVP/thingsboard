@@ -16,10 +16,23 @@
 package org.thingsboard.server.cache;
 
 /**
- * tb cache value wrapper contract.
+ * Wrapper distinguishing a cache miss from a stored {@code null} (negative cache hit).
+ *
+ * <p>{@link #get()} returns the cached value which may legitimately be {@code null}
+ * when the wrapper represents a negative-cache entry. A {@code null} wrapper reference
+ * from {@link TbTransactionalCache#get} indicates a complete cache miss.
+ *
+ * @param <T> cached value type
+ * @see SimpleTbCacheValueWrapper
+ * @see TbTransactionalCache#get
  */
 public interface TbCacheValueWrapper<T> {
 
+/**
+         * Returns the cached value, which may be {@code null} for negative-cache entries.
+         *
+         * @return cached value or {@code null} when negatively cached
+         */
     T get();
 
 }

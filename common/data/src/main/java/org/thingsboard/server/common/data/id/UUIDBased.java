@@ -22,7 +22,10 @@ import java.util.UUID;
 
 @Schema
 /**
- * Uuidbased.
+ * Abstract base for typed entity identifiers backed by a {@link UUID}.
+ *
+ * <p>Provides immutable identity, JSON serialization via Jackson, and consistent {@code equals}/
+ * {@code hashCode}. Subclasses add {@link EntityId#getEntityType()} for polymorphic deserialization.
  */
 public abstract class UUIDBased implements HasUUID, Serializable {
 
@@ -41,6 +44,11 @@ public abstract class UUIDBased implements HasUUID, Serializable {
         super();
         this.id = id;
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link UUID}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "string", example = "784f394c-42b6-435a-983c-b7beff2784f9")
     public UUID getId() {

@@ -27,10 +27,13 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-@ToString(callSuper = true)
 /**
- * In-memory EDQS projection of device entity fields and metadata.
+ * In-memory EDQS projection of device entity fields.
+ *
+ * <p>Updated from {@link org.thingsboard.server.common.data.edqs.EdqsEvent} and used during query execution.
  */
+
+@ToString(callSuper = true)
 public class DeviceData extends ProfileAwareData<DeviceFields> {
 
     private final Map<Integer, DataPoint> clientAttrMap;
@@ -41,11 +44,25 @@ public class DeviceData extends ProfileAwareData<DeviceFields> {
         this.clientAttrMap = new ConcurrentHashMap<>();
         this.sharedAttrMap = new ConcurrentHashMap<>();
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {
         return EntityType.DEVICE;
     }
+    /**
+     * Returns attr.
+     *
+     * @param keyId key id ({@link Integer})
+     * @param entityKeyType entity key type ({@link EntityKeyType})
+     * @return {@link DataPoint}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public DataPoint getAttr(Integer keyId, EntityKeyType entityKeyType) {
@@ -57,6 +74,15 @@ public class DeviceData extends ProfileAwareData<DeviceFields> {
             default -> throw new RuntimeException(entityKeyType + " not implemented");
         };
     }
+    /**
+     * Put attr.
+     *
+     * @param keyId key id ({@link Integer})
+     * @param scope scope ({@link AttributeScope})
+     * @param value value ({@link DataPoint})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean putAttr(Integer keyId, AttributeScope scope, DataPoint value) {
@@ -66,6 +92,14 @@ public class DeviceData extends ProfileAwareData<DeviceFields> {
             case SHARED_SCOPE -> sharedAttrMap.put(keyId, value) == null;
         };
     }
+    /**
+     * Removes attr.
+     *
+     * @param keyId key id ({@link Integer})
+     * @param scope scope ({@link AttributeScope})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean removeAttr(Integer keyId, AttributeScope scope) {

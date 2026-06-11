@@ -24,8 +24,14 @@ import org.thingsboard.server.common.data.id.TenantId;
 import java.io.Serial;
 import java.io.Serializable;
 /**
- * Entity count cache key.
+ * Serializable cache key for entity count entries (generic entity services, counts, and DAO registry).
  */
+
+
+
+
+
+
 
 @Getter
 @EqualsAndHashCode

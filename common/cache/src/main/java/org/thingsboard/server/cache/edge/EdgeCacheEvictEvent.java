@@ -19,11 +19,15 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.thingsboard.server.common.data.id.TenantId;
 
+/**
+ * Cluster broadcast event evicting Edge cache entries after create/update/delete.
+ *
+ * <p>Published to all ThingsBoard nodes so {@link EdgeCaffeineCache} and
+ * {@link EdgeRedisCache} stay consistent. Handlers evict old and new key variants
+ * when identifiers change (e.g. rename).
+ */
 @Data
 @RequiredArgsConstructor
-/**
- * Edge cache evict event.
- */
 public class EdgeCacheEvictEvent {
 
     private final TenantId tenantId;

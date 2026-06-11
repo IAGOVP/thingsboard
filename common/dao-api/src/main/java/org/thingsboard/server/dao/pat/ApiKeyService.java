@@ -31,22 +31,86 @@ import java.util.List;
  */
 public interface ApiKeyService extends EntityDaoService {
 
+    /**
+     * Saves or persists api key.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param apiKey api key ({@link ApiKeyInfo})
+     * @return {@link ApiKey}
+     */
     ApiKey saveApiKey(TenantId tenantId, ApiKeyInfo apiKey);
 
+    /**
+     * Saves or persists api key.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param apiKeyInfo api key info ({@link ApiKeyInfo})
+     * @param value value ({@link String})
+     * @param doValidate whether to run validation before persist
+     * @return {@link ApiKey}
+     */
     ApiKey saveApiKey(TenantId tenantId, ApiKeyInfo apiKeyInfo, String value, boolean doValidate);
 
+    /**
+     * Deletes api key.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param apiKey api key ({@link ApiKey})
+     * @param force force
+     */
     void deleteApiKey(TenantId tenantId, ApiKey apiKey, boolean force);
 
+    /**
+     * Deletes by user id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId user id ({@link UserId})
+     */
     void deleteByUserId(TenantId tenantId, UserId userId);
 
+    /**
+     * Finds api key by value.
+     *
+     * @param value value ({@link String})
+     * @return {@link ApiKey}
+     */
     ApiKey findApiKeyByValue(String value);
 
+    /**
+     * Finds api key by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param apiKeyId api key id ({@link ApiKeyId})
+     * @return {@link ApiKey}
+     */
     ApiKey findApiKeyById(TenantId tenantId, ApiKeyId apiKeyId);
 
+    /**
+     * Finds api keys by user id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId user id ({@link UserId})
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<ApiKeyInfo> findApiKeysByUserId(TenantId tenantId, UserId userId, PageLink pageLink);
 
+    /**
+     * Finds api keys by user id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId user id ({@link UserId})
+     * @return {@link List}
+     */
     List<ApiKey> findApiKeysByUserId(TenantId tenantId, UserId userId);
 
+    /**
+     * Finds api keys by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<ApiKey> findApiKeysByTenantId(TenantId tenantId, PageLink pageLink);
 
 }

@@ -31,7 +31,7 @@ import org.thingsboard.server.queue.scheduler.SchedulerComponent;
 import java.util.concurrent.ExecutorService;
 
 /**
- * Transport context.
+ * Shared Spring context for transport microservices: {@link TransportService}, profile caches, rate limits, and scheduling.
  */
 @Slf4j
 @Data
@@ -60,11 +60,23 @@ public abstract class TransportContext {
 
     @Autowired
     protected TransportRateLimitService rateLimitService;
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @PostConstruct
     public void init() {
         executor = ThingsBoardExecutors.newWorkStealingPool(50, getClass());
     }
+    /**
+     * Stop.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @PreDestroy
     public void stop() {
@@ -72,7 +84,12 @@ public abstract class TransportContext {
             executor.shutdownNow();
         }
     }
-
+    /**
+     * Returns node id.
+     *
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
     public String getNodeId() {
         return serviceInfoProvider.getServiceId();
     }

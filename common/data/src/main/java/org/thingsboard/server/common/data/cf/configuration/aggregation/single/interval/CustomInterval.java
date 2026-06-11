@@ -42,11 +42,21 @@ public class CustomInterval extends BaseAggInterval {
         super(tz, offsetSec);
         this.durationSec = durationSec;
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link AggIntervalType}
+     */
 
     @Override
     public AggIntervalType getType() {
         return AggIntervalType.CUSTOM;
     }
+    /**
+     * Returns current interval duration millis.
+     *
+     * @return the long result
+     */
 
     @Override
     public long getCurrentIntervalDurationMillis() {
@@ -56,6 +66,12 @@ public class CustomInterval extends BaseAggInterval {
     private long getDurationMillis() {
         return Duration.ofSeconds(durationSec).toMillis();
     }
+    /**
+     * Align to interval start.
+     *
+     * @param reference reference ({@link ZonedDateTime})
+     * @return {@link ZonedDateTime}
+     */
 
     @Override
     protected ZonedDateTime alignToIntervalStart(ZonedDateTime reference) {
@@ -64,6 +80,12 @@ public class CustomInterval extends BaseAggInterval {
         long alignedSecondsFromMidnight = (secondsFromMidnight / durationSec) * durationSec;
         return localMidnight.plusSeconds(alignedSecondsFromMidnight);
     }
+    /**
+     * Returns next interval start.
+     *
+     * @param currentStart current start ({@link ZonedDateTime})
+     * @return {@link ZonedDateTime}
+     */
 
     @Override
     public ZonedDateTime getNextIntervalStart(ZonedDateTime currentStart) {

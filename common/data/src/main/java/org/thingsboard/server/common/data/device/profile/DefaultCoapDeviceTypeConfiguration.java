@@ -30,11 +30,21 @@ public class DefaultCoapDeviceTypeConfiguration implements CoapDeviceTypeConfigu
 
     @Schema
     private TransportPayloadTypeConfiguration transportPayloadTypeConfiguration;
+    /**
+     * Returns coap device type.
+     *
+     * @return {@link CoapDeviceType}
+     */
 
     @Override
     public CoapDeviceType getCoapDeviceType() {
         return CoapDeviceType.DEFAULT;
     }
+    /**
+     * Returns transport payload type configuration.
+     *
+     * @return {@link TransportPayloadTypeConfiguration}
+     */
 
     public TransportPayloadTypeConfiguration getTransportPayloadTypeConfiguration() {
         if (transportPayloadTypeConfiguration != null) {

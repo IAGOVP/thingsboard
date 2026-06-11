@@ -24,6 +24,11 @@ import lombok.Data;
  * Affected user filter.
  */
 public class AffectedUserFilter implements UsersFilter {
+    /**
+     * Returns type.
+     *
+     * @return {@link UsersFilterType}
+     */
 
     @Override
     public UsersFilterType getType() {

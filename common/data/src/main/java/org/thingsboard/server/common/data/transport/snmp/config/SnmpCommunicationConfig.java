@@ -57,17 +57,37 @@ import java.util.List;
  * snmp communication config contract.
  */
 public interface SnmpCommunicationConfig extends Serializable {
+    /**
+     * Returns spec.
+     *
+     * @return {@link SnmpCommunicationSpec}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Specification of the SNMP communication")
     SnmpCommunicationSpec getSpec();
+    /**
+     * Returns method.
+     *
+     * @return {@link SnmpMethod}
+     */
 
     @JsonIgnore
     default SnmpMethod getMethod() {
         return null;
     }
+    /**
+     * Returns all mappings.
+     *
+     * @return {@link List}
+     */
 
     @JsonIgnore
     List<SnmpMapping> getAllMappings();
+    /**
+     * Is valid.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     boolean isValid();

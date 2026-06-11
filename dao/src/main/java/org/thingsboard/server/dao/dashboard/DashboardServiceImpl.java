@@ -66,8 +66,11 @@ import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
 import static org.thingsboard.server.dao.DaoUtil.toUUIDs;
 import static org.thingsboard.server.dao.service.Validator.validateId;
 /**
- * Spring service implementing dashboard API.
+ * Spring {@code @Service} implementing the dashboard DAO API.
+ *
+ * <p>Delegates to {@code *Dao} implementations and manages cache eviction (dashboard metadata, titles, and assignment).
  */
+
 
 @Service("DashboardDaoService")
 @Slf4j
@@ -110,11 +113,15 @@ public class DashboardServiceImpl extends AbstractEntityService implements Dashb
     @Autowired
     private JpaExecutorService executor;
 
+    
     /**
-
      * Publish evict event.
-
+     *
+     * @param event event ({@link DashboardTitleEvictEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected void publishEvictEvent(DashboardTitleEvictEvent event) {
         if (TransactionSynchronizationManager.isActualTransactionActive()) {
@@ -124,22 +131,31 @@ public class DashboardServiceImpl extends AbstractEntityService implements Dashb
         }
     }
 
+    
     /**
-
-     * Handle evict event.
-
+     * Handles evict event.
+     *
+     * @param event event ({@link DashboardTitleEvictEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @TransactionalEventListener(classes = DashboardTitleEvictEvent.class)
     public void handleEvictEvent(DashboardTitleEvictEvent event) {
         cache.evict(event.getKey());
     }
 
+    
     /**
-
-     * Loads dashboard by id.
-
+     * Finds dashboard by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param dashboardId dashboard id ({@link DashboardId})
+     * @return {@link Dashboard}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Dashboard findDashboardById(TenantId tenantId, DashboardId dashboardId) {
@@ -148,11 +164,16 @@ public class DashboardServiceImpl extends AbstractEntityService implements Dashb
         return dashboardDao.findById(tenantId, dashboardId.getId());
     }
 
+    
     /**
-
-     * Loads dashboard by id async.
-
+     * Finds dashboard by id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param dashboardId dashboard id ({@link DashboardId})
+     * @return future completing with {@link Dashboard}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<Dashboard> findDashboardByIdAsync(TenantId tenantId, DashboardId dashboardId) {
@@ -161,11 +182,16 @@ public class DashboardServiceImpl extends AbstractEntityService implements Dashb
         return dashboardDao.findByIdAsync(tenantId, dashboardId.getId());
     }
 
+    
     /**
-
-     * Loads dashboard info by id.
-
+     * Finds dashboard info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param dashboardId dashboard id ({@link DashboardId})
+     * @return {@link DashboardInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DashboardInfo findDashboardInfoById(TenantId tenantId, DashboardId dashboardId) {
@@ -174,11 +200,16 @@ public class DashboardServiceImpl extends AbstractEntityService implements Dashb
         return dashboardInfoDao.findById(tenantId, dashboardId.getId());
     }
 
+    
     /**
-
-     * Loads dashboard title by id.
-
+     * Finds dashboard title by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param dashboardId dashboard id ({@link DashboardId})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public String findDashboardTitleById(TenantId tenantId, DashboardId dashboardId) {
@@ -186,11 +217,16 @@ public class DashboardServiceImpl extends AbstractEntityService implements Dashb
                 () -> dashboardInfoDao.findTitleById(tenantId.getId(), dashboardId.getId()), true);
     }
 
+    
     /**
-
-     * Loads dashboard info by id async.
-
+     * Finds dashboard info by id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param dashboardId dashboard id ({@link DashboardId})
+     * @return future completing with {@link DashboardInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<DashboardInfo> findDashboardInfoByIdAsync(TenantId tenantId, DashboardId dashboardId) {
@@ -199,22 +235,31 @@ public class DashboardServiceImpl extends AbstractEntityService implements Dashb
         return dashboardInfoDao.findByIdAsync(tenantId, dashboardId.getId());
     }
 
+    
     /**
-
-     * Persists dashboard.
-
+     * Saves or persists dashboard.
+     *
+     * @param dashboard dashboard ({@link Dashboard})
+     * @return {@link Dashboard}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Dashboard saveDashboard(Dashboard dashboard) {
         return saveDashboard(dashboard, true);
     }
 
+    
     /**
-
-     * Persists dashboard.
-
+     * Saves or persists dashboard.
+     *
+     * @param dashboard dashboard ({@link Dashboard})
+     * @param doValidate do validate
+     * @return {@link Dashboard}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Dashboard saveDashboard(Dashboard dashboard, boolean doValidate) {
@@ -251,11 +296,17 @@ public class DashboardServiceImpl extends AbstractEntityService implements Dashb
         }
     }
 
+    
     /**
-
-     * Assign dashboard to customer.
-
+     * Assigns dashboard to customer.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param dashboardId dashboard id ({@link DashboardId})
+     * @param customerId target customer identifier
+     * @return {@link Dashboard}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Dashboard assignDashboardToCustomer(TenantId tenantId, DashboardId dashboardId, CustomerId customerId) {
@@ -280,11 +331,17 @@ public class DashboardServiceImpl extends AbstractEntityService implements Dashb
         }
     }
 
+    
     /**
-
-     * Unassign dashboard from customer.
-
+     * Unassigns dashboard from customer.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param dashboardId dashboard id ({@link DashboardId})
+     * @param customerId target customer identifier
+     * @return {@link Dashboard}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Dashboard unassignDashboardFromCustomer(TenantId tenantId, DashboardId dashboardId, CustomerId customerId) {
@@ -313,11 +370,16 @@ public class DashboardServiceImpl extends AbstractEntityService implements Dashb
         }
     }
 
+    
     /**
-
-     * Removes dashboard.
-
+     * Deletes dashboard.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param dashboardId dashboard id ({@link DashboardId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -338,11 +400,17 @@ public class DashboardServiceImpl extends AbstractEntityService implements Dashb
         }
     }
 
+    
     /**
-
-     * Removes entity.
-
+     * Deletes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -350,11 +418,16 @@ public class DashboardServiceImpl extends AbstractEntityService implements Dashb
         deleteDashboard(tenantId, (DashboardId) id);
     }
 
+    
     /**
-
-     * Loads dashboards by tenant id.
-
+     * Finds dashboards by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<DashboardInfo> findDashboardsByTenantId(TenantId tenantId, PageLink pageLink) {
@@ -364,11 +437,16 @@ public class DashboardServiceImpl extends AbstractEntityService implements Dashb
         return dashboardInfoDao.findDashboardsByTenantId(tenantId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads mobile dashboards by tenant id.
-
+     * Finds mobile dashboards by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<DashboardInfo> findMobileDashboardsByTenantId(TenantId tenantId, PageLink pageLink) {
@@ -378,11 +456,15 @@ public class DashboardServiceImpl extends AbstractEntityService implements Dashb
         return dashboardInfoDao.findMobileDashboardsByTenantId(tenantId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Removes dashboards by tenant id.
-
+     * Deletes dashboards by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteDashboardsByTenantId(TenantId tenantId) {
@@ -391,22 +473,32 @@ public class DashboardServiceImpl extends AbstractEntityService implements Dashb
         tenantDashboardsRemover.removeEntities(tenantId, tenantId);
     }
 
+    
     /**
-
-     * Removes by tenant id.
-
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteByTenantId(TenantId tenantId) {
         deleteDashboardsByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Loads dashboards by tenant id and customer id.
-
+     * Finds dashboards by tenant id and customer id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<DashboardInfo> findDashboardsByTenantIdAndCustomerId(TenantId tenantId, CustomerId customerId, PageLink pageLink) {
@@ -417,11 +509,17 @@ public class DashboardServiceImpl extends AbstractEntityService implements Dashb
         return dashboardInfoDao.findDashboardsByTenantIdAndCustomerId(tenantId.getId(), customerId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads mobile dashboards by tenant id and customer id.
-
+     * Finds mobile dashboards by tenant id and customer id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<DashboardInfo> findMobileDashboardsByTenantIdAndCustomerId(TenantId tenantId, CustomerId customerId, PageLink pageLink) {
@@ -432,11 +530,16 @@ public class DashboardServiceImpl extends AbstractEntityService implements Dashb
         return dashboardInfoDao.findMobileDashboardsByTenantIdAndCustomerId(tenantId.getId(), customerId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Unassign customer dashboards.
-
+     * Unassigns customer dashboards.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void unassignCustomerDashboards(TenantId tenantId, CustomerId customerId) {
@@ -449,11 +552,16 @@ public class DashboardServiceImpl extends AbstractEntityService implements Dashb
         new CustomerDashboardsRemover(customer).removeEntities(tenantId, customer);
     }
 
+    
     /**
-
      * Updates customer dashboards.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void updateCustomerDashboards(TenantId tenantId, CustomerId customerId) {
@@ -466,11 +574,17 @@ public class DashboardServiceImpl extends AbstractEntityService implements Dashb
         new CustomerDashboardsUpdater(customer).removeEntities(tenantId, customer);
     }
 
+    
     /**
-
-     * Assign dashboard to edge.
-
+     * Assigns dashboard to edge.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param dashboardId dashboard id ({@link DashboardId})
+     * @param edgeId edge id ({@link EdgeId})
+     * @return {@link Dashboard}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Dashboard assignDashboardToEdge(TenantId tenantId, DashboardId dashboardId, EdgeId edgeId) {
@@ -493,11 +607,17 @@ public class DashboardServiceImpl extends AbstractEntityService implements Dashb
         return dashboard;
     }
 
+    
     /**
-
-     * Unassign dashboard from edge.
-
+     * Unassigns dashboard from edge.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param dashboardId dashboard id ({@link DashboardId})
+     * @param edgeId edge id ({@link EdgeId})
+     * @return {@link Dashboard}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Dashboard unassignDashboardFromEdge(TenantId tenantId, DashboardId dashboardId, EdgeId edgeId) {
@@ -517,11 +637,17 @@ public class DashboardServiceImpl extends AbstractEntityService implements Dashb
         return dashboard;
     }
 
+    
     /**
-
-     * Loads dashboards by tenant id and edge id.
-
+     * Finds dashboards by tenant id and edge id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link EdgeId})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<DashboardInfo> findDashboardsByTenantIdAndEdgeId(TenantId tenantId, EdgeId edgeId, PageLink pageLink) {
@@ -532,11 +658,16 @@ public class DashboardServiceImpl extends AbstractEntityService implements Dashb
         return dashboardInfoDao.findDashboardsByTenantIdAndEdgeId(tenantId.getId(), edgeId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads first dashboard info by tenant id and name.
-
+     * Finds first dashboard info by tenant id and name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return {@link DashboardInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DashboardInfo findFirstDashboardInfoByTenantIdAndName(TenantId tenantId, String name) {
@@ -545,11 +676,16 @@ public class DashboardServiceImpl extends AbstractEntityService implements Dashb
         return dashboardInfoDao.findFirstByTenantIdAndName(tenantId.getId(), name);
     }
 
+    
     /**
-
-     * Loads first dashboard info by tenant id and name async.
-
+     * Finds first dashboard info by tenant id and name async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return future completing with {@link DashboardInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<DashboardInfo> findFirstDashboardInfoByTenantIdAndNameAsync(TenantId tenantId, String name) {
@@ -558,44 +694,63 @@ public class DashboardServiceImpl extends AbstractEntityService implements Dashb
         return executor.submit(() -> findFirstDashboardInfoByTenantIdAndName(tenantId, name));
     }
 
+    
     /**
-
-     * Loads tenant dashboards by title.
-
+     * Finds tenant dashboards by title.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param title title ({@link String})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<Dashboard> findTenantDashboardsByTitle(TenantId tenantId, String title) {
         return dashboardDao.findByTenantIdAndTitle(tenantId.getId(), title);
     }
 
+    
     /**
-
-     * Checks whether by id exists.
-
+     * Exists by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param dashboardId dashboard id ({@link DashboardId})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public boolean existsById(TenantId tenantId, DashboardId dashboardId) {
         return dashboardDao.existsById(tenantId, dashboardId.getId());
     }
 
+    
     /**
-
-     * Loads all dashboards ids.
-
+     * Finds all dashboards ids.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<DashboardId> findAllDashboardsIds(PageLink pageLink) {
         return dashboardDao.findAllIds(pageLink);
     }
 
+    
     /**
-
-     * Loads dashboard info by ids.
-
+     * Finds dashboard info by ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param dashboardIds dashboard ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<DashboardInfo> findDashboardInfoByIds(TenantId tenantId, List<DashboardId> dashboardIds) {
@@ -628,22 +783,32 @@ public class DashboardServiceImpl extends AbstractEntityService implements Dashb
         }
     };
 
+    
     /**
-
-     * Loads entity.
-
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findDashboardById(tenantId, new DashboardId(entityId.getId())));
     }
 
+    
     /**
-
-     * Loads entity async.
-
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
@@ -651,27 +816,73 @@ public class DashboardServiceImpl extends AbstractEntityService implements Dashb
                 .transform(Optional::ofNullable, directExecutor());
     }
 
+    
     /**
-
      * Counts by tenant id.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public long countByTenantId(TenantId tenantId) {
         return dashboardDao.countByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {
         return EntityType.DASHBOARD;
     }
+
+    
+
+    
+
+
+    
+
+
+
+    
+
+
+
+
+    
+
+
+
+
+
+    /**
+
+
+
+
+
+     * Spring component for customer dashboards remover (dashboard metadata, titles, and assignment).
+
+
+
+
+
+     */
+
+
+
+
+
 
     private class CustomerDashboardsRemover extends PaginatedRemover<Customer, DashboardInfo> {
 
@@ -681,22 +892,33 @@ public class DashboardServiceImpl extends AbstractEntityService implements Dashb
             this.customer = customer;
         }
 
+        
         /**
-
-         * Loads entities.
-
+         * Finds entities.
+         *
+         * @param tenantId tenant that owns the entity or operation
+         * @param customer customer ({@link Customer})
+         * @param pageLink pagination, sort, and text-search parameters
+         * @return {@link PageData}
+         * @throws Exception if an unexpected error occurs during processing
          */
+
 
         @Override
         protected PageData<DashboardInfo> findEntities(TenantId tenantId, Customer customer, PageLink pageLink) {
             return dashboardInfoDao.findDashboardsByTenantIdAndCustomerId(customer.getTenantId().getId(), customer.getId().getId(), pageLink);
         }
 
+        
         /**
-
          * Removes entity.
-
+         *
+         * @param tenantId tenant that owns the entity or operation
+         * @param entity domain entity to persist or validate
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
          */
+
 
         @Override
         protected void removeEntity(TenantId tenantId, DashboardInfo entity) {
@@ -704,6 +926,45 @@ public class DashboardServiceImpl extends AbstractEntityService implements Dashb
         }
 
     }
+
+    
+
+    
+
+
+    
+
+
+
+    
+
+
+
+
+    
+
+
+
+
+
+    /**
+
+
+
+
+
+     * Spring component for customer dashboards updater (dashboard metadata, titles, and assignment).
+
+
+
+
+
+     */
+
+
+
+
+
 
     private class CustomerDashboardsUpdater extends PaginatedRemover<Customer, DashboardInfo> {
 
@@ -713,22 +974,33 @@ public class DashboardServiceImpl extends AbstractEntityService implements Dashb
             this.customer = customer;
         }
 
+        
         /**
-
-         * Loads entities.
-
+         * Finds entities.
+         *
+         * @param tenantId tenant that owns the entity or operation
+         * @param customer customer ({@link Customer})
+         * @param pageLink pagination, sort, and text-search parameters
+         * @return {@link PageData}
+         * @throws Exception if an unexpected error occurs during processing
          */
+
 
         @Override
         protected PageData<DashboardInfo> findEntities(TenantId tenantId, Customer customer, PageLink pageLink) {
             return dashboardInfoDao.findDashboardsByTenantIdAndCustomerId(customer.getTenantId().getId(), customer.getId().getId(), pageLink);
         }
 
+        
         /**
-
          * Removes entity.
-
+         *
+         * @param tenantId tenant that owns the entity or operation
+         * @param entity domain entity to persist or validate
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
          */
+
 
         @Override
         protected void removeEntity(TenantId tenantId, DashboardInfo entity) {

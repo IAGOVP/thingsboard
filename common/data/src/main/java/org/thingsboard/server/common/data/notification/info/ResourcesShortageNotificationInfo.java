@@ -35,6 +35,11 @@ public class ResourcesShortageNotificationInfo implements RuleOriginatedNotifica
     private Long usage;
     private String serviceId;
     private String serviceType;
+    /**
+     * Returns template data.
+     *
+     * @return {@link Map}
+     */
 
     @Override
     public Map<String, String> getTemplateData() {

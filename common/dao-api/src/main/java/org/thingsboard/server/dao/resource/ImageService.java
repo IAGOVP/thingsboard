@@ -36,52 +36,206 @@ import java.util.Set;
  */
 public interface ImageService {
 
+    /**
+     * Saves or persists image.
+     *
+     * @param image image ({@link TbResource})
+     * @return {@link TbResourceInfo}
+     */
     TbResourceInfo saveImage(TbResource image);
 
+    /**
+     * Saves or persists image info.
+     *
+     * @param imageInfo image info ({@link TbResourceInfo})
+     * @return {@link TbResourceInfo}
+     */
     TbResourceInfo saveImageInfo(TbResourceInfo imageInfo);
 
+    /**
+     * Returns image info by tenant id and key.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key key ({@link String})
+     * @return {@link TbResourceInfo}
+     */
     TbResourceInfo getImageInfoByTenantIdAndKey(TenantId tenantId, String key);
 
+    /**
+     * Returns all image keys by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link Set}
+     */
     Set<String> getAllImageKeysByTenantId(TenantId tenantId);
 
+    /**
+     * Returns public image info by key.
+     *
+     * @param publicResourceKey public resource key ({@link String})
+     * @return {@link TbResourceInfo}
+     */
     TbResourceInfo getPublicImageInfoByKey(String publicResourceKey);
 
+    /**
+     * Returns images by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param imageSubType image sub type ({@link ResourceSubType})
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<TbResourceInfo> getImagesByTenantId(TenantId tenantId, ResourceSubType imageSubType, PageLink pageLink);
 
+    /**
+     * Returns all images by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param imageSubType image sub type ({@link ResourceSubType})
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<TbResourceInfo> getAllImagesByTenantId(TenantId tenantId, ResourceSubType imageSubType, PageLink pageLink);
 
+    /**
+     * Returns image data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param imageId image id ({@link TbResourceId})
+     * @return the byte[] value
+     */
     byte[] getImageData(TenantId tenantId, TbResourceId imageId);
 
+    /**
+     * Returns image preview.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param imageId image id ({@link TbResourceId})
+     * @return the byte[] value
+     */
     byte[] getImagePreview(TenantId tenantId, TbResourceId imageId);
 
+    /**
+     * Exports image.
+     *
+     * @param imageInfo image info ({@link TbResourceInfo})
+     * @return {@link ResourceExportData}
+     */
     ResourceExportData exportImage(TbResourceInfo imageInfo);
 
+    /**
+     * To image.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param imageData image data ({@link ResourceExportData})
+     * @param checkExisting check existing
+     * @return {@link TbResource}
+     */
     TbResource toImage(TenantId tenantId, ResourceExportData imageData, boolean checkExisting);
 
+    /**
+     * Deletes image.
+     *
+     * @param imageInfo image info ({@link TbResourceInfo})
+     * @param force force
+     * @return {@link TbImageDeleteResult}
+     */
     TbImageDeleteResult deleteImage(TbResourceInfo imageInfo, boolean force);
 
+    /**
+     * Calculate image etag.
+     *
+     * @param imageData image data
+     * @return {@link String}
+     */
     String calculateImageEtag(byte[] imageData);
 
+    /**
+     * Finds system or tenant image by etag.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param etag etag ({@link String})
+     * @return {@link TbResourceInfo}
+     */
     TbResourceInfo findSystemOrTenantImageByEtag(TenantId tenantId, String etag);
 
+    /**
+     * Replace base64with image url.
+     *
+     * @param entity entity ({@link HasImage})
+     * @param type type ({@link String})
+     * @return the boolean result
+     */
     boolean replaceBase64WithImageUrl(HasImage entity, String type);
 
+    /**
+     * Updates images usage.
+     *
+     * @param dashboard dashboard ({@link Dashboard})
+     * @return the boolean result
+     */
     boolean updateImagesUsage(Dashboard dashboard);
 
+    /**
+     * Updates images usage.
+     *
+     * @param widgetType widget type ({@link WidgetTypeDetails})
+     * @return the boolean result
+     */
     boolean updateImagesUsage(WidgetTypeDetails widgetType);
 
+    /**
+     * Inline image.
+     *
+     * @param entity entity ({@link T})
+     * @return the operation result
+     */
     <T extends HasImage> T inlineImage(T entity);
 
+    /**
+     * Returns used images.
+     *
+     * @param dashboard dashboard ({@link Dashboard})
+     * @return {@link Collection}
+     */
     Collection<TbResourceInfo> getUsedImages(Dashboard dashboard);
 
+    /**
+     * Returns used images.
+     *
+     * @param widgetTypeDetails widget type details ({@link WidgetTypeDetails})
+     * @return {@link Collection}
+     */
     Collection<TbResourceInfo> getUsedImages(WidgetTypeDetails widgetTypeDetails);
 
+    /**
+     * Inline image for edge.
+     *
+     * @param entity entity ({@link HasImage})
+     */
     void inlineImageForEdge(HasImage entity);
 
+    /**
+     * Inline images for edge.
+     *
+     * @param dashboard dashboard ({@link Dashboard})
+     */
     void inlineImagesForEdge(Dashboard dashboard);
 
+    /**
+     * Inline images for edge.
+     *
+     * @param widgetTypeDetails widget type details ({@link WidgetTypeDetails})
+     */
     void inlineImagesForEdge(WidgetTypeDetails widgetTypeDetails);
 
+    /**
+     * Creates or update system image.
+     *
+     * @param resourceKey resource key ({@link String})
+     * @param data data
+     * @return {@link TbResourceInfo}
+     */
     TbResourceInfo createOrUpdateSystemImage(String resourceKey, byte[] data);
 
 }

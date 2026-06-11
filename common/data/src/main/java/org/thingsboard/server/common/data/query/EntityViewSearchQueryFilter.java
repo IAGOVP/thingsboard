@@ -28,6 +28,11 @@ import java.util.List;
  * Entity view search query filter.
  */
 public class EntityViewSearchQueryFilter extends EntitySearchQueryFilter {
+    /**
+     * Returns type.
+     *
+     * @return {@link EntityFilterType}
+     */
 
     @Override
     public EntityFilterType getType() {

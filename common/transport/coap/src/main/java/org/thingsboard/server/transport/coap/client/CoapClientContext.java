@@ -26,29 +26,107 @@ import org.thingsboard.server.transport.coap.CoapSessionMsgType;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * coap client context contract.
+ * coap client context contract (CoAP transport adaptor (ThingsBoard common module)).
  */
 public interface CoapClientContext {
 
     boolean registerAttributeObservation(TbCoapClientState clientState, String token, CoapExchange exchange);
 
+    /**
+     * Register rpc observation.
+     *
+     * @param clientState client state ({@link TbCoapClientState})
+     * @param token token ({@link String})
+     * @param exchange exchange ({@link CoapExchange})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     boolean registerRpcObservation(TbCoapClientState clientState, String token, CoapExchange exchange);
 
+    /**
+     * Returns notification counter by token.
+     *
+     * @param token token ({@link String})
+     * @return {@link AtomicInteger}
+     * @throws Exception on processing failure
+     */
     AtomicInteger getNotificationCounterByToken(String token);
 
+    /**
+     * Returns or create client.
+     *
+     * @param type type ({@link CoapSessionMsgType})
+     * @param deviceCredentials device credentials ({@link ValidateDeviceCredentialsResponse})
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @return {@link TbCoapClientState}
+     * @throws AdaptorException on invalid payload or topic format
+     */
     TbCoapClientState getOrCreateClient(CoapSessionMsgType type, ValidateDeviceCredentialsResponse deviceCredentials, DeviceProfile deviceProfile) throws AdaptorException;
 
+    /**
+     * Returns new sync session.
+     *
+     * @param clientState client state ({@link TbCoapClientState})
+     * @return the TransportProtos.SessionInfoProto value
+     * @throws Exception on processing failure
+     */
     TransportProtos.SessionInfoProto getNewSyncSession(TbCoapClientState clientState);
 
+    /**
+     * Deregister attribute observation.
+     *
+     * @param clientState client state ({@link TbCoapClientState})
+     * @param token token ({@link String})
+     * @param exchange exchange ({@link CoapExchange})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void deregisterAttributeObservation(TbCoapClientState clientState, String token, CoapExchange exchange);
 
+    /**
+     * Deregister rpc observation.
+     *
+     * @param clientState client state ({@link TbCoapClientState})
+     * @param token token ({@link String})
+     * @param exchange exchange ({@link CoapExchange})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void deregisterRpcObservation(TbCoapClientState clientState, String token, CoapExchange exchange);
 
+    /**
+     * Report activity.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void reportActivity();
 
+    /**
+     * Register observe relation.
+     *
+     * @param token token ({@link String})
+     * @param relation relation ({@link ObserveRelation})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void registerObserveRelation(String token, ObserveRelation relation);
 
+    /**
+     * Deregister observe relation.
+     *
+     * @param token token ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void deregisterObserveRelation(String token);
 
+    /**
+     * Awake.
+     *
+     * @param client client ({@link TbCoapClientState})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     boolean awake(TbCoapClientState client);
 }

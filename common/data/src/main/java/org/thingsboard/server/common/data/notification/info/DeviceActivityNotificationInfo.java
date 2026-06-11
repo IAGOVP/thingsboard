@@ -43,6 +43,11 @@ public class DeviceActivityNotificationInfo implements RuleOriginatedNotificatio
     private String deviceLabel;
     private String deviceType;
     private CustomerId deviceCustomerId;
+    /**
+     * Returns template data.
+     *
+     * @return {@link Map}
+     */
 
     @Override
     public Map<String, String> getTemplateData() {
@@ -54,11 +59,21 @@ public class DeviceActivityNotificationInfo implements RuleOriginatedNotificatio
                 "deviceType", deviceType
         );
     }
+    /**
+     * Returns affected customer id.
+     *
+     * @return {@link CustomerId}
+     */
 
     @Override
     public CustomerId getAffectedCustomerId() {
         return deviceCustomerId;
     }
+    /**
+     * Returns state entity id.
+     *
+     * @return {@link EntityId}
+     */
 
     @Override
     public EntityId getStateEntityId() {

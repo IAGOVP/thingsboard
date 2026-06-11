@@ -23,6 +23,11 @@ import org.thingsboard.server.common.data.EntityType;
  * Entity name filter.
  */
 public class EntityNameFilter implements EntityFilter {
+    /**
+     * Returns type.
+     *
+     * @return {@link EntityFilterType}
+     */
     @Override
     public EntityFilterType getType() {
         return EntityFilterType.ENTITY_NAME;

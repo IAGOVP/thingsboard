@@ -253,6 +253,11 @@ public enum ActionType {
         this.ruleEngineMsgType = ruleEngineMsgType;
         this.alarmAction = alarmAction;
     }
+    /**
+     * Returns rule engine msg type.
+     *
+     * @return optional {@link TbMsgType}, empty if not found
+     */
 
     public Optional<TbMsgType> getRuleEngineMsgType() {
         return Optional.ofNullable(ruleEngineMsgType);

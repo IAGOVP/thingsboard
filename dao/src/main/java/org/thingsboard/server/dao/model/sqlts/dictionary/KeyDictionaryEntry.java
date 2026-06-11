@@ -26,8 +26,14 @@ import org.hibernate.annotations.Generated;
 import static org.thingsboard.server.dao.model.ModelConstants.KEY_COLUMN;
 import static org.thingsboard.server.dao.model.ModelConstants.KEY_ID_COLUMN;
 /**
- * Key dictionary entry.
+ * Key dictionary entry (time-series table entity mappings (JPA/Cassandra entity mappings (database row models))).
  */
+
+
+
+
+
+
 
 @Data
 @Entity

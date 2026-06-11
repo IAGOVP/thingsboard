@@ -35,8 +35,14 @@ import static org.thingsboard.server.dao.config.DedicatedEventsJpaDaoConfig.EVEN
 import static org.thingsboard.server.dao.config.DedicatedEventsJpaDaoConfig.EVENTS_PERSISTENCE_UNIT;
 import static org.thingsboard.server.dao.config.DedicatedEventsJpaDaoConfig.EVENTS_TRANSACTION_MANAGER;
 /**
- * Dedicated jpa audit log dao.
+ * Spring component for dedicated jpa audit log dao (JPA/PostgreSQL persistence layer (JPA repositories and PostgreSQL DAO implementations)).
  */
+
+
+
+
+
+
 
 @DedicatedEventsDataSource
 @Component
@@ -53,11 +59,16 @@ public class DedicatedJpaAuditLogDao extends JpaAuditLogDao {
         super(auditLogRepository, partitioningRepository);
     }
 
+    
     /**
-
-     * Persists .
-
+     * Saves or persists the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param domain domain ({@link AuditLog})
+     * @return {@link AuditLog}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional(transactionManager = EVENTS_TRANSACTION_MANAGER)
     @Override
@@ -65,11 +76,16 @@ public class DedicatedJpaAuditLogDao extends JpaAuditLogDao {
         return super.save(tenantId, domain);
     }
 
+    
     /**
-
-     * Persists and flush.
-
+     * Saves or persists and flush.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param domain domain ({@link AuditLog})
+     * @return {@link AuditLog}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional(transactionManager = EVENTS_TRANSACTION_MANAGER)
     @Override
@@ -77,11 +93,16 @@ public class DedicatedJpaAuditLogDao extends JpaAuditLogDao {
         return super.saveAndFlush(tenantId, domain);
     }
 
+    
     /**
-
      * Removes by id.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional(transactionManager = EVENTS_TRANSACTION_MANAGER)
     @Override
@@ -89,11 +110,15 @@ public class DedicatedJpaAuditLogDao extends JpaAuditLogDao {
         super.removeById(tenantId, id);
     }
 
+    
     /**
-
      * Removes all by ids.
-
+     *
+     * @param ids ids ({@link Collection})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional(transactionManager = EVENTS_TRANSACTION_MANAGER)
     @Override
@@ -101,22 +126,28 @@ public class DedicatedJpaAuditLogDao extends JpaAuditLogDao {
         super.removeAllByIds(ids);
     }
 
+    
     /**
-
-     * Get entity manager.
-
+     * Returns entity manager.
+     *
+     * @return {@link EntityManager}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected EntityManager getEntityManager() {
         return entityManager;
     }
 
+    
     /**
-
-     * Get jdbc template.
-
+     * Returns jdbc template.
+     *
+     * @return {@link JdbcTemplate}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected JdbcTemplate getJdbcTemplate() {

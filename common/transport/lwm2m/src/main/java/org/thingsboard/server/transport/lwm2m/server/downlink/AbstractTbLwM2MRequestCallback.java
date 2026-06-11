@@ -34,12 +34,28 @@ public abstract class AbstractTbLwM2MRequestCallback<R, T> implements DownlinkRe
         this.logService = logService;
         this.client = client;
     }
+    /**
+     * Handles validation error.
+     *
+     * @param params params ({@link String})
+     * @param msg msg ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onValidationError(String params, String msg) {
         log.trace("[{}] Request [{}] validation failed. Reason: {}", client.getEndpoint(), params, msg);
         logService.log(client, String.format("[%s]: Request [%s] validation failed. Reason: %s", LOG_LWM2M_ERROR, params, msg));
     }
+    /**
+     * Handles error.
+     *
+     * @param params params ({@link String})
+     * @param e e ({@link Exception})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onError(String params, Exception e) {

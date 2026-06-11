@@ -18,10 +18,16 @@ package org.thingsboard.server.common.msg.housekeeper;
 import org.thingsboard.server.common.data.housekeeper.HousekeeperTask;
 
 /**
- * housekeeper client contract.
+ * housekeeper client message contract.
  */
+
 public interface HousekeeperClient {
 
+    /**
+     * Submit task.
+     *
+     * @param task task ({@link HousekeeperTask})
+     */
     void submitTask(HousekeeperTask task);
 
 }

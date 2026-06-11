@@ -27,10 +27,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Optional;
 
-@Slf4j
 /**
  * System util.
  */
+@Slf4j
 public class SystemUtil {
 
     private static final HardwareAbstractionLayer HARDWARE;

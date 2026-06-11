@@ -26,9 +26,6 @@ import java.util.List;
  */
 @Data
 @Schema
-/**
- * Relation entity type filter.
- */
 public class RelationEntityTypeFilter {
 
     public RelationEntityTypeFilter() {}

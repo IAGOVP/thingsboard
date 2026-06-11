@@ -26,44 +26,127 @@ import org.thingsboard.server.common.data.kv.TsKvLatestRemovingResult;
 import java.util.List;
 import java.util.Optional;
 
+
 /**
 
- * Persistence contract for timeseries latest (see JPA/Cassandra implementations).
+ * Persistence contract for timeseries latest.
+
+ *
+
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (Cassandra telemetry and latest-value DAO (Cassandra time-series DAO and latest-value caches)).
 
  */
 
+
 public interface TimeseriesLatestDao {
 
+    
     /**
-     * Optional TsKvEntry if the value is present in the DB
+     * Finds latest opt.
      *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param key attribute or cache key
+     * @return future completing with optional {@link TsKvEntry}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     ListenableFuture<Optional<TsKvEntry>> findLatestOpt(TenantId tenantId, EntityId entityId, String key);
 
+    
     /**
-     * Returns new BasicTsKvEntry(System.currentTimeMillis(), new StringDataEntry(key, null)) if the value is NOT present in the DB
+     * Finds latest.
      *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param key attribute or cache key
+     * @return future completing with {@link TsKvEntry}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     ListenableFuture<TsKvEntry> findLatest(TenantId tenantId, EntityId entityId, String key);
+    /**
+     * Finds all latest.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     ListenableFuture<List<TsKvEntry>> findAllLatest(TenantId tenantId, EntityId entityId);
+    /**
+     * Saves or persists latest.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param tsKvEntry ts kv entry ({@link TsKvEntry})
+     * @return future completing with {@link Long}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     ListenableFuture<Long> saveLatest(TenantId tenantId, EntityId entityId, TsKvEntry tsKvEntry);
+    /**
+     * Removes latest.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param query filter and sort query definition
+     * @return future completing with {@link TsKvLatestRemovingResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     ListenableFuture<TsKvLatestRemovingResult> removeLatest(TenantId tenantId, EntityId entityId, DeleteTsKvQuery query);
+    /**
+     * Finds all keys by device profile id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfileId device profile id ({@link DeviceProfileId})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<String> findAllKeysByDeviceProfileId(TenantId tenantId, DeviceProfileId deviceProfileId);
+    /**
+     * Finds all keys by entity ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityIds entity ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<String> findAllKeysByEntityIds(TenantId tenantId, List<EntityId> entityIds);
+    /**
+     * Finds all keys by entity ids async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityIds entity ids ({@link List})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     ListenableFuture<List<String>> findAllKeysByEntityIdsAsync(TenantId tenantId, List<EntityId> entityIds);
 
+    
     /**
-     * For each unique timeseries key across the given entities, returns the single most recent {@link TsKvEntry}
-     * (i.e. the entry with the highest timestamp). If the same key exists on multiple entities,
-     * only the freshest value is kept. Useful for discovering available keys together with a representative sample value.
+     * Finds latest by entity ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityIds entity ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     List<TsKvEntry> findLatestByEntityIds(TenantId tenantId, List<EntityId> entityIds);
+    /**
+     * Finds latest by entity ids async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityIds entity ids ({@link List})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     ListenableFuture<List<TsKvEntry>> findLatestByEntityIdsAsync(TenantId tenantId, List<EntityId> entityIds);
 

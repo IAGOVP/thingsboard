@@ -41,8 +41,11 @@ import org.thingsboard.server.dao.util.mapping.JsonConverter;
 
 import java.util.UUID;
 /**
- * Notification request entity.
+ * JPA/Cassandra row model for notification request.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -124,6 +127,12 @@ public class NotificationRequestEntity extends BaseSqlEntity<NotificationRequest
         this.status = other.status;
         this.stats = other.stats;
     }
+    /**
+     * To data.
+     *
+     * @return {@link NotificationRequest}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationRequest toData() {

@@ -35,8 +35,11 @@ import org.thingsboard.server.dao.util.mapping.JsonConverter;
 
 import java.util.UUID;
 /**
- * Abstract rule chain entity.
+ * JPA/Cassandra row model for abstract rule chain.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -106,6 +109,12 @@ public abstract class AbstractRuleChainEntity<T extends RuleChain> extends BaseV
         this.additionalInfo = ruleChainEntity.getAdditionalInfo();
         this.externalId = ruleChainEntity.getExternalId();
     }
+    /**
+     * To rule chain.
+     *
+     * @return {@link RuleChain}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected RuleChain toRuleChain() {
         RuleChain ruleChain = new RuleChain(new RuleChainId(this.getUuid()));

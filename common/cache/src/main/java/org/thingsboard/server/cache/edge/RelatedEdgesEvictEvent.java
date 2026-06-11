@@ -20,11 +20,15 @@ import lombok.RequiredArgsConstructor;
 import org.thingsboard.server.common.data.id.EntityId;
 import org.thingsboard.server.common.data.id.TenantId;
 
+/**
+ * Cluster broadcast event evicting RelatedEdgesEvictEvent cache entries after create/update/delete.
+ *
+ * <p>Published to all ThingsBoard nodes so {@link RelatedEdgesEvictEventCaffeineCache} and
+ * {@link RelatedEdgesEvictEventRedisCache} stay consistent. Handlers evict old and new key variants
+ * when identifiers change (e.g. rename).
+ */
 @Data
 @RequiredArgsConstructor
-/**
- * Related edges evict event.
- */
 public class RelatedEdgesEvictEvent {
 
     private final TenantId tenantId;

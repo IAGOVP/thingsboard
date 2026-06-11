@@ -35,16 +35,33 @@ public class HourInterval extends BaseAggInterval {
     public HourInterval(String tz, Long offsetSec) {
         super(tz, offsetSec);
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link AggIntervalType}
+     */
 
     @Override
     public AggIntervalType getType() {
         return AggIntervalType.HOUR;
     }
+    /**
+     * Align to interval start.
+     *
+     * @param reference reference ({@link ZonedDateTime})
+     * @return {@link ZonedDateTime}
+     */
 
     @Override
     protected ZonedDateTime alignToIntervalStart(ZonedDateTime reference) {
         return reference.truncatedTo(ChronoUnit.HOURS);
     }
+    /**
+     * Returns next interval start.
+     *
+     * @param currentStart current start ({@link ZonedDateTime})
+     * @return {@link ZonedDateTime}
+     */
 
     @Override
     public ZonedDateTime getNextIntervalStart(ZonedDateTime currentStart) {

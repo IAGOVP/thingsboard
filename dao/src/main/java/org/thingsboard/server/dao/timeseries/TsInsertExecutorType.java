@@ -17,16 +17,60 @@ package org.thingsboard.server.dao.timeseries;
 
 import java.util.Optional;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * Ts insert executor type.
+
+
+
+
+
+ * Enumerates ts insert executor type values used in Cassandra telemetry and latest-value DAO (Cassandra time-series DAO and latest-value caches).
+
+
+
+
+
 
  */
+
+
+
+
+
+
 
 public enum TsInsertExecutorType {
     SINGLE,
     FIXED,
     CACHED;
+    /**
+     * Parse.
+     *
+     * @param name entity or attribute name
+     * @return optional {@link TsInsertExecutorType}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Optional<TsInsertExecutorType> parse(String name) {
         TsInsertExecutorType executorType = null;

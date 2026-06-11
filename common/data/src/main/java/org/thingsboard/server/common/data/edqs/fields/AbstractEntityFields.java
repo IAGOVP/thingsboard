@@ -24,8 +24,9 @@ import java.util.UUID;
 @Data
 @SuperBuilder
 /**
- * Abstract entity fields.
+ * Lightweight abstract entity field selection for EDQS queries and events (EDQS data — lightweight entity field DTOs for EDQS).
  */
+
 public class AbstractEntityFields implements EntityFields {
 
     private UUID id;
@@ -64,10 +65,27 @@ public class AbstractEntityFields implements EntityFields {
     public AbstractEntityFields(UUID id, long createdTime, UUID tenantId) {
         this(id, createdTime, tenantId, null, null, null);
     }
+    
+        /**
+         * Checks id.
+         *
+         * @param id id ({@link UUID})
+         * @return {@link UUID}
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
 
     protected UUID checkId(UUID id) {
         return id == null || id.equals(EntityId.NULL_UUID) ? null : id;
     }
+    
+    /**
+     * Returns customer id.
+     *
+     * @return {@link UUID}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public UUID getCustomerId() {

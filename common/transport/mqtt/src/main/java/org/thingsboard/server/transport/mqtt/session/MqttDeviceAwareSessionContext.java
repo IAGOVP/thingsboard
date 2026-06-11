@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 /**
- * Mqtt device aware session context.
+ * MQTT-specific {@link DeviceAwareSessionContext}: topic filters, QoS per topic, Sparkplug/gateway flags, and protobuf adaptor selection.
  */
 @ToString(callSuper = true)
 public abstract class MqttDeviceAwareSessionContext extends DeviceAwareSessionContext {
@@ -37,11 +37,22 @@ public abstract class MqttDeviceAwareSessionContext extends DeviceAwareSessionCo
         super(sessionId);
         this.mqttQoSMap = mqttQoSMap;
     }
-
+    /**
+     * Returns mqtt qo smap.
+     *
+     * @return {@link ConcurrentMap}
+     * @throws Exception on processing failure
+     */
     public ConcurrentMap<MqttTopicMatcher, Integer> getMqttQoSMap() {
         return mqttQoSMap;
     }
-
+    /**
+     * Returns qo sfor topic.
+     *
+     * @param topic topic ({@link String})
+     * @return {@link MqttQoS}
+     * @throws Exception on processing failure
+     */
     public MqttQoS getQoSForTopic(String topic) {
         List<Integer> qosList = mqttQoSMap.entrySet()
                 .stream()

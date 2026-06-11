@@ -26,6 +26,11 @@ import lombok.EqualsAndHashCode;
  * Configuration for email two fa provider.
  */
 public class EmailTwoFaProviderConfig extends OtpBasedTwoFaProviderConfig {
+    /**
+     * Returns provider type.
+     *
+     * @return {@link TwoFaProviderType}
+     */
 
     @Override
     public TwoFaProviderType getProviderType() {

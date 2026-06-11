@@ -31,11 +31,48 @@ import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * Device connectivity util.
+
+
+
+
+
+ * Device connectivity util (DAO utilities (KV conversion, rate executors, JSON mapping)).
+
+
+
+
+
 
  */
+
+
+
+
+
+
 
 public class DeviceConnectivityUtil {
 
@@ -56,11 +93,32 @@ public class DeviceConnectivityUtil {
     public static final String MQTT_IMAGE = "thingsboard/mosquitto-clients ";
     public static final String COAP_IMAGE = "thingsboard/coap-clients ";
     private final static Pattern VALID_URL_PATTERN = Pattern.compile("^(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
+    /**
+     * Returns http publish command.
+     *
+     * @param protocol protocol ({@link String})
+     * @param host host ({@link String})
+     * @param port port ({@link String})
+     * @param deviceCredentials device credentials ({@link DeviceCredentials})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String getHttpPublishCommand(String protocol, String host, String port, DeviceCredentials deviceCredentials) {
         return String.format("curl -v -X POST %s://%s%s/api/v1/%s/telemetry --header Content-Type:application/json --data " + JSON_EXAMPLE_PAYLOAD,
                 protocol, host, port, deviceCredentials.getCredentialsId());
     }
+    /**
+     * Returns mqtt publish command.
+     *
+     * @param protocol protocol ({@link String})
+     * @param host host ({@link String})
+     * @param port port ({@link String})
+     * @param deviceTelemetryTopic device telemetry topic ({@link String})
+     * @param deviceCredentials device credentials ({@link DeviceCredentials})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String getMqttPublishCommand(String protocol, String host, String port, String deviceTelemetryTopic, DeviceCredentials deviceCredentials) {
         StringBuilder command = new StringBuilder("mosquitto_pub -d -q 1");
@@ -97,6 +155,15 @@ public class DeviceConnectivityUtil {
         command.append(" -m " + JSON_EXAMPLE_PAYLOAD);
         return command.toString();
     }
+    /**
+     * Returns gateway docker compose file.
+     *
+     * @param host host ({@link String})
+     * @param gatewayImageVersion gateway image version ({@link String})
+     * @param deviceCredentials device credentials ({@link DeviceCredentials})
+     * @return {@link Resource}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Resource getGatewayDockerComposeFile(String host, String gatewayImageVersion, DeviceCredentials deviceCredentials) {
         StringBuilder dockerComposeBuilder = new StringBuilder();
@@ -165,6 +232,18 @@ public class DeviceConnectivityUtil {
 
         return new ByteArrayResource(dockerComposeBuilder.toString().getBytes(StandardCharsets.UTF_8));
     }
+    /**
+     * Returns docker mqtt publish command.
+     *
+     * @param protocol protocol ({@link String})
+     * @param baseUrl base url ({@link String})
+     * @param host host ({@link String})
+     * @param port port ({@link String})
+     * @param deviceTelemetryTopic device telemetry topic ({@link String})
+     * @param deviceCredentials device credentials ({@link DeviceCredentials})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String getDockerMqttPublishCommand(String protocol, String baseUrl, String host, String port, String deviceTelemetryTopic, DeviceCredentials deviceCredentials) {
         String mqttCommand = getMqttPublishCommand(protocol, host, port, deviceTelemetryTopic, deviceCredentials);
@@ -192,14 +271,41 @@ public class DeviceConnectivityUtil {
 
         return mqttDockerCommand.toString();
     }
+    /**
+     * Returns curl pem cert command.
+     *
+     * @param baseUrl base url ({@link String})
+     * @param protocol protocol ({@link String})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String getCurlPemCertCommand(String baseUrl, String protocol) {
         return getCurlPemCertCommand(baseUrl, protocol, CA_ROOT_CERT_PEM);
     }
+    /**
+     * Returns curl pem cert command.
+     *
+     * @param baseUrl base url ({@link String})
+     * @param protocol protocol ({@link String})
+     * @param caCertFilePath ca cert file path ({@link String})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String getCurlPemCertCommand(String baseUrl, String protocol, String caCertFilePath) {
         return String.format("curl -f -S -o %s %s/api/device-connectivity/%s/certificate/download", caCertFilePath, baseUrl, protocol);
     }
+    /**
+     * Returns coap publish command.
+     *
+     * @param protocol protocol ({@link String})
+     * @param host host ({@link String})
+     * @param port port ({@link String})
+     * @param deviceCredentials device credentials ({@link DeviceCredentials})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String getCoapPublishCommand(String protocol, String host, String port, DeviceCredentials deviceCredentials) {
         switch (deviceCredentials.getCredentialsType()) {
@@ -212,6 +318,17 @@ public class DeviceConnectivityUtil {
                 return null;
         }
     }
+    /**
+     * Returns docker coap publish command.
+     *
+     * @param protocol protocol ({@link String})
+     * @param baseUrl base url ({@link String})
+     * @param host host ({@link String})
+     * @param port port ({@link String})
+     * @param deviceCredentials device credentials ({@link DeviceCredentials})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String getDockerCoapPublishCommand(String protocol, String baseUrl, String host, String port, DeviceCredentials deviceCredentials) {
         String coapCommand = getCoapPublishCommand(protocol, host, port, deviceCredentials);
@@ -239,6 +356,15 @@ public class DeviceConnectivityUtil {
 
         return coapDockerCommand.toString();
     }
+    /**
+     * Returns host.
+     *
+     * @param baseUrl base url ({@link String})
+     * @param properties properties ({@link DeviceConnectivityInfo})
+     * @param protocol protocol ({@link String})
+     * @return {@link String}
+     * @throws URISyntaxException if urisyntax exception is thrown during processing
+     */
 
     public static String getHost(String baseUrl, DeviceConnectivityInfo properties, String protocol) throws URISyntaxException {
         String initialHost = StringUtils.isBlank(properties.getHost()) ? baseUrl : properties.getHost();
@@ -264,10 +390,24 @@ public class DeviceConnectivityUtil {
         }
         return host;
     }
+    /**
+     * Returns port.
+     *
+     * @param properties properties ({@link DeviceConnectivityInfo})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String getPort(DeviceConnectivityInfo properties) {
         return StringUtils.isBlank(properties.getPort()) ? "" : properties.getPort();
     }
+    /**
+     * Is localhost.
+     *
+     * @param host host ({@link String})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static boolean isLocalhost(String host) {
         try {

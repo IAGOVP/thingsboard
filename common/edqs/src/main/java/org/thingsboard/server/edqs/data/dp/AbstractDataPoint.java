@@ -21,33 +21,64 @@ import org.apache.commons.lang3.StringUtils;
 import org.thingsboard.server.common.data.edqs.DataPoint;
 
 /**
- * Typed attribute/latest-TS value stored in EDQS (abstract data point).
+ * Typed attribute or latest-TS value stored in the EDQS index (abstract data point).
  */
+
 @RequiredArgsConstructor
 public abstract class AbstractDataPoint implements DataPoint {
 
     @Getter
     private final long ts;
+    /**
+     * Returns str.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String getStr() {
         throw new RuntimeException(NOT_SUPPORTED);
     }
+    /**
+     * Returns long.
+     *
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public long getLong() {
         throw new RuntimeException(NOT_SUPPORTED);
     }
+    /**
+     * Returns double.
+     *
+     * @return the double result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public double getDouble() {
         throw new RuntimeException(NOT_SUPPORTED);
     }
+    /**
+     * Returns bool.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean getBool() {
         throw new RuntimeException(NOT_SUPPORTED);
     }
+    /**
+     * Returns json.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String getJson() {
@@ -55,8 +86,16 @@ public abstract class AbstractDataPoint implements DataPoint {
     }
 
     public String toString() {
+        /** Value to string. */
         return valueToString();
     }
+    /**
+     * Compares to.
+     *
+     * @param dataPoint data point ({@link DataPoint})
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public int compareTo(DataPoint dataPoint) {

@@ -25,6 +25,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 public interface CoapServerService {
 
+    /** Returns the coap server. */
     CoapServer getCoapServer() throws UnknownHostException;
 
     ConcurrentMap<TbCoapDtlsSessionKey, TbCoapDtlsSessionInfo> getDtlsSessionsMap();

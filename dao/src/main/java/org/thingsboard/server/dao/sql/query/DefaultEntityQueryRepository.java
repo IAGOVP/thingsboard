@@ -67,8 +67,14 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 /**
- * Default entity query repository.
+ * Default entity query repository (JPA/PostgreSQL persistence layer (JPA repositories and PostgreSQL DAO implementations)).
  */
+
+
+
+
+
+
 
 @Repository
 @Slf4j
@@ -356,6 +362,15 @@ public class DefaultEntityQueryRepository implements EntityQueryRepository {
             nullsOrderStrategy = NULLS_ORDER_DEFAULT;
         }
     }
+    /**
+     * Counts entities by query.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param query filter and sort query definition
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public long countEntitiesByQuery(TenantId tenantId, CustomerId customerId, EntityCountQuery query) {
@@ -459,16 +474,42 @@ public class DefaultEntityQueryRepository implements EntityQueryRepository {
             });
         }
     }
+    /**
+     * Finds entity data by query internal.
+     *
+     * @param query filter and sort query definition
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<EntityData> findEntityDataByQueryInternal(EntityDataQuery query) {
         return findEntityDataByQuery(null, null, query, true);
     }
+    /**
+     * Finds entity data by query.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param query filter and sort query definition
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<EntityData> findEntityDataByQuery(TenantId tenantId, CustomerId customerId, EntityDataQuery query) {
         return findEntityDataByQuery(tenantId, customerId, query, false);
     }
+    /**
+     * Finds entity data by query.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param query filter and sort query definition
+     * @param ignorePermissionCheck ignore permission check
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public PageData<EntityData> findEntityDataByQuery(TenantId tenantId, CustomerId customerId, EntityDataQuery query, boolean ignorePermissionCheck) {
         return transactionTemplate.execute(status -> {
@@ -1022,6 +1063,13 @@ public class DefaultEntityQueryRepository implements EntityQueryRepository {
         }
         return nameColumn;
     }
+    /**
+     * Resolve entity type.
+     *
+     * @param entityFilter entity filter ({@link EntityFilter})
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static EntityType resolveEntityType(EntityFilter entityFilter) {
         switch (entityFilter.getType()) {

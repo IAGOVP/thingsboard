@@ -29,9 +29,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
+
 /**
  * EDQS query processor for abstract entity profile entity filters.
+ *
+ * <p>Evaluates {@link org.thingsboard.server.common.data.query.EntityFilter} against a {@link org.thingsboard.server.edqs.repo.TenantRepo} (EDQS microservice — entity filter query processors).
  */
+
 public abstract class AbstractEntityProfileQueryProcessor<T extends EntityFilter> extends AbstractSimpleQueryProcessor<T> {
 
     private final Set<UUID> entityProfileIds = new HashSet<>();
@@ -47,12 +51,39 @@ public abstract class AbstractEntityProfileQueryProcessor<T extends EntityFilter
         }
         pattern = RepositoryUtils.toEntityNameSqlLikePattern(getEntityNameFilter(filter));
     }
+    /**
+     * Returns entity name filter.
+     *
+     * @param filter entity filter definition (type, relations, search text, etc.)
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract String getEntityNameFilter(T filter);
+    /**
+     * Returns profile names.
+     *
+     * @param filter entity filter definition (type, relations, search text, etc.)
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract List<String> getProfileNames(T filter);
+    /**
+     * Returns profile entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract EntityType getProfileEntityType();
+    /**
+     * Matches.
+     *
+     * @param ed ed ({@link EntityData})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected boolean matches(EntityData<?> ed) {

@@ -27,6 +27,14 @@ public class SessionLimits {
     private int maxPayloadSize;
     private int maxInflightMessages;
     private SessionRateLimits rateLimits;
-
+    /**
+     * Session rate limits.
+     *
+     * @param messages messages ({@link String})
+     * @param telemetryMessages telemetry messages ({@link String})
+     * @param telemetryDataPoints telemetry data points ({@link String})
+     * @return the record value
+     * @throws Exception on processing failure
+     */
     public record SessionRateLimits(String messages, String telemetryMessages, String telemetryDataPoints) {}
 }

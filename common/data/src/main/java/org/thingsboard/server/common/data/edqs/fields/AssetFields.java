@@ -29,20 +29,37 @@ import static org.thingsboard.server.common.data.edqs.fields.FieldsUtil.getText;
 @NoArgsConstructor
 @SuperBuilder
 /**
- * Asset fields.
+ * Lightweight asset field selection for EDQS queries and events (EDQS data — lightweight entity field DTOs for EDQS).
  */
+
 public class AssetFields extends AbstractEntityFields implements ProfileAwareFields {
 
     private String type;
     private UUID assetProfileId;
     private String label;
     private String additionalInfo;
+    
+  /**
+   * Returns profile name.
+   *
+   * @return {@link String}
+   * @throws Exception if an unexpected error occurs during processing
+   */
+
 
     @JsonIgnore
     @Override
     public String getProfileName() {
         return type;
     }
+    
+  /**
+   * Returns profile id.
+   *
+   * @return {@link UUID}
+   * @throws Exception if an unexpected error occurs during processing
+   */
+
 
     @JsonIgnore
     @Override

@@ -69,6 +69,11 @@ public class AssetProfileInfo extends EntityInfo {
     public AssetProfileInfo(AssetProfile profile) {
         this(profile.getId(), profile.getTenantId(), profile.getName(), profile.getImage(), profile.getDefaultDashboardId());
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link EntityId}
+     */
 
     @Override
     @Schema(implementation = AssetProfileId.class, description = "JSON object with the Asset Profile Id.")

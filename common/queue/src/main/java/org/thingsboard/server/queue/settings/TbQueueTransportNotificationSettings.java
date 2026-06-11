@@ -20,12 +20,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+
+/**
+ * Kafka settings for transport notification queues.
+ */
 @Lazy
 @Data
 @Component
-/**
- * Tb queue transport notification settings.
- */
 public class TbQueueTransportNotificationSettings {
 
     @Value("${queue.transport.notifications_topic}")

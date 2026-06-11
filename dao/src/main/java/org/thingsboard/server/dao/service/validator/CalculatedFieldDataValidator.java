@@ -35,8 +35,11 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 /**
- * Calculated field data validator.
+ * Validates calculated field entities before persistence.
+ *
+ * <p>Enforces constraints, uniqueness, and referential integrity at the DAO layer.
  */
+
 
 @Component
 public class CalculatedFieldDataValidator extends DataValidator<CalculatedField> {
@@ -47,11 +50,16 @@ public class CalculatedFieldDataValidator extends DataValidator<CalculatedField>
     @Autowired
     private ApiLimitService apiLimitService;
 
+    
     /**
-
-     * Validate data impl.
-
+     * Validates data impl.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param calculatedField calculated field ({@link CalculatedField})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateDataImpl(TenantId tenantId, CalculatedField calculatedField) {
@@ -63,11 +71,16 @@ public class CalculatedFieldDataValidator extends DataValidator<CalculatedField>
         validateEntityAggregationConfiguration(tenantId, calculatedField);
     }
 
+    
     /**
-
-     * Validate create.
-
+     * Validates create.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param calculatedField calculated field ({@link CalculatedField})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateCreate(TenantId tenantId, CalculatedField calculatedField) {
@@ -83,11 +96,16 @@ public class CalculatedFieldDataValidator extends DataValidator<CalculatedField>
         }
     }
 
+    
     /**
-
-     * Validate update.
-
+     * Validates update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param calculatedField calculated field ({@link CalculatedField})
+     * @return {@link CalculatedField}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected CalculatedField validateUpdate(TenantId tenantId, CalculatedField calculatedField) {

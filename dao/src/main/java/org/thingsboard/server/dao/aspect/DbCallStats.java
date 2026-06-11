@@ -25,8 +25,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 /**
- * Db call stats.
+ * Db call stats (database call statistics and method profiling).
  */
+
+
+
+
+
+
 
 @Data
 public class DbCallStats {
@@ -35,6 +41,15 @@ public class DbCallStats {
     private final ConcurrentMap<String, MethodCallStats> methodStats = new ConcurrentHashMap<>();
     private final AtomicInteger successCalls = new AtomicInteger();
     private final AtomicInteger failureCalls = new AtomicInteger();
+    /**
+     * Handles method call.
+     *
+     * @param methodName method name ({@link String})
+     * @param success success
+     * @param executionTime execution time
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void onMethodCall(String methodName, boolean success, long executionTime) {
         var methodCallStats = methodStats.computeIfAbsent(methodName, m -> new MethodCallStats());
@@ -47,6 +62,12 @@ public class DbCallStats {
             methodCallStats.getFailures().incrementAndGet();
         }
     }
+    /**
+     * Snapshot.
+     *
+     * @return {@link DbCallStatsSnapshot}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public DbCallStatsSnapshot snapshot() {
         return DbCallStatsSnapshot.builder()

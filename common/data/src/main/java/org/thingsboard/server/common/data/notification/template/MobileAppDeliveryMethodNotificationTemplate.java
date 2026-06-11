@@ -51,16 +51,31 @@ public class MobileAppDeliveryMethodNotificationTemplate extends DeliveryMethodN
         this.subject = other.subject;
         this.additionalConfig = other.additionalConfig;
     }
+    /**
+     * Returns method.
+     *
+     * @return {@link NotificationDeliveryMethod}
+     */
 
     @Override
     public NotificationDeliveryMethod getMethod() {
         return NotificationDeliveryMethod.MOBILE_APP;
     }
+    /**
+     * Copy.
+     *
+     * @return {@link MobileAppDeliveryMethodNotificationTemplate}
+     */
 
     @Override
     public MobileAppDeliveryMethodNotificationTemplate copy() {
         return new MobileAppDeliveryMethodNotificationTemplate(this);
     }
+    /**
+     * Returns templatable values.
+     *
+     * @return {@link List}
+     */
 
     @Override
     public List<TemplatableValue> getTemplatableValues() {

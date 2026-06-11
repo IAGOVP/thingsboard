@@ -17,8 +17,9 @@ package org.thingsboard.server.queue.discovery;
 
 import org.thingsboard.server.common.data.id.TenantId;
 
+
 /**
- * Service API for tenant routing info persistence and domain operations.
+ * Tenant routing info service used by the ThingsBoard cache and queue subsystem.
  */
 public interface TenantRoutingInfoService {
 

@@ -42,8 +42,11 @@ import static org.thingsboard.server.dao.model.ModelConstants.LONG_VALUE_COLUMN;
 import static org.thingsboard.server.dao.model.ModelConstants.STRING_VALUE_COLUMN;
 import static org.thingsboard.server.dao.model.ModelConstants.TS_COLUMN;
 /**
- * Abstract ts kv entity.
+ * JPA/Cassandra row model for abstract ts kv.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @MappedSuperclass
@@ -94,8 +97,21 @@ public abstract class AbstractTsKvEntity implements ToData<TsKvEntry> {
     public AbstractTsKvEntity(Long aggValuesLastTs) {
         this.aggValuesLastTs = aggValuesLastTs;
     }
+    /**
+     * Is not empty.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public abstract boolean isNotEmpty();
+    /**
+     * Is all null.
+     *
+     * @param args args
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected static boolean isAllNull(Object... args) {
         for (Object arg : args) {
@@ -105,6 +121,12 @@ public abstract class AbstractTsKvEntity implements ToData<TsKvEntry> {
         }
         return true;
     }
+    /**
+     * To data.
+     *
+     * @return {@link TsKvEntry}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TsKvEntry toData() {
@@ -127,6 +149,12 @@ public abstract class AbstractTsKvEntity implements ToData<TsKvEntry> {
             return new AggTsKvEntry(ts, kvEntry, aggValuesCount);
         }
     }
+    /**
+     * Returns version.
+     *
+     * @return {@link Long}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Long getVersion() {
         return null;

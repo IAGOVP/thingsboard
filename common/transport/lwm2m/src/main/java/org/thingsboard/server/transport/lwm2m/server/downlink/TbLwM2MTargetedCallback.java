@@ -46,6 +46,14 @@ public abstract class TbLwM2MTargetedCallback<R, T> extends AbstractTbLwM2MReque
         this.versionedId = null;
         this.versionedIds = versionedIds;
     }
+    /**
+     * Handles success.
+     *
+     * @param request request payload with operation parameters
+     * @param response response ({@link T})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onSuccess(R request, T response) {
@@ -54,7 +62,15 @@ public abstract class TbLwM2MTargetedCallback<R, T> extends AbstractTbLwM2MReque
             logForBadResponse(((LwM2mResponse) response).getCode().getCode(), response.toString(), request.getClass().getSimpleName());
         }
     }
-
+    /**
+     * Log for bad response.
+     *
+     * @param code code
+     * @param responseStr response str ({@link String})
+     * @param requestName request name ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void logForBadResponse(int code, String responseStr, String requestName) {
         if (code > ResponseCode.CONTENT_CODE) {
             log.error("[{}] [{}] [{}] failed to process successful response [{}] ", client.getEndpoint(), requestName,

@@ -83,7 +83,13 @@ public class LwM2MModelConfig {
         this.observeStrategyOld = SINGLE;
         this.observeStrategyNew = SINGLE;
     }
-
+    /**
+     * Merge.
+     *
+     * @param modelConfig model config ({@link LwM2MModelConfig})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void merge(LwM2MModelConfig modelConfig) {
         if (modelConfig.isEmpty() && modelConfig.getToCancelRead().isEmpty()) {
             return;
@@ -142,6 +148,12 @@ public class LwM2MModelConfig {
             this.toObserveByObjectToCancel = new ConcurrentHashMap<>();
         }
     }
+    /**
+     * Is empty.
+     *
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @JsonIgnore
     public boolean isEmpty() {

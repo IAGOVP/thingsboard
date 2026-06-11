@@ -15,16 +15,16 @@
  */
 package org.thingsboard.server.queue.util;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
-
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+
+
+/**
+ * Classpath marker for Transport service Spring components.
+ */
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@ConditionalOnExpression("('${service.type:null}'=='monolith' && '${transport.api_enabled:true}'=='true') || '${service.type:null}'=='tb-transport'")
-public @/**
- * tb transport component contract.
- */
-interface TbTransportComponent {}
+public @interface TbTransportComponent {}

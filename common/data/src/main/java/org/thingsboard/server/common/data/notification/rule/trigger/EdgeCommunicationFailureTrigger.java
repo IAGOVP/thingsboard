@@ -42,26 +42,51 @@ public class EdgeCommunicationFailureTrigger implements NotificationRuleTrigger 
     private final String edgeName;
     private final String failureMsg;
     private final String error;
+    /**
+     * Returns deduplication strategy.
+     *
+     * @return {@link DeduplicationStrategy}
+     */
 
     @Override
     public DeduplicationStrategy getDeduplicationStrategy() {
         return DeduplicationStrategy.ALL;
     }
+    /**
+     * Returns deduplication key.
+     *
+     * @return {@link String}
+     */
 
     @Override
     public String getDeduplicationKey() {
         return String.join(":", NotificationRuleTrigger.super.getDeduplicationKey(), error);
     }
+    /**
+     * Returns default deduplication duration.
+     *
+     * @return the long result
+     */
 
     @Override
     public long getDefaultDeduplicationDuration() {
         return TimeUnit.MINUTES.toMillis(30);
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     */
 
     @Override
     public NotificationRuleTriggerType getType() {
         return NotificationRuleTriggerType.EDGE_COMMUNICATION_FAILURE;
     }
+    /**
+     * Returns originator entity id.
+     *
+     * @return {@link EntityId}
+     */
 
     @Override
     public EntityId getOriginatorEntityId() {

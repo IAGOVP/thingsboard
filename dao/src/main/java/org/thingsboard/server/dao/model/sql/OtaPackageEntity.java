@@ -54,8 +54,11 @@ import static org.thingsboard.server.dao.model.ModelConstants.OTA_PACKAGE_TYPE_C
 import static org.thingsboard.server.dao.model.ModelConstants.OTA_PACKAGE_URL_COLUMN;
 import static org.thingsboard.server.dao.model.ModelConstants.OTA_PACKAGE_VERSION_COLUMN;
 /**
- * Ota package entity.
+ * JPA/Cassandra row model for ota package.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -137,6 +140,12 @@ public class OtaPackageEntity extends BaseSqlEntity<OtaPackage> {
         this.additionalInfo = otaPackage.getAdditionalInfo();
         this.externalId = getUuid(otaPackage.getExternalId());
     }
+    /**
+     * To data.
+     *
+     * @return {@link OtaPackage}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public OtaPackage toData() {

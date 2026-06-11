@@ -18,9 +18,11 @@ package org.thingsboard.server.edqs.data.dp;
 import lombok.Getter;
 import org.thingsboard.server.common.data.edqs.DataPoint;
 import org.thingsboard.server.common.data.kv.DataType;
+
 /**
- * Typed attribute/latest-TS value stored in EDQS (bool data point).
+ * Typed attribute or latest-TS value stored in the EDQS index (bool data point).
  */
+
 public class BoolDataPoint extends AbstractDataPoint {
 
     @Getter
@@ -30,21 +32,46 @@ public class BoolDataPoint extends AbstractDataPoint {
         super(ts);
         this.value = value;
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link DataType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public DataType getType() {
         return DataType.BOOLEAN;
     }
+    /**
+     * Returns bool.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean getBool() {
         return value;
     }
+    /**
+     * Value to string.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String valueToString() {
         return Boolean.toString(value);
     }
+    /**
+     * Compares to.
+     *
+     * @param dataPoint data point ({@link DataPoint})
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public int compareTo(DataPoint dataPoint) {

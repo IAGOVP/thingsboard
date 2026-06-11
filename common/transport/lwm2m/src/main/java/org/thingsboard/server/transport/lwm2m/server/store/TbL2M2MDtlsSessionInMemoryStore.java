@@ -25,16 +25,38 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TbL2M2MDtlsSessionInMemoryStore implements TbLwM2MDtlsSessionStore {
 
     private final ConcurrentHashMap<String, TbX509DtlsSessionInfo> store = new ConcurrentHashMap<>();
+    /**
+     * Put.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @param msg msg ({@link TbX509DtlsSessionInfo})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void put(String endpoint, TbX509DtlsSessionInfo msg) {
         store.put(endpoint, msg);
     }
+    /**
+     * Returns the requested data.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return {@link TbX509DtlsSessionInfo}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public TbX509DtlsSessionInfo get(String endpoint) {
         return store.get(endpoint);
     }
+    /**
+     * Removes the requested data.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void remove(String endpoint) {

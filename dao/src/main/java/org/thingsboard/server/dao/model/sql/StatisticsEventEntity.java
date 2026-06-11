@@ -29,8 +29,11 @@ import static org.thingsboard.server.dao.model.ModelConstants.EVENT_ERRORS_OCCUR
 import static org.thingsboard.server.dao.model.ModelConstants.EVENT_MESSAGES_PROCESSED_COLUMN_NAME;
 import static org.thingsboard.server.dao.model.ModelConstants.STATS_EVENT_TABLE_NAME;
 /**
- * Statistics event entity.
+ * JPA/Cassandra row model for statistics event.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -49,6 +52,12 @@ public class StatisticsEventEntity extends EventEntity<StatisticsEvent> implemen
         this.messagesProcessed = event.getMessagesProcessed();
         this.errorsOccurred = event.getErrorsOccurred();
     }
+    /**
+     * To data.
+     *
+     * @return {@link StatisticsEvent}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public StatisticsEvent toData() {

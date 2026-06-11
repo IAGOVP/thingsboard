@@ -49,13 +49,25 @@ public class NoSecObserveClient {
         coapClient.setTimeout(INFINIT_EXCHANGE_LIFETIME);
         this.latch = new CountDownLatch(5);
     }
-
+    /**
+     * Start.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void start() {
         executor.submit(() -> {
             try {
                 Request request = Request.newGet();
                 request.setObserve();
                 observeRelation = coapClient.observe(request, new CoapHandler() {
+                    /**
+                     * Handles load.
+                     *
+                     * @param response response ({@link CoapResponse})
+                     * @return nothing
+                     * @throws Exception on processing failure
+                     */
                     @Override
                     public void onLoad(CoapResponse response) {
                         String responseText = response.getResponseText();
@@ -70,6 +82,12 @@ public class NoSecObserveClient {
                                 observe);
                         latch.countDown();
                     }
+                    /**
+                     * Handles error.
+                     *
+                     * @return nothing
+                     * @throws Exception on processing failure
+                     */
 
                     @Override
                     public void onError() {
@@ -92,7 +110,13 @@ public class NoSecObserveClient {
     private String getFutureUrl(String host, Integer port, String accessToken) {
         return "coap://" + host + ":" + port + "/api/v1/" + accessToken + "/attributes";
     }
-
+    /**
+     * Main.
+     *
+     * @param args args
+     * @return nothing
+     * @throws URISyntaxException if urisyntax exception is thrown during processing
+     */
     public static void main(String[] args) throws URISyntaxException {
         log.info("Usage: java -cp ... org.thingsboard.server.transport.coap.client.NoSecObserveClient " +
                 "host port accessToken");

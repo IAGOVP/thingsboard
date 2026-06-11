@@ -40,6 +40,11 @@ public class EntityViewTypeFilter implements EntityFilter {
     private String entityViewType;
 
     private List<String> entityViewTypes;
+    /**
+     * Returns entity view types.
+     *
+     * @return {@link List}
+     */
 
     public List<String> getEntityViewTypes() {
         return !CollectionUtils.isEmpty(entityViewTypes) ? entityViewTypes : Collections.singletonList(entityViewType);
@@ -47,6 +52,11 @@ public class EntityViewTypeFilter implements EntityFilter {
 
     @Getter
     private String entityViewNameFilter;
+    /**
+     * Returns type.
+     *
+     * @return {@link EntityFilterType}
+     */
 
     @Override
     public EntityFilterType getType() {

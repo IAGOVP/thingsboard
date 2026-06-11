@@ -36,8 +36,11 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 /**
- * Base sql entity.
+ * JPA/Cassandra row model for base sql.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @MappedSuperclass
@@ -63,27 +66,60 @@ public abstract class BaseSqlEntity<D> implements BaseEntity<D> {
         this.id = entity.id;
         this.createdTime = entity.createdTime;
     }
+    /**
+     * Returns uuid.
+     *
+     * @return {@link UUID}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UUID getUuid() {
         return id;
     }
+    /**
+     * Set uuid.
+     *
+     * @param id entity UUID primary key
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void setUuid(UUID id) {
         this.id = id;
     }
+    /**
+     * Returns created time.
+     *
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public long getCreatedTime() {
         return createdTime;
     }
+    /**
+     * Set created time.
+     *
+     * @param createdTime created time
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void setCreatedTime(long createdTime) {
         if (createdTime > 0) {
             this.createdTime = createdTime;
         }
     }
+    /**
+     * Returns uuid.
+     *
+     * @param uuidBased uuid based ({@link UUIDBased})
+     * @return {@link UUID}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected static UUID getUuid(UUIDBased uuidBased) {
         if (uuidBased != null) {
@@ -92,6 +128,13 @@ public abstract class BaseSqlEntity<D> implements BaseEntity<D> {
             return null;
         }
     }
+    /**
+     * Returns tenant uuid.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link UUID}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected static UUID getTenantUuid(TenantId tenantId) {
         if (tenantId != null) {
@@ -100,10 +143,25 @@ public abstract class BaseSqlEntity<D> implements BaseEntity<D> {
             return EntityId.NULL_UUID;
         }
     }
+    /**
+     * Returns entity id.
+     *
+     * @param uuid uuid ({@link UUID})
+     * @param creator creator ({@link Function})
+     * @return {@link I}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected static <I> I getEntityId(UUID uuid, Function<UUID, I> creator) {
         return DaoUtil.toEntityId(uuid, creator);
     }
+    /**
+     * Returns tenant id.
+     *
+     * @param uuid uuid ({@link UUID})
+     * @return {@link TenantId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected static TenantId getTenantId(UUID uuid) {
         if (uuid != null && !uuid.equals(EntityId.NULL_UUID)) {
@@ -112,6 +170,13 @@ public abstract class BaseSqlEntity<D> implements BaseEntity<D> {
             return TenantId.SYS_TENANT_ID;
         }
     }
+    /**
+     * To json.
+     *
+     * @param value value ({@link Object})
+     * @return {@link JsonNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected JsonNode toJson(Object value) {
         if (value != null) {
@@ -120,10 +185,25 @@ public abstract class BaseSqlEntity<D> implements BaseEntity<D> {
             return null;
         }
     }
+    /**
+     * From json.
+     *
+     * @param json json ({@link JsonNode})
+     * @param type type ({@link Class})
+     * @return {@link T}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected <T> T fromJson(JsonNode json, Class<T> type) {
         return JacksonUtil.convertValue(json, type);
     }
+    /**
+     * Lists to string.
+     *
+     * @param list list ({@link List})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected String listToString(List<?> list) {
         if (list != null) {
@@ -132,6 +212,14 @@ public abstract class BaseSqlEntity<D> implements BaseEntity<D> {
             return "";
         }
     }
+    /**
+     * Lists from string.
+     *
+     * @param string string ({@link String})
+     * @param mappingFunction mapping function ({@link Function})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected <E> List<E> listFromString(String string, Function<String, E> mappingFunction) {
         if (string != null) {

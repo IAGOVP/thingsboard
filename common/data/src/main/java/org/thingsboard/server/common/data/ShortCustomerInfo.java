@@ -29,9 +29,6 @@ import org.thingsboard.server.common.data.validation.NoXss;
 
 @Schema
 @AllArgsConstructor
-/**
- * Short customer info.
- */
 public class ShortCustomerInfo {
 
     @Schema(description = "JSON object with the customer Id.")
@@ -46,9 +43,19 @@ public class ShortCustomerInfo {
     @JsonProperty("public")
     @Schema(description = "Indicates special 'Public' customer used to embed dashboards on public websites.")
     private boolean publicCustomer;
+    /**
+     * Is public.
+     *
+     * @return the boolean result
+     */
 
     @JsonProperty("public")
     public boolean isPublic() { return publicCustomer; }
+    /**
+     * Set public.
+     *
+     * @param publicCustomer public customer
+     */
 
     @JsonProperty("public")
     public void setPublic(boolean publicCustomer) { this.publicCustomer = publicCustomer; }

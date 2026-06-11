@@ -19,12 +19,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.Serializable;
-
-@AllArgsConstructor
-@Data
 /**
  * Claim data.
  */
+@AllArgsConstructor
+@Data
 public class ClaimData implements Serializable {
 
     private static final long serialVersionUID = -3922621193389915930L;

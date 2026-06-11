@@ -30,11 +30,21 @@ public abstract class AbstractLwM2MBootstrapClientCredentialWithKeys implements 
 
     private String clientPublicKeyOrId;
     private String clientSecretKey;
+    /**
+     * Returns decoded client public key or id.
+     *
+     * @return the byte[] value
+     */
 
     @JsonIgnore
     public byte[] getDecodedClientPublicKeyOrId() {
         return getDecoded(clientPublicKeyOrId);
     }
+    /**
+     * Returns decoded client secret key.
+     *
+     * @return the byte[] value
+     */
 
     @JsonIgnore
     public byte[] getDecodedClientSecretKey() {

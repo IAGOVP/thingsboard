@@ -28,6 +28,11 @@ public class BackupCodeTwoFaProviderConfig implements TwoFaProviderConfig {
 
     @Min(value = 1, message = "must be greater than 0")
     private int codesQuantity;
+    /**
+     * Returns provider type.
+     *
+     * @return {@link TwoFaProviderType}
+     */
 
     @Override
     public TwoFaProviderType getProviderType() {

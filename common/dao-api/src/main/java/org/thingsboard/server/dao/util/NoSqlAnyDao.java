@@ -23,7 +23,8 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 @ConditionalOnExpression("'${database.ts.type}'=='cassandra' || '${database.ts_latest.type}'=='cassandra'")
 public @/**
- * DAO contract for no sql any.
+ * no sql any dao contract for the DAO layer.
  */
+
 interface NoSqlAnyDao {
 }

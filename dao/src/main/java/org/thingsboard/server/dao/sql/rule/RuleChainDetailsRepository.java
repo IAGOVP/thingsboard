@@ -20,11 +20,17 @@ import org.thingsboard.server.dao.model.sql.RuleChainDetailsEntity;
 
 import java.util.UUID;
 
+
 /**
 
- * rule chain details repository contract.
+ * Spring Data JPA repository for rule chain details entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
+
 
 public interface RuleChainDetailsRepository extends JpaRepository<RuleChainDetailsEntity, UUID> {
 

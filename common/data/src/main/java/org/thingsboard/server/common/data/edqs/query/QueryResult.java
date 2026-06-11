@@ -28,12 +28,21 @@ import java.util.Map;
 @Data
 @RequiredArgsConstructor
 /**
- * Query result.
+ * One entity row returned by EDQS with selected fields, attributes, and latest telemetry keys.
  */
+
 public class QueryResult {
 
     private final EntityId entityId;
     private final Map<EntityKeyType, Map<String, TsValue>> latest;
+    
+        /**
+         * To old entity data.
+         *
+         * @return {@link EntityData}
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
 
     public EntityData toOldEntityData() {
         return new EntityData(entityId, latest, Collections.emptyMap(), Collections.emptyMap());

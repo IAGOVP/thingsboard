@@ -28,8 +28,14 @@ import static org.thingsboard.server.dao.model.ModelConstants.ATTRIBUTE_KEY_COLU
 import static org.thingsboard.server.dao.model.ModelConstants.ATTRIBUTE_TYPE_COLUMN;
 import static org.thingsboard.server.dao.model.ModelConstants.ENTITY_ID_COLUMN;
 /**
- * Attribute kv composite key.
+ * Attribute kv composite key (JPA entity row mappings for PostgreSQL (JPA/Cassandra entity mappings (database row models))).
  */
+
+
+
+
+
+
 
 @Data
 @AllArgsConstructor

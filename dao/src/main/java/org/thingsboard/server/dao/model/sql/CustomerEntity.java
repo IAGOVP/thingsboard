@@ -31,8 +31,11 @@ import org.thingsboard.server.dao.util.mapping.JsonConverter;
 
 import java.util.UUID;
 /**
- * Customer entity.
+ * JPA/Cassandra row model for customer.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -102,6 +105,12 @@ public final class CustomerEntity extends BaseVersionedEntity<Customer> {
             this.externalId = customer.getExternalId().getId();
         }
     }
+    /**
+     * To data.
+     *
+     * @return {@link Customer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Customer toData() {

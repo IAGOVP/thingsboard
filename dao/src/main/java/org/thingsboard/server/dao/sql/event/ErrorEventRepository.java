@@ -29,16 +29,34 @@ import java.util.List;
 import java.util.UUID;
 
 
+
+
 /**
 
 
- * error event repository contract.
+ * Spring Data JPA repository for error event entities.
+
+
+ *
+
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
 
  */
 
 
+
 public interface ErrorEventRepository extends EventRepository<ErrorEventEntity, ErrorEvent>, JpaRepository<ErrorEventEntity, UUID> {
+    /**
+     * Finds latest events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     @Query(nativeQuery = true, value = "SELECT * FROM error_event e WHERE e.tenant_id = :tenantId AND e.entity_id = :entityId ORDER BY e.ts DESC LIMIT :limit")
@@ -51,6 +69,17 @@ public interface ErrorEventRepository extends EventRepository<ErrorEventEntity, 
             "AND (:startTime IS NULL OR e.ts >= :startTime) " +
             "AND (:endTime IS NULL OR e.ts <= :endTime)"
     )
+    /**
+     * Finds events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<ErrorEventEntity> findEvents(@Param("tenantId") UUID tenantId,
                                       @Param("entityId") UUID entityId,
                                       @Param("startTime") Long startTime,
@@ -76,6 +105,20 @@ public interface ErrorEventRepository extends EventRepository<ErrorEventEntity, 
                     "AND (:method IS NULL OR e.e_method ILIKE concat('%', :method, '%')) " +
                     "AND (:error IS NULL OR e.e_error ILIKE concat('%', :error, '%'))"
     )
+    /**
+     * Finds events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @param server server ({@link String})
+     * @param method method ({@link String})
+     * @param error error ({@link String})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<ErrorEventEntity> findEvents(@Param("tenantId") UUID tenantId,
                                       @Param("entityId") UUID entityId,
                                       @Param("startTime") Long startTime,
@@ -93,6 +136,16 @@ public interface ErrorEventRepository extends EventRepository<ErrorEventEntity, 
             "AND (:startTime IS NULL OR e.ts >= :startTime) " +
             "AND (:endTime IS NULL OR e.ts <= :endTime)"
     )
+    /**
+     * Removes events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
     void removeEvents(@Param("tenantId") UUID tenantId,
                       @Param("entityId") UUID entityId,
                       @Param("startTime") Long startTime,
@@ -110,6 +163,19 @@ public interface ErrorEventRepository extends EventRepository<ErrorEventEntity, 
                     "AND (:method IS NULL OR e.e_method ILIKE concat('%', :method, '%')) " +
                     "AND (:error IS NULL OR e.e_error ILIKE concat('%', :error, '%'))"
     )
+    /**
+     * Removes events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @param server server ({@link String})
+     * @param method method ({@link String})
+     * @param error error ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
     void removeEvents(@Param("tenantId") UUID tenantId,
                       @Param("entityId") UUID entityId,
                       @Param("startTime") Long startTime,

@@ -82,6 +82,12 @@ public class LwM2MModelConfigServiceImpl implements LwM2MModelConfigService {
     private LwM2MTelemetryLogService logService;
 
     ConcurrentMap<String, LwM2MModelConfig> currentModelConfigs;
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @AfterStartUp(order = AfterStartUp.BEFORE_TRANSPORT_SERVICE)
     public void init() {
@@ -90,6 +96,13 @@ public class LwM2MModelConfigServiceImpl implements LwM2MModelConfigService {
         currentModelConfigs = models.stream()
                 .collect(Collectors.toConcurrentMap(LwM2MModelConfig::getEndpoint, m -> m, (existing, replacement) -> existing));
     }
+    /**
+     * Send updates.
+     *
+     * @param lwM2mClient lw m2m client ({@link LwM2mClient})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void sendUpdates(LwM2mClient lwM2mClient) {
@@ -100,7 +113,14 @@ public class LwM2MModelConfigServiceImpl implements LwM2MModelConfigService {
 
         doSend(lwM2mClient, modelConfig);
     }
-
+    /**
+     * Send updates.
+     *
+     * @param lwM2mClient lw m2m client ({@link LwM2mClient})
+     * @param newModelConfig new model config ({@link LwM2MModelConfig})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void sendUpdates(LwM2mClient lwM2mClient, LwM2MModelConfig newModelConfig) {
         String endpoint = lwM2mClient.getEndpoint();
         LwM2MModelConfig modelConfig = currentModelConfigs.get(endpoint);
@@ -270,17 +290,41 @@ public class LwM2MModelConfigServiceImpl implements LwM2MModelConfigService {
 
     private <R, T> DownlinkRequestCallback<R, T> createDownlinkProxyCallback(Runnable processRemove, DownlinkRequestCallback<R, T> callback) {
         return new DownlinkRequestCallback<>() {
+            /**
+             * Handles success.
+             *
+             * @param request request payload with operation parameters
+             * @param response response ({@link T})
+             * @return nothing
+             * @throws Exception on processing failure
+             */
             @Override
             public void onSuccess(R request, T response) {
                 processRemove.run();
                 callback.onSuccess(request, response);
             }
+            /**
+             * Handles validation error.
+             *
+             * @param params params ({@link String})
+             * @param msg msg ({@link String})
+             * @return nothing
+             * @throws Exception on processing failure
+             */
 
             @Override
             public void onValidationError(String params, String msg) {
                 processRemove.run();
                 callback.onValidationError(params, msg);
             }
+            /**
+             * Handles error.
+             *
+             * @param params params ({@link String})
+             * @param e e ({@link Exception})
+             * @return nothing
+             * @throws Exception on processing failure
+             */
 
             @Override
             public void onError(String params, Exception e) {
@@ -296,6 +340,13 @@ public class LwM2MModelConfigServiceImpl implements LwM2MModelConfigService {
 
         };
     }
+    /**
+     * Persist updates.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void persistUpdates(String endpoint) {
@@ -304,6 +355,13 @@ public class LwM2MModelConfigServiceImpl implements LwM2MModelConfigService {
             modelStore.put(modelConfig);
         }
     }
+    /**
+     * Removes updates.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void removeUpdates(String endpoint) {

@@ -24,7 +24,7 @@ import java.util.UUID;
 
 @Schema(allOf = EntityId.class)
 /**
- * Typed identifier for mobile app bundle.
+ * Typed identifier for a mobile app bundle.
  */
 public class MobileAppBundleId extends UUIDBased implements EntityId{
 
@@ -32,10 +32,21 @@ public class MobileAppBundleId extends UUIDBased implements EntityId{
     public MobileAppBundleId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * From string.
+     *
+     * @param mobileAppId mobile app id ({@link String})
+     * @return {@link MobileAppBundleId}
+     */
 
     public static MobileAppBundleId fromString(String mobileAppId) {
         return new MobileAppBundleId(UUID.fromString(mobileAppId));
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY, description = "string", example = "MOBILE_APP_BUNDLE", allowableValues = "MOBILE_APP_BUNDLE")
     @Override

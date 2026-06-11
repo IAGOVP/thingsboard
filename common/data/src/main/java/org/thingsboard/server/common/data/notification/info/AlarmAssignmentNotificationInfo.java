@@ -61,6 +61,11 @@ public class AlarmAssignmentNotificationInfo implements RuleOriginatedNotificati
     private AlarmStatus alarmStatus;
     private CustomerId alarmCustomerId;
     private DashboardId dashboardId;
+    /**
+     * Returns template data.
+     *
+     * @return {@link Map}
+     */
 
     @Override
     public Map<String, String> getTemplateData() {
@@ -85,21 +90,41 @@ public class AlarmAssignmentNotificationInfo implements RuleOriginatedNotificati
                 "alarmOriginatorLabel", alarmOriginatorLabel
         );
     }
+    /**
+     * Returns affected customer id.
+     *
+     * @return {@link CustomerId}
+     */
 
     @Override
     public CustomerId getAffectedCustomerId() {
         return alarmCustomerId;
     }
+    /**
+     * Returns affected user id.
+     *
+     * @return {@link UserId}
+     */
 
     @Override
     public UserId getAffectedUserId() {
         return assigneeId;
     }
+    /**
+     * Returns state entity id.
+     *
+     * @return {@link EntityId}
+     */
 
     @Override
     public EntityId getStateEntityId() {
         return alarmOriginator;
     }
+    /**
+     * Returns dashboard id.
+     *
+     * @return {@link DashboardId}
+     */
 
     @Override
     public DashboardId getDashboardId() {

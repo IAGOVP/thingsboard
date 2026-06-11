@@ -36,8 +36,11 @@ import org.thingsboard.server.dao.util.mapping.JsonConverter;
 
 import java.util.Arrays;
 /**
- * Oauth2client registration template entity.
+ * JPA/Cassandra row model for oauth2client registration template.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -131,6 +134,12 @@ public class OAuth2ClientRegistrationTemplateEntity extends BaseSqlEntity<OAuth2
             }
         }
     }
+    /**
+     * To data.
+     *
+     * @return {@link OAuth2ClientRegistrationTemplate}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public OAuth2ClientRegistrationTemplate toData() {

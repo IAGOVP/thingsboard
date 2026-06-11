@@ -39,6 +39,11 @@ public class DeviceSearchQuery {
     private String relationType;
     @Schema(description = "Array of device types to filter the related entities (e.g. 'Temperature Sensor', 'Smoke Sensor').")
     private List<String> deviceTypes;
+    /**
+     * To entity search query.
+     *
+     * @return {@link EntityRelationsQuery}
+     */
 
     public EntityRelationsQuery toEntitySearchQuery() {
         EntityRelationsQuery query = new EntityRelationsQuery();

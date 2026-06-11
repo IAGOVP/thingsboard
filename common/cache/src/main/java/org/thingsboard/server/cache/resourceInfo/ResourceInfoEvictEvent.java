@@ -19,10 +19,14 @@ import lombok.Data;
 import org.thingsboard.server.common.data.id.TbResourceId;
 import org.thingsboard.server.common.data.id.TenantId;
 
-@Data
 /**
- * Resource info evict event.
+ * Cluster broadcast event evicting ResourceInfoEvictEvent cache entries after create/update/delete.
+ *
+ * <p>Published to all ThingsBoard nodes so {@link ResourceInfoEvictEventCaffeineCache} and
+ * {@link ResourceInfoEvictEventRedisCache} stay consistent. Handlers evict old and new key variants
+ * when identifiers change (e.g. rename).
  */
+@Data
 public class ResourceInfoEvictEvent {
     private final TenantId tenantId;
     private final TbResourceId resourceId;

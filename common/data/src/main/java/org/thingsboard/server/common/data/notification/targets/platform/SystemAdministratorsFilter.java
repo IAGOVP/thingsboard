@@ -24,6 +24,11 @@ import lombok.Data;
  * System administrators filter.
  */
 public class SystemAdministratorsFilter implements SystemLevelUsersFilter {
+    /**
+     * Returns type.
+     *
+     * @return {@link UsersFilterType}
+     */
 
     @Override
     public UsersFilterType getType() {

@@ -22,8 +22,21 @@ public interface ActivityManager<Key, Metadata> {
 
     void onActivity(Key key, Metadata metadata, long activityTimeMillis);
 
+    /**
+     * Handles reporting period end.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void onReportingPeriodEnd();
 
+    /**
+     * Returns last recorded time.
+     *
+     * @param key key ({@link Key})
+     * @return the long result
+     * @throws Exception on processing failure
+     */
     long getLastRecordedTime(Key key);
 
 }

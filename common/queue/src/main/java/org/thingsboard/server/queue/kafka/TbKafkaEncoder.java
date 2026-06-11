@@ -16,10 +16,12 @@
 package org.thingsboard.server.queue.kafka;
 
 /**
- * Created by ashvayka on 25.09.18.
+ * Encodes {@link TbQueueMsg} instances to Kafka record value bytes.
  */
 public interface TbKafkaEncoder<T> {
 
+    
+    
     byte[] encode(T value);
 
 }

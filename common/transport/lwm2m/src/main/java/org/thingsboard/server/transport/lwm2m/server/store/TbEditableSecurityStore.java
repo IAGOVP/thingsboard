@@ -19,12 +19,19 @@ import org.eclipse.leshan.server.security.NonUniqueSecurityInfoException;
 import org.thingsboard.server.transport.lwm2m.secure.TbLwM2MSecurityInfo;
 
 /**
- * tb editable security store contract.
+ * tb editable security store contract (LwM2M transport and object model (ThingsBoard common module)).
  */
 public interface TbEditableSecurityStore extends TbSecurityStore {
 
     void put(TbLwM2MSecurityInfo tbSecurityInfo) throws NonUniqueSecurityInfoException;
 
+    /**
+     * Removes the requested data.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void remove(String endpoint);
 
 }

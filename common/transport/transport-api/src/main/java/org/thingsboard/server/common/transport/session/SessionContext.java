@@ -23,16 +23,36 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * session context contract.
+ * Base contract for an active device transport session.
+ *
+ * <p>Tracks session id, MQTT message ids, and reacts to device/profile updates propagated from core.
  */
 public interface SessionContext {
 
     UUID getSessionId();
 
+    /**
+     * Returns the next MQTT packet identifier for outbound publishes on this session.
+     *
+     * @return monotonically increasing message id (1–65535)
+     */
     int nextMsgId();
 
+    /**
+     * Applies a device profile change pushed from core (transport configuration, topic filters, payload type).
+     *
+     * @param sessionInfo   active session protobuf descriptor
+     * @param deviceProfile updated device profile
+     */
     void onDeviceProfileUpdate(TransportProtos.SessionInfoProto sessionInfo, DeviceProfile deviceProfile);
 
+    /**
+     * Applies a device entity change pushed from core (name, label, type, customer assignment).
+     *
+     * @param sessionInfo       active session protobuf descriptor
+     * @param device            updated device entity
+     * @param deviceProfileOpt  profile when it changed together with the device, else empty
+     */
     void onDeviceUpdate(TransportProtos.SessionInfoProto sessionInfo, Device device, Optional<DeviceProfile> deviceProfileOpt);
 
 }

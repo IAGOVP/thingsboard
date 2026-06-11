@@ -86,7 +86,10 @@ import static org.thingsboard.server.dao.device.DeviceServiceImpl.INCORRECT_TENA
 import static org.thingsboard.server.dao.service.Validator.validateId;
 /**
  * Default DAO-layer service implementation for resource.
+ *
+ * <p>Coordinates validation, caching, cluster events, and {@code *Dao} persistence (tenant/system resources (images, JS modules, etc.)).
  */
+
 
 @Service("TbResourceDaoService")
 @Slf4j
@@ -106,11 +109,14 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
     private final Map<EntityType, ResourceContainerDao<?>> resourceLinkContainerDaoMap = new HashMap<>();
     private final Map<EntityType, ResourceContainerDao<?>> generalResourceContainerDaoMap = new HashMap<>();
 
+    
     /**
-
      * Init.
-
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @PostConstruct
     public void init() {
@@ -133,11 +139,16 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
             "actions.*.*.customResources.*.url", ""
     );
 
+    
     /**
-
-     * Persists resource.
-
+     * Saves or persists resource.
+     *
+     * @param resource resource ({@link TbResource})
+     * @param doValidate do validate
+     * @return {@link TbResource}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public TbResource saveResource(TbResource resource, boolean doValidate) {
@@ -157,22 +168,30 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
         return doSaveResource(resource);
     }
 
+    
     /**
-
-     * Persists resource.
-
+     * Saves or persists resource.
+     *
+     * @param resource resource ({@link TbResource})
+     * @return {@link TbResource}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public TbResource saveResource(TbResource resource) {
         return saveResource(resource, true);
     }
 
+    
     /**
-
      * Do save resource.
-
+     *
+     * @param resource resource ({@link TbResource})
+     * @return {@link TbResource}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected TbResource doSaveResource(TbResource resource) {
         TenantId tenantId = resource.getTenantId();
@@ -203,11 +222,17 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
         return resourceInfoDao.save(resource.getTenantId(), new TbResourceInfo(resource));
     }
 
+    
     /**
-
-     * Get unique key.
-
+     * Returns unique key.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceType resource type ({@link ResourceType})
+     * @param filename filename ({@link String})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected String getUniqueKey(TenantId tenantId, ResourceType resourceType, String filename) {
         if (!resourceInfoDao.existsByTenantIdAndResourceTypeAndResourceKey(tenantId, resourceType, filename)) {
@@ -230,11 +255,17 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
         return resourceKey;
     }
 
+    
     /**
-
-     * Loads resource by tenant id and key.
-
+     * Finds resource by tenant id and key.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceType resource type ({@link ResourceType})
+     * @param resourceKey resource key ({@link String})
+     * @return {@link TbResource}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public TbResource findResourceByTenantIdAndKey(TenantId tenantId, ResourceType resourceType, String resourceKey) {
@@ -242,11 +273,16 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
         return resourceDao.findResourceByTenantIdAndKey(tenantId, resourceType, resourceKey);
     }
 
+    
     /**
-
-     * Loads resource by id.
-
+     * Finds resource by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceId resource id ({@link TbResourceId})
+     * @return {@link TbResource}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public TbResource findResourceById(TenantId tenantId, TbResourceId resourceId) {
@@ -255,11 +291,16 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
         return resourceDao.findById(tenantId, resourceId.getId());
     }
 
+    
     /**
-
-     * Get resource data.
-
+     * Returns resource data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceId resource id ({@link TbResourceId})
+     * @return the byte[] value
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public byte[] getResourceData(TenantId tenantId, TbResourceId resourceId) {
@@ -267,11 +308,16 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
         return resourceDao.getResourceData(tenantId, resourceId);
     }
 
+    
     /**
-
-     * Get resource data info.
-
+     * Returns resource data info.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceId resource id ({@link TbResourceId})
+     * @return {@link TbResourceDataInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public TbResourceDataInfo getResourceDataInfo(TenantId tenantId, TbResourceId resourceId) {
@@ -279,11 +325,15 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
         return resourceDao.getResourceDataInfo(tenantId, resourceId);
     }
 
+    
     /**
-
-     * Export resource.
-
+     * Exports resource.
+     *
+     * @param resourceInfo resource info ({@link TbResourceInfo})
+     * @return {@link ResourceExportData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ResourceExportData exportResource(TbResourceInfo resourceInfo) {
@@ -300,11 +350,16 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
                 .build();
     }
 
+    
     /**
-
-     * Export resources.
-
+     * Exports resources.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resources resources ({@link Collection})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<ResourceExportData> exportResources(TenantId tenantId, Collection<TbResourceInfo> resources) {
@@ -322,11 +377,16 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
                 .toList();
     }
 
+    
     /**
-
-     * Import resources.
-
+     * Imports resources.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resources resources ({@link List})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void importResources(TenantId tenantId, List<ResourceExportData> resources) {
@@ -351,11 +411,16 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
         }
     }
 
+    
     /**
-
      * To resource.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param exportData export data ({@link ResourceExportData})
+     * @return {@link TbResource}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public TbResource toResource(TenantId tenantId, ResourceExportData exportData) {
@@ -403,11 +468,16 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
         return resource;
     }
 
+    
     /**
-
-     * Loads resource info by id.
-
+     * Finds resource info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceId resource id ({@link TbResourceId})
+     * @return {@link TbResourceInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public TbResourceInfo findResourceInfoById(TenantId tenantId, TbResourceId resourceId) {
@@ -418,11 +488,17 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
                 () -> resourceInfoDao.findById(tenantId, resourceId.getId()), true);
     }
 
+    
     /**
-
-     * Loads resource info by tenant id and key.
-
+     * Finds resource info by tenant id and key.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceType resource type ({@link ResourceType})
+     * @param resourceKey resource key ({@link String})
+     * @return {@link TbResourceInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public TbResourceInfo findResourceInfoByTenantIdAndKey(TenantId tenantId, ResourceType resourceType, String resourceKey) {
@@ -430,11 +506,16 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
         return resourceInfoDao.findByTenantIdAndKey(tenantId, resourceType, resourceKey);
     }
 
+    
     /**
-
-     * Loads resource info by id async.
-
+     * Finds resource info by id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceId resource id ({@link TbResourceId})
+     * @return future completing with {@link TbResourceInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<TbResourceInfo> findResourceInfoByIdAsync(TenantId tenantId, TbResourceId resourceId) {
@@ -443,11 +524,17 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
         return resourceInfoDao.findByIdAsync(tenantId, resourceId.getId());
     }
 
+    
     /**
-
-     * Removes resource.
-
+     * Deletes resource.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceId resource id ({@link TbResourceId})
+     * @param force force
+     * @return {@link TbResourceDeleteResult}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public TbResourceDeleteResult deleteResource(TenantId tenantId, TbResourceId resourceId, boolean force) {
@@ -507,22 +594,33 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
         });
     }
 
+    
     /**
-
-     * Removes entity.
-
+     * Deletes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteEntity(TenantId tenantId, EntityId id, boolean force) {
         deleteResource(tenantId, (TbResourceId) id, force);
     }
 
+    
     /**
-
-     * Loads all tenant resources by tenant id.
-
+     * Finds all tenant resources by tenant id.
+     *
+     * @param filter filter ({@link TbResourceInfoFilter})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<TbResourceInfo> findAllTenantResourcesByTenantId(TbResourceInfoFilter filter, PageLink pageLink) {
@@ -532,11 +630,16 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
         return resourceInfoDao.findAllTenantResourcesByTenantId(filter, pageLink);
     }
 
+    
     /**
-
-     * Loads tenant resources by tenant id.
-
+     * Finds tenant resources by tenant id.
+     *
+     * @param filter filter ({@link TbResourceInfoFilter})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<TbResourceInfo> findTenantResourcesByTenantId(TbResourceInfoFilter filter, PageLink pageLink) {
@@ -546,11 +649,17 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
         return resourceInfoDao.findTenantResourcesByTenantId(filter, pageLink);
     }
 
+    
     /**
-
-     * Loads tenant resources by resource type and object ids.
-
+     * Finds tenant resources by resource type and object ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceType resource type ({@link ResourceType})
+     * @param objectIds object ids
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<TbResource> findTenantResourcesByResourceTypeAndObjectIds(TenantId tenantId, ResourceType resourceType, String[] objectIds) {
@@ -559,11 +668,16 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
         return resourceDao.findResourcesByTenantIdAndResourceType(tenantId, resourceType, null, objectIds, null);
     }
 
+    
     /**
-
-     * Loads all tenant resources.
-
+     * Finds all tenant resources.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<TbResource> findAllTenantResources(TenantId tenantId, PageLink pageLink) {
@@ -572,11 +686,17 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
         return resourceDao.findAllByTenantId(tenantId, pageLink);
     }
 
+    
     /**
-
-     * Loads tenant resources by resource type and page link.
-
+     * Finds tenant resources by resource type and page link.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceType resource type ({@link ResourceType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<TbResource> findTenantResourcesByResourceTypeAndPageLink(TenantId tenantId, ResourceType resourceType, PageLink pageLink) {
@@ -585,11 +705,15 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
         return resourceDao.findResourcesByTenantIdAndResourceType(tenantId, resourceType, null, pageLink);
     }
 
+    
     /**
-
-     * Removes resources by tenant id.
-
+     * Deletes resources by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteResourcesByTenantId(TenantId tenantId) {
@@ -598,33 +722,47 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
         tenantResourcesRemover.removeEntities(tenantId, tenantId);
     }
 
+    
     /**
-
-     * Removes by tenant id.
-
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteByTenantId(TenantId tenantId) {
         deleteResourcesByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Loads entity.
-
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findResourceInfoById(tenantId, new TbResourceId(entityId.getId())));
     }
 
+    
     /**
-
-     * Loads entity async.
-
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
@@ -632,33 +770,45 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
                 .transform(Optional::ofNullable, directExecutor());
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {
         return EntityType.TB_RESOURCE;
     }
 
+    
     /**
-
      * Sum data size by tenant id.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public long sumDataSizeByTenantId(TenantId tenantId) {
         return resourceDao.sumDataSizeByTenantId(tenantId);
     }
 
+    
     /**
-
      * Updates resources usage.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param dashboard dashboard ({@link Dashboard})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public boolean updateResourcesUsage(TenantId tenantId, Dashboard dashboard) {
@@ -669,11 +819,16 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
         return updateResourcesUsage(tenantId, List.of(dashboard.getConfiguration()), List.of(DASHBOARD_RESOURCES_MAPPING), links);
     }
 
+    
     /**
-
      * Updates resources usage.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetTypeDetails widget type details ({@link WidgetTypeDetails})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public boolean updateResourcesUsage(TenantId tenantId, WidgetTypeDetails widgetTypeDetails) {
@@ -699,11 +854,15 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
         return updated;
     }
 
+    
     /**
-
-     * Get resources links.
-
+     * Returns resources links.
+     *
+     * @param resources resources ({@link List})
+     * @return {@link Map}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected Map<String, String> getResourcesLinks(List<ResourceExportData> resources) {
         Map<String, String> links;
@@ -749,22 +908,32 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
         });
     }
 
+    
     /**
-
-     * Get used resources.
-
+     * Returns used resources.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param dashboard dashboard ({@link Dashboard})
+     * @return {@link Collection}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Collection<TbResourceInfo> getUsedResources(TenantId tenantId, Dashboard dashboard) {
         return getUsedResources(tenantId, List.of(dashboard.getConfiguration()), List.of(DASHBOARD_RESOURCES_MAPPING)).values();
     }
 
+    
     /**
-
-     * Get used resources.
-
+     * Returns used resources.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetTypeDetails widget type details ({@link WidgetTypeDetails})
+     * @return {@link Collection}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Collection<TbResourceInfo> getUsedResources(TenantId tenantId, WidgetTypeDetails widgetTypeDetails) {
@@ -879,11 +1048,18 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
         return updated.get();
     }
 
+    
     /**
-
      * Creates or update system resource.
-
+     *
+     * @param resourceType resource type ({@link ResourceType})
+     * @param resourceSubType resource sub type ({@link ResourceSubType})
+     * @param resourceKey resource key ({@link String})
+     * @param data data
+     * @return {@link TbResource}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public TbResource createOrUpdateSystemResource(ResourceType resourceType, ResourceSubType resourceSubType, String resourceKey, byte[] data) {
@@ -914,11 +1090,16 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
         return saveResource(resource);
     }
 
+    
     /**
-
-     * Loads system or tenant resources by ids.
-
+     * Finds system or tenant resources by ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceIds resource ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<TbResourceInfo> findSystemOrTenantResourcesByIds(TenantId tenantId, List<TbResourceId> resourceIds) {
@@ -926,22 +1107,32 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
         return resourceInfoDao.findSystemOrTenantResourcesByIds(tenantId, resourceIds);
     }
 
+    
     /**
-
      * Calculate etag.
-
+     *
+     * @param data data
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public String calculateEtag(byte[] data) {
         return Hashing.sha256().hashBytes(data).toString();
     }
 
+    
     /**
-
-     * Loads system or tenant resource by etag.
-
+     * Finds system or tenant resource by etag.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceType resource type ({@link ResourceType})
+     * @param etag etag ({@link String})
+     * @return {@link TbResourceInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public TbResourceInfo findSystemOrTenantResourceByEtag(TenantId tenantId, ResourceType resourceType, String etag) {
@@ -952,21 +1143,29 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
         return resourceInfoDao.findSystemOrTenantResourceByEtag(tenantId, resourceType, etag);
     }
 
+    
     /**
-
      * Encode.
-
+     *
+     * @param data data ({@link String})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected String encode(String data) {
         return encode(data.getBytes(StandardCharsets.UTF_8));
     }
 
+    
     /**
-
      * Encode.
-
+     *
+     * @param data data
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected String encode(byte[] data) {
         if (data == null || data.length == 0) {
@@ -975,11 +1174,15 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
         return Base64.getEncoder().encodeToString(data);
     }
 
+    
     /**
-
      * Decode.
-
+     *
+     * @param value value ({@link String})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected String decode(String value) {
         if (value == null) {
@@ -1013,11 +1216,15 @@ public class BaseResourceService extends AbstractCachedEntityService<ResourceInf
         }
     };
 
+    
     /**
-
-     * Handle evict event.
-
+     * Handles evict event.
+     *
+     * @param event event ({@link ResourceInfoEvictEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @TransactionalEventListener(classes = ResourceInfoEvictEvent.class)
     @Override

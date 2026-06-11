@@ -24,24 +24,78 @@ import org.thingsboard.server.common.data.query.EntityCountQuery;
 import org.thingsboard.server.common.data.query.EntityDataQuery;
 
 import java.util.function.Predicate;
+
 /**
- * Tenant-scoped in-memory index API: apply {@link org.thingsboard.server.common.data.edqs.EdqsEvent} updates and execute {@link org.thingsboard.server.common.data.query.EntityDataQuery} / {@link org.thingsboard.server.common.data.query.EntityCountQuery} without hitting SQL.
+ * Tenant-scoped in-memory entity index API.
+ *
+ * <p>Applies {@link org.thingsboard.server.common.data.edqs.EdqsEvent} updates and executes {@link org.thingsboard.server.common.data.query.EntityDataQuery} / {@link org.thingsboard.server.common.data.query.EntityCountQuery} without PostgreSQL.
  */
+
 public interface EdqsRepository {
 
-    /** Applies create/update/delete for one indexed object. */
+    
+     /**
+      * Applies create/update/delete of an entity, relation, attribute, or latest telemetry key in the index.
+      *
+      * @param event EDQS create/update/delete event from Kafka
+      * @return nothing
+      * @throws Exception if an unexpected error occurs during processing
+      */
+
+    
     void processEvent(EdqsEvent event);
 
-    /** Entity count for the query filter (and optional key filters). */
+    
+    /**
+     * Returns entity count for the filter without loading full entity rows.
+     *
+     * @param tenantId tenant that owns the indexed entities
+     * @param customerId customer scope for permission filtering (may be null)
+     * @param query entity count or data query with filter, sort, and key selections
+     * @param ignorePermissionCheck when true, skips customer/user permission filtering (system use only)
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
+    
     long countEntitiesByQuery(TenantId tenantId, CustomerId customerId, EntityCountQuery query, boolean ignorePermissionCheck);
 
-    /** Paged entity rows with selected entity fields, attributes, and latest telemetry keys. */
+    
+    /**
+     * Returns a page of entities matching filter, sort, and selected keys.
+     *
+     * @param tenantId tenant that owns the indexed entities
+     * @param customerId customer scope for permission filtering (may be null)
+     * @param query entity count or data query with filter, sort, and key selections
+     * @param ignorePermissionCheck when true, skips customer/user permission filtering (system use only)
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
+    
     PageData<QueryResult> findEntityDataByQuery(TenantId tenantId, CustomerId customerId, EntityDataQuery query, boolean ignorePermissionCheck);
 
-    /** Removes tenant repos matching the predicate (e.g. lost Kafka partitions). */
+    
+     /**
+      * Removes tenant repos matching the predicate (e.g. lost Kafka partitions).
+      *
+      * @param predicate tenant id predicate selecting which repos to evict
+      * @return nothing
+      * @throws Exception if an unexpected error occurs during processing
+      */
+
+    
     void clearIf(Predicate<TenantId> predicate);
 
-    /** Clears all tenant indexes (used on OOM recovery). */
+    
+    /**
+     * Clears all tenant indexes (used on OOM recovery or full resync).
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
+    
     void clear();
 
 }

@@ -43,6 +43,11 @@ public class LatestTsDeletionHousekeeperTask extends HousekeeperTask {
         super(tenantId, entityId, HousekeeperTaskType.DELETE_LATEST_TS);
         this.key = key;
     }
+    /**
+     * Returns description.
+     *
+     * @return {@link String}
+     */
 
     @Override
     public String getDescription() {

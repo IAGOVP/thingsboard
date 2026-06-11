@@ -22,13 +22,24 @@ import org.thingsboard.server.cache.VersionedCaffeineTbCache;
 import org.thingsboard.server.common.data.CacheConstants;
 import org.thingsboard.server.common.data.Device;
 
+/**
+ * Caffeine {@link VersionedCaffeineTbCache} for {@link org.thingsboard.server.common.data.Device} entities.
+ *
+ * <p>Spring bean {@code "DeviceCache"} activated when
+ * {@code cache.type=caffeine} (default). Cache name: {@link org.thingsboard.server.common.data.CacheConstants#DEVICE_CACHE}.
+ *
+ * @see DeviceCacheKey
+ * @see VersionedCaffeineTbCache
+ */
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "caffeine", matchIfMissing = true)
 @Service("DeviceCache")
-/**
- * Device caffeine cache.
- */
 public class DeviceCaffeineCache extends VersionedCaffeineTbCache<DeviceCacheKey, Device> {
 
+    /**
+     * Wires the cache from the Spring {@link org.springframework.cache.CacheManager}.
+     *
+     * @param cacheManager manager built by {@link TbCaffeineCacheConfiguration}
+     */
     public DeviceCaffeineCache(CacheManager cacheManager) {
         super(cacheManager, CacheConstants.DEVICE_CACHE);
     }

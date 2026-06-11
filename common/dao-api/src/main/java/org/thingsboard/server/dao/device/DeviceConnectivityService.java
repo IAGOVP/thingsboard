@@ -26,9 +26,31 @@ import java.net.URISyntaxException;
  */
 public interface DeviceConnectivityService {
 
+    /**
+     * Finds device publish telemetry commands.
+     *
+     * @param baseUrl base url ({@link String})
+     * @param device device ({@link Device})
+     * @return {@link JsonNode}
+     * @throws URISyntaxException if urisyntax exception is thrown
+     */
     JsonNode findDevicePublishTelemetryCommands(String baseUrl, Device device) throws URISyntaxException;
 
+    /**
+     * Returns pem cert file.
+     *
+     * @param protocol protocol ({@link String})
+     * @return {@link Resource}
+     */
     Resource getPemCertFile(String protocol);
 
+    /**
+     * Creates gateway docker compose file.
+     *
+     * @param baseUrl base url ({@link String})
+     * @param device device ({@link Device})
+     * @return {@link Resource}
+     * @throws URISyntaxException if urisyntax exception is thrown
+     */
     Resource createGatewayDockerComposeFile(String baseUrl, Device device) throws URISyntaxException;
 }

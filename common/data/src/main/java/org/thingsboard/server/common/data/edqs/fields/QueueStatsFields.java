@@ -25,12 +25,21 @@ import java.util.UUID;
 @NoArgsConstructor
 @SuperBuilder
 /**
- * Queue stats fields.
+ * Lightweight queue stats field selection for EDQS queries and events (EDQS data — lightweight entity field DTOs for EDQS).
  */
+
 public class QueueStatsFields extends AbstractEntityFields {
 
     private String queueName;
     private String serviceId;
+    
+        /**
+         * Returns name.
+         *
+         * @return {@link String}
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
 
     @Override
     public String getName() {

@@ -20,12 +20,18 @@ import org.eclipse.leshan.core.request.ContentFormat;
 import java.util.Optional;
 
 /**
- * has content format contract.
+ * has content format contract (LwM2M transport and object model (ThingsBoard common module)).
  */
 public interface HasContentFormat {
 
     Optional<ContentFormat> getRequestContentFormat();
 
+    /**
+     * Returns response content format.
+     *
+     * @return {@link ContentFormat}
+     * @throws Exception on processing failure
+     */
     default ContentFormat getResponseContentFormat() {
         return null;
     }

@@ -46,18 +46,28 @@ public class TbLwM2mSecurityStore implements TbMainSecurityStore {
         this.securityStore = securityStore;
         this.validator = validator;
     }
+    /**
+     * Returns tb lw m2msecurity info by endpoint.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return {@link TbLwM2MSecurityInfo}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public TbLwM2MSecurityInfo getTbLwM2MSecurityInfoByEndpoint(String endpoint) {
         return securityStore.getTbLwM2MSecurityInfoByEndpoint(endpoint);
     }
 
+    
     /**
-     * @param endpoint
-     * @return : If SecurityMode == NO_SEC:
-     * return SecurityInfo.newPreSharedKeyInfo(SecurityMode.NO_SEC.toString(), SecurityMode.NO_SEC.toString(),
-     * SecurityMode.NO_SEC.toString().getBytes());
+     * Returns by endpoint.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return {@link SecurityInfo}
+     * @throws Exception on processing failure
      */
+
     @Override
     public SecurityInfo getByEndpoint(String endpoint) {
         SecurityInfo securityInfo = securityStore.getByEndpoint(endpoint);
@@ -70,6 +80,13 @@ public class TbLwM2mSecurityStore implements TbMainSecurityStore {
         }
         return securityInfo;
     }
+    /**
+     * Returns by identity.
+     *
+     * @param pskIdentity psk identity ({@link String})
+     * @return {@link SecurityInfo}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public SecurityInfo getByIdentity(String pskIdentity) {
@@ -84,12 +101,25 @@ public class TbLwM2mSecurityStore implements TbMainSecurityStore {
         }
         return securityInfo;
     }
+    /**
+     * Returns by oscore identity.
+     *
+     * @param oscoreIdentity oscore identity ({@link OscoreIdentity})
+     * @return {@link SecurityInfo}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public SecurityInfo getByOscoreIdentity(OscoreIdentity oscoreIdentity) {
         return null;
     }
-
+    /**
+     * Fetches and put security info.
+     *
+     * @param credentialsId credentials id ({@link String})
+     * @return {@link SecurityInfo}
+     * @throws Exception on processing failure
+     */
     public SecurityInfo fetchAndPutSecurityInfo(String credentialsId) {
         TbLwM2MSecurityInfo securityInfo = validator.getEndpointSecurityInfoByCredentialsId(credentialsId, CLIENT);
         doPut(securityInfo);
@@ -105,16 +135,39 @@ public class TbLwM2mSecurityStore implements TbMainSecurityStore {
             }
         }
     }
+    /**
+     * Put x509.
+     *
+     * @param securityInfo security info ({@link TbLwM2MSecurityInfo})
+     * @return nothing
+     * @throws NonUniqueSecurityInfoException if non unique security info exception is thrown during processing
+     */
 
     @Override
     public void putX509(TbLwM2MSecurityInfo securityInfo) throws NonUniqueSecurityInfoException {
         securityStore.put(securityInfo);
     }
+    /**
+     * Register x509.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @param registrationId registration id ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void registerX509(String endpoint, String registrationId) {
         endpointRegistrations.computeIfAbsent(endpoint, ep -> new HashSet<>()).add(registrationId);
     }
+    /**
+     * Removes the requested data.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @param registrationId registration id ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void remove(String endpoint, String registrationId) {

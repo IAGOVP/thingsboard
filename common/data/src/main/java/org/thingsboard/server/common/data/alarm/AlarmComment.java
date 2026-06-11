@@ -37,7 +37,7 @@ import java.io.Serial;
 @Builder
 @AllArgsConstructor
 /**
- * Alarm comment.
+ * User or system comment attached to an alarm lifecycle event.
  */
 public class AlarmComment extends BaseData<AlarmCommentId> implements HasName {
 
@@ -55,6 +55,11 @@ public class AlarmComment extends BaseData<AlarmCommentId> implements HasName {
     @Length(fieldName = "comment", max = 10000)
     @EqualsAndHashCode.Include
     private JsonNode comment;
+    /**
+     * Returns id.
+     *
+     * @return {@link AlarmCommentId}
+     */
 
     @Schema(description = "JSON object with the alarm comment Id. " +
             "Specify this field to update the alarm comment. " +
@@ -64,6 +69,11 @@ public class AlarmComment extends BaseData<AlarmCommentId> implements HasName {
     public AlarmCommentId getId() {
         return super.getId();
     }
+    /**
+     * Returns created time.
+     *
+     * @return the long result
+     */
 
     @Schema(description = "Timestamp of the alarm comment creation, in milliseconds", example = "1634058704567", accessMode = Schema.AccessMode.READ_ONLY)
     @Override
@@ -78,6 +88,11 @@ public class AlarmComment extends BaseData<AlarmCommentId> implements HasName {
     public AlarmComment(AlarmCommentId id) {
         super(id);
     }
+    /**
+     * Returns name.
+     *
+     * @return {@link String}
+     */
 
     @Override
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

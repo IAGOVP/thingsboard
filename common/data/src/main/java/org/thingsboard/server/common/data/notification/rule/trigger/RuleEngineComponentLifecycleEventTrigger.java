@@ -37,11 +37,21 @@ public class RuleEngineComponentLifecycleEventTrigger implements NotificationRul
     private final String componentName;
     private final ComponentLifecycleEvent eventType;
     private final Throwable error;
+    /**
+     * Returns type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     */
 
     @Override
     public NotificationRuleTriggerType getType() {
         return NotificationRuleTriggerType.RULE_ENGINE_COMPONENT_LIFECYCLE_EVENT;
     }
+    /**
+     * Returns originator entity id.
+     *
+     * @return {@link EntityId}
+     */
 
     @Override
     public EntityId getOriginatorEntityId() {

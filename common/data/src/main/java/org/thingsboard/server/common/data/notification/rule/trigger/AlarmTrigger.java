@@ -36,11 +36,21 @@ public class AlarmTrigger implements NotificationRuleTrigger {
 
     private final TenantId tenantId;
     private final AlarmApiCallResult alarmUpdate;
+    /**
+     * Returns type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     */
 
     @Override
     public NotificationRuleTriggerType getType() {
         return NotificationRuleTriggerType.ALARM;
     }
+    /**
+     * Returns originator entity id.
+     *
+     * @return {@link EntityId}
+     */
 
     @Override
     public EntityId getOriginatorEntityId() {

@@ -24,8 +24,14 @@ import org.thingsboard.server.dao.config.DedicatedEventsDataSource;
 import static org.thingsboard.server.dao.config.DedicatedEventsJpaDaoConfig.EVENTS_JDBC_TEMPLATE;
 import static org.thingsboard.server.dao.config.DedicatedEventsJpaDaoConfig.EVENTS_TRANSACTION_TEMPLATE;
 /**
- * Dedicated event insert repository.
+ * Dedicated event insert repository (JPA/PostgreSQL persistence layer (JPA repositories and PostgreSQL DAO implementations)).
  */
+
+
+
+
+
+
 
 @DedicatedEventsDataSource
 @Repository

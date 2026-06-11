@@ -34,6 +34,14 @@ import static org.thingsboard.server.transport.lwm2m.utils.LwM2MTransportUtil.LO
 public class DefaultLwM2MTelemetryLogService implements LwM2MTelemetryLogService {
 
     private final LwM2mTransportServerHelper helper;
+    /**
+     * Log.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param logMsg log msg ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void log(LwM2mClient client, String logMsg) {

@@ -40,7 +40,7 @@ import static org.thingsboard.server.transport.mqtt.util.sparkplug.SparkplugMetr
 import static org.thingsboard.server.transport.mqtt.util.sparkplug.SparkplugMetricUtil.getTsKvProtoFromJsonNode;
 
 /**
- * Sparkplug device session context.
+ * Session context for a Sparkplug B device node under an edge gateway connection.
  */
 @Slf4j
 public class SparkplugDeviceSessionContext extends AbstractGatewayDeviceSessionContext<SparkplugNodeSessionHandler> {
@@ -55,11 +55,22 @@ public class SparkplugDeviceSessionContext extends AbstractGatewayDeviceSessionC
                                          TransportService transportService) {
         super(parent, deviceInfo, deviceProfile, mqttQoSMap, transportService);
     }
-
+    /**
+     * Returns device birth metrics.
+     *
+     * @return {@link Map}
+     * @throws Exception on processing failure
+     */
     public Map<String, SparkplugBProto.Payload.Metric> getDeviceBirthMetrics() {
         return deviceBirthMetrics;
     }
-
+    /**
+     * Set device birth metrics.
+     *
+     * @param metrics metrics
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void setDeviceBirthMetrics(java.util.List<org.thingsboard.server.gen.transport.mqtt.SparkplugBProto.Payload.Metric> metrics)  {
         for (var metric : metrics) {
             if (metric.hasName()) {
@@ -72,6 +83,14 @@ public class SparkplugDeviceSessionContext extends AbstractGatewayDeviceSessionC
             }
         }
     }
+    /**
+     * Handles attribute update.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param notification notification
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
 
     @Override
@@ -102,6 +121,14 @@ public class SparkplugDeviceSessionContext extends AbstractGatewayDeviceSessionC
             }
         });
     }
+    /**
+     * Handles to device rpc request.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param rpcRequest rpc request
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onToDeviceRpcRequest(UUID sessionId, TransportProtos.ToDeviceRpcRequestMsg rpcRequest) {

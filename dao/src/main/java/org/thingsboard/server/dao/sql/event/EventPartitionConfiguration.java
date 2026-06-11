@@ -23,8 +23,11 @@ import org.thingsboard.server.common.data.event.EventType;
 
 import java.util.concurrent.TimeUnit;
 /**
- * Event partition configuration.
+ * Spring configuration for event partitionuration DAO beans.
+ *
+ * <p>Registers entity managers, repositories, and datasource routing.
  */
+
 
 @Component
 public class EventPartitionConfiguration {
@@ -38,12 +41,25 @@ public class EventPartitionConfiguration {
 
     private long regularPartitionSizeInMs;
     private long debugPartitionSizeInMs;
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PostConstruct
     public void init() {
         regularPartitionSizeInMs = TimeUnit.HOURS.toMillis(regularPartitionSizeInHours);
         debugPartitionSizeInMs = TimeUnit.HOURS.toMillis(debugPartitionSizeInHours);
     }
+    /**
+     * Returns partition size in ms.
+     *
+     * @param eventType event type ({@link EventType})
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public long getPartitionSizeInMs(EventType eventType) {
         return eventType.isDebug() ? debugPartitionSizeInMs : regularPartitionSizeInMs;

@@ -28,10 +28,24 @@ public class CoapNoOpCallback implements TransportServiceCallback<Void> {
     public CoapNoOpCallback(CoapExchange exchange) {
         this.exchange = exchange;
     }
+    /**
+     * Handles success.
+     *
+     * @param msg msg ({@link Void})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onSuccess(Void msg) {
     }
+    /**
+     * Handles error.
+     *
+     * @param e e ({@link Throwable})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onError(Throwable e) {

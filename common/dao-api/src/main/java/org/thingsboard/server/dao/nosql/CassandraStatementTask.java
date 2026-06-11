@@ -25,14 +25,10 @@ import org.thingsboard.server.dao.cassandra.guava.GuavaSession;
 import org.thingsboard.server.dao.util.AsyncTask;
 
 import java.util.function.Function;
-
-/**
- * Created by ashvayka on 24.10.18.
- */
-@Data
 /**
  * Cassandra statement task.
  */
+@Data
 public class CassandraStatementTask implements AsyncTask {
 
     private final TenantId tenantId;

@@ -53,7 +53,10 @@ import static org.thingsboard.server.dao.service.Validator.validateId;
 import static org.thingsboard.server.dao.service.Validator.validatePageLink;
 /**
  * Default DAO-layer service implementation for ota package.
+ *
+ * <p>Coordinates validation, caching, cluster events, and {@code *Dao} persistence (OTA firmware/software package metadata and data cache).
  */
+
 
 @Service("OtaPackageDaoService")
 @Slf4j
@@ -69,11 +72,15 @@ public class BaseOtaPackageService extends AbstractCachedEntityService<OtaPackag
     private final DataValidator<OtaPackageInfo> otaPackageInfoValidator;
     private final DataValidator<OtaPackage> otaPackageValidator;
 
+    
     /**
-
-     * Handle evict event.
-
+     * Handles evict event.
+     *
+     * @param event event ({@link OtaPackageCacheEvictEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @TransactionalEventListener(classes = OtaPackageCacheEvictEvent.class)
     @Override
@@ -82,11 +89,16 @@ public class BaseOtaPackageService extends AbstractCachedEntityService<OtaPackag
         otaPackageDataCache.evict(event.getId().toString());
     }
 
+    
     /**
-
-     * Persists ota package info.
-
+     * Saves or persists ota package info.
+     *
+     * @param otaPackageInfo ota package info ({@link OtaPackageInfo})
+     * @param isUrl is url
+     * @return {@link OtaPackageInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public OtaPackageInfo saveOtaPackageInfo(OtaPackageInfo otaPackageInfo, boolean isUrl) {
@@ -115,11 +127,15 @@ public class BaseOtaPackageService extends AbstractCachedEntityService<OtaPackag
         }
     }
 
+    
     /**
-
-     * Persists ota package.
-
+     * Saves or persists ota package.
+     *
+     * @param otaPackage ota package ({@link OtaPackage})
+     * @return {@link OtaPackage}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public OtaPackage saveOtaPackage(OtaPackage otaPackage) {
@@ -145,11 +161,16 @@ public class BaseOtaPackageService extends AbstractCachedEntityService<OtaPackag
         }
     }
 
+    
     /**
-
      * Generate checksum.
-
+     *
+     * @param checksumAlgorithm checksum algorithm ({@link ChecksumAlgorithm})
+     * @param data data ({@link ByteBuffer})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public String generateChecksum(ChecksumAlgorithm checksumAlgorithm, ByteBuffer data) {
@@ -174,11 +195,16 @@ public class BaseOtaPackageService extends AbstractCachedEntityService<OtaPackag
         };
     }
 
+    
     /**
-
-     * Loads ota package by id.
-
+     * Finds ota package by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param otaPackageId ota package id ({@link OtaPackageId})
+     * @return {@link OtaPackage}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public OtaPackage findOtaPackageById(TenantId tenantId, OtaPackageId otaPackageId) {
@@ -187,11 +213,16 @@ public class BaseOtaPackageService extends AbstractCachedEntityService<OtaPackag
         return otaPackageDao.findById(tenantId, otaPackageId.getId());
     }
 
+    
     /**
-
-     * Loads ota package info by id.
-
+     * Finds ota package info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param otaPackageId ota package id ({@link OtaPackageId})
+     * @return {@link OtaPackageInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public OtaPackageInfo findOtaPackageInfoById(TenantId tenantId, OtaPackageId otaPackageId) {
@@ -201,11 +232,17 @@ public class BaseOtaPackageService extends AbstractCachedEntityService<OtaPackag
                 () -> otaPackageInfoDao.findById(tenantId, otaPackageId.getId()), true);
     }
 
+    
     /**
-
-     * Loads ota package by tenant id and title and version.
-
+     * Finds ota package by tenant id and title and version.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param title title ({@link String})
+     * @param version version ({@link String})
+     * @return {@link OtaPackage}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public OtaPackage findOtaPackageByTenantIdAndTitleAndVersion(TenantId tenantId, String title, String version) {
@@ -213,11 +250,16 @@ public class BaseOtaPackageService extends AbstractCachedEntityService<OtaPackag
         return otaPackageDao.findOtaPackageByTenantIdAndTitleAndVersion(tenantId, title, version);
     }
 
+    
     /**
-
-     * Loads ota package info by id async.
-
+     * Finds ota package info by id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param otaPackageId ota package id ({@link OtaPackageId})
+     * @return future completing with {@link OtaPackageInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<OtaPackageInfo> findOtaPackageInfoByIdAsync(TenantId tenantId, OtaPackageId otaPackageId) {
@@ -226,11 +268,16 @@ public class BaseOtaPackageService extends AbstractCachedEntityService<OtaPackag
         return otaPackageInfoDao.findByIdAsync(tenantId, otaPackageId.getId());
     }
 
+    
     /**
-
-     * Loads tenant ota packages by tenant id.
-
+     * Finds tenant ota packages by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<OtaPackageInfo> findTenantOtaPackagesByTenantId(TenantId tenantId, PageLink pageLink) {
@@ -240,11 +287,18 @@ public class BaseOtaPackageService extends AbstractCachedEntityService<OtaPackag
         return otaPackageInfoDao.findOtaPackageInfoByTenantId(tenantId, pageLink);
     }
 
+    
     /**
-
-     * Loads tenant ota packages by tenant id and device profile id and type and has data.
-
+     * Finds tenant ota packages by tenant id and device profile id and type and has data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfileId device profile id ({@link DeviceProfileId})
+     * @param otaPackageType ota package type ({@link OtaPackageType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<OtaPackageInfo> findTenantOtaPackagesByTenantIdAndDeviceProfileIdAndTypeAndHasData(TenantId tenantId, DeviceProfileId deviceProfileId, OtaPackageType otaPackageType, PageLink pageLink) {
@@ -254,11 +308,16 @@ public class BaseOtaPackageService extends AbstractCachedEntityService<OtaPackag
         return otaPackageInfoDao.findOtaPackageInfoByTenantIdAndDeviceProfileIdAndTypeAndHasData(tenantId, deviceProfileId, otaPackageType, pageLink);
     }
 
+    
     /**
-
-     * Removes ota package.
-
+     * Deletes ota package.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param otaPackageId ota package id ({@link OtaPackageId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteOtaPackage(TenantId tenantId, OtaPackageId otaPackageId) {
@@ -310,44 +369,62 @@ public class BaseOtaPackageService extends AbstractCachedEntityService<OtaPackag
         }
     }
 
+    
     /**
-
-     * Removes entity.
-
+     * Deletes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteEntity(TenantId tenantId, EntityId id, boolean force) {
         deleteOtaPackage(tenantId, (OtaPackageId) id);
     }
 
+    
     /**
-
      * Sum data size by tenant id.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public long sumDataSizeByTenantId(TenantId tenantId) {
         return otaPackageDao.sumDataSizeByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Removes by tenant id.
-
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteByTenantId(TenantId tenantId) {
         deleteOtaPackagesByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Removes ota packages by tenant id.
-
+     * Deletes ota packages by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteOtaPackagesByTenantId(TenantId tenantId) {
@@ -377,22 +454,32 @@ public class BaseOtaPackageService extends AbstractCachedEntityService<OtaPackag
         }
     };
 
+    
     /**
-
-     * Loads entity.
-
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findOtaPackageInfoById(tenantId, new OtaPackageId(entityId.getId())));
     }
 
+    
     /**
-
-     * Loads entity async.
-
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
@@ -400,11 +487,14 @@ public class BaseOtaPackageService extends AbstractCachedEntityService<OtaPackag
                 .transform(Optional::ofNullable, directExecutor());
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

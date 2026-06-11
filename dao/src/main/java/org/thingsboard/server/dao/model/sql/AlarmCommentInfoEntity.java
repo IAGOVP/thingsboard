@@ -19,8 +19,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.thingsboard.server.common.data.alarm.AlarmCommentInfo;
 /**
- * Alarm comment info entity.
+ * JPA/Cassandra row model for alarm comment info.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -45,6 +48,12 @@ public class AlarmCommentInfoEntity extends AbstractAlarmCommentEntity<AlarmComm
         this.lastName = lastName;
         this.email = email;
     }
+    /**
+     * To data.
+     *
+     * @return {@link AlarmCommentInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AlarmCommentInfo toData() {

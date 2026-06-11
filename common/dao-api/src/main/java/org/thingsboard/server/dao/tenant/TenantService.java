@@ -32,32 +32,116 @@ import java.util.function.Consumer;
  */
 public interface TenantService extends EntityDaoService {
 
+    /**
+     * Finds tenant by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link Tenant}
+     */
     Tenant findTenantById(TenantId tenantId);
 
+    /**
+     * Finds tenant info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link TenantInfo}
+     */
     TenantInfo findTenantInfoById(TenantId tenantId);
 
+    /**
+     * Finds tenant by id async.
+     *
+     * @param callerId caller id ({@link TenantId})
+     * @param tenantId tenant that owns the entity or operation
+     * @return future completing with {@link Tenant}
+     */
     ListenableFuture<Tenant> findTenantByIdAsync(TenantId callerId, TenantId tenantId);
 
+    /**
+     * Saves or persists tenant.
+     *
+     * @param tenant tenant ({@link Tenant})
+     * @return {@link Tenant}
+     */
     Tenant saveTenant(Tenant tenant);
 
+    /**
+     * Saves or persists tenant.
+     *
+     * @param tenant tenant ({@link Tenant})
+     * @param defaultEntitiesCreator default entities creator ({@link Consumer})
+     * @return {@link Tenant}
+     */
     Tenant saveTenant(Tenant tenant, Consumer<TenantId> defaultEntitiesCreator);
 
+    /**
+     * Tenant exists.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return the boolean result
+     */
     boolean tenantExists(TenantId tenantId);
 
+    /**
+     * Deletes tenant.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     */
     void deleteTenant(TenantId tenantId);
 
+    /**
+     * Finds tenants.
+     *
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<Tenant> findTenants(PageLink pageLink);
 
+    /**
+     * Finds tenant infos.
+     *
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<TenantInfo> findTenantInfos(PageLink pageLink);
 
+    /**
+     * Finds tenant ids by tenant profile id.
+     *
+     * @param tenantProfileId tenant profile id ({@link TenantProfileId})
+     * @return {@link List}
+     */
     List<TenantId> findTenantIdsByTenantProfileId(TenantProfileId tenantProfileId);
 
+    /**
+     * Finds tenant by name.
+     *
+     * @param name entity name (unique within tenant scope where applicable)
+     * @return {@link Tenant}
+     */
     Tenant findTenantByName(String name);
 
+    /**
+     * Deletes tenants.
+     *
+     */
     void deleteTenants();
 
+    /**
+     * Finds tenants ids.
+     *
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<TenantId> findTenantsIds(PageLink pageLink);
 
+    /**
+     * Finds tenants by ids.
+     *
+     * @param callerId caller id ({@link TenantId})
+     * @param tenantIds tenant ids ({@link List})
+     * @return {@link List}
+     */
     List<Tenant> findTenantsByIds(TenantId callerId, List<TenantId> tenantIds);
 
 }

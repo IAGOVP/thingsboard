@@ -42,21 +42,42 @@ public class DummyTask extends Task<DummyTaskResult> {
     private long processingTimeoutMs;
     private List<String> errors; // errors for each attempt
     private boolean failAlways;
+    /**
+     * To failed.
+     *
+     * @param error error ({@link Throwable})
+     * @return {@link DummyTaskResult}
+     */
 
     @Override
     public DummyTaskResult toFailed(Throwable error) {
         return DummyTaskResult.failed(this, error);
     }
+    /**
+     * To discarded.
+     *
+     * @return {@link DummyTaskResult}
+     */
 
     @Override
     public DummyTaskResult toDiscarded() {
         return DummyTaskResult.discarded(this);
     }
+    /**
+     * Returns entity id.
+     *
+     * @return {@link EntityId}
+     */
 
     @Override
     public EntityId getEntityId() {
         return new DeviceId(UUID.randomUUID());
     }
+    /**
+     * Returns job type.
+     *
+     * @return {@link JobType}
+     */
 
     @Override
     public JobType getJobType() {

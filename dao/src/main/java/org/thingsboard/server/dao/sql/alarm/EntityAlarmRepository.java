@@ -28,27 +28,69 @@ import org.thingsboard.server.dao.model.sql.EntityAlarmEntity;
 import java.util.List;
 import java.util.UUID;
 
+
 /**
 
- * entity alarm repository contract.
+ * Spring Data JPA repository for entity alarm entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
 
+
 public interface EntityAlarmRepository extends JpaRepository<EntityAlarmEntity, EntityAlarmCompositeKey> {
+    /**
+     * Finds all by alarm id.
+     *
+     * @param alarmId alarm id ({@link UUID})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<EntityAlarmEntity> findAllByAlarmId(UUID alarmId);
+    /**
+     * Deletes by entity id.
+     *
+     * @param entityId target entity identifier
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Transactional
     @Modifying
     @Query("DELETE FROM EntityAlarmEntity e where e.entityId = :entityId")
     int deleteByEntityId(@Param("entityId") UUID entityId);
+    /**
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Transactional
     @Modifying
     @Query("DELETE FROM EntityAlarmEntity a WHERE a.tenantId = :tenantId")
     void deleteByTenantId(@Param("tenantId") UUID tenantId);
+    /**
+     * Finds all by entity id.
+     *
+     * @param entityId target entity identifier
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<EntityAlarmEntity> findAllByEntityId(UUID entityId);
+    /**
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     Page<EntityAlarmEntity> findByTenantId(UUID tenantId, Pageable pageable);
 

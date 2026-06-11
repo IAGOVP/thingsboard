@@ -21,19 +21,61 @@ import jakarta.validation.ConstraintValidatorContext;
 import org.thingsboard.common.util.JsonSchemaUtils;
 import org.thingsboard.server.common.data.validation.ValidJsonSchema;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * Json schema validator.
+
+
+
+
+
+ * Json schema validator (shared DAO validators, removers, and constraints).
+
+
+
+
+
 
  */
 
+
+
+
+
+
+
 public final class JsonSchemaValidator implements ConstraintValidator<ValidJsonSchema, ObjectNode> {
 
+    
     /**
-
      * Is valid.
-
+     *
+     * @param schema schema ({@link ObjectNode})
+     * @param context context ({@link ConstraintValidatorContext})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public boolean isValid(ObjectNode schema, ConstraintValidatorContext context) {

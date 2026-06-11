@@ -23,11 +23,11 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
 
-@Schema
-@Builder
 /**
  * Configuration for open ai provider.
  */
+@Schema
+@Builder
 public record OpenAiProviderConfig(
         String baseUrl,
         String apiKey
@@ -38,6 +38,11 @@ public record OpenAiProviderConfig(
     public OpenAiProviderConfig {
         baseUrl = Objects.requireNonNullElse(baseUrl, OPENAI_OFFICIAL_BASE_URL);
     }
+    /**
+     * Is valid.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     @AssertTrue(message = "API key is required when using the official OpenAI API")

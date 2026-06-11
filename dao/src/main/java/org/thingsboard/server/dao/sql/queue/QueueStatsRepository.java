@@ -29,32 +29,79 @@ import org.thingsboard.server.dao.model.sql.QueueStatsEntity;
 import java.util.List;
 import java.util.UUID;
 
+
 /**
 
- * queue stats repository contract.
+ * Spring Data JPA repository for queue stats entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
 
+
 public interface QueueStatsRepository extends JpaRepository<QueueStatsEntity, UUID> {
+    /**
+     * Finds by tenant id and queue name and service id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param queueName queue name ({@link String})
+     * @param serviceId service id ({@link String})
+     * @return {@link QueueStatsEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     QueueStatsEntity findByTenantIdAndQueueNameAndServiceId(UUID tenantId, String queueName, String serviceId);
 
     @Query("SELECT q FROM QueueStatsEntity q WHERE q.tenantId = :tenantId " +
             "AND (:textSearch IS NULL OR ilike(q.queueName, CONCAT('%', :textSearch, '%')) = true " +
             "OR ilike(q.serviceId, CONCAT('%', :textSearch, '%')) = true)")
+    /**
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param textSearch text search ({@link String})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<QueueStatsEntity> findByTenantId(@Param("tenantId") UUID tenantId,
                                           @Param("textSearch") String textSearch,
                                           Pageable pageable);
+    /**
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Transactional
     @Modifying
     @Query("DELETE FROM QueueStatsEntity t WHERE t.tenantId = :tenantId")
     void deleteByTenantId(@Param("tenantId") UUID tenantId);
+    /**
+     * Finds by tenant id and id in.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param queueStatsIds queue stats ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<QueueStatsEntity> findByTenantIdAndIdIn(UUID tenantId, List<UUID> queueStatsIds);
 
     @Query("SELECT new org.thingsboard.server.common.data.edqs.fields.QueueStatsFields(q.id, q.createdTime," +
             "q.tenantId, q.queueName, q.serviceId) FROM QueueStatsEntity q WHERE q.id > :id ORDER BY q.id")
+    /**
+     * Finds next batch.
+     *
+     * @param id entity UUID primary key
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     List<QueueStatsFields> findNextBatch(@Param("id") UUID id, Limit limit);
 
 }

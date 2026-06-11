@@ -23,10 +23,25 @@ import org.thingsboard.server.common.data.id.OtaPackageId;
 public interface HasOtaPackage {
 
     OtaPackageId getFirmwareId();
+/**
+ * Returns software id.
+ *
+ * @return {@link OtaPackageId}
+ */
 
     OtaPackageId getSoftwareId();
+/**
+ * Set firmware id.
+ *
+ * @param otaPackageId ota package id ({@link OtaPackageId})
+ */
 
     void setFirmwareId(OtaPackageId otaPackageId);
+/**
+ * Set software id.
+ *
+ * @param otaPackageId ota package id ({@link OtaPackageId})
+ */
 
     void setSoftwareId(OtaPackageId otaPackageId);
 }

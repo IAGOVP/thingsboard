@@ -42,17 +42,31 @@ public class PropagationCalculatedFieldConfiguration extends BaseCalculatedField
     private RelationPathLevel relation;
 
     private boolean applyExpressionToResolvedArguments;
+    /**
+     * Is use latest ts.
+     *
+     * @return the boolean result
+     */
 
     @Override
     @JsonIgnore
     public boolean isUseLatestTs() {
         return output.getType() == OutputType.TIME_SERIES;
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link CalculatedFieldType}
+     */
 
     @Override
     public CalculatedFieldType getType() {
         return CalculatedFieldType.PROPAGATION;
     }
+    /**
+     * Validates the requested data.
+     *
+     */
 
     @Override
     public void validate() {
@@ -84,6 +98,11 @@ public class PropagationCalculatedFieldConfiguration extends BaseCalculatedField
             }
         }
     }
+    /**
+     * To propagation argument.
+     *
+     * @return {@link Argument}
+     */
 
     public Argument toPropagationArgument() {
         var refDynamicSourceConfiguration = new RelationPathQueryDynamicSourceConfiguration();

@@ -25,8 +25,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @SuperBuilder
 /**
- * Entity id fields.
+ * Lightweight entity id field selection for EDQS queries and events (EDQS data — lightweight entity field DTOs for EDQS).
  */
+
 public class EntityIdFields implements EntityFields {
 
     private UUID id;

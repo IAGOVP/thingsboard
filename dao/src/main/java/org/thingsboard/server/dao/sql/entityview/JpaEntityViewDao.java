@@ -45,8 +45,11 @@ import java.util.UUID;
 
 import static org.thingsboard.server.dao.DaoUtil.convertTenantEntityTypesToDto;
 /**
- * JPA implementation of entity view dao.
+ * JPA/PostgreSQL implementation of entity view dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Component
 @Slf4j
@@ -56,44 +59,60 @@ public class JpaEntityViewDao extends JpaAbstractDao<EntityViewEntity, EntityVie
     @Autowired
     private EntityViewRepository entityViewRepository;
 
+    
     /**
-
-     * Get entity class.
-
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected Class<EntityViewEntity> getEntityClass() {
         return EntityViewEntity.class;
     }
 
+    
     /**
-
-     * Get repository.
-
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected JpaRepository<EntityViewEntity, UUID> getRepository() {
         return entityViewRepository;
     }
 
+    
     /**
-
-     * Loads entity view info by id.
-
+     * Finds entity view info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityViewId entity view id ({@link UUID})
+     * @return {@link EntityViewInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityViewInfo findEntityViewInfoById(TenantId tenantId, UUID entityViewId) {
         return DaoUtil.getData(entityViewRepository.findEntityViewInfoById(entityViewId));
     }
 
+    
     /**
-
-     * Loads entity views by tenant id.
-
+     * Finds entity views by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EntityView> findEntityViewsByTenantId(UUID tenantId, PageLink pageLink) {
@@ -104,11 +123,16 @@ public class JpaEntityViewDao extends JpaAbstractDao<EntityViewEntity, EntityVie
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads entity view infos by tenant id.
-
+     * Finds entity view infos by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EntityViewInfo> findEntityViewInfosByTenantId(UUID tenantId, PageLink pageLink) {
@@ -119,11 +143,17 @@ public class JpaEntityViewDao extends JpaAbstractDao<EntityViewEntity, EntityVie
                         DaoUtil.toPageable(pageLink, EntityViewInfoEntity.entityViewInfoColumnMap)));
     }
 
+    
     /**
-
-     * Loads entity views by tenant id and type.
-
+     * Finds entity views by tenant id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EntityView> findEntityViewsByTenantIdAndType(UUID tenantId, String type, PageLink pageLink) {
@@ -135,11 +165,17 @@ public class JpaEntityViewDao extends JpaAbstractDao<EntityViewEntity, EntityVie
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads entity view infos by tenant id and type.
-
+     * Finds entity view infos by tenant id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EntityViewInfo> findEntityViewInfosByTenantIdAndType(UUID tenantId, String type, PageLink pageLink) {
@@ -151,11 +187,16 @@ public class JpaEntityViewDao extends JpaAbstractDao<EntityViewEntity, EntityVie
                         DaoUtil.toPageable(pageLink, EntityViewInfoEntity.entityViewInfoColumnMap)));
     }
 
+    
     /**
-
-     * Loads entity view by tenant id and name.
-
+     * Finds entity view by tenant id and name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return optional {@link EntityView}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<EntityView> findEntityViewByTenantIdAndName(UUID tenantId, String name) {
@@ -163,11 +204,17 @@ public class JpaEntityViewDao extends JpaAbstractDao<EntityViewEntity, EntityVie
                 DaoUtil.getData(entityViewRepository.findByTenantIdAndName(tenantId, name)));
     }
 
+    
     /**
-
-     * Loads entity views by tenant id and customer id.
-
+     * Finds entity views by tenant id and customer id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EntityView> findEntityViewsByTenantIdAndCustomerId(UUID tenantId,
@@ -182,11 +229,17 @@ public class JpaEntityViewDao extends JpaAbstractDao<EntityViewEntity, EntityVie
                 ));
     }
 
+    
     /**
-
-     * Loads entity view infos by tenant id and customer id.
-
+     * Finds entity view infos by tenant id and customer id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EntityViewInfo> findEntityViewInfosByTenantIdAndCustomerId(UUID tenantId, UUID customerId, PageLink pageLink) {
@@ -198,11 +251,18 @@ public class JpaEntityViewDao extends JpaAbstractDao<EntityViewEntity, EntityVie
                         DaoUtil.toPageable(pageLink, EntityViewInfoEntity.entityViewInfoColumnMap)));
     }
 
+    
     /**
-
-     * Loads entity views by tenant id and customer id and type.
-
+     * Finds entity views by tenant id and customer id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EntityView> findEntityViewsByTenantIdAndCustomerIdAndType(UUID tenantId, UUID customerId, String type, PageLink pageLink) {
@@ -216,11 +276,18 @@ public class JpaEntityViewDao extends JpaAbstractDao<EntityViewEntity, EntityVie
                 ));
     }
 
+    
     /**
-
-     * Loads entity view infos by tenant id and customer id and type.
-
+     * Finds entity view infos by tenant id and customer id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EntityViewInfo> findEntityViewInfosByTenantIdAndCustomerIdAndType(UUID tenantId, UUID customerId, String type, PageLink pageLink) {
@@ -233,11 +300,16 @@ public class JpaEntityViewDao extends JpaAbstractDao<EntityViewEntity, EntityVie
                         DaoUtil.toPageable(pageLink, EntityViewInfoEntity.entityViewInfoColumnMap)));
     }
 
+    
     /**
-
-     * Loads entity views by tenant id and entity id.
-
+     * Finds entity views by tenant id and entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<EntityView> findEntityViewsByTenantIdAndEntityId(UUID tenantId, UUID entityId) {
@@ -245,33 +317,48 @@ public class JpaEntityViewDao extends JpaAbstractDao<EntityViewEntity, EntityVie
                 entityViewRepository.findAllByTenantIdAndEntityId(tenantId, entityId));
     }
 
+    
     /**
-
-     * Checks whether by tenant id and entity id exists.
-
+     * Exists by tenant id and entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public boolean existsByTenantIdAndEntityId(UUID tenantId, UUID entityId) {
         return entityViewRepository.existsByTenantIdAndEntityId(tenantId, entityId);
     }
 
+    
     /**
-
-     * Loads tenant entity view types async.
-
+     * Finds tenant entity view types async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<EntitySubtype>> findTenantEntityViewTypesAsync(UUID tenantId) {
         return service.submit(() -> convertTenantEntityTypesToDto(tenantId, EntityType.ENTITY_VIEW, entityViewRepository.findTenantEntityViewTypes(tenantId)));
     }
 
+    
     /**
-
-     * Loads entity views by tenant id and edge id.
-
+     * Finds entity views by tenant id and edge id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link UUID})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EntityView> findEntityViewsByTenantIdAndEdgeId(UUID tenantId, UUID edgeId, PageLink pageLink) {
@@ -284,22 +371,34 @@ public class JpaEntityViewDao extends JpaAbstractDao<EntityViewEntity, EntityVie
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads entity views by tenant id and ids.
-
+     * Finds entity views by tenant id and ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityViewIds entity view ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<EntityView> findEntityViewsByTenantIdAndIds(UUID tenantId, List<UUID> entityViewIds) {
         return DaoUtil.convertDataList(entityViewRepository.findEntityViewsByTenantIdAndIdIn(tenantId, entityViewIds));
     }
 
+    
     /**
-
-     * Loads entity views by tenant id and edge id and type.
-
+     * Finds entity views by tenant id and edge id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link UUID})
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EntityView> findEntityViewsByTenantIdAndEdgeIdAndType(UUID tenantId, UUID edgeId, String type, PageLink pageLink) {
@@ -313,33 +412,47 @@ public class JpaEntityViewDao extends JpaAbstractDao<EntityViewEntity, EntityVie
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads by tenant id and external id.
-
+     * Finds by tenant id and external id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param externalId external id ({@link UUID})
+     * @return {@link EntityView}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityView findByTenantIdAndExternalId(UUID tenantId, UUID externalId) {
         return DaoUtil.getData(entityViewRepository.findByTenantIdAndExternalId(tenantId, externalId));
     }
 
+    
     /**
-
-     * Loads by tenant id.
-
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EntityView> findByTenantId(UUID tenantId, PageLink pageLink) {
         return findEntityViewsByTenantId(tenantId, pageLink);
     }
 
+    
     /**
-
-     * Get external id by internal.
-
+     * Returns external id by internal.
+     *
+     * @param internalId internal id ({@link EntityViewId})
+     * @return {@link EntityViewId}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityViewId getExternalIdByInternal(EntityViewId internalId) {
@@ -347,55 +460,78 @@ public class JpaEntityViewDao extends JpaAbstractDao<EntityViewEntity, EntityVie
                 .map(EntityViewId::new).orElse(null);
     }
 
+    
     /**
-
-     * Loads by tenant id and name.
-
+     * Finds by tenant id and name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return {@link EntityView}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityView findByTenantIdAndName(UUID tenantId, String name) {
         return findEntityViewByTenantIdAndName(tenantId, name).orElse(null);
     }
 
+    
     /**
-
-     * Loads all by tenant id.
-
+     * Finds all by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EntityView> findAllByTenantId(TenantId tenantId, PageLink pageLink) {
         return findByTenantId(tenantId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads next batch.
-
+     * Finds next batch.
+     *
+     * @param id entity UUID primary key
+     * @param batchSize batch size
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<EntityViewFields> findNextBatch(UUID id, int batchSize) {
         return entityViewRepository.findNextBatch(id, Limit.of(batchSize));
     }
 
+    
     /**
-
-     * Loads entity infos by name prefix.
-
+     * Finds entity infos by name prefix.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<EntityInfo> findEntityInfosByNamePrefix(TenantId tenantId, String name) {
         return entityViewRepository.findEntityInfosByNamePrefix(tenantId.getId(), name);
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

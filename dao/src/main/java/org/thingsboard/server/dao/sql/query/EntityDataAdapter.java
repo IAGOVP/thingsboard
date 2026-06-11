@@ -33,13 +33,60 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * Entity data adapter.
+
+
+
+
+
+ * Entity data adapter (JPA/PostgreSQL persistence layer (JPA repositories and PostgreSQL DAO implementations)).
+
+
+
+
+
 
  */
 
+
+
+
+
+
+
 public class EntityDataAdapter {
+    /**
+     * Creates entity data.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @param selectionMapping selection mapping ({@link List})
+     * @param rows rows ({@link List})
+     * @param totalElements total elements
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static PageData<EntityData> createEntityData(EntityDataPageLink pageLink,
                                                         List<EntityKeyMapping> selectionMapping,

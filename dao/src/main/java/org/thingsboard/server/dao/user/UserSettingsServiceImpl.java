@@ -38,8 +38,11 @@ import java.util.List;
 
 import static org.thingsboard.server.dao.service.Validator.validateId;
 /**
- * Spring service implementing user settings API.
+ * Spring {@code @Service} implementing the user settings DAO API.
+ *
+ * <p>Delegates to {@code *Dao} implementations and manages cache eviction (users, credentials, and user settings).
  */
+
 
 @Service("UserSettingsDaoService")
 @Slf4j
@@ -47,6 +50,14 @@ import static org.thingsboard.server.dao.service.Validator.validateId;
 public class UserSettingsServiceImpl extends AbstractCachedService<UserSettingsCompositeKey, UserSettings, UserSettingsEvictEvent> implements UserSettingsService {
     public static final String INCORRECT_USER_ID = "Incorrect userId ";
     private final UserSettingsDao userSettingsDao;
+    /**
+     * Saves or persists user settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userSettings user settings ({@link UserSettings})
+     * @return {@link UserSettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UserSettings saveUserSettings(TenantId tenantId, UserSettings userSettings) {
@@ -54,6 +65,16 @@ public class UserSettingsServiceImpl extends AbstractCachedService<UserSettingsC
         validateId(userSettings.getUserId(), id -> INCORRECT_USER_ID + id);
         return doSaveUserSettings(tenantId, userSettings);
     }
+    /**
+     * Updates user settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @param type type ({@link UserSettingsType})
+     * @param settings settings ({@link JsonNode})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void updateUserSettings(TenantId tenantId, UserId userId, UserSettingsType type, JsonNode settings) {
@@ -70,6 +91,15 @@ public class UserSettingsServiceImpl extends AbstractCachedService<UserSettingsC
         newUserSettings.setSettings(update(oldSettingsJson, settings));
         doSaveUserSettings(tenantId, newUserSettings);
     }
+    /**
+     * Finds user settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @param type type ({@link UserSettingsType})
+     * @return {@link UserSettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UserSettings findUserSettings(TenantId tenantId, UserId userId, UserSettingsType type) {
@@ -80,6 +110,16 @@ public class UserSettingsServiceImpl extends AbstractCachedService<UserSettingsC
         return cache.getAndPutInTransaction(key,
                 () -> userSettingsDao.findById(tenantId, key), true);
     }
+    /**
+     * Deletes user settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @param type type ({@link UserSettingsType})
+     * @param jsonPaths json paths ({@link List})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteUserSettings(TenantId tenantId, UserId userId, UserSettingsType type, List<String> jsonPaths) {
@@ -115,6 +155,13 @@ public class UserSettingsServiceImpl extends AbstractCachedService<UserSettingsC
             throw t;
         }
     }
+    /**
+     * Handles evict event.
+     *
+     * @param event event ({@link UserSettingsEvictEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @TransactionalEventListener(classes = UserSettingsEvictEvent.class)
     @Override
@@ -131,6 +178,14 @@ public class UserSettingsServiceImpl extends AbstractCachedService<UserSettingsC
             }
         }
     }
+    /**
+     * Updates the requested data.
+     *
+     * @param mainNode main node ({@link JsonNode})
+     * @param updateNode update node ({@link JsonNode})
+     * @return {@link JsonNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public JsonNode update(JsonNode mainNode, JsonNode updateNode) {
         Iterator<String> fieldNames = updateNode.fieldNames();

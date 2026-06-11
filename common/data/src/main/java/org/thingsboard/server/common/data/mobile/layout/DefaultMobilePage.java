@@ -38,6 +38,11 @@ public class DefaultMobilePage extends AbstractMobilePage {
     @Schema(description = "Identifier for default page", example = "HOME")
     @JsonView(Views.Public.class)
     private DefaultPageId id;
+    /**
+     * Returns type.
+     *
+     * @return {@link MobilePageType}
+     */
 
     @Override
     public MobilePageType getType() {

@@ -22,8 +22,11 @@ import org.thingsboard.server.cache.CaffeineTbTransactionalCache;
 import org.thingsboard.server.common.data.CacheConstants;
 import org.thingsboard.server.common.data.OtaPackageInfo;
 /**
- * Ota package caffeine cache.
+ * in-process Caffeine cache for ota package (OTA firmware/software package metadata and data cache).
+ *
+ * <p>Implements {@link org.thingsboard.server.cache.TbTransactionalCache} with DAO-specific key types.
  */
+
 
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "caffeine", matchIfMissing = true)
 @Service("OtaPackageCache")

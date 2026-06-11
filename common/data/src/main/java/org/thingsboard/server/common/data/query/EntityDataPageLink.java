@@ -38,6 +38,11 @@ public class EntityDataPageLink {
     public EntityDataPageLink(int pageSize, int page, String textSearch, EntityDataSortOrder sortOrder) {
         this(pageSize, page, textSearch, sortOrder, false);
     }
+    /**
+     * Next page link.
+     *
+     * @return {@link EntityDataPageLink}
+     */
 
     @JsonIgnore
     public EntityDataPageLink nextPageLink() {

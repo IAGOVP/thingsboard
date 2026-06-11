@@ -24,19 +24,56 @@ import org.thingsboard.server.dao.TenantEntityDao;
 import java.util.Optional;
 import java.util.Set;
 
+
 /**
 
- * Persistence contract for ai model (see JPA/Cassandra implementations).
+ * Persistence contract for ai model.
+
+ *
+
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (ThingsBoard DAO layer).
 
  */
 
+
 public interface AiModelDao extends TenantEntityDao<AiModel>, ExportableEntityDao<AiModelId, AiModel> {
+    /**
+     * Finds by tenant id and id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param modelId model id ({@link AiModelId})
+     * @return optional {@link AiModel}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     Optional<AiModel> findByTenantIdAndId(TenantId tenantId, AiModelId modelId);
+    /**
+     * Deletes by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param modelId model id ({@link AiModelId})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     boolean deleteById(TenantId tenantId, AiModelId modelId);
+    /**
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     Set<AiModelId> deleteByTenantId(TenantId tenantId);
+    /**
+     * Deletes by tenant id and id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param modelId model id ({@link AiModelId})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     boolean deleteByTenantIdAndId(TenantId tenantId, AiModelId modelId);
 

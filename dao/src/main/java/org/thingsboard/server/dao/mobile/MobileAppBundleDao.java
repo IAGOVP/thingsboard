@@ -27,25 +27,87 @@ import org.thingsboard.server.dao.Dao;
 
 import java.util.List;
 
+
 /**
 
- * Persistence contract for mobile app bundle (see JPA/Cassandra implementations).
+ * Persistence contract for mobile app bundle.
+
+ *
+
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (mobile apps, bundles, and QR code settings).
 
  */
 
+
 public interface MobileAppBundleDao extends Dao<MobileAppBundle> {
+    /**
+     * Finds infos by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<MobileAppBundleInfo> findInfosByTenantId(TenantId tenantId, PageLink pageLink);
+    /**
+     * Finds info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param mobileAppBundleId mobile app bundle id ({@link MobileAppBundleId})
+     * @return {@link MobileAppBundleInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     MobileAppBundleInfo findInfoById(TenantId tenantId, MobileAppBundleId mobileAppBundleId);
+    /**
+     * Finds oauth2clients by mobile app bundle id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param mobileAppBundleId mobile app bundle id ({@link MobileAppBundleId})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<MobileAppBundleOauth2Client> findOauth2ClientsByMobileAppBundleId(TenantId tenantId, MobileAppBundleId mobileAppBundleId);
+    /**
+     * Add oauth2client.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param mobileAppBundleOauth2Client mobile app bundle oauth2client ({@link MobileAppBundleOauth2Client})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void addOauth2Client(TenantId tenantId, MobileAppBundleOauth2Client mobileAppBundleOauth2Client);
+    /**
+     * Removes oauth2client.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param mobileAppBundleOauth2Client mobile app bundle oauth2client ({@link MobileAppBundleOauth2Client})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void removeOauth2Client(TenantId tenantId, MobileAppBundleOauth2Client mobileAppBundleOauth2Client);
+    /**
+     * Finds by pkg name and platform.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pkgName pkg name ({@link String})
+     * @param platform platform ({@link PlatformType})
+     * @return {@link MobileAppBundle}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     MobileAppBundle findByPkgNameAndPlatform(TenantId tenantId, String pkgName, PlatformType platform);
+    /**
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void deleteByTenantId(TenantId tenantId);
 

@@ -21,11 +21,48 @@ import java.io.Serializable;
 
 import static java.util.Objects.requireNonNull;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * Api key cache key.
+
+
+
+
+
+ * Serializable cache key for api key entries (personal access tokens (API keys)).
+
+
+
+
+
 
  */
+
+
+
+
+
+
 
 record ApiKeyCacheKey(String value) implements Serializable {
 

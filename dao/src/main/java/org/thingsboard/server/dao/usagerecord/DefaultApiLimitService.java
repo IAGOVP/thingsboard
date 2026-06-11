@@ -30,8 +30,14 @@ import org.thingsboard.server.dao.tenant.TbTenantProfileCache;
 
 import java.util.function.Function;
 /**
- * Default api limit service.
+ * Spring component for default api limit service (tenant API usage state and metering).
  */
+
+
+
+
+
+
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +45,14 @@ public class DefaultApiLimitService implements ApiLimitService {
 
     private final EntityService entityService;
     private final TbTenantProfileCache tenantProfileCache;
+    /**
+     * Checks entities limit.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityType entity type discriminator
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean checkEntitiesLimit(TenantId tenantId, EntityType entityType) {
@@ -52,6 +66,14 @@ public class DefaultApiLimitService implements ApiLimitService {
         long currentCount = entityService.countEntitiesByQuery(tenantId, new CustomerId(EntityId.NULL_UUID), new EntityCountQuery(filter));
         return currentCount < limit;
     }
+    /**
+     * Returns limit.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param extractor extractor ({@link Function})
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public long getLimit(TenantId tenantId, Function<DefaultTenantProfileConfiguration, Number> extractor) {

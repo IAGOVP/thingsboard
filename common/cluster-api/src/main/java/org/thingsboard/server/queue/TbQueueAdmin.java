@@ -16,7 +16,7 @@
 package org.thingsboard.server.queue;
 
 /**
- * tb queue admin contract.
+ * Contract for tb queue admin.
  */
 public interface TbQueueAdmin {
 
@@ -24,10 +24,13 @@ public interface TbQueueAdmin {
         createTopicIfNotExists(topic, null, false);
     }
 
+    /** Create topic if not exists. */
     void createTopicIfNotExists(String topic, String properties, boolean force);
 
+    /** Invoked when the actor stops; override to release resources. */
     void destroy();
 
+    /** Delete topic. */
     void deleteTopic(String topic);
 
 }

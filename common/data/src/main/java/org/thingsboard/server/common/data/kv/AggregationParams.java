@@ -42,26 +42,68 @@ public class AggregationParams {
     private final ZoneId tzId;
 
     private final long interval;
+    /**
+     * None.
+     *
+     * @return {@link AggregationParams}
+     */
 
     public static AggregationParams none() {
         return new AggregationParams(Aggregation.NONE, null, null, 0L);
     }
+    /**
+     * Milliseconds.
+     *
+     * @param aggregationType aggregation type ({@link Aggregation})
+     * @param aggregationIntervalMs aggregation interval ms
+     * @return {@link AggregationParams}
+     */
 
     public static AggregationParams milliseconds(Aggregation aggregationType, long aggregationIntervalMs) {
         return new AggregationParams(aggregationType, IntervalType.MILLISECONDS, null, aggregationIntervalMs);
     }
+    /**
+     * Calendar.
+     *
+     * @param aggregationType aggregation type ({@link Aggregation})
+     * @param intervalType interval type ({@link IntervalType})
+     * @param tzIdStr tz id str ({@link String})
+     * @return {@link AggregationParams}
+     */
 
     public static AggregationParams calendar(Aggregation aggregationType, IntervalType intervalType, String tzIdStr) {
         return calendar(aggregationType, intervalType, getZoneId(tzIdStr));
     }
+    /**
+     * Calendar.
+     *
+     * @param aggregationType aggregation type ({@link Aggregation})
+     * @param intervalType interval type ({@link IntervalType})
+     * @param tzId tz id ({@link ZoneId})
+     * @return {@link AggregationParams}
+     */
 
     public static AggregationParams calendar(Aggregation aggregationType, IntervalType intervalType, ZoneId tzId) {
         return new AggregationParams(aggregationType, intervalType, tzId, 0L);
     }
+    /**
+     * Of.
+     *
+     * @param aggregation aggregation ({@link Aggregation})
+     * @param intervalType interval type ({@link IntervalType})
+     * @param tzId tz id ({@link ZoneId})
+     * @param interval interval
+     * @return {@link AggregationParams}
+     */
 
     public static AggregationParams of(Aggregation aggregation, IntervalType intervalType, ZoneId tzId, long interval) {
         return new AggregationParams(aggregation, intervalType, tzId, interval);
     }
+    /**
+     * Returns interval.
+     *
+     * @return the long result
+     */
 
     public long getInterval() {
         if (intervalType == null) {

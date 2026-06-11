@@ -26,9 +26,11 @@ import org.thingsboard.server.dao.eventsourcing.DeleteEntityEvent;
 import org.thingsboard.server.dao.eventsourcing.RelationActionEvent;
 import org.thingsboard.server.dao.eventsourcing.SaveEntityEvent;
 
-    /**
-     * Spring service component for edqs listener (Entity Data Query Service integration from tb-core).
-     */
+    
+/**
+ * Spring application listener on tb-core that forwards entity lifecycle changes to EDQS sync.
+ */
+
 
 @Service
 @RequiredArgsConstructor

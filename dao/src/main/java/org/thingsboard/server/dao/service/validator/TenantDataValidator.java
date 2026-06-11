@@ -24,8 +24,11 @@ import org.thingsboard.server.exception.DataValidationException;
 import org.thingsboard.server.dao.service.DataValidator;
 import org.thingsboard.server.dao.tenant.TenantDao;
 /**
- * Tenant data validator.
+ * Validates tenant entities before persistence.
+ *
+ * <p>Enforces constraints, uniqueness, and referential integrity at the DAO layer.
  */
+
 
 @Component
 public class TenantDataValidator extends DataValidator<Tenant> {
@@ -33,11 +36,16 @@ public class TenantDataValidator extends DataValidator<Tenant> {
     @Autowired
     private TenantDao tenantDao;
 
+    
     /**
-
-     * Validate data impl.
-
+     * Validates data impl.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param tenant tenant ({@link Tenant})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateDataImpl(TenantId tenantId, Tenant tenant) {
@@ -47,11 +55,16 @@ public class TenantDataValidator extends DataValidator<Tenant> {
         }
     }
 
+    
     /**
-
-     * Validate update.
-
+     * Validates update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param tenant tenant ({@link Tenant})
+     * @return {@link Tenant}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected Tenant validateUpdate(TenantId tenantId, Tenant tenant) {

@@ -47,8 +47,14 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 /**
- * Default alarm query repository.
+ * Default alarm query repository (JPA/PostgreSQL persistence layer (JPA repositories and PostgreSQL DAO implementations)).
  */
+
+
+
+
+
+
 
 @Repository
 @Slf4j
@@ -129,6 +135,15 @@ public class DefaultAlarmQueryRepository implements AlarmQueryRepository {
         this.transactionTemplate = transactionTemplate;
         this.queryLog = queryLog;
     }
+    /**
+     * Finds alarm data by query for entities.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param query filter and sort query definition
+     * @param orderedEntityIds ordered entity ids ({@link Collection})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<AlarmData> findAlarmDataByQueryForEntities(TenantId tenantId, AlarmDataQuery query, Collection<EntityId> orderedEntityIds) {
@@ -318,6 +333,16 @@ public class DefaultAlarmQueryRepository implements AlarmQueryRepository {
             return AlarmDataAdapter.createAlarmData(pageLink, rows, totalElements, orderedEntityIds);
         });
     }
+    /**
+     * Counts alarms by query.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param query filter and sort query definition
+     * @param orderedEntityIds ordered entity ids ({@link Collection})
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public long countAlarmsByQuery(TenantId tenantId, CustomerId customerId, AlarmCountQuery query, Collection<EntityId> orderedEntityIds) {

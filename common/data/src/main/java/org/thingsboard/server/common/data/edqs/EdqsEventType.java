@@ -16,8 +16,9 @@
 package org.thingsboard.server.common.data.edqs;
 
 /**
- * edqs event type values.
+ * Enumerates edqs event type values used by EDQS (EDQS data).
  */
+
 public enum EdqsEventType {
     UPDATED,
     DELETED

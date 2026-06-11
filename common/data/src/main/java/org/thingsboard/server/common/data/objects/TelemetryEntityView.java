@@ -29,9 +29,6 @@ import java.util.List;
 @Schema
 @Data
 @NoArgsConstructor
-/**
- * Telemetry entity view.
- */
 public class TelemetryEntityView implements Serializable {
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "List of time-series data keys to expose", example = "[\"temperature\", \"humidity\"]")

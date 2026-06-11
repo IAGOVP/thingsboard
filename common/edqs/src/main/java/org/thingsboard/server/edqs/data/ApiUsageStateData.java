@@ -20,25 +20,48 @@ import org.thingsboard.server.common.data.EntityType;
 import org.thingsboard.server.common.data.edqs.fields.ApiUsageStateFields;
 
 import java.util.UUID;
+
 /**
- * In-memory EDQS projection of api usage state entity fields and metadata.
+ * In-memory EDQS projection of api usage state entity fields.
+ *
+ * <p>Updated from {@link org.thingsboard.server.common.data.edqs.EdqsEvent} and used during query execution.
  */
+
 @ToString(callSuper = true)
 public class ApiUsageStateData extends BaseEntityData<ApiUsageStateFields> {
 
     public ApiUsageStateData(UUID entityId) {
         super(entityId);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {
         return EntityType.API_USAGE_STATE;
     }
+    /**
+     * Returns entity name.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String getEntityName() {
+        /** Returns the owner name. */
         return getOwnerName();
     }
+    /**
+     * Returns owner name.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String getOwnerName() {

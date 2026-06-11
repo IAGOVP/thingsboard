@@ -28,11 +28,11 @@ import lombok.With;
 import org.thingsboard.server.common.data.ai.provider.AiProvider;
 import org.thingsboard.server.common.data.ai.provider.AzureOpenAiProviderConfig;
 
-@Schema
-@Builder
 /**
  * Configuration for azure open ai chat model.
  */
+@Schema
+@Builder
 public record AzureOpenAiChatModelConfig(
         @Schema(ref = "#/components/schemas/AzureOpenAiProviderConfig")
         @NotNull @Valid AzureOpenAiProviderConfig providerConfig,
@@ -45,16 +45,32 @@ public record AzureOpenAiChatModelConfig(
         @With @Positive Integer timeoutSeconds,
         @With @PositiveOrZero Integer maxRetries
 ) implements AiChatModelConfig<AzureOpenAiChatModelConfig> {
+    /**
+     * Provider.
+     *
+     * @return {@link AiProvider}
+     */
 
     @Override
     public AiProvider provider() {
         return AiProvider.AZURE_OPENAI;
     }
+    /**
+     * Configure.
+     *
+     * @param configurer configurer ({@link Langchain4jChatModelConfigurer})
+     * @return {@link ChatModel}
+     */
 
     @Override
     public ChatModel configure(Langchain4jChatModelConfigurer configurer) {
         return configurer.configureChatModel(this);
     }
+    /**
+     * Supports json mode.
+     *
+     * @return the boolean result
+     */
 
     @Override
     public boolean supportsJsonMode() {

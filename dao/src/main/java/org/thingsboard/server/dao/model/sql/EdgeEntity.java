@@ -23,8 +23,11 @@ import org.thingsboard.server.common.data.edge.Edge;
 
 import static org.thingsboard.server.dao.model.ModelConstants.EDGE_TABLE_NAME;
 /**
- * Edge entity.
+ * JPA/Cassandra row model for edge.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -39,6 +42,12 @@ public class EdgeEntity extends AbstractEdgeEntity<Edge> {
     public EdgeEntity(Edge edge) {
         super(edge);
     }
+    /**
+     * To data.
+     *
+     * @return {@link Edge}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Edge toData() {

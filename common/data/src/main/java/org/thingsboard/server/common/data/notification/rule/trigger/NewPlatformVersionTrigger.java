@@ -35,27 +35,52 @@ public class NewPlatformVersionTrigger implements NotificationRuleTrigger {
     private static final long serialVersionUID = 3298785969736390092L;
 
     private final UpdateMessage updateInfo;
+    /**
+     * Returns type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     */
 
     @Override
     public NotificationRuleTriggerType getType() {
         return NotificationRuleTriggerType.NEW_PLATFORM_VERSION;
     }
+    /**
+     * Returns tenant id.
+     *
+     * @return {@link TenantId}
+     */
 
     @Override
     public TenantId getTenantId() {
         return TenantId.SYS_TENANT_ID;
     }
+    /**
+     * Returns originator entity id.
+     *
+     * @return {@link EntityId}
+     */
 
     @Override
     public EntityId getOriginatorEntityId() {
         return TenantId.SYS_TENANT_ID;
     }
+    /**
+     * Returns deduplication strategy.
+     *
+     * @return {@link DeduplicationStrategy}
+     */
 
 
     @Override
     public DeduplicationStrategy getDeduplicationStrategy() {
         return DeduplicationStrategy.ALL;
     }
+    /**
+     * Returns deduplication key.
+     *
+     * @return {@link String}
+     */
 
     @Override
     public String getDeduplicationKey() {

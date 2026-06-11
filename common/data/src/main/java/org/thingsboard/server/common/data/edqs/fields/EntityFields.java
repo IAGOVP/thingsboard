@@ -26,125 +26,337 @@ import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 /**
- * entity fields contract.
+ * Lightweight entity field selection for EDQS queries and events (EDQS data — lightweight entity field DTOs for EDQS).
  */
+
 public interface EntityFields {
 
     Logger log = LoggerFactory.getLogger(EntityFields.class);
+ /**
+  * Returns id.
+  *
+  * @return {@link UUID}
+  * @throws Exception if an unexpected error occurs during processing
+  */
+
 
     UUID getId();
+  /**
+   * Returns tenant id.
+   *
+   * @return {@link UUID}
+   * @throws Exception if an unexpected error occurs during processing
+   */
+
 
     default UUID getTenantId() {
         return null;
     }
+  /**
+   * Returns customer id.
+   *
+   * @return {@link UUID}
+   * @throws Exception if an unexpected error occurs during processing
+   */
+
 
     default UUID getCustomerId() {
         return null;
     }
+        /**
+         * Returns assigned customer ids.
+         *
+         * @return {@link List}
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
 
     default List<UUID> getAssignedCustomerIds() {
         return Collections.emptyList();
     }
+  /**
+   * Returns created time.
+   *
+   * @return the long result
+   * @throws Exception if an unexpected error occurs during processing
+   */
+
 
     default long getCreatedTime() {
         return 0;
     }
+   /**
+    * Returns name.
+    *
+    * @return {@link String}
+    * @throws Exception if an unexpected error occurs during processing
+    */
+
 
     default String getName() {
         return "";
     }
+   /**
+    * Returns type.
+    *
+    * @return {@link String}
+    * @throws Exception if an unexpected error occurs during processing
+    */
+
 
     default String getType() {
         return "";
     }
+   /**
+    * Returns label.
+    *
+    * @return {@link String}
+    * @throws Exception if an unexpected error occurs during processing
+    */
+
 
     default String getLabel() {
         return "";
     }
+    /**
+     * Returns additional info.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     default String getAdditionalInfo() {
         return "";
     }
+   /**
+    * Returns email.
+    *
+    * @return {@link String}
+    * @throws Exception if an unexpected error occurs during processing
+    */
+
 
     default String getEmail() {
         return "";
     }
+   /**
+    * Returns country.
+    *
+    * @return {@link String}
+    * @throws Exception if an unexpected error occurs during processing
+    */
+
 
     default String getCountry() {
         return "";
     }
+   /**
+    * Returns state.
+    *
+    * @return {@link String}
+    * @throws Exception if an unexpected error occurs during processing
+    */
+
 
     default String getState() {
         return "";
     }
+   /**
+    * Returns city.
+    *
+    * @return {@link String}
+    * @throws Exception if an unexpected error occurs during processing
+    */
+
 
     default String getCity() {
         return "";
     }
+   /**
+    * Returns address.
+    *
+    * @return {@link String}
+    * @throws Exception if an unexpected error occurs during processing
+    */
+
 
     default String getAddress() {
         return "";
     }
+   /**
+    * Returns address2.
+    *
+    * @return {@link String}
+    * @throws Exception if an unexpected error occurs during processing
+    */
+
 
     default String getAddress2() {
         return "";
     }
+   /**
+    * Returns zip.
+    *
+    * @return {@link String}
+    * @throws Exception if an unexpected error occurs during processing
+    */
+
 
     default String getZip() {
         return "";
     }
+   /**
+    * Returns phone.
+    *
+    * @return {@link String}
+    * @throws Exception if an unexpected error occurs during processing
+    */
+
 
     default String getPhone() {
         return "";
     }
+   /**
+    * Returns region.
+    *
+    * @return {@link String}
+    * @throws Exception if an unexpected error occurs during processing
+    */
+
 
     default String getRegion() {
         return "";
     }
+    /**
+     * Returns first name.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     default String getFirstName() {
         return "";
     }
+    /**
+     * Returns last name.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     default String getLastName() {
         return "";
     }
+    /**
+     * Is edge template.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     default boolean isEdgeTemplate() {
         return false;
     }
+   /**
+    * Returns configuration.
+    *
+    * @return {@link String}
+    * @throws Exception if an unexpected error occurs during processing
+    */
+
 
     default String getConfiguration() {
         return "";
     }
+   /**
+    * Returns schedule.
+    *
+    * @return {@link String}
+    * @throws Exception if an unexpected error occurs during processing
+    */
+
 
     default String getSchedule() {
         return "";
     }
+  /**
+   * Returns originator id.
+   *
+   * @return {@link EntityId}
+   * @throws Exception if an unexpected error occurs during processing
+   */
+
 
     default EntityId getOriginatorId() {
         return null;
     }
+    /**
+     * Returns queue name.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     default String getQueueName() {
         return "";
     }
+    /**
+     * Returns service id.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     default String getServiceId() {
         return "";
     }
+        /**
+         * Is default.
+         *
+         * @return the boolean result
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
 
     default boolean isDefault() {
         return false;
     }
+  /**
+   * Returns owner id.
+   *
+   * @return {@link UUID}
+   * @throws Exception if an unexpected error occurs during processing
+   */
+
 
     default UUID getOwnerId() {
         return null;
     }
+ /**
+  * Returns version.
+  *
+  * @return {@link Long}
+  * @throws Exception if an unexpected error occurs during processing
+  */
+
 
     default Long getVersion() {
         return null;
     }
+            /**
+             * Returns as string.
+             *
+             * @param key key ({@link String})
+             * @return {@link String}
+             * @throws Exception if an unexpected error occurs during processing
+             */
+
 
     default String getAsString(String key) {
         return switch (key) {

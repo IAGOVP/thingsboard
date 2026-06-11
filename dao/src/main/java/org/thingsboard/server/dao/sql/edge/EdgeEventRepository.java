@@ -25,11 +25,17 @@ import org.thingsboard.server.dao.model.sql.EdgeEventEntity;
 
 import java.util.UUID;
 
+
 /**
 
- * edge event repository contract.
+ * Spring Data JPA repository for edge event entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
+
 
 public interface EdgeEventRepository extends JpaRepository<EdgeEventEntity, UUID>, JpaSpecificationExecutor<EdgeEventEntity> {
 
@@ -42,6 +48,20 @@ public interface EdgeEventRepository extends JpaRepository<EdgeEventEntity, UUID
             "AND (:seqIdEnd IS NULL OR e.seqId < :seqIdEnd) " +
             "AND (:textSearch IS NULL OR ilike(e.edgeEventType, CONCAT('%', :textSearch, '%')) = true)"
     )
+    /**
+     * Finds edge events by tenant id and edge id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link UUID})
+     * @param textSearch text search ({@link String})
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @param seqIdStart seq id start ({@link Long})
+     * @param seqIdEnd seq id end ({@link Long})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<EdgeEventEntity> findEdgeEventsByTenantIdAndEdgeId(@Param("tenantId") UUID tenantId,
                                                             @Param("edgeId") UUID edgeId,
                                                             @Param("textSearch") String textSearch,

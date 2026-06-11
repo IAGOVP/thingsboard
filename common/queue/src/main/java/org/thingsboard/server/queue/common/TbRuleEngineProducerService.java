@@ -15,6 +15,10 @@
  */
 package org.thingsboard.server.queue.common;
 
+import java.util.List;
+import java.util.UUID;
+
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,15 +31,12 @@ import org.thingsboard.server.queue.TbQueueCallback;
 import org.thingsboard.server.queue.TbQueueProducer;
 import org.thingsboard.server.queue.discovery.PartitionService;
 
-import java.util.List;
-import java.util.UUID;
-
+/**
+ * High-level producer service that routes rule-engine messages to tenant-specific topics.
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
-/**
- * Tb rule engine producer service.
- */
 public class TbRuleEngineProducerService {
 
     private final PartitionService partitionService;

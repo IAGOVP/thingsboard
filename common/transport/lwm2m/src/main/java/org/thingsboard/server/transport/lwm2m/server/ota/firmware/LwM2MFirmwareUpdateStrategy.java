@@ -30,7 +30,13 @@ public enum LwM2MFirmwareUpdateStrategy {
         this.code = code;
         this.type = type;
     }
-
+    /**
+     * From strategy fw by type.
+     *
+     * @param type type ({@link String})
+     * @return {@link LwM2MFirmwareUpdateStrategy}
+     * @throws Exception on processing failure
+     */
     public static LwM2MFirmwareUpdateStrategy fromStrategyFwByType(String type) {
         for (LwM2MFirmwareUpdateStrategy to : LwM2MFirmwareUpdateStrategy.values()) {
             if (to.type.equals(type)) {
@@ -39,7 +45,13 @@ public enum LwM2MFirmwareUpdateStrategy {
         }
         throw new IllegalArgumentException(String.format("Unsupported FW State type  : %s", type));
     }
-
+    /**
+     * From strategy fw by code.
+     *
+     * @param code code
+     * @return {@link LwM2MFirmwareUpdateStrategy}
+     * @throws Exception on processing failure
+     */
     public static LwM2MFirmwareUpdateStrategy fromStrategyFwByCode(int code) {
         for (LwM2MFirmwareUpdateStrategy to : LwM2MFirmwareUpdateStrategy.values()) {
             if (to.code == code) {

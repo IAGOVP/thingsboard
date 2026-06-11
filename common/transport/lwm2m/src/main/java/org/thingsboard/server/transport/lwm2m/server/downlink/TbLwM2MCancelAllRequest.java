@@ -31,6 +31,12 @@ public class TbLwM2MCancelAllRequest implements TbLwM2MDownlinkRequest<Integer> 
     private TbLwM2MCancelAllRequest(long timeout) {
         this.timeout = timeout;
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link LwM2MOperationType}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public LwM2MOperationType getType() {

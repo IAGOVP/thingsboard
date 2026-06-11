@@ -21,10 +21,13 @@ import org.thingsboard.server.common.data.edqs.fields.EntityFields;
 
 import java.util.UUID;
 
-@ToString(callSuper = true)
 /**
- * In-memory EDQS projection of entity profile entity fields and metadata.
+ * In-memory EDQS projection of entity profile entity fields.
+ *
+ * <p>Updated from {@link org.thingsboard.server.common.data.edqs.EdqsEvent} and used during query execution.
  */
+
+@ToString(callSuper = true)
 public class EntityProfileData extends BaseEntityData<EntityFields> {
 
     private final EntityType entityType;
@@ -33,6 +36,12 @@ public class EntityProfileData extends BaseEntityData<EntityFields> {
         super(entityId);
         this.entityType = entityType;
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

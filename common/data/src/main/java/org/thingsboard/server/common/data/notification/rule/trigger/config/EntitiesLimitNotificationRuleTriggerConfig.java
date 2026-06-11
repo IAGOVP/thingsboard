@@ -40,6 +40,11 @@ public class EntitiesLimitNotificationRuleTriggerConfig implements NotificationR
     private Set<EntityType> entityTypes;
     @Max(1)
     private float threshold; // in percents,
+    /**
+     * Returns trigger type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     */
 
     @Override
     public NotificationRuleTriggerType getTriggerType() {

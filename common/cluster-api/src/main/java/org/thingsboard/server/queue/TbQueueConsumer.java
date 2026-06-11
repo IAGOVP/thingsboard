@@ -21,28 +21,38 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * tb queue consumer contract.
+ * Contract for tb queue consumer.
  */
 public interface TbQueueConsumer<T extends TbQueueMsg> {
 
+    /** Returns the topic. */
     String getTopic();
 
+    /** Subscribe. */
     void subscribe();
 
+    /** Subscribe. */
     void subscribe(Set<TopicPartitionInfo> partitions);
 
+    /** Stops the actor and releases its resources. */
     void stop();
 
+    /** Unsubscribe. */
     void unsubscribe();
 
+    /** Poll. */
     List<T> poll(long durationInMillis);
 
+    /** Applies staged changes and completes the transaction. */
     void commit();
 
+    /** Whether stopped. */
     boolean isStopped();
 
+    /** Returns the partitions. */
     Set<TopicPartitionInfo> getPartitions();
 
+    /** Returns the full topic names. */
     List<String> getFullTopicNames();
 
 }

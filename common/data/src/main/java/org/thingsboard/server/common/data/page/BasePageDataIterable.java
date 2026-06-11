@@ -37,11 +37,21 @@ public abstract class BasePageDataIterable<T> implements Iterable<T>, Iterator<T
         super();
         this.fetchSize = fetchSize;
     }
+    /**
+     * Iterator.
+     *
+     * @return {@link Iterator}
+     */
 
     @Override
     public Iterator<T> iterator() {
         return this;
     }
+    /**
+     * Has next.
+     *
+     * @return the boolean result
+     */
 
     @Override
     public boolean hasNext() {
@@ -56,6 +66,11 @@ public abstract class BasePageDataIterable<T> implements Iterable<T>, Iterator<T
         }
         return currentIdx < currentItems.size();
     }
+    /**
+     * Next.
+     *
+     * @return {@link T}
+     */
 
     @Override
     public T next() {

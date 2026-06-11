@@ -24,15 +24,32 @@ public final class LastEventActivityStrategy implements ActivityStrategy {
 
     private LastEventActivityStrategy() {
     }
-
+    /**
+     * Returns instance.
+     *
+     * @return {@link LastEventActivityStrategy}
+     * @throws Exception on processing failure
+     */
     public static LastEventActivityStrategy getInstance() {
         return INSTANCE;
     }
+    /**
+     * Handles activity.
+     *
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     public boolean onActivity() {
         return false;
     }
+    /**
+     * Handles reporting period end.
+     *
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     public boolean onReportingPeriodEnd() {

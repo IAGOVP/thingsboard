@@ -18,12 +18,14 @@ package org.thingsboard.server.common.msg;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+/**
+ * Internal actor or queue message: tb rule engine actor msg.
+ *
+ * <p>Serialized between tb-core, rule-engine, transport, and edge services.
+ */
 
 @ToString
 @EqualsAndHashCode
-/**
- * Message: tb rule engine actor msg.
- */
 public abstract class TbRuleEngineActorMsg implements TbActorMsg {
 
     @Getter

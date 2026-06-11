@@ -27,6 +27,11 @@ import org.apache.commons.codec.binary.Base64;
  * Abstract lw m2mbootstrap server credential.
  */
 public abstract class AbstractLwM2MBootstrapServerCredential extends LwM2MServerSecurityConfig implements LwM2MBootstrapServerCredential {
+    /**
+     * Returns decoded cserver public key.
+     *
+     * @return the byte[] value
+     */
 
     @JsonIgnore
     public byte[] getDecodedCServerPublicKey() {

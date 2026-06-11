@@ -33,8 +33,11 @@ import static org.thingsboard.server.dao.model.ModelConstants.EVENT_SERVICE_ID_P
 import static org.thingsboard.server.dao.model.ModelConstants.EVENT_TENANT_ID_PROPERTY;
 import static org.thingsboard.server.dao.model.ModelConstants.TS_COLUMN;
 /**
- * Event entity.
+ * JPA/Cassandra row model for event.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @NoArgsConstructor
@@ -78,21 +81,47 @@ public abstract class EventEntity<T extends Event> implements BaseEntity<T> {
         this.serviceId = event.getServiceId();
         this.ts = event.getCreatedTime();
     }
+    /**
+     * Returns uuid.
+     *
+     * @return {@link UUID}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UUID getUuid() {
         return id;
     }
+    /**
+     * Set uuid.
+     *
+     * @param id entity UUID primary key
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void setUuid(UUID id) {
         this.id = id;
     }
+    /**
+     * Returns created time.
+     *
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public long getCreatedTime() {
         return ts;
     }
+    /**
+     * Set created time.
+     *
+     * @param createdTime created time
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void setCreatedTime(long createdTime) {

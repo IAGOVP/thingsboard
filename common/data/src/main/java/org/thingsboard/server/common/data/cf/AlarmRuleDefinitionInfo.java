@@ -33,6 +33,12 @@ public class AlarmRuleDefinitionInfo extends AlarmRuleDefinition {
         super(alarmRuleDefinition);
         this.entityName = entityName;
     }
+    /**
+     * From calculated field info.
+     *
+     * @param cfi cfi ({@link CalculatedFieldInfo})
+     * @return {@link AlarmRuleDefinitionInfo}
+     */
 
     public static AlarmRuleDefinitionInfo fromCalculatedFieldInfo(CalculatedFieldInfo cfi) {
         AlarmRuleDefinition def = AlarmRuleDefinition.fromCalculatedField(cfi);

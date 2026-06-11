@@ -26,24 +26,54 @@ import org.thingsboard.server.dao.model.sql.DomainEntity;
 
 import java.util.UUID;
 
+
 /**
 
- * domain repository contract.
+ * Spring Data JPA repository for domain entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
+
 
 public interface DomainRepository extends JpaRepository<DomainEntity, UUID> {
 
     @Query("SELECT d FROM DomainEntity d WHERE d.tenantId = :tenantId AND " +
             "(:searchText is NULL OR ilike(d.name, concat('%', :searchText, '%')) = true)")
+    /**
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param searchText search text ({@link String})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<DomainEntity> findByTenantId(@Param("tenantId") UUID tenantId,
                                       @Param("searchText") String searchText,
                                       Pageable pageable);
+    /**
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Transactional
     @Modifying
     @Query("DELETE FROM DomainEntity r WHERE r.tenantId = :tenantId")
     void deleteByTenantId(@Param("tenantId") UUID tenantId);
+    /**
+     * Counts by tenant id and oauth2enabled.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param oauth2Enabled oauth2enabled
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     int countByTenantIdAndOauth2Enabled(UUID tenantId, boolean oauth2Enabled);
 

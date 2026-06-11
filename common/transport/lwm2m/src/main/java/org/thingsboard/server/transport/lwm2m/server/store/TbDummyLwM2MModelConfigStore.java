@@ -24,15 +24,35 @@ import java.util.List;
  * Tb dummy lw m2mmodel config store.
  */
 public class TbDummyLwM2MModelConfigStore implements TbLwM2MModelConfigStore {
+    /**
+     * Returns all.
+     *
+     * @return {@link List}
+     * @throws Exception on processing failure
+     */
     @Override
     public List<LwM2MModelConfig> getAll() {
         return Collections.emptyList();
     }
+    /**
+     * Put.
+     *
+     * @param modelConfig model config ({@link LwM2MModelConfig})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void put(LwM2MModelConfig modelConfig) {
 
     }
+    /**
+     * Removes the requested data.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void remove(String endpoint) {

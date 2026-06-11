@@ -20,11 +20,48 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 
 import java.util.concurrent.CompletableFuture;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * Cassandra ts partitions cache.
+
+
+
+
+
+ * Cassandra ts partitions cache (Cassandra telemetry and latest-value DAO (Cassandra time-series DAO and latest-value caches)).
+
+
+
+
+
 
  */
+
+
+
+
+
+
 
 public class CassandraTsPartitionsCache {
 
@@ -37,14 +74,35 @@ public class CassandraTsPartitionsCache {
                     throw new IllegalStateException("'get' methods calls are not supported!");
                 });
     }
+    /**
+     * Has.
+     *
+     * @param key attribute or cache key
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean has(CassandraPartitionCacheKey key) {
         return partitionsCache.getIfPresent(key) != null;
     }
+    /**
+     * Put.
+     *
+     * @param key attribute or cache key
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void put(CassandraPartitionCacheKey key) {
         partitionsCache.put(key, CompletableFuture.completedFuture(true));
     }
+    /**
+     * Invalidate.
+     *
+     * @param key attribute or cache key
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void invalidate(CassandraPartitionCacheKey key) {
         partitionsCache.synchronous().invalidate(key);

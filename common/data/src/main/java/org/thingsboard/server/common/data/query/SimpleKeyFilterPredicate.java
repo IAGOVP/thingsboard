@@ -22,6 +22,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
  */
 interface for simple key filter predicates")
 public interface SimpleKeyFilterPredicate<T> extends KeyFilterPredicate {
+    /**
+     * Returns value.
+     *
+     * @return {@link FilterPredicateValue}
+     */
 
     @Schema(description = "The value associated with the filter predicate")
     FilterPredicateValue<T> getValue();

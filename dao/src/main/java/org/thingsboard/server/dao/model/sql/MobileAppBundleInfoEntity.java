@@ -19,8 +19,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.thingsboard.server.common.data.mobile.bundle.MobileAppBundleInfo;
 /**
- * Mobile app bundle info entity.
+ * JPA/Cassandra row model for mobile app bundle info.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -40,6 +43,12 @@ public class MobileAppBundleInfoEntity extends AbstractMobileAppBundleEntity<Mob
         this.iosPkgName = iosPkgName;
         this.qrCodeEnabled = qrCodeEnabled;
     }
+    /**
+     * To data.
+     *
+     * @return {@link MobileAppBundleInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public MobileAppBundleInfo toData() {

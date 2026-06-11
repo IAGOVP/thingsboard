@@ -37,201 +37,330 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * The Interface DeviceDao.
+ * Persistence contract for device.
  *
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (devices, credentials, profiles, and connectivity).
  */
+
 public interface DeviceDao extends Dao<Device>, TenantEntityDao<Device>, ExportableEntityDao<DeviceId, Device> {
 
+    
     /**
-     * Find device info by id.
+     * Finds device info by id.
      *
-     * @param tenantId the tenant id
-     * @param deviceId the device id
-     * @return the device info object
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @return {@link DeviceInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     DeviceInfo findDeviceInfoById(TenantId tenantId, UUID deviceId);
 
+    
     /**
-     * Save or update device object
+     * Saves or persists the requested data.
      *
-     * @param device the device object
-     * @return saved device object
+     * @param tenantId tenant that owns the entity or operation
+     * @param device device ({@link Device})
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     Device save(TenantId tenantId, Device device);
 
+    
     /**
-     * Save or update device object
+     * Saves or persists and flush.
      *
-     * @param device the device object
-     * @return saved device object
+     * @param tenantId tenant that owns the entity or operation
+     * @param device device ({@link Device})
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     Device saveAndFlush(TenantId tenantId, Device device);
 
+    
     /**
-     * Find devices by tenantId and page link.
+     * Finds devices by tenant id.
      *
-     * @param tenantId the tenantId
-     * @param pageLink the page link
-     * @return the list of device objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<Device> findDevicesByTenantId(UUID tenantId, PageLink pageLink);
 
+    
     /**
-     * Find devices by tenantId, type and page link.
+     * Finds devices by tenant id and type.
      *
-     * @param tenantId the tenantId
-     * @param type the type
-     * @param pageLink the page link
-     * @return the list of device objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<Device> findDevicesByTenantIdAndType(UUID tenantId, String type, PageLink pageLink);
 
+    
     /**
-     * Find device ids by tenantId, type and page link.
+     * Finds device ids by tenant id and device profile id.
      *
-     * @param tenantId the tenantId
-     * @param deviceProfileId the deviceProfileId
-     * @param pageLink the page link
-     * @return the list of device objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfileId device profile id ({@link UUID})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<DeviceId> findDeviceIdsByTenantIdAndDeviceProfileId(UUID tenantId, UUID deviceProfileId, PageLink pageLink);
+    /**
+     * Finds devices by tenant id and type and empty ota package.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfileId device profile id ({@link UUID})
+     * @param type type ({@link OtaPackageType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<Device> findDevicesByTenantIdAndTypeAndEmptyOtaPackage(UUID tenantId,
                                                                     UUID deviceProfileId,
                                                                     OtaPackageType type,
                                                                     PageLink pageLink);
+    /**
+     * Counts devices by tenant id and device profile id and empty ota package.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfileId device profile id ({@link UUID})
+     * @param otaPackageType ota package type ({@link OtaPackageType})
+     * @return {@link Long}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     Long countDevicesByTenantIdAndDeviceProfileIdAndEmptyOtaPackage(UUID tenantId, UUID deviceProfileId, OtaPackageType otaPackageType);
 
+    
     /**
-     * Find devices by tenantId and devices Ids.
+     * Finds devices by tenant id and ids async.
      *
-     * @param tenantId the tenantId
-     * @param deviceIds the device Ids
-     * @return the list of device objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceIds device ids ({@link List})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     ListenableFuture<List<Device>> findDevicesByTenantIdAndIdsAsync(UUID tenantId, List<UUID> deviceIds);
 
+    
     /**
-     * Find devices by devices Ids.
+     * Finds devices by ids.
      *
-     * @param deviceIds the device Ids
-     * @return the list of device objects
+     * @param deviceIds device ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     List<Device> findDevicesByIds(List<UUID> deviceIds);
 
+    
     /**
-     * Find devices by devices Ids.
+     * Finds devices by ids async.
      *
-     * @param deviceIds the device Ids
-     * @return the list of device objects
+     * @param deviceIds device ids ({@link List})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     ListenableFuture<List<Device>> findDevicesByIdsAsync(List<UUID> deviceIds);
 
+    
     /**
-     * Find devices by tenantId, customerId and page link.
+     * Finds devices by tenant id and customer id.
      *
-     * @param tenantId the tenantId
-     * @param customerId the customerId
-     * @param pageLink the page link
-     * @return the list of device objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<Device> findDevicesByTenantIdAndCustomerId(UUID tenantId, UUID customerId, PageLink pageLink);
 
+    
     /**
-     * Find devices by tenantId, customerId, type and page link.
+     * Finds devices by tenant id and customer id and type.
      *
-     * @param tenantId the tenantId
-     * @param customerId the customerId
-     * @param type the type
-     * @param pageLink the page link
-     * @return the list of device objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<Device> findDevicesByTenantIdAndCustomerIdAndType(UUID tenantId, UUID customerId, String type, PageLink pageLink);
 
+    
     /**
-     * Find devices by tenantId, customerId and devices Ids.
+     * Finds devices by tenant id customer id and ids async.
      *
-     * @param tenantId the tenantId
-     * @param customerId the customerId
-     * @param deviceIds the device Ids
-     * @return the list of device objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param deviceIds device ids ({@link List})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     ListenableFuture<List<Device>> findDevicesByTenantIdCustomerIdAndIdsAsync(UUID tenantId, UUID customerId, List<UUID> deviceIds);
 
+    
     /**
-     * Find devices by tenantId and device name.
+     * Finds device by tenant id and name.
      *
-     * @param tenantId the tenantId
-     * @param name the device name
-     * @return the optional device object
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return optional {@link Device}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     Optional<Device> findDeviceByTenantIdAndName(UUID tenantId, String name);
 
+    
     /**
-     * Find tenants device types.
+     * Finds tenant device types async.
      *
-     * @return the list of tenant device type objects
+     * @param tenantId tenant that owns the entity or operation
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     @Deprecated(since = "3.6.2", forRemoval = true)
     ListenableFuture<List<EntitySubtype>> findTenantDeviceTypesAsync(UUID tenantId);
 
+    
     /**
-     * Find devices by tenantId and device id.
-     * @param tenantId the tenant Id
-     * @param id the device Id
-     * @return the device object
+     * Finds device by tenant id and id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     Device findDeviceByTenantIdAndId(TenantId tenantId, UUID id);
 
+    
     /**
-     * Find devices by tenantId and device id.
-     * @param tenantId tenantId the tenantId
-     * @param id the deviceId
-     * @return the device object
+     * Finds device by tenant id and id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @return future completing with {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     ListenableFuture<Device> findDeviceByTenantIdAndIdAsync(TenantId tenantId, UUID id);
+    /**
+     * Counts devices by device profile id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfileId device profile id ({@link UUID})
+     * @return {@link Long}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     Long countDevicesByDeviceProfileId(TenantId tenantId, UUID deviceProfileId);
 
+    
     /**
-     * Find devices by tenantId, profileId and page link.
+     * Finds devices by tenant id and profile id.
      *
-     * @param tenantId the tenantId
-     * @param profileId the profileId
-     * @param pageLink the page link
-     * @return the list of device objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param profileId profile id ({@link UUID})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<Device> findDevicesByTenantIdAndProfileId(UUID tenantId, UUID profileId, PageLink pageLink);
+    /**
+     * Finds devices ids by device profile transport type.
+     *
+     * @param transportType transport type ({@link DeviceTransportType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<UUID> findDevicesIdsByDeviceProfileTransportType(DeviceTransportType transportType, PageLink pageLink);
 
+    
     /**
-     * Find devices by tenantId, edgeId and page link.
+     * Finds devices by tenant id and edge id.
      *
-     * @param tenantId the tenantId
-     * @param edgeId the edgeId
-     * @param pageLink the page link
-     * @return the list of device objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link UUID})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<Device> findDevicesByTenantIdAndEdgeId(UUID tenantId, UUID edgeId, PageLink pageLink);
 
+    
     /**
-     * Find devices by tenantId, edgeId, type and page link.
+     * Finds devices by tenant id and edge id and type.
      *
-     * @param tenantId the tenantId
-     * @param edgeId the edgeId
-     * @param type the type
-     * @param pageLink the page link
-     * @return the list of device objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link UUID})
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<Device> findDevicesByTenantIdAndEdgeIdAndType(UUID tenantId, UUID edgeId, String type, PageLink pageLink);
+    /**
+     * Finds device id infos.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<DeviceIdInfo> findDeviceIdInfos(PageLink pageLink);
+    /**
+     * Finds profile entity id infos.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<ProfileEntityIdInfo> findProfileEntityIdInfos(PageLink pageLink);
+    /**
+     * Finds profile entity id infos by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<ProfileEntityIdInfo> findProfileEntityIdInfosByTenantId(UUID tenantId, PageLink pageLink);
+    /**
+     * Finds device infos by filter.
+     *
+     * @param filter filter ({@link DeviceInfoFilter})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<DeviceInfo> findDeviceInfosByFilter(DeviceInfoFilter filter, PageLink pageLink);
 

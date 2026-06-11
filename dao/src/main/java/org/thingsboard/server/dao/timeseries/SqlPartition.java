@@ -17,8 +17,14 @@ package org.thingsboard.server.dao.timeseries;
 
 import lombok.Data;
 /**
- * Sql partition.
+ * Sql partition (Cassandra telemetry and latest-value DAO (Cassandra time-series DAO and latest-value caches)).
  */
+
+
+
+
+
+
 
 @Data
 public class SqlPartition {

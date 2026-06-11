@@ -20,14 +20,26 @@ import lombok.Data;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 /**
- * Method call stats.
+ * Method call stats (database call statistics and method profiling).
  */
+
+
+
+
+
+
 
 @Data
 public class MethodCallStats {
     private final AtomicInteger executions = new AtomicInteger();
     private final AtomicInteger failures = new AtomicInteger();
     private final AtomicLong timing = new AtomicLong();
+    /**
+     * Snapshot.
+     *
+     * @return {@link MethodCallStatsSnapshot}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public MethodCallStatsSnapshot snapshot() {
         return new MethodCallStatsSnapshot(executions.get(), failures.get(), timing.get());

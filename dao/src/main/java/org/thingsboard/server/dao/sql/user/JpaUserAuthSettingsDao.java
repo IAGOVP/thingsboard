@@ -29,8 +29,11 @@ import org.thingsboard.server.dao.util.SqlDao;
 
 import java.util.UUID;
 /**
- * JPA implementation of user auth settings dao.
+ * JPA/PostgreSQL implementation of user auth settings dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Component
 @RequiredArgsConstructor
@@ -38,21 +41,47 @@ import java.util.UUID;
 public class JpaUserAuthSettingsDao extends JpaAbstractDao<UserAuthSettingsEntity, UserAuthSettings> implements UserAuthSettingsDao, TenantEntityDao<UserAuthSettings> {
 
     private final UserAuthSettingsRepository repository;
+    /**
+     * Finds by user id.
+     *
+     * @param userId target user identifier
+     * @return {@link UserAuthSettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UserAuthSettings findByUserId(UserId userId) {
         return DaoUtil.getData(repository.findByUserId(userId.getId()));
     }
+    /**
+     * Removes by user id.
+     *
+     * @param userId target user identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void removeByUserId(UserId userId) {
         repository.deleteByUserId(userId.getId());
     }
+    /**
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Class<UserAuthSettingsEntity> getEntityClass() {
         return UserAuthSettingsEntity.class;
     }
+    /**
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected JpaRepository<UserAuthSettingsEntity, UUID> getRepository() {

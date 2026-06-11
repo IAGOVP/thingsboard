@@ -27,6 +27,11 @@ public class BooleanFilterPredicate implements SimpleKeyFilterPredicate<Boolean>
 
     private BooleanOperation operation;
     private FilterPredicateValue<Boolean> value;
+    /**
+     * Returns type.
+     *
+     * @return {@link FilterPredicateType}
+     */
 
     @Override
     public FilterPredicateType getType() {

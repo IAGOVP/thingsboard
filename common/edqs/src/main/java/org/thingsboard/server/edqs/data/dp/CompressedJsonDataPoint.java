@@ -18,14 +18,22 @@ package org.thingsboard.server.edqs.data.dp;
 import org.thingsboard.server.common.data.kv.DataType;
 
 import java.util.function.Function;
+
 /**
- * Typed attribute/latest-TS value stored in EDQS (compressed json data point).
+ * Typed attribute or latest-TS value stored in the EDQS index (compressed json data point).
  */
+
 public class CompressedJsonDataPoint extends CompressedStringDataPoint {
 
     public CompressedJsonDataPoint(long ts, byte[] compressedValue, Function<byte[], String> uncompressor) {
         super(ts, compressedValue, uncompressor);
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link DataType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public DataType getType() {

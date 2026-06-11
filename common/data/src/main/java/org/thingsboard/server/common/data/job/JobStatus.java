@@ -26,6 +26,12 @@ public enum JobStatus {
     COMPLETED,
     FAILED,
     CANCELLED;
+    /**
+     * Is one of.
+     *
+     * @param statuses statuses
+     * @return the boolean result
+     */
 
     public boolean isOneOf(JobStatus... statuses) {
         if (statuses == null) {

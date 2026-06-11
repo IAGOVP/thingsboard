@@ -50,8 +50,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 /**
- * JPA implementation of sql timeseries dao.
+ * JPA/PostgreSQL implementation of sql timeseries dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Component
 @Slf4j
@@ -70,6 +73,12 @@ public class JpaSqlTimeseriesDao extends AbstractChunkedAggregationTimeseriesDao
 
     @Value("${sql.postgres.ts_key_value_partitioning:MONTHS}")
     private String partitioning;
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
 
     @Override
@@ -83,6 +92,16 @@ public class JpaSqlTimeseriesDao extends AbstractChunkedAggregationTimeseriesDao
             throw new RuntimeException("Failed to parse partitioning property: " + partitioning + "!");
         }
     }
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param tsKvEntry ts kv entry ({@link TsKvEntry})
+     * @param ttl ttl
+     * @return future completing with {@link Integer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<Integer> save(TenantId tenantId, EntityId entityId, TsKvEntry tsKvEntry, long ttl) {
@@ -102,6 +121,13 @@ public class JpaSqlTimeseriesDao extends AbstractChunkedAggregationTimeseriesDao
         log.trace("Saving entity: {}", entity);
         return Futures.transform(tsQueue.add(entity), v -> dataPointDays, MoreExecutors.directExecutor());
     }
+    /**
+     * Cleanup.
+     *
+     * @param systemTtl system ttl
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void cleanup(long systemTtl) {

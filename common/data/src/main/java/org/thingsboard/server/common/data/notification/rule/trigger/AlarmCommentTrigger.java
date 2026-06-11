@@ -42,11 +42,21 @@ public class AlarmCommentTrigger implements NotificationRuleTrigger {
     private final Alarm alarm;
     private final ActionType actionType;
     private final User user;
+    /**
+     * Returns type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     */
 
     @Override
     public NotificationRuleTriggerType getType() {
         return NotificationRuleTriggerType.ALARM_COMMENT;
     }
+    /**
+     * Returns originator entity id.
+     *
+     * @return {@link EntityId}
+     */
 
     @Override
     public EntityId getOriginatorEntityId() {

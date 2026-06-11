@@ -21,39 +21,78 @@ import org.thingsboard.server.common.data.id.EntityId;
 import java.util.UUID;
 
 /**
- * tb callback contract.
+ * tb callback message contract.
  */
+
 public interface TbCallback {
 
     TbCallback EMPTY = new TbCallback() {
 
         @Override
+        /**
+         * Handles success.
+         *
+         */
         public void onSuccess() {
 
         }
 
         @Override
+        /**
+         * Handles failure.
+         *
+         * @param t t ({@link Throwable})
+         */
         public void onFailure(Throwable t) {
 
         }
     };
 
+    /**
+     * Returns id.
+     *
+     * @return {@link UUID}
+     */
     default UUID getId() {
         return EntityId.NULL_UUID;
     }
 
+    /**
+     * Handles success.
+     *
+     */
     void onSuccess();
 
+    /**
+     * Handles failure.
+     *
+     * @param t t ({@link Throwable})
+     */
     void onFailure(Throwable t);
 
+    /**
+     * Wrap.
+     *
+     * @param future future ({@link SettableFuture})
+     * @return the operation result
+     */
     static <V> TbCallback wrap(SettableFuture<V> future) {
         return new TbCallback() {
             @Override
+            /**
+             * Handles success.
+             *
+             */
             public void onSuccess() {
                 future.set(null);
             }
 
             @Override
+            /**
+             * Handles failure.
+             *
+             * @param t t ({@link Throwable})
+             */
             public void onFailure(Throwable t) {
                 future.setException(t);
             }

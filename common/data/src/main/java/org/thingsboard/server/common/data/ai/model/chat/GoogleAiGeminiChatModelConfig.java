@@ -28,11 +28,11 @@ import lombok.With;
 import org.thingsboard.server.common.data.ai.provider.AiProvider;
 import org.thingsboard.server.common.data.ai.provider.GoogleAiGeminiProviderConfig;
 
-@Schema
-@Builder
 /**
  * Configuration for google ai gemini chat model.
  */
+@Schema
+@Builder
 public record GoogleAiGeminiChatModelConfig(
         @Schema(ref = "#/components/schemas/GoogleAiGeminiProviderConfig")
         @NotNull @Valid GoogleAiGeminiProviderConfig providerConfig,
@@ -46,16 +46,32 @@ public record GoogleAiGeminiChatModelConfig(
         @With @Positive Integer timeoutSeconds,
         @With @PositiveOrZero Integer maxRetries
 ) implements AiChatModelConfig<GoogleAiGeminiChatModelConfig> {
+    /**
+     * Provider.
+     *
+     * @return {@link AiProvider}
+     */
 
     @Override
     public AiProvider provider() {
         return AiProvider.GOOGLE_AI_GEMINI;
     }
+    /**
+     * Configure.
+     *
+     * @param configurer configurer ({@link Langchain4jChatModelConfigurer})
+     * @return {@link ChatModel}
+     */
 
     @Override
     public ChatModel configure(Langchain4jChatModelConfigurer configurer) {
         return configurer.configureChatModel(this);
     }
+    /**
+     * Supports json mode.
+     *
+     * @return the boolean result
+     */
 
     @Override
     public boolean supportsJsonMode() {

@@ -111,6 +111,11 @@ public class OtaPackageInfo extends BaseDataWithAdditionalInfo<OtaPackageId> imp
         this.dataSize = otaPackageInfo.getDataSize();
         this.externalId = otaPackageInfo.getExternalId();
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link OtaPackageId}
+     */
 
     @Schema(description = "JSON object with the ota package Id. " +
             "Specify existing ota package Id to update the ota package. " +
@@ -120,23 +125,43 @@ public class OtaPackageInfo extends BaseDataWithAdditionalInfo<OtaPackageId> imp
     public OtaPackageId getId() {
         return super.getId();
     }
+    /**
+     * Returns created time.
+     *
+     * @return the long result
+     */
 
     @Schema(description = "Timestamp of the ota package creation, in milliseconds", example = "1609459200000", accessMode = Schema.AccessMode.READ_ONLY)
     @Override
     public long getCreatedTime() {
         return super.getCreatedTime();
     }
+    /**
+     * Returns name.
+     *
+     * @return {@link String}
+     */
 
     @Override
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     public String getName() {
         return title;
     }
+    /**
+     * Has url.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     public boolean hasUrl() {
         return StringUtils.isNotEmpty(url);
     }
+    /**
+     * Returns additional info.
+     *
+     * @return {@link JsonNode}
+     */
 
     @Schema(description = "OTA Package description.", example = "Description for the OTA Package fw_1.0")
     @Override

@@ -24,6 +24,11 @@ import org.thingsboard.server.common.data.transport.snmp.config.RepeatingQueryin
 public class ClientAttributesQueryingSnmpCommunicationConfig extends RepeatingQueryingSnmpCommunicationConfig {
 
     private static final long serialVersionUID = 536740834893462914L;
+    /**
+     * Returns spec.
+     *
+     * @return {@link SnmpCommunicationSpec}
+     */
 
     @Override
     public SnmpCommunicationSpec getSpec() {

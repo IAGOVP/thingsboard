@@ -26,9 +26,6 @@ import org.thingsboard.server.common.data.validation.Length;
 
 import java.util.Objects;
 
-/**
- * @author Andrew Shvayka
- */
 @Schema
 @ToString
 /**
@@ -79,6 +76,11 @@ public class ComponentDescriptor extends BaseData<ComponentDescriptorId> {
         this.actions = plugin.getActions();
         this.hasQueueName = plugin.isHasQueueName();
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link ComponentDescriptorId}
+     */
 
     @Schema(description = "JSON object with the descriptor Id. " +
             "Specify existing descriptor id to update the descriptor. " +
@@ -88,6 +90,11 @@ public class ComponentDescriptor extends BaseData<ComponentDescriptorId> {
     public ComponentDescriptorId getId() {
         return super.getId();
     }
+    /**
+     * Returns created time.
+     *
+     * @return the long result
+     */
 
     @Schema(description = "Timestamp of the descriptor creation, in milliseconds", example = "1609459200000", accessMode = Schema.AccessMode.READ_ONLY)
     @Override

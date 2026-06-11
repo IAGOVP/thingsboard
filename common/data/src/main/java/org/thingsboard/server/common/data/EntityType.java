@@ -42,6 +42,11 @@ public enum EntityType {
     RULE_NODE(12),
     ENTITY_VIEW(15) {
         // backward compatibility for TbOriginatorTypeSwitchNode to return correct rule node connection.
+        /**
+         * Returns normal name.
+         *
+         * @return {@link String}
+         */
         @Override
         public String getNormalName() {
             return "Entity View";
@@ -73,6 +78,11 @@ public enum EntityType {
     JOB(41),
     ADMIN_SETTINGS(42),
     AI_MODEL(43, "ai_model") {
+        /**
+         * Returns normal name.
+         *
+         * @return {@link String}
+         */
         @Override
         public String getNormalName() {
             return "AI model";
@@ -109,6 +119,12 @@ public enum EntityType {
         this.protoNumber = protoNumber;
         this.tableName = tableName;
     }
+    /**
+     * Is one of.
+     *
+     * @param types types
+     * @return the boolean result
+     */
 
     public boolean isOneOf(EntityType... types) {
         if (types == null) {
@@ -121,6 +137,12 @@ public enum EntityType {
         }
         return false;
     }
+    /**
+     * For proto number.
+     *
+     * @param protoNumber proto number
+     * @return {@link EntityType}
+     */
 
     public static EntityType forProtoNumber(int protoNumber) {
         if (protoNumber < 0 || protoNumber >= BY_PROTO.length) {

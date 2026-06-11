@@ -27,31 +27,76 @@ import org.thingsboard.server.dao.model.sql.MobileAppEntity;
 
 import java.util.UUID;
 
+
 /**
 
- * mobile app repository contract.
+ * Spring Data JPA repository for mobile app entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
+
 
 public interface MobileAppRepository extends JpaRepository<MobileAppEntity, UUID> {
 
     @Query("SELECT a FROM MobileAppEntity a WHERE a.tenantId = :tenantId AND " +
             "(:platformType is NULL OR a.platformType = :platformType) AND" +
             "(:searchText is NULL OR ilike(a.pkgName, concat('%', :searchText, '%')) = true)")
+    /**
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param platformType platform type ({@link PlatformType})
+     * @param searchText search text ({@link String})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<MobileAppEntity> findByTenantId(@Param("tenantId") UUID tenantId,
                                          @Param("platformType") PlatformType platformType,
                                          @Param("searchText") String searchText,
                                          Pageable pageable);
+    /**
+     * Finds by pkg name and platform type.
+     *
+     * @param pkgName pkg name ({@link String})
+     * @param platformType platform type ({@link PlatformType})
+     * @return {@link MobileAppEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     MobileAppEntity findByPkgNameAndPlatformType(@Param("pkgName") String pkgName, @Param("platformType") PlatformType platformType);
+    /**
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Transactional
     @Modifying
     @Query("DELETE FROM MobileAppEntity r WHERE r.tenantId = :tenantId")
     void deleteByTenantId(@Param("tenantId") UUID tenantId);
+    /**
+     * Finds android app by bundle id.
+     *
+     * @param bundleId bundle id ({@link UUID})
+     * @return {@link MobileAppEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Query("SELECT a FROM MobileAppEntity a LEFT JOIN MobileAppBundleEntity b ON b.androidAppId = a.id WHERE b.id = :bundleId")
     MobileAppEntity findAndroidAppByBundleId(@Param("bundleId") UUID bundleId);
+    /**
+     * Finds iosapp by bundle id.
+     *
+     * @param bundleId bundle id ({@link UUID})
+     * @return {@link MobileAppEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Query("SELECT a FROM MobileAppEntity a LEFT JOIN MobileAppBundleEntity b ON b.iosAppID = a.id WHERE b.id = :bundleId")
     MobileAppEntity findIOSAppByBundleId(@Param("bundleId") UUID bundleId);

@@ -24,20 +24,47 @@ import java.util.Set;
  * Tb dummy lw m2mclient store.
  */
 public class TbDummyLwM2MClientStore implements TbLwM2MClientStore {
+    /**
+     * Returns the requested data.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return {@link LwM2mClient}
+     * @throws Exception on processing failure
+     */
     @Override
     public LwM2mClient get(String endpoint) {
         return null;
     }
+    /**
+     * Returns all.
+     *
+     * @return {@link Set}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public Set<LwM2mClient> getAll() {
         return Collections.emptySet();
     }
+    /**
+     * Put.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void put(LwM2mClient client) {
 
     }
+    /**
+     * Removes the requested data.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void remove(String endpoint) {

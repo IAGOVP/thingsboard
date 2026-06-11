@@ -48,6 +48,13 @@ public class DynamicProtoUtils {
 
     public static final Location LOCATION = new Location("", "", -1, -1);
     public static final String PROTO_3_SYNTAX = "proto3";
+    /**
+     * Returns descriptor.
+     *
+     * @param protoSchema proto schema ({@link String})
+     * @param schemaName schema name ({@link String})
+     * @return the Descriptors.Descriptor value
+     */
 
     public static Descriptors.Descriptor getDescriptor(String protoSchema, String schemaName) {
         try {
@@ -58,6 +65,13 @@ public class DynamicProtoUtils {
             return null;
         }
     }
+    /**
+     * Returns dynamic message builder.
+     *
+     * @param protoSchema proto schema ({@link String})
+     * @param schemaName schema name ({@link String})
+     * @return the DynamicMessage.Builder value
+     */
 
     public static DynamicMessage.Builder getDynamicMessageBuilder(String protoSchema, String schemaName) {
         ProtoFileElement protoFileElement = getProtoFileElement(protoSchema);
@@ -66,6 +80,13 @@ public class DynamicProtoUtils {
                 .map(MessageElement::getName).reduce((previous, last) -> last).get();
         return dynamicSchema.newMessageBuilder(lastMsgName);
     }
+    /**
+     * Returns dynamic schema.
+     *
+     * @param protoFileElement proto file element ({@link ProtoFileElement})
+     * @param schemaName schema name ({@link String})
+     * @return {@link DynamicSchema}
+     */
 
     public static DynamicSchema getDynamicSchema(ProtoFileElement protoFileElement, String schemaName) {
         DynamicSchema.Builder schemaBuilder = DynamicSchema.newBuilder();
@@ -95,15 +116,37 @@ public class DynamicProtoUtils {
             throw new RuntimeException("Failed to get Dynamic Schema! Message types is empty for schema:" + schemaName);
         }
     }
+    /**
+     * Returns proto file element.
+     *
+     * @param protoSchema proto schema ({@link String})
+     * @return {@link ProtoFileElement}
+     */
 
     public static ProtoFileElement getProtoFileElement(String protoSchema) {
         return new ProtoParser(LOCATION, protoSchema.toCharArray()).readProtoFile();
     }
+    /**
+     * Dynamic msg to json.
+     *
+     * @param descriptor descriptor
+     * @param payload payload
+     * @return {@link String}
+     * @throws InvalidProtocolBufferException if invalid protocol buffer exception is thrown during processing
+     */
 
     public static String dynamicMsgToJson(Descriptors.Descriptor descriptor, byte[] payload) throws InvalidProtocolBufferException {
         DynamicMessage dynamicMessage = DynamicMessage.parseFrom(descriptor, payload);
         return JsonFormat.printer().includingDefaultValueFields().print(dynamicMessage);
     }
+    /**
+     * Json to dynamic message.
+     *
+     * @param builder builder
+     * @param payload payload ({@link String})
+     * @return {@link DynamicMessage}
+     * @throws InvalidProtocolBufferException if invalid protocol buffer exception is thrown during processing
+     */
 
     public static DynamicMessage jsonToDynamicMessage(DynamicMessage.Builder builder, String payload) throws InvalidProtocolBufferException {
         JsonFormat.parser().ignoringUnknownFields().merge(payload, builder);
@@ -195,6 +238,14 @@ public class DynamicProtoUtils {
     }
 
     // validation
+    /**
+     * Validates proto schema.
+     *
+     * @param schema schema ({@link String})
+     * @param schemaName schema name ({@link String})
+     * @param exceptionPrefix exception prefix ({@link String})
+     * @throws IllegalArgumentException if illegal argument exception is thrown during processing
+     */
 
     public static void validateProtoSchema(String schema, String schemaName, String exceptionPrefix) throws IllegalArgumentException {
         ProtoParser schemaParser = new ProtoParser(LOCATION, schema.toCharArray());
@@ -296,6 +347,13 @@ public class DynamicProtoUtils {
             });
         }
     }
+    /**
+     * Invalid schema provided message.
+     *
+     * @param schemaName schema name ({@link String})
+     * @param exceptionPrefix exception prefix ({@link String})
+     * @return {@link String}
+     */
 
     public static String invalidSchemaProvidedMessage(String schemaName, String exceptionPrefix) {
         return exceptionPrefix + " invalid " + schemaName + " provided!";

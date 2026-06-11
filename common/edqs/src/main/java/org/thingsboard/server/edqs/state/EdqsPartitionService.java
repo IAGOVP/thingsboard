@@ -23,14 +23,23 @@ import org.thingsboard.server.queue.edqs.EdqsConfig;
 import org.thingsboard.server.queue.edqs.EdqsConfig.EdqsPartitioningStrategy;
 
 /**
- * Resolves which Kafka partition owns a tenant (TENANT vs NONE partitioning strategy).
+ * Resolves Kafka partition ownership for tenants (TENANT vs NONE partitioning strategy).
  */
+
 @Service
 @RequiredArgsConstructor
 public class EdqsPartitionService {
 
     private final HashPartitionService hashPartitionService;
     private final EdqsConfig edqsConfig;
+    /**
+     * Resolve partition.
+     *
+     * @param tenantId tenant that owns the indexed entities
+     * @param key key ({@link Object})
+     * @return {@link Integer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Integer resolvePartition(TenantId tenantId, Object key) {
         if (edqsConfig.getPartitioningStrategy() == EdqsPartitioningStrategy.TENANT) {

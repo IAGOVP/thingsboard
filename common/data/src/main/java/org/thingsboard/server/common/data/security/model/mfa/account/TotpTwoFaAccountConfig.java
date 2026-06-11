@@ -33,6 +33,11 @@ public class TotpTwoFaAccountConfig extends TwoFaAccountConfig {
     @NotBlank
     @Pattern(regexp = "otpauth://totp/(\\S+?):(\\S+?)\\?issuer=(\\S+?)&secret=(\\w+?)", message = "is invalid")
     private String authUrl;
+    /**
+     * Returns provider type.
+     *
+     * @return {@link TwoFaProviderType}
+     */
 
     @Override
     public TwoFaProviderType getProviderType() {

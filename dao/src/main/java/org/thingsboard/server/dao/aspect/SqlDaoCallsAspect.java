@@ -49,8 +49,14 @@ import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.join;
 /**
- * Sql dao calls aspect.
+ * Spring component for sql dao calls aspect (database call statistics and method profiling).
  */
+
+
+
+
+
+
 
 @Aspect
 @ConditionalOnProperty(prefix = "sql", value = "log_tenant_stats", havingValue = "true")
@@ -69,6 +75,12 @@ public class SqlDaoCallsAspect {
 
     @Scheduled(initialDelayString = "${sql.log_tenant_stats_interval_ms:60000}",
             fixedDelayString = "${sql.log_tenant_stats_interval_ms:60000}")
+    /**
+     * Print stats.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
     public void printStats() {
         List<DbCallStatsSnapshot> snapshots = snapshot();
         if (snapshots.isEmpty()) return;
@@ -145,6 +157,13 @@ public class SqlDaoCallsAspect {
         }
         stream.forEach(logFunction);
     }
+    /**
+     * Handles sql call.
+     *
+     * @param joinPoint join point ({@link ProceedingJoinPoint})
+     * @return {@link Object}
+     * @throws Throwable if throwable is thrown during processing
+     */
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Around("@within(org.thingsboard.server.dao.util.SqlDao)")

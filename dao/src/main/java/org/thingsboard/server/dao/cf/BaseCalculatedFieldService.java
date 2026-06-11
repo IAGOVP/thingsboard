@@ -54,7 +54,10 @@ import static org.thingsboard.server.dao.service.Validator.validateId;
 import static org.thingsboard.server.dao.service.Validator.validatePageLink;
 /**
  * Default DAO-layer service implementation for calculated field.
+ *
+ * <p>Coordinates validation, caching, cluster events, and {@code *Dao} persistence (calculated-field definitions and evaluation state).
  */
+
 
 @Service("CalculatedFieldDaoService")
 @Slf4j
@@ -70,22 +73,31 @@ public class BaseCalculatedFieldService extends AbstractEntityService implements
     private final CalculatedFieldDataValidator calculatedFieldDataValidator;
     private final ApiLimitService apiLimitService;
 
+    
     /**
-
-     * Persists .
-
+     * Saves or persists the requested data.
+     *
+     * @param calculatedField calculated field ({@link CalculatedField})
+     * @return {@link CalculatedField}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public CalculatedField save(CalculatedField calculatedField) {
         return save(calculatedField, true);
     }
 
+    
     /**
-
-     * Persists .
-
+     * Saves or persists the requested data.
+     *
+     * @param calculatedField calculated field ({@link CalculatedField})
+     * @param doValidate do validate
+     * @return {@link CalculatedField}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public CalculatedField save(CalculatedField calculatedField, boolean doValidate) {
@@ -132,11 +144,16 @@ public class BaseCalculatedFieldService extends AbstractEntityService implements
         }
     }
 
+    
     /**
-
-     * Loads by id.
-
+     * Finds by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param calculatedFieldId calculated field id ({@link CalculatedFieldId})
+     * @return {@link CalculatedField}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public CalculatedField findById(TenantId tenantId, CalculatedFieldId calculatedFieldId) {
@@ -146,11 +163,17 @@ public class BaseCalculatedFieldService extends AbstractEntityService implements
         return calculatedFieldDao.findById(tenantId, calculatedFieldId.getId());
     }
 
+    
     /**
-
-     * Loads by entity id and type and name.
-
+     * Finds by entity id and type and name.
+     *
+     * @param entityId target entity identifier
+     * @param type type ({@link CalculatedFieldType})
+     * @param name entity or attribute name
+     * @return {@link CalculatedField}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public CalculatedField findByEntityIdAndTypeAndName(EntityId entityId, CalculatedFieldType type, String name) {
@@ -159,11 +182,16 @@ public class BaseCalculatedFieldService extends AbstractEntityService implements
         return calculatedFieldDao.findByEntityIdAndTypeAndName(entityId, type, name);
     }
 
+    
     /**
-
-     * Loads calculated field ids by entity id.
-
+     * Finds calculated field ids by entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<CalculatedFieldId> findCalculatedFieldIdsByEntityId(TenantId tenantId, EntityId entityId) {
@@ -172,11 +200,16 @@ public class BaseCalculatedFieldService extends AbstractEntityService implements
         return calculatedFieldDao.findCalculatedFieldIdsByEntityId(tenantId, entityId);
     }
 
+    
     /**
-
-     * Loads calculated fields by entity id.
-
+     * Finds calculated fields by entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<CalculatedField> findCalculatedFieldsByEntityId(TenantId tenantId, EntityId entityId) {
@@ -185,11 +218,15 @@ public class BaseCalculatedFieldService extends AbstractEntityService implements
         return calculatedFieldDao.findCalculatedFieldsByEntityId(tenantId, entityId);
     }
 
+    
     /**
-
-     * Loads all calculated fields.
-
+     * Finds all calculated fields.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<CalculatedField> findAllCalculatedFields(PageLink pageLink) {
@@ -198,11 +235,16 @@ public class BaseCalculatedFieldService extends AbstractEntityService implements
         return calculatedFieldDao.findAll(pageLink);
     }
 
+    
     /**
-
-     * Loads calculated fields by tenant id.
-
+     * Finds calculated fields by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<CalculatedField> findCalculatedFieldsByTenantId(TenantId tenantId, PageLink pageLink) {
@@ -212,11 +254,17 @@ public class BaseCalculatedFieldService extends AbstractEntityService implements
         return calculatedFieldDao.findAllByTenantId(tenantId, pageLink);
     }
 
+    
     /**
-
-     * Loads calculated fields by tenant id and filter.
-
+     * Finds calculated fields by tenant id and filter.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param filter filter ({@link CalculatedFieldFilter})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<CalculatedFieldInfo> findCalculatedFieldsByTenantIdAndFilter(TenantId tenantId, CalculatedFieldFilter filter, PageLink pageLink) {
@@ -231,22 +279,35 @@ public class BaseCalculatedFieldService extends AbstractEntityService implements
         });
     }
 
+    
     /**
-
-     * Loads calculated field names by tenant id and type.
-
+     * Finds calculated field names by tenant id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link CalculatedFieldType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<String> findCalculatedFieldNamesByTenantIdAndType(TenantId tenantId, CalculatedFieldType type, PageLink pageLink) {
         return calculatedFieldDao.findNamesByTenantIdAndType(tenantId, type, pageLink);
     }
 
+    
     /**
-
-     * Loads calculated fields by entity id.
-
+     * Finds calculated fields by entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param type type ({@link CalculatedFieldType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<CalculatedField> findCalculatedFieldsByEntityId(TenantId tenantId, EntityId entityId, CalculatedFieldType type, PageLink pageLink) {
@@ -263,11 +324,16 @@ public class BaseCalculatedFieldService extends AbstractEntityService implements
         return calculatedFieldDao.findByEntityIdAndTypes(tenantId, entityId, types, pageLink);
     }
 
+    
     /**
-
-     * Removes calculated field.
-
+     * Deletes calculated field.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param calculatedFieldId calculated field id ({@link CalculatedFieldId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteCalculatedField(TenantId tenantId, CalculatedFieldId calculatedFieldId) {
@@ -276,11 +342,17 @@ public class BaseCalculatedFieldService extends AbstractEntityService implements
         deleteEntity(tenantId, calculatedFieldId, false);
     }
 
+    
     /**
-
-     * Removes entity.
-
+     * Deletes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteEntity(TenantId tenantId, EntityId id, boolean force) {
@@ -301,11 +373,16 @@ public class BaseCalculatedFieldService extends AbstractEntityService implements
         eventPublisher.publishEvent(DeleteEntityEvent.builder().tenantId(tenantId).entityId(calculatedField.getId()).entity(calculatedField).build());
     }
 
+    
     /**
-
-     * Removes all calculated fields by entity id.
-
+     * Deletes all calculated fields by entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public int deleteAllCalculatedFieldsByEntityId(TenantId tenantId, EntityId entityId) {
@@ -316,11 +393,16 @@ public class BaseCalculatedFieldService extends AbstractEntityService implements
         return calculatedFields.size();
     }
 
+    
     /**
-
      * Referenced in any calculated field.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param referencedEntityId referenced entity id ({@link EntityId})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public boolean referencedInAnyCalculatedField(TenantId tenantId, EntityId referencedEntityId) {
@@ -331,22 +413,32 @@ public class BaseCalculatedFieldService extends AbstractEntityService implements
                 .anyMatch(referencedEntities -> referencedEntities.contains(referencedEntityId));
     }
 
+    
     /**
-
-     * Loads entity.
-
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findById(tenantId, new CalculatedFieldId(entityId.getId())));
     }
 
+    
     /**
-
-     * Loads entity async.
-
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
@@ -354,11 +446,14 @@ public class BaseCalculatedFieldService extends AbstractEntityService implements
                 .transform(Optional::ofNullable, directExecutor());
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

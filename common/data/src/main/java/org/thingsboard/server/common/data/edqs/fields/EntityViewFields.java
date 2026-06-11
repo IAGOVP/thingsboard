@@ -28,8 +28,9 @@ import static org.thingsboard.server.common.data.edqs.fields.FieldsUtil.getText;
 @NoArgsConstructor
 @SuperBuilder
 /**
- * Entity view fields.
+ * Lightweight entity view field selection for EDQS queries and events (EDQS data — lightweight entity field DTOs for EDQS).
  */
+
 public class EntityViewFields extends AbstractEntityFields {
 
     private String type;

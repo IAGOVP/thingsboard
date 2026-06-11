@@ -26,8 +26,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 /**
- * Default entity service registry.
+ * Spring component for default entity service registry (generic entity services, counts, and DAO registry).
  */
+
+
+
+
+
+
 
 @Service
 @RequiredArgsConstructor
@@ -37,11 +43,14 @@ public class DefaultEntityServiceRegistry implements EntityServiceRegistry {
     private final List<EntityDaoService> entityDaoServices;
     private final Map<EntityType, EntityDaoService> entityDaoServicesMap = new HashMap<>();
 
+    
     /**
-
      * Init.
-
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @PostConstruct
     public void init() {
@@ -56,11 +65,15 @@ public class DefaultEntityServiceRegistry implements EntityServiceRegistry {
         log.debug("Initialized EntityServiceRegistry total [{}] entries", entityDaoServicesMap.size());
     }
 
+    
     /**
-
-     * Get service by entity type.
-
+     * Returns service by entity type.
+     *
+     * @param entityType entity type discriminator
+     * @return {@link EntityDaoService}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityDaoService getServiceByEntityType(EntityType entityType) {

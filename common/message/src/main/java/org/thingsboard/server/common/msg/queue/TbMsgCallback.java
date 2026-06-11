@@ -25,20 +25,43 @@ public interface TbMsgCallback {
     TbMsgCallback EMPTY = new TbMsgCallback() {
 
         @Override
+        /**
+         * Handles success.
+         *
+         */
         public void onSuccess() {
 
         }
 
         @Override
+        /**
+         * Handles failure.
+         *
+         * @param e e ({@link RuleEngineException})
+         */
         public void onFailure(RuleEngineException e) {
 
         }
     };
 
+    /**
+     * Handles success.
+     *
+     */
     void onSuccess();
 
+    /**
+     * Handles failure.
+     *
+     * @param e e ({@link RuleEngineException})
+     */
     void onFailure(RuleEngineException e);
 
+    /**
+     * Handles rate limit.
+     *
+     * @param e e ({@link RuleEngineException})
+     */
     default void onRateLimit(RuleEngineException e) {
         onFailure(e);
     };
@@ -53,9 +76,19 @@ public interface TbMsgCallback {
         return true;
     }
 
+    /**
+     * Handles processing start.
+     *
+     * @param ruleNodeInfo rule node info ({@link RuleNodeInfo})
+     */
     default void onProcessingStart(RuleNodeInfo ruleNodeInfo) {
     }
 
+    /**
+     * Handles processing end.
+     *
+     * @param ruleNodeId rule node id ({@link RuleNodeId})
+     */
     default void onProcessingEnd(RuleNodeId ruleNodeId) {
     }
 

@@ -72,7 +72,10 @@ import static org.thingsboard.server.dao.service.Validator.validatePageLink;
 import static org.thingsboard.server.dao.service.Validator.validateString;
 /**
  * Default DAO-layer service implementation for asset.
+ *
+ * <p>Coordinates validation, caching, cluster events, and {@code *Dao} persistence (asset and asset-profile DAO services and caches).
  */
+
 
 @Service("AssetDaoService")
 @Slf4j
@@ -99,11 +102,15 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
     @Autowired
     private JpaExecutorService executor;
 
+    
     /**
-
-     * Handle evict event.
-
+     * Handles evict event.
+     *
+     * @param event event ({@link AssetCacheEvictEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @TransactionalEventListener
@@ -116,11 +123,16 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         cache.evict(keys);
     }
 
+    
     /**
-
-     * Loads asset info by id.
-
+     * Finds asset info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetId asset id ({@link AssetId})
+     * @return {@link AssetInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AssetInfo findAssetInfoById(TenantId tenantId, AssetId assetId) {
@@ -129,11 +141,16 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         return assetDao.findAssetInfoById(tenantId, assetId.getId());
     }
 
+    
     /**
-
-     * Loads asset by id.
-
+     * Finds asset by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetId asset id ({@link AssetId})
+     * @return {@link Asset}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Asset findAssetById(TenantId tenantId, AssetId assetId) {
@@ -142,11 +159,16 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         return assetDao.findById(tenantId, assetId.getId());
     }
 
+    
     /**
-
-     * Loads asset by id async.
-
+     * Finds asset by id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetId asset id ({@link AssetId})
+     * @return future completing with {@link Asset}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<Asset> findAssetByIdAsync(TenantId tenantId, AssetId assetId) {
@@ -155,11 +177,16 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         return assetDao.findByIdAsync(tenantId, assetId.getId());
     }
 
+    
     /**
-
-     * Loads asset by tenant id and name.
-
+     * Finds asset by tenant id and name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return {@link Asset}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Asset findAssetByTenantIdAndName(TenantId tenantId, String name) {
@@ -170,11 +197,16 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
                         .orElse(null), true);
     }
 
+    
     /**
-
-     * Loads asset by tenant id and name async.
-
+     * Finds asset by tenant id and name async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return future completing with {@link Asset}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<Asset> findAssetByTenantIdAndNameAsync(TenantId tenantId, String name) {
@@ -183,33 +215,47 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         return executor.submit(() -> findAssetByTenantIdAndName(tenantId, name));
     }
 
+    
     /**
-
-     * Persists asset.
-
+     * Saves or persists asset.
+     *
+     * @param asset asset ({@link Asset})
+     * @return {@link Asset}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Asset saveAsset(Asset asset) {
         return saveAsset(asset, true);
     }
 
+    
     /**
-
-     * Persists asset.
-
+     * Saves or persists asset.
+     *
+     * @param asset asset ({@link Asset})
+     * @param nameConflictStrategy name conflict strategy ({@link NameConflictStrategy})
+     * @return {@link Asset}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Asset saveAsset(Asset asset, NameConflictStrategy nameConflictStrategy) {
         return saveEntity(asset, () -> saveAsset(asset, true, nameConflictStrategy));
     }
 
+    
     /**
-
-     * Persists asset.
-
+     * Saves or persists asset.
+     *
+     * @param asset asset ({@link Asset})
+     * @param doValidate do validate
+     * @return {@link Asset}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Asset saveAsset(Asset asset, boolean doValidate) {
@@ -263,11 +309,17 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         return savedAsset;
     }
 
+    
     /**
-
-     * Assign asset to customer.
-
+     * Assigns asset to customer.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetId asset id ({@link AssetId})
+     * @param customerId target customer identifier
+     * @return {@link Asset}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Asset assignAssetToCustomer(TenantId tenantId, AssetId assetId, CustomerId customerId) {
@@ -279,11 +331,16 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         return saveAsset(asset);
     }
 
+    
     /**
-
-     * Unassign asset from customer.
-
+     * Unassigns asset from customer.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetId asset id ({@link AssetId})
+     * @return {@link Asset}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Asset unassignAssetFromCustomer(TenantId tenantId, AssetId assetId) {
@@ -295,11 +352,16 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         return saveAsset(asset);
     }
 
+    
     /**
-
-     * Removes asset.
-
+     * Deletes asset.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetId asset id ({@link AssetId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -308,11 +370,17 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         deleteEntity(tenantId, assetId, false);
     }
 
+    
     /**
-
-     * Removes entity.
-
+     * Deletes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -337,11 +405,16 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         eventPublisher.publishEvent(DeleteEntityEvent.builder().tenantId(tenantId).entityId(asset.getId()).entity(asset).build());
     }
 
+    
     /**
-
-     * Loads assets by tenant id.
-
+     * Finds assets by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Asset> findAssetsByTenantId(TenantId tenantId, PageLink pageLink) {
@@ -351,11 +424,16 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         return assetDao.findAssetsByTenantId(tenantId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads asset infos by tenant id.
-
+     * Finds asset infos by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AssetInfo> findAssetInfosByTenantId(TenantId tenantId, PageLink pageLink) {
@@ -365,11 +443,17 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         return assetDao.findAssetInfosByTenantId(tenantId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads assets by tenant id and type.
-
+     * Finds assets by tenant id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Asset> findAssetsByTenantIdAndType(TenantId tenantId, String type, PageLink pageLink) {
@@ -380,11 +464,17 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         return assetDao.findAssetsByTenantIdAndType(tenantId.getId(), type, pageLink);
     }
 
+    
     /**
-
-     * Loads asset infos by tenant id and type.
-
+     * Finds asset infos by tenant id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AssetInfo> findAssetInfosByTenantIdAndType(TenantId tenantId, String type, PageLink pageLink) {
@@ -395,11 +485,17 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         return assetDao.findAssetInfosByTenantIdAndType(tenantId.getId(), type, pageLink);
     }
 
+    
     /**
-
-     * Loads asset infos by tenant id and asset profile id.
-
+     * Finds asset infos by tenant id and asset profile id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetProfileId asset profile id ({@link AssetProfileId})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AssetInfo> findAssetInfosByTenantIdAndAssetProfileId(TenantId tenantId, AssetProfileId assetProfileId, PageLink pageLink) {
@@ -410,11 +506,15 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         return assetDao.findAssetInfosByTenantIdAndAssetProfileId(tenantId.getId(), assetProfileId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads profile entity id infos.
-
+     * Finds profile entity id infos.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<ProfileEntityIdInfo> findProfileEntityIdInfos(PageLink pageLink) {
@@ -423,11 +523,16 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         return assetDao.findProfileEntityIdInfos(pageLink);
     }
 
+    
     /**
-
-     * Loads profile entity id infos by tenant id.
-
+     * Finds profile entity id infos by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<ProfileEntityIdInfo> findProfileEntityIdInfosByTenantId(TenantId tenantId, PageLink pageLink) {
@@ -437,11 +542,17 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         return assetDao.findProfileEntityIdInfosByTenantId(tenantId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads asset ids by tenant id and asset profile id.
-
+     * Finds asset ids by tenant id and asset profile id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetProfileId asset profile id ({@link AssetProfileId})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AssetId> findAssetIdsByTenantIdAndAssetProfileId(TenantId tenantId, AssetProfileId assetProfileId, PageLink pageLink) {
@@ -452,11 +563,16 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         return assetDao.findAssetIdsByTenantIdAndAssetProfileId(tenantId.getId(), assetProfileId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads assets by tenant id and ids async.
-
+     * Finds assets by tenant id and ids async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetIds asset ids ({@link List})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<Asset>> findAssetsByTenantIdAndIdsAsync(TenantId tenantId, List<AssetId> assetIds) {
@@ -466,11 +582,15 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         return assetDao.findAssetsByTenantIdAndIdsAsync(tenantId.getId(), toUUIDs(assetIds));
     }
 
+    
     /**
-
-     * Removes assets by tenant id.
-
+     * Deletes assets by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteAssetsByTenantId(TenantId tenantId) {
@@ -479,22 +599,32 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         tenantAssetsRemover.removeEntities(tenantId, tenantId);
     }
 
+    
     /**
-
-     * Removes by tenant id.
-
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteByTenantId(TenantId tenantId) {
         deleteAssetsByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Loads assets by tenant id and customer id.
-
+     * Finds assets by tenant id and customer id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Asset> findAssetsByTenantIdAndCustomerId(TenantId tenantId, CustomerId customerId, PageLink pageLink) {
@@ -505,11 +635,17 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         return assetDao.findAssetsByTenantIdAndCustomerId(tenantId.getId(), customerId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads asset infos by tenant id and customer id.
-
+     * Finds asset infos by tenant id and customer id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AssetInfo> findAssetInfosByTenantIdAndCustomerId(TenantId tenantId, CustomerId customerId, PageLink pageLink) {
@@ -520,11 +656,18 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         return assetDao.findAssetInfosByTenantIdAndCustomerId(tenantId.getId(), customerId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads assets by tenant id and customer id and type.
-
+     * Finds assets by tenant id and customer id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Asset> findAssetsByTenantIdAndCustomerIdAndType(TenantId tenantId, CustomerId customerId, String type, PageLink pageLink) {
@@ -536,11 +679,18 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         return assetDao.findAssetsByTenantIdAndCustomerIdAndType(tenantId.getId(), customerId.getId(), type, pageLink);
     }
 
+    
     /**
-
-     * Loads asset infos by tenant id and customer id and type.
-
+     * Finds asset infos by tenant id and customer id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AssetInfo> findAssetInfosByTenantIdAndCustomerIdAndType(TenantId tenantId, CustomerId customerId, String type, PageLink pageLink) {
@@ -552,11 +702,18 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         return assetDao.findAssetInfosByTenantIdAndCustomerIdAndType(tenantId.getId(), customerId.getId(), type, pageLink);
     }
 
+    
     /**
-
-     * Loads asset infos by tenant id and customer id and asset profile id.
-
+     * Finds asset infos by tenant id and customer id and asset profile id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param assetProfileId asset profile id ({@link AssetProfileId})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AssetInfo> findAssetInfosByTenantIdAndCustomerIdAndAssetProfileId(TenantId tenantId, CustomerId customerId, AssetProfileId assetProfileId, PageLink pageLink) {
@@ -568,11 +725,17 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         return assetDao.findAssetInfosByTenantIdAndCustomerIdAndAssetProfileId(tenantId.getId(), customerId.getId(), assetProfileId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads assets by tenant id customer id and ids async.
-
+     * Finds assets by tenant id customer id and ids async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param assetIds asset ids ({@link List})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<Asset>> findAssetsByTenantIdCustomerIdAndIdsAsync(TenantId tenantId, CustomerId customerId, List<AssetId> assetIds) {
@@ -583,11 +746,16 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         return assetDao.findAssetsByTenantIdAndCustomerIdAndIdsAsync(tenantId.getId(), customerId.getId(), toUUIDs(assetIds));
     }
 
+    
     /**
-
-     * Unassign customer assets.
-
+     * Unassigns customer assets.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void unassignCustomerAssets(TenantId tenantId, CustomerId customerId) {
@@ -597,11 +765,16 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         customerAssetsUnasigner.removeEntities(tenantId, customerId);
     }
 
+    
     /**
-
-     * Loads assets by query.
-
+     * Finds assets by query.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param query filter and sort query definition
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<Asset>> findAssetsByQuery(TenantId tenantId, AssetSearchQuery query) {
@@ -628,11 +801,15 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         return assets;
     }
 
+    
     /**
-
-     * Loads asset types by tenant id.
-
+     * Finds asset types by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<EntitySubtype>> findAssetTypesByTenantId(TenantId tenantId) {
@@ -641,11 +818,17 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         return assetDao.findTenantAssetTypesAsync(tenantId.getId());
     }
 
+    
     /**
-
-     * Assign asset to edge.
-
+     * Assigns asset to edge.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetId asset id ({@link AssetId})
+     * @param edgeId edge id ({@link EdgeId})
+     * @return {@link Asset}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Asset assignAssetToEdge(TenantId tenantId, AssetId assetId, EdgeId edgeId) {
@@ -668,11 +851,17 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         return asset;
     }
 
+    
     /**
-
-     * Unassign asset from edge.
-
+     * Unassigns asset from edge.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetId asset id ({@link AssetId})
+     * @param edgeId edge id ({@link EdgeId})
+     * @return {@link Asset}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Asset unassignAssetFromEdge(TenantId tenantId, AssetId assetId, EdgeId edgeId) {
@@ -695,11 +884,17 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         return asset;
     }
 
+    
     /**
-
-     * Loads assets by tenant id and edge id.
-
+     * Finds assets by tenant id and edge id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link EdgeId})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Asset> findAssetsByTenantIdAndEdgeId(TenantId tenantId, EdgeId edgeId, PageLink pageLink) {
@@ -710,11 +905,18 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         return assetDao.findAssetsByTenantIdAndEdgeId(tenantId.getId(), edgeId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads assets by tenant id and edge id and type.
-
+     * Finds assets by tenant id and edge id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link EdgeId})
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Asset> findAssetsByTenantIdAndEdgeIdAndType(TenantId tenantId, EdgeId edgeId, String type, PageLink pageLink) {
@@ -776,22 +978,32 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
         }
     };
 
+    
     /**
-
-     * Loads entity.
-
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findAssetById(tenantId, new AssetId(entityId.getId())));
     }
 
+    
     /**
-
-     * Loads entity async.
-
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
@@ -799,22 +1011,29 @@ public class BaseAssetService extends AbstractCachedEntityService<AssetCacheKey,
                 .transform(Optional::ofNullable, directExecutor());
     }
 
+    
     /**
-
      * Counts by tenant id.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public long countByTenantId(TenantId tenantId) {
         return assetDao.countByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

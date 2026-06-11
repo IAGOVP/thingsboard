@@ -33,8 +33,11 @@ import org.thingsboard.server.dao.tenant.TenantService;
 import org.thingsboard.server.dao.user.UserDao;
 import org.thingsboard.server.dao.user.UserService;
 /**
- * User data validator.
+ * Validates user entities before persistence.
+ *
+ * <p>Enforces constraints, uniqueness, and referential integrity at the DAO layer.
  */
+
 
 @Component
 public class UserDataValidator extends DataValidator<User> {
@@ -53,11 +56,16 @@ public class UserDataValidator extends DataValidator<User> {
     @Lazy
     private TenantService tenantService;
 
+    
     /**
-
-     * Validate create.
-
+     * Validates create.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateCreate(TenantId tenantId, User user) {
@@ -66,11 +74,16 @@ public class UserDataValidator extends DataValidator<User> {
         }
     }
 
+    
     /**
-
-     * Validate update.
-
+     * Validates update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param user authenticated user performing the action
+     * @return {@link User}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected User validateUpdate(TenantId tenantId, User user) {
@@ -90,11 +103,16 @@ public class UserDataValidator extends DataValidator<User> {
         return old;
     }
 
+    
     /**
-
-     * Validate data impl.
-
+     * Validates data impl.
+     *
+     * @param requestTenantId request tenant id ({@link TenantId})
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateDataImpl(TenantId requestTenantId, User user) {

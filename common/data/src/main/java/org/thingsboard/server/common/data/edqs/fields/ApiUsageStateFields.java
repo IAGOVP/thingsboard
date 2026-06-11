@@ -30,8 +30,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @SuperBuilder
 /**
- * Api usage state fields.
+ * Lightweight api usage state field selection for EDQS queries and events (EDQS data — lightweight entity field DTOs for EDQS).
  */
+
 public class ApiUsageStateFields extends AbstractEntityFields {
 
     private EntityId entityId;

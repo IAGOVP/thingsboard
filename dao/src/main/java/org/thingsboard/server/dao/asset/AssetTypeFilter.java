@@ -21,8 +21,14 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * Created by ashvayka on 02.05.17.
+ * Asset type filter (asset and asset-profile DAO services and caches).
  */
+
+
+
+
+
+
 @Data
 public class AssetTypeFilter {
     @Nullable

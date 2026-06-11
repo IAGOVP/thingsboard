@@ -69,6 +69,11 @@ public class DashboardInfo extends BaseData<DashboardId> implements HasName, Has
         this.mobileOrder = dashboardInfo.getMobileOrder();
         this.version = dashboardInfo.getVersion();
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link DashboardId}
+     */
 
     @Schema(description = "JSON object with the dashboard Id. " +
             "Specify existing dashboard Id to update the dashboard. " +
@@ -78,70 +83,147 @@ public class DashboardInfo extends BaseData<DashboardId> implements HasName, Has
     public DashboardId getId() {
         return super.getId();
     }
+    /**
+     * Returns created time.
+     *
+     * @return the long result
+     */
 
     @Schema(description = "Timestamp of the dashboard creation, in milliseconds", example = "1609459200000", accessMode = Schema.AccessMode.READ_ONLY)
     @Override
     public long getCreatedTime() {
         return super.getCreatedTime();
     }
+    /**
+     * Returns tenant id.
+     *
+     * @return {@link TenantId}
+     */
 
     @Schema(description = "JSON object with Tenant Id. Tenant Id of the dashboard can't be changed.", accessMode = Schema.AccessMode.READ_ONLY)
     public TenantId getTenantId() {
         return tenantId;
     }
+    /**
+     * Set tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     */
 
     public void setTenantId(TenantId tenantId) {
         this.tenantId = tenantId;
     }
+    /**
+     * Returns title.
+     *
+     * @return {@link String}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Title of the dashboard.")
     public String getTitle() {
         return title;
     }
+    /**
+     * Set title.
+     *
+     * @param title title ({@link String})
+     */
 
     public void setTitle(String title) {
         this.title = title;
     }
+    /**
+     * Returns image.
+     *
+     * @return {@link String}
+     */
 
     @Schema(description = "Thumbnail picture for rendering of the dashboards in a grid view on mobile devices.", accessMode = Schema.AccessMode.READ_ONLY)
     public String getImage() {
         return image;
     }
+    /**
+     * Set image.
+     *
+     * @param image image ({@link String})
+     */
 
     public void setImage(String image) {
         this.image = image;
     }
+    /**
+     * Returns assigned customers.
+     *
+     * @return {@link Set}
+     */
 
     @Schema(description = "List of assigned customers with their info.", accessMode = Schema.AccessMode.READ_ONLY)
     public Set<ShortCustomerInfo> getAssignedCustomers() {
         return assignedCustomers;
     }
+    /**
+     * Set assigned customers.
+     *
+     * @param assignedCustomers assigned customers ({@link Set})
+     */
 
     public void setAssignedCustomers(Set<ShortCustomerInfo> assignedCustomers) {
         this.assignedCustomers = assignedCustomers;
     }
+    /**
+     * Is mobile hide.
+     *
+     * @return the boolean result
+     */
 
     @Schema(description = "Hide dashboard from mobile devices. Useful if the dashboard is not designed for small screens.", accessMode = Schema.AccessMode.READ_ONLY)
     public boolean isMobileHide() {
         return mobileHide;
     }
+    /**
+     * Set mobile hide.
+     *
+     * @param mobileHide mobile hide
+     */
 
     public void setMobileHide(boolean mobileHide) {
         this.mobileHide = mobileHide;
     }
+    /**
+     * Returns mobile order.
+     *
+     * @return {@link Integer}
+     */
 
     @Schema(description = "Order on mobile devices. Useful to adjust sorting of the dashboards for mobile applications", accessMode = Schema.AccessMode.READ_ONLY)
     public Integer getMobileOrder() {
         return mobileOrder;
     }
+    /**
+     * Set mobile order.
+     *
+     * @param mobileOrder mobile order ({@link Integer})
+     */
 
     public void setMobileOrder(Integer mobileOrder) {
         this.mobileOrder = mobileOrder;
     }
+    /**
+     * Is assigned to customer.
+     *
+     * @param customerId customer id ({@link CustomerId})
+     * @return the boolean result
+     */
 
     public boolean isAssignedToCustomer(CustomerId customerId) {
         return this.assignedCustomers != null && this.assignedCustomers.contains(new ShortCustomerInfo(customerId, null, false));
     }
+    /**
+     * Returns assigned customer info.
+     *
+     * @param customerId customer id ({@link CustomerId})
+     * @return {@link ShortCustomerInfo}
+     */
 
     public ShortCustomerInfo getAssignedCustomerInfo(CustomerId customerId) {
         if (this.assignedCustomers != null) {
@@ -153,6 +235,12 @@ public class DashboardInfo extends BaseData<DashboardId> implements HasName, Has
         }
         return null;
     }
+    /**
+     * Add assigned customer.
+     *
+     * @param customer customer ({@link Customer})
+     * @return the boolean result
+     */
 
     public boolean addAssignedCustomer(Customer customer) {
         ShortCustomerInfo customerInfo = customer.toShortCustomerInfo();
@@ -166,6 +254,12 @@ public class DashboardInfo extends BaseData<DashboardId> implements HasName, Has
             return true;
         }
     }
+    /**
+     * Updates assigned customer.
+     *
+     * @param customer customer ({@link Customer})
+     * @return the boolean result
+     */
 
     public boolean updateAssignedCustomer(Customer customer) {
         ShortCustomerInfo customerInfo = customer.toShortCustomerInfo();
@@ -177,6 +271,12 @@ public class DashboardInfo extends BaseData<DashboardId> implements HasName, Has
             return false;
         }
     }
+    /**
+     * Removes assigned customer.
+     *
+     * @param customer customer ({@link Customer})
+     * @return the boolean result
+     */
 
     public boolean removeAssignedCustomer(Customer customer) {
         ShortCustomerInfo customerInfo = customer.toShortCustomerInfo();
@@ -187,6 +287,11 @@ public class DashboardInfo extends BaseData<DashboardId> implements HasName, Has
             return false;
         }
     }
+    /**
+     * Returns name.
+     *
+     * @return {@link String}
+     */
 
     @Schema(description = "Same as title of the dashboard. Read-only field. Update the 'title' to change the 'name' of the dashboard.", accessMode = Schema.AccessMode.READ_ONLY)
     @Override

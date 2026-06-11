@@ -35,8 +35,11 @@ import org.thingsboard.server.dao.util.mapping.JsonConverter;
 
 import java.util.UUID;
 /**
- * Queue entity.
+ * JPA/Cassandra row model for queue.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -95,6 +98,12 @@ public class QueueEntity extends BaseSqlEntity<Queue> {
         this.processingStrategy = JacksonUtil.valueToTree(queue.getProcessingStrategy());
         this.additionalInfo = queue.getAdditionalInfo();
     }
+    /**
+     * To data.
+     *
+     * @return {@link Queue}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Queue toData() {

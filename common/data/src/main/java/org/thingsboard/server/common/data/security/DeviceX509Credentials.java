@@ -25,9 +25,19 @@ public class DeviceX509Credentials implements DeviceCredentialsFilter {
     public DeviceX509Credentials(String sha3Hash) {
         this.sha3Hash = sha3Hash;
     }
+    /**
+     * Returns credentials id.
+     *
+     * @return {@link String}
+     */
 
     @Override
     public String getCredentialsId() { return sha3Hash; }
+    /**
+     * Returns credentials type.
+     *
+     * @return {@link DeviceCredentialsType}
+     */
 
     @Override
     public DeviceCredentialsType getCredentialsType() { return DeviceCredentialsType.X509_CERTIFICATE; }

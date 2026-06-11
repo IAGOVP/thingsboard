@@ -32,8 +32,11 @@ import static org.thingsboard.server.dao.model.ModelConstants.MOBILE_APP_BUNDLE_
 import static org.thingsboard.server.dao.model.ModelConstants.MOBILE_APP_BUNDLE_OAUTH2_CLIENT_MOBILE_APP_BUNDLE_ID_PROPERTY;
 import static org.thingsboard.server.dao.model.ModelConstants.MOBILE_APP_BUNDLE_OAUTH2_CLIENT_TABLE_NAME;
 /**
- * Mobile app bundle oauth2client entity.
+ * JPA/Cassandra row model for mobile app bundle oauth2client.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @Entity
@@ -57,6 +60,12 @@ public final class MobileAppBundleOauth2ClientEntity implements ToData<MobileApp
         mobileAppBundleId = mobileAppBundleOauth2Client.getMobileAppBundleId().getId();
         oauth2ClientId = mobileAppBundleOauth2Client.getOAuth2ClientId().getId();
     }
+    /**
+     * To data.
+     *
+     * @return {@link MobileAppBundleOauth2Client}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public MobileAppBundleOauth2Client toData() {

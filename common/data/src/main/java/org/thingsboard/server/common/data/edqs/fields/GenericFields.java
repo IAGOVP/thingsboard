@@ -21,8 +21,9 @@ import java.util.UUID;
 
 @NoArgsConstructor
 /**
- * Generic fields.
+ * Lightweight generic field selection for EDQS queries and events (EDQS data — lightweight entity field DTOs for EDQS).
  */
+
 public class GenericFields extends AbstractEntityFields {
 
     public GenericFields(UUID id, long createdTime, UUID tenantId, String name, Long version) {

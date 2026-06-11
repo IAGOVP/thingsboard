@@ -42,11 +42,21 @@ public class CalculatedFieldDebugEventFilter extends DebugEventFilter {
     @Schema(description = "String value representing the result of a calculation",
             example = "{\"x + y\":32}")
     protected String result;
+    /**
+     * Returns event type.
+     *
+     * @return {@link EventType}
+     */
 
     @Override
     public EventType getEventType() {
         return EventType.DEBUG_CALCULATED_FIELD;
     }
+    /**
+     * Is not empty.
+     *
+     * @return the boolean result
+     */
 
     @Override
     public boolean isNotEmpty() {

@@ -25,8 +25,11 @@ import org.thingsboard.server.dao.DaoUtil;
 import org.thingsboard.server.dao.TenantEntityDao;
 import org.thingsboard.server.dao.util.SqlDao;
 /**
- * JPA implementation of entity alarm dao.
+ * JPA/PostgreSQL implementation of entity alarm dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Component
 @SqlDao
@@ -35,11 +38,16 @@ public class JpaEntityAlarmDao implements TenantEntityDao<EntityAlarm> {
     @Autowired
     private EntityAlarmRepository entityAlarmRepository;
 
+    
     /**
-
-     * Loads all by tenant id.
-
+     * Finds all by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EntityAlarm> findAllByTenantId(TenantId tenantId, PageLink pageLink) {

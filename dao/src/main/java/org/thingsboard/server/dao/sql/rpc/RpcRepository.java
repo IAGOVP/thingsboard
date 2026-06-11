@@ -27,17 +27,50 @@ import org.thingsboard.server.dao.model.sql.RpcEntity;
 
 import java.util.UUID;
 
+
 /**
 
- * rpc repository contract.
+ * Spring Data JPA repository for rpc entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
 
+
 public interface RpcRepository extends JpaRepository<RpcEntity, UUID> {
+    /**
+     * Finds all by tenant id and device id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     Page<RpcEntity> findAllByTenantIdAndDeviceId(UUID tenantId, UUID deviceId, Pageable pageable);
+    /**
+     * Finds all by tenant id and device id and status.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @param status status ({@link RpcStatus})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     Page<RpcEntity> findAllByTenantIdAndDeviceIdAndStatus(UUID tenantId, UUID deviceId, RpcStatus status, Pageable pageable);
+    /**
+     * Finds all by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     Page<RpcEntity> findAllByTenantId(UUID tenantId, Pageable pageable);
 
@@ -46,6 +79,15 @@ public interface RpcRepository extends JpaRepository<RpcEntity, UUID> {
     @Query(value = "DELETE FROM rpc WHERE id IN " +
             "(SELECT id FROM rpc WHERE tenant_id = :tenantId AND created_time < :expirationTime LIMIT :batchSize)",
             nativeQuery = true)
+    /**
+     * Deletes outdated rpc by tenant id batch.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param expirationTime expiration time ({@link Long})
+     * @param batchSize batch size
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
     int deleteOutdatedRpcByTenantIdBatch(@Param("tenantId") UUID tenantId,
                                          @Param("expirationTime") Long expirationTime,
                                          @Param("batchSize") int batchSize);

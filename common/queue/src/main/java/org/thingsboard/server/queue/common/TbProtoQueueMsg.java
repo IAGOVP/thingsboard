@@ -15,16 +15,18 @@
  */
 package org.thingsboard.server.queue.common;
 
+import java.util.UUID;
+
+
 import lombok.Data;
 import org.thingsboard.server.queue.TbQueueMsg;
 import org.thingsboard.server.queue.TbQueueMsgHeaders;
 
-import java.util.UUID;
 
-@Data
 /**
- * Message: tb proto queue msg.
+ * Protobuf-backed {@link TbQueueMsg} used for internal cluster communication.
  */
+@Data
 public class TbProtoQueueMsg<T extends com.google.protobuf.GeneratedMessageV3> implements TbQueueMsg {
 
     private final UUID key;

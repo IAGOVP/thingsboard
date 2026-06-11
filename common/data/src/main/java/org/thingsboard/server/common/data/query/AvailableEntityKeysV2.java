@@ -32,10 +32,10 @@ import java.util.Set;
                 Contains unique time series and attribute key names discovered from entities matching a query,
                 optionally including a sample value for each key."""
 )
-@JsonInclude(JsonInclude.Include.NON_NULL)
 /**
  * available entity keys v2.
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record AvailableEntityKeysV2(
         @Schema(
                 description = "Set of entity types found among the matched entities.",
@@ -62,6 +62,16 @@ public record AvailableEntityKeysV2(
         )
         @Nullable Map<AttributeScope, List<KeyInfo>> attributes
 ) {
+    /**
+     * Key info.
+     *
+     * @param name." name."
+     * @param "temperature" "temperature"
+     * @param key key ({@link String})
+     * @param requested." requested."
+     * @param sample sample ({@link KeySample})
+     * @return the record value
+     */
 
     @Schema(description = "Key name with an optional sample value.")
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -79,6 +89,18 @@ public record AvailableEntityKeysV2(
             )
             @Nullable KeySample sample
     ) {}
+    /**
+     * Key sample.
+     *
+     * @param epoch." epoch."
+     * @param "1707000000000" "1707000000000"
+     * @param ts ts
+     * @param value." value."
+     * @param "23.5" "23.5"
+     * @param Schema.RequiredMode.REQUIRED schema.required mode.required
+     * @param value value ({@link JsonNode})
+     * @return the record value
+     */
 
     @Schema(description = "Most recent value and its timestamp.")
     public record KeySample(

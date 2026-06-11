@@ -25,13 +25,20 @@ import org.thingsboard.server.common.data.id.TenantId;
 
 import java.io.Serial;
 
+/**
+ * Composite {@link VersionedCacheKey} for {@link org.thingsboard.server.common.data.Device} lookups.
+ *
+ * <p>Supports three lookup shapes: by {@link org.thingsboard.server.common.data.id.DeviceId} alone,
+ * by tenant+deviceId (versioned), or by tenant+deviceName (non-versioned name index).
+ *
+ * @see DeviceCaffeineCache
+ * @see DeviceRedisCache
+ * @see DeviceCacheEvictEvent
+ */
 @Getter
 @EqualsAndHashCode
 @RequiredArgsConstructor
 @Builder
-/**
- * Device cache key.
- */
 public class DeviceCacheKey implements VersionedCacheKey {
 
     @Serial
@@ -41,18 +48,38 @@ public class DeviceCacheKey implements VersionedCacheKey {
     private final DeviceId deviceId;
     private final String deviceName;
 
+    /**
+     * Key for global device-id lookup (no tenant scope).
+     *
+     * @param deviceId device identifier
+     */
     public DeviceCacheKey(DeviceId deviceId) {
         this(null, deviceId, null);
     }
 
+    /**
+     * Versioned tenant-scoped key by device id.
+     *
+     * @param tenantId tenant scope
+     * @param deviceId device identifier
+     */
     public DeviceCacheKey(TenantId tenantId, DeviceId deviceId) {
         this(tenantId, deviceId, null);
     }
 
+    /**
+     * Non-versioned tenant-scoped key by device name.
+     *
+     * @param tenantId   tenant scope
+     * @param deviceName device name within tenant
+     */
     public DeviceCacheKey(TenantId tenantId, String deviceName) {
         this(tenantId, null, deviceName);
     }
 
+/**
+         * @return key suffix encoding tenant, id, or name lookup variant
+         */
     @Override
     public String toString() {
         if (deviceId == null) {
@@ -64,6 +91,9 @@ public class DeviceCacheKey implements VersionedCacheKey {
         }
     }
 
+/**
+         * @return {@code true} when keyed by device id (versioned storage enabled)
+         */
     @Override
     public boolean isVersioned() {
         return deviceId != null;

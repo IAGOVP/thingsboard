@@ -23,36 +23,66 @@ import org.thingsboard.server.dao.Dao;
 import java.util.UUID;
 
 /**
- * The Interface DeviceCredentialsDao.
+ * Persistence contract for device credentials.
+ *
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (devices, credentials, profiles, and connectivity).
  */
+
 public interface DeviceCredentialsDao extends Dao<DeviceCredentials> {
 
+    
     /**
-     * Save or update device credentials object
+     * Saves or persists the requested data.
      *
-     * @param tenantId the device tenant id
-     * @param deviceCredentials the device credentials object
-     * @return saved device credentials object
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceCredentials device credentials ({@link DeviceCredentials})
+     * @return {@link DeviceCredentials}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     DeviceCredentials save(TenantId tenantId, DeviceCredentials deviceCredentials);
+    /**
+     * Saves or persists and flush.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceCredentials device credentials ({@link DeviceCredentials})
+     * @return {@link DeviceCredentials}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     DeviceCredentials saveAndFlush(TenantId tenantId, DeviceCredentials deviceCredentials);
 
+    
     /**
-     * Find device credentials by device id.
+     * Finds by device id.
      *
-     * @param deviceId the device id
-     * @return the device credentials object
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @return {@link DeviceCredentials}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     DeviceCredentials findByDeviceId(TenantId tenantId, UUID deviceId);
 
+    
     /**
-     * Find device credentials by credentials id.
+     * Finds by credentials id.
      *
-     * @param credentialsId the credentials id
-     * @return the device credentials object
+     * @param tenantId tenant that owns the entity or operation
+     * @param credentialsId credentials id ({@link String})
+     * @return {@link DeviceCredentials}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     DeviceCredentials findByCredentialsId(TenantId tenantId, String credentialsId);
+    /**
+     * Removes by device id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @return {@link DeviceCredentials}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     DeviceCredentials removeByDeviceId(TenantId tenantId, DeviceId deviceId);
 

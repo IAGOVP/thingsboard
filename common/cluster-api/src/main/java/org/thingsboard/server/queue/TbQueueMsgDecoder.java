@@ -18,9 +18,10 @@ package org.thingsboard.server.queue;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 /**
- * tb queue msg decoder contract.
+ * Contract for tb queue msg decoder.
  */
 public interface TbQueueMsgDecoder<T extends TbQueueMsg> {
 
+    /** Decode. */
     T decode(TbQueueMsg msg) throws InvalidProtocolBufferException;
 }

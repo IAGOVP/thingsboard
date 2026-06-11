@@ -26,8 +26,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @SuperBuilder
 /**
- * Device profile fields.
+ * Lightweight device profile field selection for EDQS queries and events (EDQS data — lightweight entity field DTOs for EDQS).
  */
+
 public class DeviceProfileFields extends AbstractEntityFields {
 
     private String type;

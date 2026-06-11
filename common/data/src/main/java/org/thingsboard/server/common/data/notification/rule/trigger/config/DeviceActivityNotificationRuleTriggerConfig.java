@@ -43,6 +43,11 @@ public class DeviceActivityNotificationRuleTriggerConfig implements Notification
     @NotEmpty
     @ArraySchema(schema = @Schema(implementation = DeviceEvent.class))
     private Set<DeviceEvent> notifyOn;
+    /**
+     * Returns trigger type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     */
 
     @Override
     public NotificationRuleTriggerType getTriggerType() {

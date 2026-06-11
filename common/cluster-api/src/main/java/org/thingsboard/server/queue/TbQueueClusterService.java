@@ -24,8 +24,10 @@ import java.util.List;
  */
 public interface TbQueueClusterService {
 
+    /** On queues update. */
     void onQueuesUpdate(List<Queue> queues);
 
+    /** On queues delete. */
     void onQueuesDelete(List<Queue> queues);
 
 }

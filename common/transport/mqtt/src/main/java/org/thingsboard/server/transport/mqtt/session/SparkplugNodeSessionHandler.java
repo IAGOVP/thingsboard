@@ -65,7 +65,7 @@ import static org.thingsboard.server.transport.mqtt.util.sparkplug.SparkplugTopi
 import static org.thingsboard.server.transport.mqtt.util.sparkplug.SparkplugTopicService.TOPIC_STATE_REGEXP;
 
 /**
- * Handles sparkplug node session.
+ * Handles Sparkplug B NBIRTH/NDEATH/DDATA/DCMD topic flows and metric conversion.
  */
 @Slf4j
 @SpecVersion(spec = "sparkplug", version = "3.0.0")
@@ -87,7 +87,13 @@ public class SparkplugNodeSessionHandler extends AbstractGatewaySessionHandler<S
         this.nodeBirthMetrics = new ConcurrentHashMap<>();
         this.nodeAlias = new ConcurrentHashMap<>();
     }
-
+    /**
+     * Set node birth metrics.
+     *
+     * @param metrics metrics
+     * @return nothing
+     * @throws AdaptorException on invalid payload or topic format
+     */
     public void setNodeBirthMetrics(java.util.List<org.thingsboard.server.gen.transport.mqtt.SparkplugBProto.Payload.Metric> metrics) throws AdaptorException {
         for (var metric : metrics) {
             if (metric.hasName()) {
@@ -100,14 +106,28 @@ public class SparkplugNodeSessionHandler extends AbstractGatewaySessionHandler<S
             }
         }
     }
-
-
+    /**
+     * Handles validate ndeath.
+     *
+     * @param sparkplugBProto sparkplug bproto
+     * @return the boolean result
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
     public boolean onValidateNDEATH(SparkplugBProto.Payload sparkplugBProto) throws ThingsboardException {
         return sparkplugBProto.getMetricsCount() == 1 && SPARKPLUG_BD_SEQUENCE_NUMBER_KEY.equals(sparkplugBProto.getMetrics(0).getName())
                 && this.nodeBirthMetrics.get(SPARKPLUG_BD_SEQUENCE_NUMBER_KEY) != null
                 && sparkplugBProto.getMetrics(0).getLongValue() == this.nodeBirthMetrics.get(SPARKPLUG_BD_SEQUENCE_NUMBER_KEY).getLongValue();
     }
-
+    /**
+     * Handles attributes telemetry proto.
+     *
+     * @param msgId msg id
+     * @param sparkplugBProto sparkplug bproto
+     * @param topic topic ({@link SparkplugTopic})
+     * @return nothing
+     * @throws AdaptorException on invalid payload or topic format
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
     public void onAttributesTelemetryProto(int msgId, SparkplugBProto.Payload sparkplugBProto, SparkplugTopic topic) throws AdaptorException, ThingsboardException {
         String deviceName = topic.getNodeDeviceName();
         checkDeviceName(deviceName);
@@ -144,7 +164,16 @@ public class SparkplugNodeSessionHandler extends AbstractGatewaySessionHandler<S
         List<TransportProtos.PostTelemetryMsg> postTelemetryMsgList = convertToPostTelemetry(sparkplugBProto, attributesMetricNames, topic.getType().name());
         onDeviceTelemetryProto(contextListenableFuture, msgId, postTelemetryMsgList, deviceName);
     }
-
+    /**
+     * Handles device telemetry proto.
+     *
+     * @param contextListenableFuture context listenable future ({@link ListenableFuture})
+     * @param msgId msg id
+     * @param postTelemetryMsgList post telemetry msg list ({@link List})
+     * @param deviceName device name ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void onDeviceTelemetryProto(ListenableFuture<MqttDeviceAwareSessionContext> contextListenableFuture,
                                        int msgId, List<TransportProtos.PostTelemetryMsg> postTelemetryMsgList, String deviceName) {
         if (CollectionUtils.isEmpty(postTelemetryMsgList)) {
@@ -195,11 +224,13 @@ public class SparkplugNodeSessionHandler extends AbstractGatewaySessionHandler<S
         }
     }
 
+    
     /**
-     * Subscribe: spBv1.0/STATE/my_primary_hos -> Implemented as status via checkSparkplugNodeSession
-     * Subscribe: CMD/DATA -> Implemented  after connection: SUBSCRIBE_TO_ATTRIBUTE_UPDATES_ASYNC_MSG/SUBSCRIBE_TO_RPC_ASYNC_MSG
-     * @param subscription
-     * @throws ThingsboardException
+     * Handles sparkplug subscribe msg.
+     *
+     * @param subscription subscription ({@link MqttTopicSubscription})
+     * @return nothing
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
      */
     public void handleSparkplugSubscribeMsg(MqttTopicSubscription subscription) throws ThingsboardException {
         String topic = subscription.topicFilter();
@@ -212,7 +243,14 @@ public class SparkplugNodeSessionHandler extends AbstractGatewaySessionHandler<S
             log.trace("Failed to subscribe to the topic: [" + topic + "].");
         }
     }
-
+    /**
+     * Handles device disconnect.
+     *
+     * @param mqttMsg mqtt msg ({@link MqttPublishMessage})
+     * @param deviceName device name ({@link String})
+     * @return nothing
+     * @throws AdaptorException on invalid payload or topic format
+     */
     public void onDeviceDisconnect(MqttPublishMessage mqttMsg, String deviceName) throws AdaptorException {
         try {
             processOnDisconnect(mqttMsg, deviceName);
@@ -332,7 +370,15 @@ public class SparkplugNodeSessionHandler extends AbstractGatewaySessionHandler<S
         }
         return Optional.empty();
     }
-
+    /**
+     * Creates sparkplug mqtt publish msg.
+     *
+     * @param tsKvProto ts kv proto
+     * @param sparkplugTopic sparkplug topic ({@link String})
+     * @param metricBirth metric birth
+     * @return optional {@link MqttPublishMessage}, empty if not found
+     * @throws Exception on processing failure
+     */
     public Optional<MqttPublishMessage> createSparkplugMqttPublishMsg(TransportProtos.TsKvProto tsKvProto,
                                                                       String sparkplugTopic,
                                                                       SparkplugBProto.Payload.Metric metricBirth) {
@@ -358,17 +404,41 @@ public class SparkplugNodeSessionHandler extends AbstractGatewaySessionHandler<S
         }
         return Optional.empty();
     }
+    /**
+     * New device session ctx.
+     *
+     * @param msg msg ({@link GetOrCreateDeviceFromGatewayResponse})
+     * @return {@link SparkplugDeviceSessionContext}
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected SparkplugDeviceSessionContext newDeviceSessionCtx(GetOrCreateDeviceFromGatewayResponse msg) {
         return new SparkplugDeviceSessionContext(this, msg.getDeviceInfo(), msg.getDeviceProfile(), mqttQoSMap, transportService);
     }
-
+    /**
+     * Send to device rpc request.
+     *
+     * @param payload payload ({@link MqttMessage})
+     * @param rpcRequest rpc request
+     * @param sessionInfo session info
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     protected void sendToDeviceRpcRequest(MqttMessage payload, TransportProtos.ToDeviceRpcRequestMsg
             rpcRequest, TransportProtos.SessionInfoProto sessionInfo) {
         parent.sendToDeviceRpcRequest(payload, rpcRequest, sessionInfo);
     }
-
+    /**
+     * Send error rpc response.
+     *
+     * @param sessionInfo session info
+     * @param requestId request id
+     * @param result result ({@link ThingsboardErrorCode})
+     * @param errorMsg error msg ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     protected void sendErrorRpcResponse(TransportProtos.SessionInfoProto sessionInfo,
                                         int requestId, ThingsboardErrorCode result, String errorMsg) {
         parent.sendErrorRpcResponse(sessionInfo, requestId, result, errorMsg);

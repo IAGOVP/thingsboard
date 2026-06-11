@@ -31,8 +31,14 @@ import org.thingsboard.server.common.data.page.PageData;
 import java.util.Map;
 import java.util.UUID;
 /**
- * Default native asset repository.
+ * Default native asset repository (JPA/PostgreSQL persistence layer (JPA repositories and PostgreSQL DAO implementations)).
  */
+
+
+
+
+
+
 
 @Repository
 @Slf4j
@@ -44,11 +50,15 @@ public class DefaultNativeAssetRepository extends AbstractNativeRepository imple
         super(jdbcTemplate, transactionTemplate);
     }
 
+    
     /**
-
-     * Loads profile entity id infos.
-
+     * Finds profile entity id infos.
+     *
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<ProfileEntityIdInfo> findProfileEntityIdInfos(Pageable pageable) {
@@ -56,11 +66,16 @@ public class DefaultNativeAssetRepository extends AbstractNativeRepository imple
         return find(COUNT_QUERY, PROFILE_ASSET_ID_INFO_QUERY, pageable, DefaultNativeAssetRepository::toInfo);
     }
 
+    
     /**
-
-     * Loads profile entity id infos by tenant id.
-
+     * Finds profile entity id infos by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<ProfileEntityIdInfo> findProfileEntityIdInfosByTenantId(UUID tenantId, Pageable pageable) {

@@ -19,10 +19,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-@Data
 /**
  * Tbel cf propagation arg.
  */
+@Data
 public class TbelCfPropagationArg implements TbelCfArg {
 
     private final Object value;

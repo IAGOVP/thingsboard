@@ -33,6 +33,11 @@ public class ComplexVersionCreateRequest extends VersionCreateRequest {
     // Default sync strategy
     private SyncStrategy syncStrategy;
     private Map<EntityType, EntityTypeVersionCreateConfig> entityTypes;
+    /**
+     * Returns type.
+     *
+     * @return {@link VersionCreateRequestType}
+     */
 
     @Override
     public VersionCreateRequestType getType() {

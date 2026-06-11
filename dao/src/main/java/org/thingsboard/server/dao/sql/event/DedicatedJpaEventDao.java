@@ -22,8 +22,14 @@ import org.thingsboard.server.dao.sql.ScheduledLogExecutorComponent;
 import org.thingsboard.server.dao.sqlts.insert.sql.DedicatedEventsSqlPartitioningRepository;
 import org.thingsboard.server.dao.util.SqlDao;
 /**
- * Dedicated jpa event dao.
+ * Spring component for dedicated jpa event dao (JPA/PostgreSQL persistence layer (JPA repositories and PostgreSQL DAO implementations)).
  */
+
+
+
+
+
+
 
 @DedicatedEventsDataSource
 @Component

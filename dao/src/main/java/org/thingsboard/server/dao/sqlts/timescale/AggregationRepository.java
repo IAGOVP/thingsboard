@@ -24,8 +24,14 @@ import org.thingsboard.server.dao.util.TimescaleDBTsOrTsLatestDao;
 import java.util.List;
 import java.util.UUID;
 /**
- * Aggregation repository.
+ * Aggregation repository (time-series SQL/Timescale persistence (SQL/Timescale time-series key-value storage)).
  */
+
+
+
+
+
+
 
 @Repository
 @TimescaleDBTsOrTsLatestDao
@@ -86,26 +92,81 @@ public class AggregationRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
+    /**
+     * Finds avg.
+     *
+     * @param entityId target entity identifier
+     * @param entityKey entity key
+     * @param timeBucket time bucket
+     * @param startTs interval start timestamp (epoch ms)
+     * @param endTs interval end timestamp (epoch ms)
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @SuppressWarnings("unchecked")
     public List<TimescaleTsKvEntity> findAvg(UUID entityId, int entityKey, long timeBucket, long startTs, long endTs) {
         return getResultList(entityId, entityKey, timeBucket, startTs, endTs, FIND_AVG);
     }
+    /**
+     * Finds max.
+     *
+     * @param entityId target entity identifier
+     * @param entityKey entity key
+     * @param timeBucket time bucket
+     * @param startTs interval start timestamp (epoch ms)
+     * @param endTs interval end timestamp (epoch ms)
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @SuppressWarnings("unchecked")
     public List<TimescaleTsKvEntity> findMax(UUID entityId, int entityKey, long timeBucket, long startTs, long endTs) {
         return getResultList(entityId, entityKey, timeBucket, startTs, endTs, FIND_MAX);
     }
+    /**
+     * Finds min.
+     *
+     * @param entityId target entity identifier
+     * @param entityKey entity key
+     * @param timeBucket time bucket
+     * @param startTs interval start timestamp (epoch ms)
+     * @param endTs interval end timestamp (epoch ms)
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @SuppressWarnings("unchecked")
     public List<TimescaleTsKvEntity> findMin(UUID entityId, int entityKey, long timeBucket, long startTs, long endTs) {
         return getResultList(entityId, entityKey, timeBucket, startTs, endTs, FIND_MIN);
     }
+    /**
+     * Finds sum.
+     *
+     * @param entityId target entity identifier
+     * @param entityKey entity key
+     * @param timeBucket time bucket
+     * @param startTs interval start timestamp (epoch ms)
+     * @param endTs interval end timestamp (epoch ms)
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @SuppressWarnings("unchecked")
     public List<TimescaleTsKvEntity> findSum(UUID entityId, int entityKey, long timeBucket, long startTs, long endTs) {
         return getResultList(entityId, entityKey, timeBucket, startTs, endTs, FIND_SUM);
     }
+    /**
+     * Finds count.
+     *
+     * @param entityId target entity identifier
+     * @param entityKey entity key
+     * @param timeBucket time bucket
+     * @param startTs interval start timestamp (epoch ms)
+     * @param endTs interval end timestamp (epoch ms)
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @SuppressWarnings("unchecked")
     public List<TimescaleTsKvEntity> findCount(UUID entityId, int entityKey, long timeBucket, long startTs, long endTs) {

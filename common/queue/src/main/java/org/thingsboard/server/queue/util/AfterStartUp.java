@@ -15,24 +15,26 @@
  */
 package org.thingsboard.server.queue.util;
 
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
-import org.springframework.core.annotation.AliasFor;
-import org.springframework.core.annotation.Order;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.core.annotation.AliasFor;
+import org.springframework.core.annotation.Order;
+
+
+/**
+ * Method annotation: invoke the marked method after application startup completes.
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 @EventListener(ApplicationReadyEvent.class)
 @Order
-public @/**
- * after start up contract.
- */
-interface AfterStartUp {
+public @interface AfterStartUp {
 
     int QUEUE_INFO_INITIALIZATION = 1;
     int DISCOVERY_SERVICE = 2;

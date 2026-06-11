@@ -78,7 +78,14 @@ public enum SparkplugMessageType {
 	 * Edge of Network (EoN) Node record message.
 	 */
 	NRECORD;
-	
+
+    /**
+     * Parse message type.
+     *
+     * @param type type ({@link String})
+     * @return {@link SparkplugMessageType}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 	public static SparkplugMessageType parseMessageType(String type) throws ThingsboardException {
 		for (SparkplugMessageType messageType : SparkplugMessageType.values()) {
 			if (messageType.name().equals(type)) {
@@ -87,42 +94,96 @@ public enum SparkplugMessageType {
 		}
 		throw new ThingsboardException("Invalid message type: " + type, ThingsboardErrorCode.INVALID_ARGUMENTS);
 	}
+	/**
+	 * Message name.
+	 *
+	 * @param type type ({@link SparkplugMessageType})
+	 * @return {@link String}
+	 * @throws Exception on processing failure
+	 */
 	public static String messageName(SparkplugMessageType type) {
 		return STATE.equals(type) ? "sparkplugConnectionState" : type.name();
 	}
-	
+	/**
+	 * Is state.
+	 *
+	 * @return the boolean result
+	 * @throws Exception on processing failure
+	 */
 	public boolean isState() {
 		return this.equals(STATE);
 	}
-
+	/**
+	 * Is death.
+	 *
+	 * @return the boolean result
+	 * @throws Exception on processing failure
+	 */
 	public boolean isDeath() {
 		return this.equals(DDEATH) || this.equals(NDEATH);
 	}
-
+	/**
+	 * Is command.
+	 *
+	 * @return the boolean result
+	 * @throws Exception on processing failure
+	 */
 	public boolean isCommand() {
 		return this.equals(DCMD) || this.equals(NCMD);
 	}
-	
+	/**
+	 * Is data.
+	 *
+	 * @return the boolean result
+	 * @throws Exception on processing failure
+	 */
 	public boolean isData() {
 		return this.equals(DDATA) || this.equals(NDATA);
 	}
-	
+	/**
+	 * Is birth.
+	 *
+	 * @return the boolean result
+	 * @throws Exception on processing failure
+	 */
 	public boolean isBirth() {
 		return this.equals(DBIRTH) || this.equals(NBIRTH);
 	}
-	
+	/**
+	 * Is record.
+	 *
+	 * @return the boolean result
+	 * @throws Exception on processing failure
+	 */
 	public boolean isRecord() {
 		return this.equals(DRECORD) || this.equals(NRECORD);
 	}
+	/**
+	 * Is subscribe.
+	 *
+	 * @return the boolean result
+	 * @throws Exception on processing failure
+	 */
 	public boolean isSubscribe() {
 		return isCommand() || isData() || isRecord();
 	}
-
+	/**
+	 * Is node.
+	 *
+	 * @return the boolean result
+	 * @throws Exception on processing failure
+	 */
 	public boolean isNode() {
 		return this.equals(NBIRTH)
 				|| this.equals(NCMD) || this.equals(NDATA)
 				||this.equals(NDEATH) || this.equals(NRECORD);
 	}
+	/**
+	 * Is device.
+	 *
+	 * @return the boolean result
+	 * @throws Exception on processing failure
+	 */
 	public boolean isDevice() {
 		return this.equals(DBIRTH)
 				|| this.equals(DCMD) || this.equals(DDATA)

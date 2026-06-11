@@ -32,28 +32,106 @@ import java.util.Optional;
  */
 public interface CustomerService extends EntityDaoService {
 
+    /**
+     * Finds customer by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId customer to assign or filter by
+     * @return {@link Customer}
+     */
     Customer findCustomerById(TenantId tenantId, CustomerId customerId);
 
+    /**
+     * Finds customer by tenant id and title.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param title title ({@link String})
+     * @return optional {@link Customer}, empty if not found
+     */
     Optional<Customer> findCustomerByTenantIdAndTitle(TenantId tenantId, String title);
 
+    /**
+     * Finds customer by tenant id and title async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param title title ({@link String})
+     * @return future completing with optional {@link Customer}, empty if not found
+     */
     ListenableFuture<Optional<Customer>> findCustomerByTenantIdAndTitleAsync(TenantId tenantId, String title);
 
+    /**
+     * Finds customer by id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId customer to assign or filter by
+     * @return future completing with {@link Customer}
+     */
     ListenableFuture<Customer> findCustomerByIdAsync(TenantId tenantId, CustomerId customerId);
 
+    /**
+     * Saves or persists customer.
+     *
+     * @param customer customer ({@link Customer})
+     * @return {@link Customer}
+     */
     Customer saveCustomer(Customer customer);
 
+    /**
+     * Saves or persists customer.
+     *
+     * @param customer customer ({@link Customer})
+     * @param nameConflictStrategy behavior when an entity with the same name already exists
+     * @return {@link Customer}
+     */
     Customer saveCustomer(Customer customer, NameConflictStrategy nameConflictStrategy);
 
+    /**
+     * Deletes customer.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId customer to assign or filter by
+     */
     void deleteCustomer(TenantId tenantId, CustomerId customerId);
 
+    /**
+     * Finds or create public customer.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link Customer}
+     */
     Customer findOrCreatePublicCustomer(TenantId tenantId);
 
+    /**
+     * Finds public customer.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link Customer}
+     */
     Customer findPublicCustomer(TenantId tenantId);
 
+    /**
+     * Finds customers by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<Customer> findCustomersByTenantId(TenantId tenantId, PageLink pageLink);
 
+    /**
+     * Deletes customers by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     */
     void deleteCustomersByTenantId(TenantId tenantId);
 
+    /**
+     * Finds customers by tenant id and ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerIds customer ids ({@link List})
+     * @return {@link List}
+     */
     List<Customer> findCustomersByTenantIdAndIds(TenantId tenantId, List<CustomerId> customerIds);
 
 }

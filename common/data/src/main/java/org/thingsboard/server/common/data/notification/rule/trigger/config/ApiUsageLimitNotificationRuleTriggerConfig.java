@@ -40,6 +40,11 @@ public class ApiUsageLimitNotificationRuleTriggerConfig implements NotificationR
     private Set<ApiFeature> apiFeatures;
     @ArraySchema(schema = @Schema(implementation = ApiUsageStateValue.class))
     private Set<ApiUsageStateValue> notifyOn;
+    /**
+     * Returns trigger type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     */
 
     @Override
     public NotificationRuleTriggerType getTriggerType() {

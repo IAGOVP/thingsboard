@@ -66,6 +66,11 @@ public record AvailableEntityKeys(
         timeseries = requireNonNullElse(timeseries, emptyList());
         attribute = requireNonNullElse(attribute, emptyList());
     }
+    /**
+     * None.
+     *
+     * @return {@link AvailableEntityKeys}
+     */
 
     public static AvailableEntityKeys none() {
         return new AvailableEntityKeys(emptySet(), emptyList(), emptyList());

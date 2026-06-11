@@ -48,9 +48,19 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * event filter contract.
  */
 public interface EventFilter {
+    /**
+     * Returns event type.
+     *
+     * @return {@link EventType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "String value representing the event type", example = "STATS")
     EventType getEventType();
+/**
+ * Is not empty.
+ *
+ * @return the boolean result
+ */
 
     boolean isNotEmpty();
 

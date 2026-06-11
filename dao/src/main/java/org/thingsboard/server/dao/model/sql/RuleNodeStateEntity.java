@@ -30,8 +30,11 @@ import org.thingsboard.server.dao.model.ModelConstants;
 
 import java.util.UUID;
 /**
- * Rule node state entity.
+ * JPA/Cassandra row model for rule node state.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -64,6 +67,12 @@ public class RuleNodeStateEntity extends BaseSqlEntity<RuleNodeState> {
         this.entityType = ruleNodeState.getEntityId().getEntityType().name();
         this.stateData = ruleNodeState.getStateData();
     }
+    /**
+     * To data.
+     *
+     * @return {@link RuleNodeState}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleNodeState toData() {

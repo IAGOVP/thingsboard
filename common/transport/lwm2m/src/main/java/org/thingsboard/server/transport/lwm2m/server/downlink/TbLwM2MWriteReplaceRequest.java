@@ -37,6 +37,12 @@ public class TbLwM2MWriteReplaceRequest extends AbstractTbLwM2MTargetedDownlinkR
         this.contentFormat = contentFormat;
         this.value = value;
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link LwM2MOperationType}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public LwM2MOperationType getType() {

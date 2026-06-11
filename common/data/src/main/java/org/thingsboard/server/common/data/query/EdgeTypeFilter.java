@@ -39,6 +39,11 @@ public class EdgeTypeFilter implements EntityFilter {
     private String edgeType;
 
     private List<String> edgeTypes;
+    /**
+     * Returns edge types.
+     *
+     * @return {@link List}
+     */
 
     public List<String> getEdgeTypes() {
         return !CollectionUtils.isEmpty(edgeTypes) ? edgeTypes : Collections.singletonList(edgeType);
@@ -46,6 +51,11 @@ public class EdgeTypeFilter implements EntityFilter {
 
     @Getter
     private String edgeNameFilter;
+    /**
+     * Returns type.
+     *
+     * @return {@link EntityFilterType}
+     */
 
     @Override
     public EntityFilterType getType() {

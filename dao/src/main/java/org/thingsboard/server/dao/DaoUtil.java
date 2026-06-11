@@ -44,20 +44,71 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * Dao util.
+
+
+
+
+
+ * Dao util (ThingsBoard DAO layer).
+
+
+
+
+
 
  */
+
+
+
+
+
+
 
 public final class DaoUtil {
 
     private DaoUtil() {}
+    /**
+     * To page data.
+     *
+     * @param page page ({@link Page})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static <T> PageData<T> toPageData(Page<? extends ToData<T>> page) {
         List<T> data = convertDataList(page.getContent());
         return new PageData<>(data, page.getTotalPages(), page.getTotalElements(), page.hasNext());
     }
+    /**
+     * Page to page data.
+     *
+     * @param slice slice ({@link Slice})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static <T> PageData<T> pageToPageData(Slice<T> slice) {
         int totalPages;
@@ -71,38 +122,112 @@ public final class DaoUtil {
         }
         return new PageData<>(slice.getContent(), totalPages, totalElements, slice.hasNext());
     }
+    /**
+     * To pageable.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link Pageable}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Pageable toPageable(PageLink pageLink) {
         return toPageable(pageLink, true);
     }
+    /**
+     * To pageable.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @param addDefaultSorting add default sorting
+     * @return {@link Pageable}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Pageable toPageable(PageLink pageLink, boolean addDefaultSorting) {
         return toPageable(pageLink, Collections.emptyMap(), addDefaultSorting);
     }
+    /**
+     * To pageable.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @param columnMap column map ({@link Map})
+     * @return {@link Pageable}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Pageable toPageable(PageLink pageLink, Map<String, String> columnMap) {
         return toPageable(pageLink, columnMap, true);
     }
+    /**
+     * To pageable.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @param columnMap column map ({@link Map})
+     * @param addDefaultSorting add default sorting
+     * @return {@link Pageable}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Pageable toPageable(PageLink pageLink, Map<String, String> columnMap, boolean addDefaultSorting) {
         return PageRequest.of(pageLink.getPage(), pageLink.getPageSize(), pageLink.toSort(pageLink.getSortOrder(), columnMap, addDefaultSorting));
     }
+    /**
+     * To pageable.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @param sortOrders sort orders ({@link List})
+     * @return {@link Pageable}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Pageable toPageable(PageLink pageLink, List<SortOrder> sortOrders) {
         return toPageable(pageLink, Collections.emptyMap(), sortOrders);
     }
+    /**
+     * To pageable.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @param sortColumns sort columns
+     * @return {@link Pageable}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Pageable toPageable(PageLink pageLink, String... sortColumns) {
         return toPageable(pageLink, Collections.emptyMap(), Arrays.stream(sortColumns).map(column -> new SortOrder(column, SortOrder.Direction.ASC)).toList(), false);
     }
+    /**
+     * To pageable.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @param columnMap column map ({@link Map})
+     * @param sortOrders sort orders ({@link List})
+     * @return {@link Pageable}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Pageable toPageable(PageLink pageLink, Map<String, String> columnMap, List<SortOrder> sortOrders) {
         return toPageable(pageLink, columnMap, sortOrders, true);
     }
+    /**
+     * To pageable.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @param columnMap column map ({@link Map})
+     * @param sortOrders sort orders ({@link List})
+     * @param addDefaultSorting add default sorting
+     * @return {@link Pageable}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Pageable toPageable(PageLink pageLink, Map<String, String> columnMap, List<SortOrder> sortOrders, boolean addDefaultSorting) {
         return PageRequest.of(pageLink.getPage(), pageLink.getPageSize(), pageLink.toSort(sortOrders, columnMap, addDefaultSorting));
     }
+    /**
+     * Convert data list.
+     *
+     * @param toConvert to convert ({@link Collection})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static <T> List<T> convertDataList(Collection<? extends ToData<T>> toConvert) {
         if (CollectionUtils.isEmpty(toConvert)) {
@@ -116,6 +241,13 @@ public final class DaoUtil {
         }
         return converted;
     }
+    /**
+     * Returns data.
+     *
+     * @param data data ({@link ToData})
+     * @return {@link T}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static <T> T getData(ToData<T> data) {
         T object = null;
@@ -124,6 +256,13 @@ public final class DaoUtil {
         }
         return object;
     }
+    /**
+     * Returns data.
+     *
+     * @param data data ({@link Optional})
+     * @return {@link T}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static <T> T getData(Optional<? extends ToData<T>> data) {
         T object = null;
@@ -132,6 +271,13 @@ public final class DaoUtil {
         }
         return object;
     }
+    /**
+     * Returns id.
+     *
+     * @param idBased id based ({@link UUIDBased})
+     * @return {@link UUID}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static UUID getId(UUIDBased idBased) {
         UUID id = null;
@@ -140,6 +286,13 @@ public final class DaoUtil {
         }
         return id;
     }
+    /**
+     * To uuids.
+     *
+     * @param idBasedIds id based ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static List<UUID> toUUIDs(List<? extends UUIDBased> idBasedIds) {
         List<UUID> ids = new ArrayList<>();
@@ -148,10 +301,26 @@ public final class DaoUtil {
         }
         return ids;
     }
+    /**
+     * From uuids.
+     *
+     * @param uuids uuids ({@link List})
+     * @param mapper mapper ({@link Function})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static <I> List<I> fromUUIDs(List<UUID> uuids, Function<UUID, I> mapper) {
         return uuids.stream().map(mapper).collect(Collectors.toList());
     }
+    /**
+     * To entity id.
+     *
+     * @param uuid uuid ({@link UUID})
+     * @param creator creator ({@link Function})
+     * @return {@link I}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static <I> I toEntityId(UUID uuid, Function<UUID, I> creator) {
         if (uuid != null) {
@@ -160,10 +329,28 @@ public final class DaoUtil {
             return null;
         }
     }
+    /**
+     * Processes in batches.
+     *
+     * @param finder finder ({@link Function})
+     * @param batchSize batch size
+     * @param processor processor ({@link Consumer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static <T> void processInBatches(Function<PageLink, PageData<T>> finder, int batchSize, Consumer<T> processor) {
         processBatches(finder, batchSize, batch -> batch.getData().forEach(processor));
     }
+    /**
+     * Processes batches.
+     *
+     * @param finder finder ({@link Function})
+     * @param batchSize batch size
+     * @param processor processor ({@link Consumer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static <T> void processBatches(Function<PageLink, PageData<T>> finder, int batchSize, Consumer<PageData<T>> processor) {
         PageLink pageLink = new PageLink(batchSize);
@@ -178,6 +365,13 @@ public final class DaoUtil {
             pageLink = pageLink.nextPageLink();
         } while (hasNextBatch);
     }
+    /**
+     * Returns string id.
+     *
+     * @param id entity UUID primary key
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String getStringId(UUIDBased id) {
         if (id != null) {
@@ -186,6 +380,15 @@ public final class DaoUtil {
             return null;
         }
     }
+    /**
+     * Convert tenant entity types to dto.
+     *
+     * @param tenantUUID tenant uuid ({@link UUID})
+     * @param entityType entity type discriminator
+     * @param types types ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static List<EntitySubtype> convertTenantEntityTypesToDto(UUID tenantUUID, EntityType entityType, List<String> types) {
         if (CollectionUtils.isEmpty(types)) {
@@ -196,6 +399,15 @@ public final class DaoUtil {
                 .map(type -> new EntitySubtype(tenantId, entityType, type))
                 .collect(Collectors.toList());
     }
+    /**
+     * Convert tenant entity infos to dto.
+     *
+     * @param tenantUUID tenant uuid ({@link UUID})
+     * @param entityType entity type discriminator
+     * @param entityInfos entity infos ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Deprecated // used only in deprecated DAO api
     public static List<EntitySubtype> convertTenantEntityInfosToDto(UUID tenantUUID, EntityType entityType, List<EntityInfo> entityInfos) {
@@ -208,6 +420,13 @@ public final class DaoUtil {
                 .sorted(Comparator.comparing(EntitySubtype::getType))
                 .collect(Collectors.toList());
     }
+    /**
+     * Extract constraint violation.
+     *
+     * @param t t ({@link Throwable})
+     * @return {@link ConstraintViolationException}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static ConstraintViolationException extractConstraintViolation(Throwable t) {
         if (t instanceof ConstraintViolationException cve) {

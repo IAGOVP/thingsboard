@@ -21,6 +21,16 @@ import java.io.Serializable;
  * User auth data changed event.
  */
 public abstract class UserAuthDataChangedEvent implements Serializable {
+    /**
+     * Returns id.
+     *
+     * @return {@link String}
+     */
     public abstract String getId();
+    /**
+     * Returns ts.
+     *
+     * @return the long result
+     */
     public abstract long getTs();
 }

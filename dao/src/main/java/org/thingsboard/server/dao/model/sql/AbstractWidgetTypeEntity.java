@@ -27,8 +27,11 @@ import org.thingsboard.server.dao.model.ModelConstants;
 
 import java.util.UUID;
 /**
- * Abstract widget type entity.
+ * JPA/Cassandra row model for abstract widget type.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -73,6 +76,12 @@ public abstract class AbstractWidgetTypeEntity<T extends BaseWidgetType> extends
         this.deprecated = widgetTypeEntity.isDeprecated();
         this.scada = widgetTypeEntity.isScada();
     }
+    /**
+     * To base widget type.
+     *
+     * @return {@link BaseWidgetType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected BaseWidgetType toBaseWidgetType() {
         BaseWidgetType widgetType = new BaseWidgetType(new WidgetTypeId(getUuid()));

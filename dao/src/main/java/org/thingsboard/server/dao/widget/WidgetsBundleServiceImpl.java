@@ -51,8 +51,11 @@ import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
 import static org.thingsboard.server.dao.DaoUtil.toUUIDs;
 import static org.thingsboard.server.dao.entity.AbstractEntityService.checkConstraintViolation;
 /**
- * Spring service implementing widgets bundle API.
+ * Spring {@code @Service} implementing the widgets bundle DAO API.
+ *
+ * <p>Delegates to {@code *Dao} implementations and manages cache eviction (widget types and widget bundles).
  */
+
 
 @Service("WidgetsBundleDaoService")
 @Slf4j
@@ -75,6 +78,14 @@ public class WidgetsBundleServiceImpl implements WidgetsBundleService {
 
     @Autowired
     private ImageService imageService;
+    /**
+     * Finds widgets bundle by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetsBundleId widgets bundle id ({@link WidgetsBundleId})
+     * @return {@link WidgetsBundle}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public WidgetsBundle findWidgetsBundleById(TenantId tenantId, WidgetsBundleId widgetsBundleId) {
@@ -82,6 +93,13 @@ public class WidgetsBundleServiceImpl implements WidgetsBundleService {
         Validator.validateId(widgetsBundleId, id -> "Incorrect widgetsBundleId " + id);
         return widgetsBundleDao.findById(tenantId, widgetsBundleId.getId());
     }
+    /**
+     * Saves or persists widgets bundle.
+     *
+     * @param widgetsBundle widgets bundle ({@link WidgetsBundle})
+     * @return {@link WidgetsBundle}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public WidgetsBundle saveWidgetsBundle(WidgetsBundle widgetsBundle) {
@@ -100,6 +118,14 @@ public class WidgetsBundleServiceImpl implements WidgetsBundleService {
             throw e;
         }
     }
+    /**
+     * Deletes widgets bundle.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetsBundleId widgets bundle id ({@link WidgetsBundleId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteWidgetsBundle(TenantId tenantId, WidgetsBundleId widgetsBundleId) {
@@ -107,6 +133,15 @@ public class WidgetsBundleServiceImpl implements WidgetsBundleService {
         Validator.validateId(widgetsBundleId, id -> "Incorrect widgetsBundleId " + id);
         deleteEntity(tenantId, widgetsBundleId, false);
     }
+    /**
+     * Deletes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteEntity(TenantId tenantId, EntityId id, boolean force) {
@@ -121,6 +156,14 @@ public class WidgetsBundleServiceImpl implements WidgetsBundleService {
         eventPublisher.publishEvent(DeleteEntityEvent.builder().tenantId(tenantId).entityId(id).build());
         widgetsBundleDao.removeById(tenantId, id.getId());
     }
+    /**
+     * Finds widgets bundle by tenant id and alias.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alias alias ({@link String})
+     * @return {@link WidgetsBundle}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public WidgetsBundle findWidgetsBundleByTenantIdAndAlias(TenantId tenantId, String alias) {
@@ -129,6 +172,14 @@ public class WidgetsBundleServiceImpl implements WidgetsBundleService {
         Validator.validateString(alias, a -> "Incorrect alias " + a);
         return widgetsBundleDao.findWidgetsBundleByTenantIdAndAlias(tenantId.getId(), alias);
     }
+    /**
+     * Finds system widgets bundles by page link.
+     *
+     * @param widgetsBundleFilter widgets bundle filter ({@link WidgetsBundleFilter})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<WidgetsBundle> findSystemWidgetsBundlesByPageLink(WidgetsBundleFilter widgetsBundleFilter, PageLink pageLink) {
@@ -136,6 +187,13 @@ public class WidgetsBundleServiceImpl implements WidgetsBundleService {
         Validator.validatePageLink(pageLink);
         return widgetsBundleDao.findSystemWidgetsBundles(widgetsBundleFilter, pageLink);
     }
+    /**
+     * Finds system widgets bundles.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<WidgetsBundle> findSystemWidgetsBundles(TenantId tenantId) {
@@ -152,6 +210,14 @@ public class WidgetsBundleServiceImpl implements WidgetsBundleService {
         } while (pageData.hasNext());
         return widgetsBundles;
     }
+    /**
+     * Finds tenant widgets bundles by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<WidgetsBundle> findTenantWidgetsBundlesByTenantId(TenantId tenantId, PageLink pageLink) {
@@ -160,6 +226,14 @@ public class WidgetsBundleServiceImpl implements WidgetsBundleService {
         Validator.validatePageLink(pageLink);
         return widgetsBundleDao.findTenantWidgetsBundlesByTenantId(tenantId.getId(), pageLink);
     }
+    /**
+     * Finds all tenant widgets bundles by tenant id and page link.
+     *
+     * @param widgetsBundleFilter widgets bundle filter ({@link WidgetsBundleFilter})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<WidgetsBundle> findAllTenantWidgetsBundlesByTenantIdAndPageLink(WidgetsBundleFilter widgetsBundleFilter, PageLink pageLink) {
@@ -169,6 +243,14 @@ public class WidgetsBundleServiceImpl implements WidgetsBundleService {
         Validator.validatePageLink(pageLink);
         return widgetsBundleDao.findAllTenantWidgetsBundlesByTenantId(widgetsBundleFilter, pageLink);
     }
+    /**
+     * Finds tenant widgets bundles by tenant id and page link.
+     *
+     * @param widgetsBundleFilter widgets bundle filter ({@link WidgetsBundleFilter})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<WidgetsBundle> findTenantWidgetsBundlesByTenantIdAndPageLink(WidgetsBundleFilter widgetsBundleFilter, PageLink pageLink) {
@@ -178,6 +260,13 @@ public class WidgetsBundleServiceImpl implements WidgetsBundleService {
         Validator.validatePageLink(pageLink);
         return widgetsBundleDao.findTenantWidgetsBundlesByTenantId(widgetsBundleFilter, pageLink);
     }
+    /**
+     * Finds all tenant widgets bundles by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<WidgetsBundle> findAllTenantWidgetsBundlesByTenantId(TenantId tenantId) {
@@ -195,6 +284,13 @@ public class WidgetsBundleServiceImpl implements WidgetsBundleService {
         } while (pageData.hasNext());
         return widgetsBundles;
     }
+    /**
+     * Deletes widgets bundles by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteWidgetsBundlesByTenantId(TenantId tenantId) {
@@ -202,11 +298,26 @@ public class WidgetsBundleServiceImpl implements WidgetsBundleService {
         Validator.validateId(tenantId, id -> INCORRECT_TENANT_ID + id);
         tenantWidgetsBundleRemover.removeEntities(tenantId, tenantId);
     }
+    /**
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteByTenantId(TenantId tenantId) {
         deleteWidgetsBundlesByTenantId(tenantId);
     }
+    /**
+     * Updates system widgets.
+     *
+     * @param bundles bundles ({@link Stream})
+     * @param widgets widgets ({@link Stream})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Transactional
     @Override
@@ -255,6 +366,14 @@ public class WidgetsBundleServiceImpl implements WidgetsBundleService {
             widgetTypeService.updateWidgetsBundleWidgetFqns(TenantId.SYS_TENANT_ID, widgetsBundle.getId(), widgetTypeFqns);
         });
     }
+    /**
+     * Finds system or tenant widgets bundles by ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetsBundleIds widgets bundle ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<WidgetsBundle> findSystemOrTenantWidgetsBundlesByIds(TenantId tenantId, List<WidgetsBundleId> widgetsBundleIds) {
@@ -274,17 +393,39 @@ public class WidgetsBundleServiceImpl implements WidgetsBundleService {
         log.debug("{} widget type {}", existingWidget == null ? "Created" : "Updated", widgetTypeDetails.getFqn());
         return widgetTypeDetails;
     }
+    /**
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findWidgetsBundleById(tenantId, new WidgetsBundleId(entityId.getId())));
     }
+    /**
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
         return FluentFuture.from(widgetsBundleDao.findByIdAsync(tenantId, entityId.getId()))
                 .transform(Optional::ofNullable, directExecutor());
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

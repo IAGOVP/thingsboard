@@ -30,8 +30,11 @@ import org.thingsboard.server.dao.model.ModelConstants;
 
 import java.util.UUID;
 /**
- * Asset profile entity.
+ * JPA/Cassandra row model for asset profile.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -96,6 +99,12 @@ public final class AssetProfileEntity extends BaseVersionedEntity<AssetProfile> 
             this.externalId = assetProfile.getExternalId().getId();
         }
     }
+    /**
+     * To data.
+     *
+     * @return {@link AssetProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AssetProfile toData() {

@@ -37,12 +37,23 @@ public class ModelObject  implements Cloneable {
         this.objectModel = objectModel;
         this.instances = instances;
     }
-
+    /**
+     * Removes instance.
+     *
+     * @param id id
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     public boolean removeInstance (int id ) {
         LwM2mObjectInstance instance = this.instances.get(id);
          return this.instances.remove(id, instance);
     }
-
+    /**
+     * Clone.
+     *
+     * @return {@link ModelObject}
+     * @throws CloneNotSupportedException if clone not supported exception is thrown during processing
+     */
     public ModelObject clone() throws CloneNotSupportedException {
         return (ModelObject) super.clone();
     }

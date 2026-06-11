@@ -29,18 +29,41 @@ import java.util.function.Supplier;
 public class TemplatableValue {
     private final Supplier<String> getter;
     private final Consumer<String> setter;
+    /**
+     * Of.
+     *
+     * @param getter getter ({@link Supplier})
+     * @param setter setter ({@link Consumer})
+     * @return {@link TemplatableValue}
+     */
 
     public static TemplatableValue of(Supplier<String> getter, Consumer<String> setter) {
         return new TemplatableValue(getter, setter);
     }
+    /**
+     * Returns the requested data.
+     *
+     * @return {@link String}
+     */
 
     public String get() {
         return getter.get();
     }
+    /**
+     * Set.
+     *
+     * @param processed processed ({@link String})
+     */
 
     public void set(String processed) {
         setter.accept(processed);
     }
+    /**
+     * Contains params.
+     *
+     * @param params params ({@link Collection})
+     * @return the boolean result
+     */
 
     public boolean containsParams(Collection<String> params) {
         return StringUtils.containsAny(get(), params.toArray(String[]::new));

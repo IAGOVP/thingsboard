@@ -18,23 +18,34 @@ package org.thingsboard.server.common.data;
 import lombok.Getter;
 
 /**
- * api usage  /**
-  * key.
-  */
-record key values.
+ * Keys for tenant API usage metering counters and limits.
+ *
+ * <p>Each constant maps to {@link ApiFeature} counters stored in {@link ApiUsageState}
+ * and compared against tenant profile limits. Used by the usage reporting service.
  */
 public enum ApiUsageRecordKey {
 
+    /** Transport protocol messages processed. */
     TRANSPORT_MSG_COUNT(ApiFeature.TRANSPORT, "transportMsgCount", "transportMsgLimit", "message"),
+    /** Transport telemetry data points ingested. */
     TRANSPORT_DP_COUNT(ApiFeature.TRANSPORT, "transportDataPointsCount", "transportDataPointsLimit", "data point"),
+    /** Time-series data points persisted to storage. */
     STORAGE_DP_COUNT(ApiFeature.DB, "storageDataPointsCount", "storageDataPointsLimit", "data point"),
+    /** Rule engine message executions. */
     RE_EXEC_COUNT(ApiFeature.RE, "ruleEngineExecutionCount", "ruleEngineExecutionLimit", "Rule Engine execution"),
+    /** JavaScript function invocations in rule nodes. */
     JS_EXEC_COUNT(ApiFeature.JS, "jsExecutionCount", "jsExecutionLimit", "JavaScript execution"),
+    /** TBEL expression executions in rule nodes. */
     TBEL_EXEC_COUNT(ApiFeature.TBEL, "tbelExecutionCount", "tbelExecutionLimit", "Tbel execution"),
+    /** Outbound email messages sent. */
     EMAIL_EXEC_COUNT(ApiFeature.EMAIL, "emailCount", "emailLimit", "email message", true, true),
+    /** Outbound SMS messages sent. */
     SMS_EXEC_COUNT(ApiFeature.SMS, "smsCount", "smsLimit", "SMS message", true, true),
+    /** Alarms created within the billing period. */
     CREATED_ALARMS_COUNT(ApiFeature.ALARM, "createdAlarmsCount", "createdAlarmsLimit", "alarm"),
+    /** Devices currently reporting as active. */
     ACTIVE_DEVICES("activeDevicesCount"),
+    /** Devices currently reporting as inactive. */
     INACTIVE_DEVICES("inactiveDevicesCount");
 
     private static final ApiUsageRecordKey[] JS_RECORD_KEYS = {JS_EXEC_COUNT};
@@ -75,6 +86,12 @@ public enum ApiUsageRecordKey {
         this.counter = counter;
         this.urgent = urgent;
     }
+    /**
+     * Returns keys.
+     *
+     * @param feature feature ({@link ApiFeature})
+     * @return the ApiUsageRecordKey[] value
+     */
 
     public static ApiUsageRecordKey[] getKeys(ApiFeature feature) {
         switch (feature) {

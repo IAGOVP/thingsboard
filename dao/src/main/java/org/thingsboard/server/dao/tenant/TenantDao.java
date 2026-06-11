@@ -26,27 +26,95 @@ import org.thingsboard.server.dao.Dao;
 import java.util.List;
 import java.util.UUID;
 
+
 /**
 
- * Persistence contract for tenant (see JPA/Cassandra implementations).
+ * Persistence contract for tenant.
+
+ *
+
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (tenants, tenant profiles, and profile caching).
 
  */
 
+
 public interface TenantDao extends Dao<Tenant> {
+    /**
+     * Finds tenant info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @return {@link TenantInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     TenantInfo findTenantInfoById(TenantId tenantId, UUID id);
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param tenant tenant ({@link Tenant})
+     * @return {@link Tenant}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     Tenant save(TenantId tenantId, Tenant tenant);
+    /**
+     * Finds tenants.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<Tenant> findTenants(TenantId tenantId, PageLink pageLink);
+    /**
+     * Finds tenant infos.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<TenantInfo> findTenantInfos(TenantId tenantId, PageLink pageLink);
+    /**
+     * Finds tenants ids.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<TenantId> findTenantsIds(PageLink pageLink);
+    /**
+     * Finds tenant ids by tenant profile id.
+     *
+     * @param tenantProfileId tenant profile id ({@link TenantProfileId})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<TenantId> findTenantIdsByTenantProfileId(TenantProfileId tenantProfileId);
+    /**
+     * Finds tenant by name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return {@link Tenant}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     Tenant findTenantByName(TenantId tenantId, String name);
+    /**
+     * Finds tenants by ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param tenantIds tenant ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<Tenant> findTenantsByIds(UUID tenantId, List<UUID> tenantIds);
 

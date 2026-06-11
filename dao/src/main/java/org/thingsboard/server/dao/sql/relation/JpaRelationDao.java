@@ -53,8 +53,11 @@ import static org.thingsboard.server.dao.model.ModelConstants.RELATION_TYPE_GROU
 import static org.thingsboard.server.dao.model.ModelConstants.RELATION_TYPE_PROPERTY;
 import static org.thingsboard.server.dao.model.ModelConstants.VERSION_COLUMN;
 /**
- * JPA implementation of relation dao.
+ * JPA/PostgreSQL implementation of relation dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Slf4j
 @Component
@@ -74,6 +77,15 @@ public class JpaRelationDao extends JpaAbstractDaoListeningExecutorService imple
 
     @Autowired
     private RelationInsertRepository relationInsertRepository;
+    /**
+     * Finds all by from.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param from from ({@link EntityId})
+     * @param typeGroup type group ({@link RelationTypeGroup})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<EntityRelation> findAllByFrom(TenantId tenantId, EntityId from, RelationTypeGroup typeGroup) {
@@ -83,6 +95,14 @@ public class JpaRelationDao extends JpaAbstractDaoListeningExecutorService imple
                         from.getEntityType().name(),
                         typeGroup.name()));
     }
+    /**
+     * Finds all by from.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param from from ({@link EntityId})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<EntityRelation> findAllByFrom(TenantId tenantId, EntityId from) {
@@ -92,6 +112,16 @@ public class JpaRelationDao extends JpaAbstractDaoListeningExecutorService imple
                         from.getEntityType().name(),
                         ALL_TYPE_GROUP_NAMES));
     }
+    /**
+     * Finds all by from and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param from from ({@link EntityId})
+     * @param relationType relation type ({@link String})
+     * @param typeGroup type group ({@link RelationTypeGroup})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<EntityRelation> findAllByFromAndType(TenantId tenantId, EntityId from, String relationType, RelationTypeGroup typeGroup) {
@@ -102,6 +132,15 @@ public class JpaRelationDao extends JpaAbstractDaoListeningExecutorService imple
                         relationType,
                         typeGroup.name()));
     }
+    /**
+     * Finds all by to.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param to to ({@link EntityId})
+     * @param typeGroup type group ({@link RelationTypeGroup})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<EntityRelation> findAllByTo(TenantId tenantId, EntityId to, RelationTypeGroup typeGroup) {
@@ -111,6 +150,14 @@ public class JpaRelationDao extends JpaAbstractDaoListeningExecutorService imple
                         to.getEntityType().name(),
                         typeGroup.name()));
     }
+    /**
+     * Finds all by to.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param to to ({@link EntityId})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<EntityRelation> findAllByTo(TenantId tenantId, EntityId to) {
@@ -120,6 +167,16 @@ public class JpaRelationDao extends JpaAbstractDaoListeningExecutorService imple
                         to.getEntityType().name(),
                         ALL_TYPE_GROUP_NAMES));
     }
+    /**
+     * Finds all by to and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param to to ({@link EntityId})
+     * @param relationType relation type ({@link String})
+     * @param typeGroup type group ({@link RelationTypeGroup})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<EntityRelation> findAllByToAndType(TenantId tenantId, EntityId to, String relationType, RelationTypeGroup typeGroup) {
@@ -130,18 +187,51 @@ public class JpaRelationDao extends JpaAbstractDaoListeningExecutorService imple
                         relationType,
                         typeGroup.name()));
     }
+    /**
+     * Checks relation async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param from from ({@link EntityId})
+     * @param to to ({@link EntityId})
+     * @param relationType relation type ({@link String})
+     * @param typeGroup type group ({@link RelationTypeGroup})
+     * @return future completing with {@link Boolean}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
 
     @Override
     public ListenableFuture<Boolean> checkRelationAsync(TenantId tenantId, EntityId from, EntityId to, String relationType, RelationTypeGroup typeGroup) {
         return service.submit(() -> checkRelation(tenantId, from, to, relationType, typeGroup));
     }
+    /**
+     * Checks relation.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param from from ({@link EntityId})
+     * @param to to ({@link EntityId})
+     * @param relationType relation type ({@link String})
+     * @param typeGroup type group ({@link RelationTypeGroup})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean checkRelation(TenantId tenantId, EntityId from, EntityId to, String relationType, RelationTypeGroup typeGroup) {
         RelationCompositeKey key = getRelationCompositeKey(from, to, relationType, typeGroup);
         return relationRepository.existsById(key);
     }
+    /**
+     * Returns relation.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param from from ({@link EntityId})
+     * @param to to ({@link EntityId})
+     * @param relationType relation type ({@link String})
+     * @param typeGroup type group ({@link RelationTypeGroup})
+     * @return {@link EntityRelation}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityRelation getRelation(TenantId tenantId, EntityId from, EntityId to, String relationType, RelationTypeGroup typeGroup) {
@@ -157,28 +247,68 @@ public class JpaRelationDao extends JpaAbstractDaoListeningExecutorService imple
                 relationType,
                 typeGroup.name());
     }
+    /**
+     * Saves or persists relation.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param relation relation ({@link EntityRelation})
+     * @return {@link EntityRelation}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityRelation saveRelation(TenantId tenantId, EntityRelation relation) {
         return DaoUtil.getData(relationInsertRepository.saveOrUpdate(new RelationEntity(relation)));
     }
+    /**
+     * Saves or persists relations.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param relations relations ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<EntityRelation> saveRelations(TenantId tenantId, List<EntityRelation> relations) {
         List<RelationEntity> entities = relations.stream().map(RelationEntity::new).collect(Collectors.toList());
         return DaoUtil.convertDataList(relationInsertRepository.saveOrUpdate(entities));
     }
+    /**
+     * Saves or persists relation async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param relation relation ({@link EntityRelation})
+     * @return future completing with {@link EntityRelation}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<EntityRelation> saveRelationAsync(TenantId tenantId, EntityRelation relation) {
         return service.submit(() -> DaoUtil.getData(relationInsertRepository.saveOrUpdate(new RelationEntity(relation))));
     }
+    /**
+     * Deletes relation.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param relation relation ({@link EntityRelation})
+     * @return {@link EntityRelation}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityRelation deleteRelation(TenantId tenantId, EntityRelation relation) {
         RelationCompositeKey key = new RelationCompositeKey(relation);
         return deleteRelationIfExists(key);
     }
+    /**
+     * Deletes relation async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param relation relation ({@link EntityRelation})
+     * @return future completing with {@link EntityRelation}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<EntityRelation> deleteRelationAsync(TenantId tenantId, EntityRelation relation) {
@@ -186,12 +316,34 @@ public class JpaRelationDao extends JpaAbstractDaoListeningExecutorService imple
         return service.submit(
                 () -> deleteRelationIfExists(key));
     }
+    /**
+     * Deletes relation.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param from from ({@link EntityId})
+     * @param to to ({@link EntityId})
+     * @param relationType relation type ({@link String})
+     * @param typeGroup type group ({@link RelationTypeGroup})
+     * @return {@link EntityRelation}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityRelation deleteRelation(TenantId tenantId, EntityId from, EntityId to, String relationType, RelationTypeGroup typeGroup) {
         RelationCompositeKey key = getRelationCompositeKey(from, to, relationType, typeGroup);
         return deleteRelationIfExists(key);
     }
+    /**
+     * Deletes relation async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param from from ({@link EntityId})
+     * @param to to ({@link EntityId})
+     * @param relationType relation type ({@link String})
+     * @param typeGroup type group ({@link RelationTypeGroup})
+     * @return future completing with {@link EntityRelation}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<EntityRelation> deleteRelationAsync(TenantId tenantId, EntityId from, EntityId to, String relationType, RelationTypeGroup typeGroup) {
@@ -225,21 +377,55 @@ public class JpaRelationDao extends JpaAbstractDaoListeningExecutorService imple
             return relation;
         }, key.getFromId(), key.getFromType(), key.getToId(), key.getToType(), key.getRelationType(), key.getRelationTypeGroup());
     }
+    /**
+     * Deletes outbound relations.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entity domain entity to persist or validate
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<EntityRelation> deleteOutboundRelations(TenantId tenantId, EntityId entity) {
         return deleteRelations(entity, null, false);
     }
+    /**
+     * Deletes outbound relations.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entity domain entity to persist or validate
+     * @param relationTypeGroup relation type group ({@link RelationTypeGroup})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<EntityRelation> deleteOutboundRelations(TenantId tenantId, EntityId entity, RelationTypeGroup relationTypeGroup) {
         return deleteRelations(entity, Collections.singletonList(relationTypeGroup.name()), false);
     }
+    /**
+     * Deletes inbound relations.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entity domain entity to persist or validate
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<EntityRelation> deleteInboundRelations(TenantId tenantId, EntityId entity) {
         return deleteRelations(entity, ALL_TYPE_GROUP_NAMES, true);
     }
+    /**
+     * Deletes inbound relations.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entity domain entity to persist or validate
+     * @param relationTypeGroup relation type group ({@link RelationTypeGroup})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<EntityRelation> deleteInboundRelations(TenantId tenantId, EntityId entity, RelationTypeGroup relationTypeGroup) {
@@ -289,11 +475,28 @@ public class JpaRelationDao extends JpaAbstractDaoListeningExecutorService imple
                     return relation;
                 }).toList();
     }
+    /**
+     * Finds rule node to rule chain relations.
+     *
+     * @param ruleChainType rule chain type ({@link RuleChainType})
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<EntityRelation> findRuleNodeToRuleChainRelations(RuleChainType ruleChainType, int limit) {
         return DaoUtil.convertDataList(relationRepository.findRuleNodeToRuleChainRelations(ruleChainType, PageRequest.of(0, limit)));
     }
+    /**
+     * Finds by relation path query.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param query filter and sort query definition
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<EntityRelation> findByRelationPathQuery(TenantId tenantId, EntityRelationPathQuery query, int limit) {

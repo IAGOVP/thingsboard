@@ -18,9 +18,15 @@ package org.thingsboard.server.dao.edge;
 import org.thingsboard.server.common.data.id.EdgeId;
 
 /**
- * edge synchronization manager contract.
+ * edge synchronization manager contract for the DAO layer.
  */
+
 public interface EdgeSynchronizationManager {
 
+    /**
+     * Returns edge id.
+     *
+     * @return {@link ThreadLocal}
+     */
     ThreadLocal<EdgeId> getEdgeId();
 }

@@ -20,7 +20,8 @@ import org.thingsboard.server.common.msg.TbActorMsg;
 import java.io.Serializable;
 
 /**
- * @author Andrew Shvayka
+ * Message contract: to all nodes msg.
  */
+
 public interface ToAllNodesMsg extends Serializable, TbActorMsg {
 }

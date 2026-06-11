@@ -29,6 +29,13 @@ import static org.thingsboard.server.common.data.device.credentials.lwm2m.Lwm2mS
  * Lw m2mconfiguration checker.
  */
 public class LwM2MConfigurationChecker extends ConfigurationChecker {
+    /**
+     * Verify.
+     *
+     * @param config config ({@link BootstrapConfig})
+     * @return nothing
+     * @throws InvalidConfigurationException if invalid configuration exception is thrown during processing
+     */
 
     @Override
     public void verify(BootstrapConfig config) throws InvalidConfigurationException {
@@ -60,7 +67,13 @@ public class LwM2MConfigurationChecker extends ConfigurationChecker {
         // does each server have a corresponding security entry?
         validateOneSecurityByServer(config);
     }
-
+    /**
+     * Validates one security by server.
+     *
+     * @param config config ({@link BootstrapConfig})
+     * @return nothing
+     * @throws InvalidConfigurationException if invalid configuration exception is thrown during processing
+     */
     protected void validateOneSecurityByServer(BootstrapConfig config) throws InvalidConfigurationException {
         for (Map.Entry<Integer, BootstrapConfig.ServerConfig> e : config.servers.entrySet()) {
             BootstrapConfig.ServerConfig srvCfg = e.getValue();
@@ -86,7 +99,14 @@ public class LwM2MConfigurationChecker extends ConfigurationChecker {
             }
         }
     }
-
+    /**
+     * Returns security entry.
+     *
+     * @param config config ({@link BootstrapConfig})
+     * @param shortId short id
+     * @return the BootstrapConfig.ServerSecurity value
+     * @throws Exception on processing failure
+     */
     protected static BootstrapConfig.ServerSecurity getSecurityEntry(BootstrapConfig config, int shortId) {
         for (Map.Entry<Integer, BootstrapConfig.ServerSecurity> es : config.security.entrySet()) {
             if ((es.getValue().serverId == null && shortId == 0) ||

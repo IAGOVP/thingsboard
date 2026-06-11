@@ -15,6 +15,11 @@
  */
 package org.thingsboard.server.queue.notification;
 
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.TimeUnit;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,19 +34,14 @@ import org.thingsboard.server.common.data.notification.rule.trigger.Notification
 import org.thingsboard.server.common.data.notification.rule.trigger.config.NotificationRuleTriggerType;
 import org.thingsboard.server.queue.util.PropertyUtils;
 
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.TimeUnit;
-
 import static org.springframework.util.ConcurrentReferenceHashMap.ReferenceType.SOFT;
 
+/**
+ * Deduplicates notification triggers using a time-window cache to prevent alert storms.
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
-/**
- * Default notification deduplication service.
- */
 public class DefaultNotificationDeduplicationService implements NotificationDeduplicationService {
 
     private ConcurrentMap<NotificationRuleTriggerType, Long> deduplicationDurations;

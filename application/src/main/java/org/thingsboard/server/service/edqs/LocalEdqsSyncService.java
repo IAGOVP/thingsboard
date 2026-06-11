@@ -20,9 +20,11 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Service;
 import org.thingsboard.server.edqs.util.EdqsRocksDb;
 
-    /**
-     * Spring service component for local edqs sync service (Entity Data Query Service integration from tb-core).
-     */
+    
+/**
+ * Spring component for EDQS local edqs sync service (EDQS tb-core).
+ */
+
 
 @Service
 @RequiredArgsConstructor

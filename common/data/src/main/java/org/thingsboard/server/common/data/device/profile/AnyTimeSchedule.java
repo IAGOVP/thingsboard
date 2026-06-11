@@ -24,11 +24,21 @@ import org.thingsboard.server.common.data.query.DynamicValue;
  * Any time schedule.
  */
 public class AnyTimeSchedule implements AlarmSchedule {
+    /**
+     * Returns type.
+     *
+     * @return {@link AlarmScheduleType}
+     */
 
     @Override
     public AlarmScheduleType getType() {
         return AlarmScheduleType.ANY_TIME;
     }
+    /**
+     * Returns dynamic value.
+     *
+     * @return {@link DynamicValue}
+     */
 
     @Override
     public DynamicValue<String> getDynamicValue() {

@@ -25,12 +25,13 @@ import org.thingsboard.server.queue.common.TbProtoQueueMsg;
 import org.thingsboard.server.queue.memory.InMemoryStorage;
 import org.thingsboard.server.queue.memory.InMemoryTbQueueProducer;
 
+
+/**
+ * In-memory implementation of {@link TaskProducerQueueFactory}.
+ */
 @Component
 @ConditionalOnExpression("'${queue.type:null}' == 'in-memory'")
 @RequiredArgsConstructor
-/**
- * Factory for in memory task producer queue.
- */
 public class InMemoryTaskProducerQueueFactory implements TaskProducerQueueFactory {
 
     private final InMemoryStorage storage;

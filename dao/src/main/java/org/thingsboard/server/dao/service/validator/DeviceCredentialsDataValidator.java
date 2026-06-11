@@ -27,8 +27,11 @@ import org.thingsboard.server.dao.device.DeviceService;
 import org.thingsboard.server.dao.exception.DeviceCredentialsValidationException;
 import org.thingsboard.server.dao.service.DataValidator;
 /**
- * Device credentials data validator.
+ * Validates device credentials entities before persistence.
+ *
+ * <p>Enforces constraints, uniqueness, and referential integrity at the DAO layer.
  */
+
 
 @Component
 public class DeviceCredentialsDataValidator extends DataValidator<DeviceCredentials> {
@@ -39,11 +42,16 @@ public class DeviceCredentialsDataValidator extends DataValidator<DeviceCredenti
     @Autowired @Lazy
     private DeviceService deviceService;
 
+    
     /**
-
-     * Validate create.
-
+     * Validates create.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceCredentials device credentials ({@link DeviceCredentials})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateCreate(TenantId tenantId, DeviceCredentials deviceCredentials) {
@@ -55,11 +63,16 @@ public class DeviceCredentialsDataValidator extends DataValidator<DeviceCredenti
         }
     }
 
+    
     /**
-
-     * Validate update.
-
+     * Validates update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceCredentials device credentials ({@link DeviceCredentials})
+     * @return {@link DeviceCredentials}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected DeviceCredentials validateUpdate(TenantId tenantId, DeviceCredentials deviceCredentials) {
@@ -73,11 +86,16 @@ public class DeviceCredentialsDataValidator extends DataValidator<DeviceCredenti
         return existingCredentials;
     }
 
+    
     /**
-
-     * Validate data impl.
-
+     * Validates data impl.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceCredentials device credentials ({@link DeviceCredentials})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateDataImpl(TenantId tenantId, DeviceCredentials deviceCredentials) {

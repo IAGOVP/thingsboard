@@ -29,7 +29,7 @@ import org.thingsboard.server.common.data.id.UserId;
 @NoArgsConstructor
 @AllArgsConstructor
 /**
- * Entity alarm.
+ * Association between an entity and an alarm (for propagation).
  */
 public class EntityAlarm implements HasTenantId {
 

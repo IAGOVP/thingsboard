@@ -58,8 +58,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 
 /**
- * Created by ashvayka on 24.10.18.
+ * Abstract buffered rate executor (DAO utilities (KV conversion, rate executors, JSON mapping)).
  */
+
+
+
+
+
+
 @Slf4j
 public abstract class AbstractBufferedRateExecutor<T extends AsyncTask, F extends ListenableFuture<V>, V> implements BufferedRateExecutor<T, F> {
 
@@ -113,6 +119,13 @@ public abstract class AbstractBufferedRateExecutor<T extends AsyncTask, F extend
             dispatcherExecutor.submit(this::dispatch);
         }
     }
+    /**
+     * Submit.
+     *
+     * @param task task ({@link T})
+     * @return {@link F}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public F submit(T task) {
@@ -153,6 +166,12 @@ public abstract class AbstractBufferedRateExecutor<T extends AsyncTask, F extend
         }
         return executorType.getCoreLimitedApi();
     }
+    /**
+     * Stop.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void stop() {
         if (dispatcherExecutor != null) {
@@ -165,10 +184,31 @@ public abstract class AbstractBufferedRateExecutor<T extends AsyncTask, F extend
             timeoutExecutor.shutdownNow();
         }
     }
+    /**
+     * Creates the requested data.
+     *
+     * @return {@link SettableFuture}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract SettableFuture<V> create();
+    /**
+     * Wrap.
+     *
+     * @param task task ({@link T})
+     * @param future future ({@link SettableFuture})
+     * @return {@link F}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract F wrap(T task, SettableFuture<V> future);
+    /**
+     * Executes the requested data.
+     *
+     * @param taskCtx task ctx ({@link AsyncTaskContext})
+     * @return future completing with {@link V}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract ListenableFuture<V> execute(AsyncTaskContext<T, V> taskCtx);
 
@@ -288,10 +328,22 @@ public abstract class AbstractBufferedRateExecutor<T extends AsyncTask, F extend
         }
         return query;
     }
+    /**
+     * Returns queue size.
+     *
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected int getQueueSize() {
         return queue.size();
     }
+    /**
+     * Print stats.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void printStats() {
         int queueSize = getQueueSize();

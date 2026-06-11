@@ -34,8 +34,18 @@ public @/**
 interface ValidJsonSchema {
 
     String message() default "must conform to the Draft 2020-12 meta-schema";
+/**
+ * Groups.
+ *
+ * @return {@link Class}
+ */
 
     Class<?>[] groups() default {};
+/**
+ * Payload.
+ *
+ * @return {@link Class}
+ */
 
     Class<? extends Payload>[] payload() default {};
 

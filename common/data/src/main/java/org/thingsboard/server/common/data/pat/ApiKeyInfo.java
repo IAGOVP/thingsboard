@@ -63,12 +63,22 @@ public class ApiKeyInfo extends BaseData<ApiKeyId> implements HasTenantId {
     @Schema(description = "Indicates if the API key is expired based on current time. Returns false if expirationTime is 0 (no expiry).",
             example = "false",
             accessMode = Schema.AccessMode.READ_ONLY)
+    /**
+     * Is expired.
+     *
+     * @return the boolean result
+     */
     public boolean isExpired() {
         if (expirationTime == 0) {
             return false;
         }
         return System.currentTimeMillis() > expirationTime;
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link ApiKeyId}
+     */
 
     @Schema(description = "JSON object with the API Key Id. " +
             "Specify this field to update the API Key. " +

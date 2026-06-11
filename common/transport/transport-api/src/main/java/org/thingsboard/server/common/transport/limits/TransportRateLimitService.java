@@ -30,22 +30,86 @@ public interface TransportRateLimitService {
 
     TbPair<EntityType, Boolean> checkLimits(TenantId tenantId, DeviceId gatewayId, DeviceId deviceId, int dataPoints, boolean isGateway);
 
+    /**
+     * Updates the requested data.
+     *
+     * @param update update ({@link TenantProfileUpdateResult})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void update(TenantProfileUpdateResult update);
 
+    /**
+     * Updates the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void update(TenantId tenantId);
 
+    /**
+     * Removes the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void remove(TenantId tenantId);
 
+    /**
+     * Removes the requested data.
+     *
+     * @param deviceId target device identifier
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void remove(DeviceId deviceId);
 
+    /**
+     * Updates the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param transportEnabled transport enabled
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void update(TenantId tenantId, boolean transportEnabled);
 
+    /**
+     * Checks address.
+     *
+     * @param address address ({@link InetSocketAddress})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     boolean checkAddress(InetSocketAddress address);
 
+    /**
+     * Handles auth success.
+     *
+     * @param address address ({@link InetSocketAddress})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void onAuthSuccess(InetSocketAddress address);
 
+    /**
+     * Handles auth failure.
+     *
+     * @param address address ({@link InetSocketAddress})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void onAuthFailure(InetSocketAddress address);
 
+    /**
+     * Invalidate rate limits ip table.
+     *
+     * @param sessionInactivityTimeout session inactivity timeout
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void invalidateRateLimitsIpTable(long sessionInactivityTimeout);
 
 }

@@ -34,8 +34,11 @@ import org.thingsboard.server.dao.util.mapping.JsonConverter;
 
 import java.util.UUID;
 /**
- * Qr code settings entity.
+ * JPA/Cassandra row model for qr code settings.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -75,6 +78,12 @@ public class QrCodeSettingsEntity extends BaseSqlEntity<QrCodeSettings> {
         }
         this.qrCodeConfig = toJson(qrCodeSettings.getQrCodeConfig());
     }
+    /**
+     * To data.
+     *
+     * @return {@link QrCodeSettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public QrCodeSettings toData() {

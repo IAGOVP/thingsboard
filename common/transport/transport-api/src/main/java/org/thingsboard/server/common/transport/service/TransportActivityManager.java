@@ -54,16 +54,36 @@ public abstract class TransportActivityManager extends AbstractActivityManager<U
 
     @Value("${transport.activity.reporting_strategy:LAST}")
     private ActivityStrategyType reportingStrategyType;
+    /**
+     * Returns reporting period millis.
+     *
+     * @return the long result
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected long getReportingPeriodMillis() {
         return sessionReportTimeout;
     }
+    /**
+     * Returns strategy.
+     *
+     * @return {@link ActivityStrategy}
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected ActivityStrategy getStrategy() {
         return reportingStrategyType.toStrategy();
     }
+    /**
+     * Updates state.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param state state ({@link ActivityState})
+     * @return {@link ActivityState}
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected ActivityState<TransportProtos.SessionInfoProto> updateState(UUID sessionId, ActivityState<TransportProtos.SessionInfoProto> state) {
@@ -93,11 +113,26 @@ public abstract class TransportActivityManager extends AbstractActivityManager<U
         state.setLastRecordedTime(Math.max(lastRecordedTime, gwLastRecordedTime));
         return state;
     }
+    /**
+     * Has expired.
+     *
+     * @param lastRecordedTime last recorded time
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected boolean hasExpired(long lastRecordedTime) {
         return (getCurrentTimeMillis() - sessionInactivityTimeout) > lastRecordedTime;
     }
+    /**
+     * Handles state expiry.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param sessionInfo session info
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected void onStateExpiry(UUID sessionId, TransportProtos.SessionInfoProto sessionInfo) {
@@ -109,6 +144,16 @@ public abstract class TransportActivityManager extends AbstractActivityManager<U
             expiredSession.getListener().onRemoteSessionCloseCommand(sessionId, SESSION_EXPIRED_NOTIFICATION_PROTO);
         }
     }
+    /**
+     * Report activity.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param currentSessionInfo current session info
+     * @param timeToReport time to report
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected void reportActivity(UUID sessionId, TransportProtos.SessionInfoProto currentSessionInfo, long timeToReport, ActivityReportCallback<UUID> callback) {
@@ -121,11 +166,25 @@ public abstract class TransportActivityManager extends AbstractActivityManager<U
                 .build();
         TransportProtos.SessionInfoProto sessionInfo = session != null ? session.getSessionInfo() : currentSessionInfo;
         process(sessionInfo, subscriptionInfo, new TransportServiceCallback<>() {
+            /**
+             * Handles success.
+             *
+             * @param msgAcknowledged msg acknowledged ({@link Void})
+             * @return nothing
+             * @throws Exception on processing failure
+             */
             @Override
             public void onSuccess(Void msgAcknowledged) {
                 callback.onSuccess(sessionId, timeToReport);
 
             }
+            /**
+             * Handles error.
+             *
+             * @param e e ({@link Throwable})
+             * @return nothing
+             * @throws Exception on processing failure
+             */
 
             @Override
             public void onError(Throwable e) {
@@ -133,7 +192,12 @@ public abstract class TransportActivityManager extends AbstractActivityManager<U
             }
         });
     }
-
+    /**
+     * Returns current time millis.
+     *
+     * @return the long result
+     * @throws Exception on processing failure
+     */
     protected long getCurrentTimeMillis() {
         return System.currentTimeMillis();
     }

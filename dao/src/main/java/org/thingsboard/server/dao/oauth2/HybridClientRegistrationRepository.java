@@ -27,8 +27,14 @@ import org.thingsboard.server.common.data.oauth2.OAuth2Client;
 
 import java.util.UUID;
 /**
- * Hybrid client registration repository.
+ * Spring component for hybrid client registration repository (OAuth2 client registration templates).
  */
+
+
+
+
+
+
 
 @Component
 public class HybridClientRegistrationRepository implements ClientRegistrationRepository {
@@ -38,11 +44,15 @@ public class HybridClientRegistrationRepository implements ClientRegistrationRep
     @Autowired
     private OAuth2ClientService oAuth2ClientService;
 
+    
     /**
-
-     * Loads by registration id.
-
+     * Finds by registration id.
+     *
+     * @param registrationId registration id ({@link String})
+     * @return {@link ClientRegistration}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ClientRegistration findByRegistrationId(String registrationId) {

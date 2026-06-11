@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.UUID;
 
 /**
- * Typed identifier for user credentials.
+ * Typed identifier for user login credentials.
  */
 public class UserCredentialsId extends UUIDBased {
 

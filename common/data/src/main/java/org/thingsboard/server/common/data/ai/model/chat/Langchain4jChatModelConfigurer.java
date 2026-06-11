@@ -23,20 +23,68 @@ import dev.langchain4j.model.chat.ChatModel;
 public interface Langchain4jChatModelConfigurer {
 
     ChatModel configureChatModel(OpenAiChatModelConfig chatModelConfig);
+/**
+ * Configure chat model.
+ *
+ * @param chatModelConfig chat model config ({@link AzureOpenAiChatModelConfig})
+ * @return {@link ChatModel}
+ */
 
     ChatModel configureChatModel(AzureOpenAiChatModelConfig chatModelConfig);
+/**
+ * Configure chat model.
+ *
+ * @param chatModelConfig chat model config ({@link GoogleAiGeminiChatModelConfig})
+ * @return {@link ChatModel}
+ */
 
     ChatModel configureChatModel(GoogleAiGeminiChatModelConfig chatModelConfig);
+/**
+ * Configure chat model.
+ *
+ * @param chatModelConfig chat model config ({@link GoogleVertexAiGeminiChatModelConfig})
+ * @return {@link ChatModel}
+ */
 
     ChatModel configureChatModel(GoogleVertexAiGeminiChatModelConfig chatModelConfig);
+/**
+ * Configure chat model.
+ *
+ * @param chatModelConfig chat model config ({@link MistralAiChatModelConfig})
+ * @return {@link ChatModel}
+ */
 
     ChatModel configureChatModel(MistralAiChatModelConfig chatModelConfig);
+/**
+ * Configure chat model.
+ *
+ * @param chatModelConfig chat model config ({@link AnthropicChatModelConfig})
+ * @return {@link ChatModel}
+ */
 
     ChatModel configureChatModel(AnthropicChatModelConfig chatModelConfig);
+/**
+ * Configure chat model.
+ *
+ * @param chatModelConfig chat model config ({@link AmazonBedrockChatModelConfig})
+ * @return {@link ChatModel}
+ */
 
     ChatModel configureChatModel(AmazonBedrockChatModelConfig chatModelConfig);
+/**
+ * Configure chat model.
+ *
+ * @param chatModelConfig chat model config ({@link GitHubModelsChatModelConfig})
+ * @return {@link ChatModel}
+ */
 
     ChatModel configureChatModel(GitHubModelsChatModelConfig chatModelConfig);
+/**
+ * Configure chat model.
+ *
+ * @param chatModelConfig chat model config ({@link OllamaChatModelConfig})
+ * @return {@link ChatModel}
+ */
 
     ChatModel configureChatModel(OllamaChatModelConfig chatModelConfig);
 

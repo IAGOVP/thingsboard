@@ -30,9 +30,6 @@ import java.util.List;
  * Created by ashvayka on 03.05.17.
  */
 @Data
-/**
- * Asset search query.
- */
 public class AssetSearchQuery {
 
     @Schema(description = "Main search parameters.")
@@ -41,6 +38,11 @@ public class AssetSearchQuery {
     private String relationType;
     @Schema(description = "Array of asset types to filter the related entities (e.g. 'Building', 'Vehicle').")
     private List<String> assetTypes;
+    /**
+     * To entity search query.
+     *
+     * @return {@link EntityRelationsQuery}
+     */
 
     public EntityRelationsQuery toEntitySearchQuery() {
         EntityRelationsQuery query = new EntityRelationsQuery();

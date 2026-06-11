@@ -50,7 +50,14 @@ public class SnmpAuthService {
 
     @Value("${transport.snmp.underlying_protocol}")
     private String snmpUnderlyingProtocol;
-
+    /**
+     * Set up snmp target.
+     *
+     * @param profileTransportConfig profile transport config ({@link SnmpDeviceProfileTransportConfiguration})
+     * @param deviceTransportConfig device transport config ({@link SnmpDeviceTransportConfiguration})
+     * @return {@link Target}
+     * @throws Exception on processing failure
+     */
     public Target setUpSnmpTarget(SnmpDeviceProfileTransportConfiguration profileTransportConfig, SnmpDeviceTransportConfiguration deviceTransportConfig) {
         AbstractTarget target;
 
@@ -113,7 +120,13 @@ public class SnmpAuthService {
 
         return target;
     }
-
+    /**
+     * Clean up snmp auth info.
+     *
+     * @param sessionContext session context ({@link DeviceSessionContext})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void cleanUpSnmpAuthInfo(DeviceSessionContext sessionContext) {
         SnmpDeviceTransportConfiguration deviceTransportConfiguration = sessionContext.getDeviceTransportConfiguration();
         if (deviceTransportConfiguration.getProtocolVersion() == SnmpProtocolVersion.V3) {

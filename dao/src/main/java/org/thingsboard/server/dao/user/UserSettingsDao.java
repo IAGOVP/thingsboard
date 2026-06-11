@@ -23,21 +23,68 @@ import org.thingsboard.server.common.data.settings.UserSettingsType;
 
 import java.util.List;
 
+
 /**
 
- * Persistence contract for user settings (see JPA/Cassandra implementations).
+ * Persistence contract for user settings.
+
+ *
+
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (users, credentials, and user settings).
 
  */
 
+
 public interface UserSettingsDao {
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userSettings user settings ({@link UserSettings})
+     * @return {@link UserSettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     UserSettings save(TenantId tenantId, UserSettings userSettings);
+    /**
+     * Finds by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key attribute or cache key
+     * @return {@link UserSettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     UserSettings findById(TenantId tenantId, UserSettingsCompositeKey key);
+    /**
+     * Removes by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key attribute or cache key
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void removeById(TenantId tenantId, UserSettingsCompositeKey key);
+    /**
+     * Removes by user id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void removeByUserId(TenantId tenantId, UserId userId);
+    /**
+     * Finds by type and path.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link UserSettingsType})
+     * @param path path
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<UserSettings> findByTypeAndPath(TenantId tenantId, UserSettingsType type, String... path);
 

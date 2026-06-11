@@ -41,8 +41,11 @@ import static org.thingsboard.server.dao.model.ModelConstants.MOBILE_APP_STORE_I
 import static org.thingsboard.server.dao.model.ModelConstants.MOBILE_APP_VERSION_INFO_EMPTY_OBJECT;
 import static org.thingsboard.server.dao.model.ModelConstants.TENANT_ID_COLUMN;
 /**
- * Mobile app entity.
+ * JPA/Cassandra row model for mobile app.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -95,6 +98,12 @@ public class MobileAppEntity extends BaseSqlEntity<MobileApp> {
         this.versionInfo = toJson(mobile.getVersionInfo());
         this.storeInfo = toJson(mobile.getStoreInfo());
     }
+    /**
+     * To data.
+     *
+     * @return {@link MobileApp}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public MobileApp toData() {

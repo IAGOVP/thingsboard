@@ -32,8 +32,11 @@ import org.thingsboard.server.dao.tenant.TenantService;
 import java.net.URI;
 import java.util.Optional;
 /**
- * Ai model data validator.
+ * Validates ai model entities before persistence.
+ *
+ * <p>Enforces constraints, uniqueness, and referential integrity at the DAO layer.
  */
+
 
 @Component
 @RequiredArgsConstructor
@@ -42,11 +45,16 @@ class AiModelDataValidator extends DataValidator<AiModel> {
     private final TenantService tenantService;
     private final AiModelDao aiModelDao;
 
+    
     /**
-
-     * Validate update.
-
+     * Validates update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param model model ({@link AiModel})
+     * @return {@link AiModel}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected AiModel validateUpdate(TenantId tenantId, AiModel model) {
@@ -57,11 +65,16 @@ class AiModelDataValidator extends DataValidator<AiModel> {
         return existing.get();
     }
 
+    
     /**
-
-     * Validate data impl.
-
+     * Validates data impl.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param model model ({@link AiModel})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateDataImpl(TenantId tenantId, AiModel model) {

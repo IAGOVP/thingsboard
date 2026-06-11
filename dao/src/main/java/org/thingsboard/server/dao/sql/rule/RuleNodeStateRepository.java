@@ -24,21 +24,58 @@ import org.thingsboard.server.dao.model.sql.RuleNodeStateEntity;
 
 import java.util.UUID;
 
+
 /**
 
- * rule node state repository contract.
+ * Spring Data JPA repository for rule node state entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
 
+
 public interface RuleNodeStateRepository extends JpaRepository<RuleNodeStateEntity, UUID> {
+    /**
+     * Finds by rule node id.
+     *
+     * @param ruleNodeId rule node id ({@link UUID})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Query("SELECT e FROM RuleNodeStateEntity e WHERE e.ruleNodeId = :ruleNodeId")
     Page<RuleNodeStateEntity> findByRuleNodeId(@Param("ruleNodeId") UUID ruleNodeId, Pageable pageable);
+    /**
+     * Finds by rule node id and entity id.
+     *
+     * @param ruleNodeId rule node id ({@link UUID})
+     * @param entityId target entity identifier
+     * @return {@link RuleNodeStateEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Query("SELECT e FROM RuleNodeStateEntity e WHERE e.ruleNodeId = :ruleNodeId and e.entityId = :entityId")
     RuleNodeStateEntity findByRuleNodeIdAndEntityId(@Param("ruleNodeId") UUID ruleNodeId, @Param("entityId") UUID entityId);
+    /**
+     * Removes by rule node id.
+     *
+     * @param ruleNodeId rule node id ({@link UUID})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void removeByRuleNodeId(@Param("ruleNodeId") UUID ruleNodeId);
+    /**
+     * Removes by rule node id and entity id.
+     *
+     * @param ruleNodeId rule node id ({@link UUID})
+     * @param entityId target entity identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void removeByRuleNodeIdAndEntityId(@Param("ruleNodeId") UUID ruleNodeId, @Param("entityId") UUID entityId);
 }

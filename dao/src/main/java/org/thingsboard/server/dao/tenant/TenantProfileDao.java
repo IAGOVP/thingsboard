@@ -25,25 +25,85 @@ import org.thingsboard.server.dao.Dao;
 import java.util.List;
 import java.util.UUID;
 
+
 /**
 
- * Persistence contract for tenant profile (see JPA/Cassandra implementations).
+ * Persistence contract for tenant profile.
+
+ *
+
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (tenants, tenant profiles, and profile caching).
 
  */
 
+
 public interface TenantProfileDao extends Dao<TenantProfile> {
+    /**
+     * Finds tenant profile info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param tenantProfileId tenant profile id ({@link UUID})
+     * @return {@link EntityInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     EntityInfo findTenantProfileInfoById(TenantId tenantId, UUID tenantProfileId);
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param tenantProfile tenant profile ({@link TenantProfile})
+     * @return {@link TenantProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     TenantProfile save(TenantId tenantId, TenantProfile tenantProfile);
+    /**
+     * Finds tenant profiles.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<TenantProfile> findTenantProfiles(TenantId tenantId, PageLink pageLink);
+    /**
+     * Finds tenant profile infos.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<EntityInfo> findTenantProfileInfos(TenantId tenantId, PageLink pageLink);
+    /**
+     * Finds default tenant profile.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link TenantProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     TenantProfile findDefaultTenantProfile(TenantId tenantId);
+    /**
+     * Finds default tenant profile info.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link EntityInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     EntityInfo findDefaultTenantProfileInfo(TenantId tenantId);
+    /**
+     * Finds tenant profiles by ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ids ids
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<TenantProfile> findTenantProfilesByIds(TenantId tenantId, UUID[] ids);
 

@@ -75,11 +75,24 @@ public class NotificationRequestStats {
         this.error = error;
         this.processedRecipients = Collections.emptyMap();
     }
+    /**
+     * Report sent.
+     *
+     * @param deliveryMethod delivery method ({@link NotificationDeliveryMethod})
+     * @param recipient recipient ({@link NotificationRecipient})
+     */
 
     public void reportSent(NotificationDeliveryMethod deliveryMethod, NotificationRecipient recipient) {
         sent.computeIfAbsent(deliveryMethod, k -> new AtomicInteger()).incrementAndGet();
         totalSent.incrementAndGet();
     }
+    /**
+     * Report error.
+     *
+     * @param deliveryMethod delivery method ({@link NotificationDeliveryMethod})
+     * @param error error ({@link Throwable})
+     * @param recipient recipient ({@link NotificationRecipient})
+     */
 
     public void reportError(NotificationDeliveryMethod deliveryMethod, Throwable error, NotificationRecipient recipient) {
         if (error instanceof AlreadySentException) {
@@ -95,10 +108,23 @@ public class NotificationRequestStats {
         }
         totalErrors.incrementAndGet();
     }
+    /**
+     * Report processed.
+     *
+     * @param deliveryMethod delivery method ({@link NotificationDeliveryMethod})
+     * @param recipientId recipient id ({@link Object})
+     */
 
     public void reportProcessed(NotificationDeliveryMethod deliveryMethod, Object recipientId) {
         processedRecipients.computeIfAbsent(deliveryMethod, k -> ConcurrentHashMap.newKeySet()).add(recipientId);
     }
+    /**
+     * Contains.
+     *
+     * @param deliveryMethod delivery method ({@link NotificationDeliveryMethod})
+     * @param recipientId recipient id ({@link Object})
+     * @return the boolean result
+     */
 
     public boolean contains(NotificationDeliveryMethod deliveryMethod, Object recipientId) {
         Set<Object> processedRecipients = this.processedRecipients.get(deliveryMethod);

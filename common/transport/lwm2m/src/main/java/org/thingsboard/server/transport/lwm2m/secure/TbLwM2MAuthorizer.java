@@ -48,6 +48,15 @@ public class TbLwM2MAuthorizer implements Authorizer {
     private final TbMainSecurityStore securityStore;
     private final SecurityChecker securityChecker = new SecurityChecker();
     private final LwM2mClientContext clientContext;
+    /**
+     * Is authorized.
+     *
+     * @param request request payload with operation parameters
+     * @param registration registration ({@link Registration})
+     * @param sender sender ({@link LwM2mPeer})
+     * @return {@link Authorization}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public Authorization isAuthorized(UplinkRequest<?> request, Registration registration, LwM2mPeer sender) {

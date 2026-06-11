@@ -29,8 +29,11 @@ import org.thingsboard.server.dao.util.SqlDao;
 
 import java.util.UUID;
 /**
- * JPA implementation of qr code settings dao.
+ * JPA/PostgreSQL implementation of qr code settings dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 
 @Component
@@ -40,22 +43,48 @@ public class JpaQrCodeSettingsDao extends JpaAbstractDao<QrCodeSettingsEntity, Q
 
     @Autowired
     private QrCodeSettingsRepository qrCodeSettingsRepository;
+    /**
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link QrCodeSettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
 
     @Override
     public QrCodeSettings findByTenantId(TenantId tenantId) {
         return DaoUtil.getData(qrCodeSettingsRepository.findByTenantId(tenantId.getId()));
     }
+    /**
+     * Removes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void removeByTenantId(TenantId tenantId) {
         qrCodeSettingsRepository.deleteByTenantId(tenantId.getId());
     }
+    /**
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Class<QrCodeSettingsEntity> getEntityClass() {
         return QrCodeSettingsEntity.class;
     }
+    /**
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected JpaRepository<QrCodeSettingsEntity, UUID> getRepository() {

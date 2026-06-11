@@ -39,6 +39,11 @@ public class DurationAlarmCondition extends AlarmCondition {
     @Valid
     @NotNull
     private AlarmConditionValue<Long> value;
+    /**
+     * Returns type.
+     *
+     * @return {@link AlarmConditionType}
+     */
 
     @Override
     public AlarmConditionType getType() {

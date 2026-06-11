@@ -23,14 +23,11 @@ import org.thingsboard.server.common.data.rpc.ToDeviceRpcRequestBody;
 
 import java.io.Serializable;
 import java.util.UUID;
+/**
+ * Server-side RPC request targeting a device.
+ */
 
-/**
- * @author Andrew Shvayka
- */
 @Data
-/**
- * To device rpc request.
- */
 public class ToDeviceRpcRequest implements Serializable {
 
     private static final long serialVersionUID = -7089247105087346214L;

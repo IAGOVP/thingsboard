@@ -28,6 +28,11 @@ public enum SnmpProtocolVersion {
     SnmpProtocolVersion(int code) {
         this.code = code;
     }
+    /**
+     * Returns code.
+     *
+     * @return the int result
+     */
 
     public int getCode() {
         return code;

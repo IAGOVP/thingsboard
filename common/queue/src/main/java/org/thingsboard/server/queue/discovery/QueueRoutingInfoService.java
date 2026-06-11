@@ -17,8 +17,9 @@ package org.thingsboard.server.queue.discovery;
 
 import java.util.List;
 
+
 /**
- * Service API for queue routing info persistence and domain operations.
+ * Provides {@link QueueRoutingInfo} for partition assignment decisions.
  */
 public interface QueueRoutingInfoService {
 

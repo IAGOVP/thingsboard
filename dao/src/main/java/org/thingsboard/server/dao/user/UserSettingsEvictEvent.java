@@ -18,8 +18,11 @@ package org.thingsboard.server.dao.user;
 import lombok.Data;
 import org.thingsboard.server.common.data.settings.UserSettingsCompositeKey;
 /**
- * User settings evict event.
+ * Cache eviction event published when user settings data changes.
+ *
+ * <p>Consumed by cache listeners to invalidate stale entries cluster-wide.
  */
+
 
 @Data
 public class UserSettingsEvictEvent {

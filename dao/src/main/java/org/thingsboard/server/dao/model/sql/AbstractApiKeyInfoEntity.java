@@ -34,8 +34,11 @@ import static org.thingsboard.server.dao.model.ModelConstants.API_KEY_EXPIRATION
 import static org.thingsboard.server.dao.model.ModelConstants.API_KEY_TENANT_ID_COLUMN_NAME;
 import static org.thingsboard.server.dao.model.ModelConstants.API_KEY_USER_ID_COLUMN_NAME;
 /**
- * Abstract api key info entity.
+ * JPA/Cassandra row model for abstract api key info.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -69,6 +72,12 @@ public abstract class AbstractApiKeyInfoEntity<T extends ApiKeyInfo> extends Bas
         this.description = apiKeyInfo.getDescription();
         this.enabled = apiKeyInfo.isEnabled();
     }
+    /**
+     * To api key info.
+     *
+     * @return {@link ApiKeyInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected ApiKeyInfo toApiKeyInfo() {
         ApiKeyInfo apiKeyInfo = new ApiKeyInfo(new ApiKeyId(getUuid()));

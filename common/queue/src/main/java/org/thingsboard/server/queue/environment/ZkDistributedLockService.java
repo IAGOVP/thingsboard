@@ -24,13 +24,14 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.thingsboard.server.queue.discovery.ZkDiscoveryService;
 
+
+/**
+ * ZooKeeper-based {@link DistributedLockService} implementation.
+ */
 @Service
 @RequiredArgsConstructor
 @ConditionalOnProperty(prefix = "zk", value = "enabled", havingValue = "true")
 @Slf4j
-/**
- * Zk distributed lock service.
- */
 public class ZkDistributedLockService implements DistributedLockService {
 
     private final ZkDiscoveryService zkDiscoveryService;

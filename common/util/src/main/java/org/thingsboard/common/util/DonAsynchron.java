@@ -68,6 +68,7 @@ public class DonAsynchron {
     }
 
     public static <T> ListenableFuture<T> submit(Callable<T> task, Consumer<T> onSuccess, Consumer<Throwable> onFailure, Executor executor) {
+        /** Submit. */
         return submit(task, onSuccess, onFailure, executor, null);
     }
 

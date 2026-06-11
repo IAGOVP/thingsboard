@@ -39,6 +39,11 @@ public class NoDataFilterPredicate implements KeyFilterPredicate {
     @Valid
     @NotNull
     private AlarmConditionValue<Long> duration;
+    /**
+     * Returns type.
+     *
+     * @return {@link FilterPredicateType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, ref = "#/components/schemas/AlarmRuleFilterPredicateType")
     @Override

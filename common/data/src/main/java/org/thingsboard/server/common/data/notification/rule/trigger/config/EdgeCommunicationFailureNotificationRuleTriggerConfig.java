@@ -37,6 +37,11 @@ public class EdgeCommunicationFailureNotificationRuleTriggerConfig implements No
 
     @ArraySchema(schema = @Schema(implementation = UUID.class))
     private Set<UUID> edges; // if empty - all edges
+    /**
+     * Returns trigger type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     */
 
     @Override
     public NotificationRuleTriggerType getTriggerType() {

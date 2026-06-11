@@ -32,10 +32,25 @@ public @/**
 interface NoXss {
 
     String message() default "is malformed";
+/**
+ * Field name.
+ *
+ * @return {@link String}
+ */
 
     String fieldName() default "";
+/**
+ * Groups.
+ *
+ * @return {@link Class}
+ */
 
     Class<?>[] groups() default {};
+/**
+ * Payload.
+ *
+ * @return {@link Class}
+ */
 
     Class<? extends Payload>[] payload() default {};
 

@@ -30,21 +30,53 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+
 /**
 
- * user repository contract.
+ * Spring Data JPA repository for user entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
 
+
 public interface UserRepository extends JpaRepository<UserEntity, UUID> {
+    /**
+     * Finds by email.
+     *
+     * @param email email ({@link String})
+     * @return {@link UserEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     UserEntity findByEmail(String email);
+    /**
+     * Finds by tenant id and email.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param email email ({@link String})
+     * @return {@link UserEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     UserEntity findByTenantIdAndEmail(UUID tenantId, String email);
 
     @Query("SELECT u FROM UserEntity u WHERE u.tenantId = :tenantId " +
             "AND u.customerId = :customerId AND u.authority = :authority " +
             "AND (:searchText IS NULL OR ilike(u.email, CONCAT('%', :searchText, '%')) = true)")
+    /**
+     * Finds users by authority.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param searchText search text ({@link String})
+     * @param authority authority ({@link Authority})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<UserEntity> findUsersByAuthority(@Param("tenantId") UUID tenantId,
                                           @Param("customerId") UUID customerId,
                                           @Param("searchText") String searchText,
@@ -54,6 +86,16 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     @Query("SELECT u FROM UserEntity u WHERE u.tenantId = :tenantId " +
             "AND u.customerId IN (:customerIds) " +
             "AND (:searchText IS NULL OR ilike(u.email, CONCAT('%', :searchText, '%')) = true)")
+    /**
+     * Finds tenant and customer users.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerIds customer ids ({@link Collection})
+     * @param searchText search text ({@link String})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<UserEntity> findTenantAndCustomerUsers(@Param("tenantId") UUID tenantId,
                                                 @Param("customerIds") Collection<UUID> customerIds,
                                                 @Param("searchText") String searchText,
@@ -61,33 +103,106 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
 
     @Query("SELECT u FROM UserEntity u WHERE u.tenantId = :tenantId " +
             "AND (:searchText IS NULL OR ilike(u.email, CONCAT('%', :searchText, '%')) = true)")
+    /**
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param searchText search text ({@link String})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<UserEntity> findByTenantId(@Param("tenantId") UUID tenantId,
                                     @Param("searchText") String searchText,
                                     Pageable pageable);
+    /**
+     * Finds all by authority.
+     *
+     * @param authority authority ({@link Authority})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     Page<UserEntity> findAllByAuthority(Authority authority, Pageable pageable);
+    /**
+     * Finds by authority and tenant id in.
+     *
+     * @param authority authority ({@link Authority})
+     * @param tenantsIds tenants ids ({@link Collection})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     Page<UserEntity> findByAuthorityAndTenantIdIn(Authority authority, Collection<UUID> tenantsIds, Pageable pageable);
 
     @Query("SELECT u FROM UserEntity u INNER JOIN TenantEntity t ON u.tenantId = t.id AND u.authority = :authority " +
             "INNER JOIN TenantProfileEntity p ON t.tenantProfileId = p.id " +
             "WHERE p.id IN :profiles")
+    /**
+     * Finds by authority and tenant profiles ids.
+     *
+     * @param authority authority ({@link Authority})
+     * @param tenantProfilesIds tenant profiles ids ({@link Collection})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<UserEntity> findByAuthorityAndTenantProfilesIds(@Param("authority") Authority authority,
                                                          @Param("profiles") Collection<UUID> tenantProfilesIds,
                                                          Pageable pageable);
+    /**
+     * Counts by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link Long}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     Long countByTenantId(UUID tenantId);
 
     @Query("SELECT new org.thingsboard.server.common.data.edqs.fields.UserFields(u.id, u.createdTime, u.tenantId," +
             "u.customerId, u.version, u.firstName, u.lastName, u.email, u.phone, u.additionalInfo) " +
             "FROM UserEntity u WHERE u.id > :id ORDER BY u.id")
+    /**
+     * Finds next batch.
+     *
+     * @param id entity UUID primary key
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     List<UserFields> findNextBatch(@Param("id") UUID id, Limit limit);
+    /**
+     * Counts by tenant id and authority.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param authority authority ({@link Authority})
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     int countByTenantIdAndAuthority(UUID tenantId, Authority authority);
 
     @Query("SELECT new org.thingsboard.server.common.data.util.TbPair(u, uc.enabled) " +
             "FROM UserEntity u JOIN UserCredentialsEntity uc ON u.id = uc.userId WHERE u.id = :userId ")
+    /**
+     * Finds user auth details by user id.
+     *
+     * @param userId target user identifier
+     * @return {@link TbPair}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     TbPair<UserEntity, Boolean> findUserAuthDetailsByUserId(@Param("userId") UUID userId);
+    /**
+     * Finds users by tenant id and id in.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userIds user ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<UserEntity> findUsersByTenantIdAndIdIn(UUID tenantId, List<UUID> userIds);
 

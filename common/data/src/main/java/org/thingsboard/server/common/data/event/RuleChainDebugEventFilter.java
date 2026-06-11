@@ -30,11 +30,21 @@ public class RuleChainDebugEventFilter extends DebugEventFilter {
 
     @Schema(description = "String value representing the message")
     protected String message;
+    /**
+     * Returns event type.
+     *
+     * @return {@link EventType}
+     */
 
     @Override
     public EventType getEventType() {
         return EventType.DEBUG_RULE_CHAIN;
     }
+    /**
+     * Is not empty.
+     *
+     * @return the boolean result
+     */
 
     @Override
     public boolean isNotEmpty() {

@@ -22,8 +22,11 @@ import org.thingsboard.server.common.data.TenantInfo;
 import java.util.HashMap;
 import java.util.Map;
 /**
- * Tenant info entity.
+ * JPA/Cassandra row model for tenant info.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -44,6 +47,12 @@ public class TenantInfoEntity extends AbstractTenantEntity<TenantInfo> {
         super(tenantEntity);
         this.tenantProfileName = tenantProfileName;
     }
+    /**
+     * To data.
+     *
+     * @return {@link TenantInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TenantInfo toData() {

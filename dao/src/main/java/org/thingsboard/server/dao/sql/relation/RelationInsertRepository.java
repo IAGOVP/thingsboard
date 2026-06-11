@@ -19,15 +19,35 @@ import org.thingsboard.server.dao.model.sql.RelationEntity;
 
 import java.util.List;
 
+
 /**
 
- * relation insert repository contract.
+ * Spring Data JPA repository for relation insert entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
 
+
 public interface RelationInsertRepository {
+    /**
+     * Saves or updates the requested data.
+     *
+     * @param entity domain entity to persist or validate
+     * @return {@link RelationEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     RelationEntity saveOrUpdate(RelationEntity entity);
+    /**
+     * Saves or updates the requested data.
+     *
+     * @param entities entities ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<RelationEntity> saveOrUpdate(List<RelationEntity> entities);
 

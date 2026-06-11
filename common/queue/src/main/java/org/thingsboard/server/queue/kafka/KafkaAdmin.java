@@ -16,6 +16,19 @@
 package org.thingsboard.server.queue.kafka;
 
 import jakarta.annotation.PreDestroy;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
+
+
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.concurrent.ConcurrentException;
@@ -34,24 +47,12 @@ import org.springframework.stereotype.Component;
 import org.thingsboard.common.util.CachedValue;
 import org.thingsboard.server.queue.util.TbKafkaComponent;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.stream.Collectors;
-
+/**
+ * Low-level Kafka admin client wrapper used by queue factories and topic provisioning.
+ */
 @TbKafkaComponent
 @Component
 @Slf4j
-/**
- * Kafka admin.
- */
 public class KafkaAdmin {
 
     /*
@@ -172,11 +173,7 @@ public class KafkaAdmin {
         return getClient().listConsumerGroupOffsets(groupId).partitionsToOffsetAndMetadata().get(settings.getRequestTimeoutMs(), TimeUnit.MILLISECONDS);
     }
 
-    /**
-     * Sync offsets from a fat group to a single-partition group
-     * Migration back from single-partition consumer to a fat group is not supported
-     * TODO: The best possible approach to synchronize the offsets is to do the synchronization as a part of the save Queue parameters with stop all consumers
-     * */
+    
     public void syncOffsets(String fatGroupId, String newGroupId, Integer partitionId) {
         try {
             log.info("syncOffsets [{}][{}][{}]", fatGroupId, newGroupId, partitionId);

@@ -18,15 +18,39 @@ package org.thingsboard.server.transport.lwm2m.server.model;
 import org.thingsboard.server.transport.lwm2m.server.client.LwM2mClient;
 
 /**
- * Service API for lw m2mmodel config persistence and domain operations.
+ * Service contract for lw m2mmodel config (LwM2M transport and object model (ThingsBoard common module)).
+ *
+ * <p>Implemented by the corresponding class in this or the dao module.
  */
 public interface LwM2MModelConfigService {
 
     void sendUpdates(LwM2mClient lwM2mClient);
 
+    /**
+     * Send updates.
+     *
+     * @param lwM2mClient lw m2m client ({@link LwM2mClient})
+     * @param modelConfig model config ({@link LwM2MModelConfig})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void sendUpdates(LwM2mClient lwM2mClient, LwM2MModelConfig modelConfig);
 
+    /**
+     * Persist updates.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void persistUpdates(String endpoint);
 
+    /**
+     * Removes updates.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void removeUpdates(String endpoint);
 }

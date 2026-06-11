@@ -17,15 +17,64 @@ package org.thingsboard.server.dao.util;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * async rate limiter contract.
+
+
+
+
+
+ * async rate limiter contract (DAO utilities (KV conversion, rate executors, JSON mapping)).
+
+
+
+
+
 
  */
 
+
+
+
+
+
+
 public interface AsyncRateLimiter {
+    /**
+     * Acquire async.
+     *
+     * @return future completing with {@link Void}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     ListenableFuture<Void> acquireAsync();
+    /**
+     * Release.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void release();
 }

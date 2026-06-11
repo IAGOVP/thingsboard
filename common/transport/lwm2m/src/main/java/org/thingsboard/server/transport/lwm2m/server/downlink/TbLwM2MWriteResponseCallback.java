@@ -31,6 +31,14 @@ public class TbLwM2MWriteResponseCallback extends TbLwM2MUplinkTargetedCallback<
     public TbLwM2MWriteResponseCallback(LwM2mUplinkMsgHandler handler, LwM2MTelemetryLogService logService, LwM2mClient client, String targetId) {
         super(handler, logService, client, targetId);
     }
+    /**
+     * Handles success.
+     *
+     * @param request request payload with operation parameters
+     * @param response response ({@link WriteResponse})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onSuccess(WriteRequest request, WriteResponse response) {

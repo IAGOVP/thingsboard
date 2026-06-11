@@ -18,10 +18,16 @@ package org.thingsboard.server.common.msg.aware;
 import org.thingsboard.server.common.data.id.CustomerId;
 
 /**
- * customer aware msg contract.
+ * Message contract: customer aware msg.
  */
+
 public interface CustomerAwareMsg {
 
+    /**
+     * Returns customer id.
+     *
+     * @return {@link CustomerId}
+     */
 	CustomerId getCustomerId();
 	
 }

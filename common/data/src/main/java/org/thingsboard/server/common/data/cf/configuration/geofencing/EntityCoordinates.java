@@ -37,6 +37,11 @@ public class EntityCoordinates {
     private final String latitudeKeyName;
     @NotBlank
     private final String longitudeKeyName;
+    /**
+     * To arguments.
+     *
+     * @return {@link Map}
+     */
 
     public Map<String, Argument> toArguments() {
         return Map.of(

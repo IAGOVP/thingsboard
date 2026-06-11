@@ -20,21 +20,48 @@ import org.springframework.data.redis.serializer.SerializationException;
 import org.thingsboard.common.util.JacksonUtil;
 
 /**
- * Tb typed json redis serializer.
+ * JSON {@link TbRedisSerializer} using Jackson {@link com.fasterxml.jackson.core.type.TypeReference}
+ * for generic or complex value types.
+ *
+ * <p>Used when the cached type is not a simple {@link Class} (e.g. {@code List<Device>},
+ * {@code Map<String, Object>}).
+ *
+ * @param <K> cache key type
+ * @param <V> cache value type described by the type reference
+ * @see TbJsonRedisSerializer
  */
 public class TbTypedJsonRedisSerializer<K, V> implements TbRedisSerializer<K, V> {
 
+    /** Jackson type token for {@code V}. */
+
     private final TypeReference<V> valueTypeRef;
 
+    /**
+     * @param valueTypeRef Jackson type reference for deserialization
+     */
     public TbTypedJsonRedisSerializer(TypeReference<V> valueTypeRef) {
         this.valueTypeRef = valueTypeRef;
     }
 
+/**
+         * {@inheritDoc}
+         *
+         * @param v value to serialize
+         * @return JSON bytes
+         */
     @Override
     public byte[] serialize(V v) throws SerializationException {
         return JacksonUtil.writeValueAsBytes(v);
     }
 
+/**
+         * {@inheritDoc}
+         *
+         * @param key   cache key (unused)
+         * @param bytes JSON bytes
+         * @return deserialized value
+         * @throws org.springframework.data.redis.serializer.SerializationException on parse failure
+         */
     @Override
     public V deserialize(K key, byte[] bytes) throws SerializationException {
         return JacksonUtil.fromBytes(bytes, valueTypeRef);

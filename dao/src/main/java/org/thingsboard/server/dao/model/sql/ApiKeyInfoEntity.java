@@ -24,8 +24,11 @@ import org.thingsboard.server.common.data.pat.ApiKeyInfo;
 
 import static org.thingsboard.server.dao.model.ModelConstants.API_KEY_TABLE_NAME;
 /**
- * Api key info entity.
+ * JPA/Cassandra row model for api key info.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -40,6 +43,12 @@ public class ApiKeyInfoEntity extends AbstractApiKeyInfoEntity<ApiKeyInfo> {
     public ApiKeyInfoEntity(ApiKey apiKey) {
         super(apiKey);
     }
+    /**
+     * To data.
+     *
+     * @return {@link ApiKeyInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ApiKeyInfo toData() {

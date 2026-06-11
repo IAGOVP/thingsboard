@@ -55,8 +55,11 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 /**
- * JPA implementation of attribute dao.
+ * JPA/PostgreSQL implementation of attribute dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Component
 @Slf4j
@@ -123,11 +126,18 @@ public class JpaAttributeDao extends JpaAbstractDaoListeningExecutorService impl
         }
     }
 
+    
     /**
-
-     * Loads .
-
+     * Finds the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param attributeScope attribute scope ({@link AttributeScope})
+     * @param attributeKey attribute key ({@link String})
+     * @return optional {@link AttributeKvEntry}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<AttributeKvEntry> find(TenantId tenantId, EntityId entityId, AttributeScope attributeScope, String attributeKey) {
@@ -142,11 +152,18 @@ public class JpaAttributeDao extends JpaAbstractDaoListeningExecutorService impl
         return Optional.ofNullable(DaoUtil.getData(attributeKvEntityOptional));
     }
 
+    
     /**
-
-     * Loads .
-
+     * Finds the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param attributeScope attribute scope ({@link AttributeScope})
+     * @param attributeKeys attribute keys ({@link Collection})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<AttributeKvEntry> find(TenantId tenantId, EntityId entityId, AttributeScope attributeScope, Collection<String> attributeKeys) {
@@ -161,11 +178,17 @@ public class JpaAttributeDao extends JpaAbstractDaoListeningExecutorService impl
         return DaoUtil.convertDataList(Lists.newArrayList(attributes));
     }
 
+    
     /**
-
-     * Loads all.
-
+     * Finds all.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param attributeScope attribute scope ({@link AttributeScope})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<AttributeKvEntry> findAll(TenantId tenantId, EntityId entityId, AttributeScope attributeScope) {
@@ -176,22 +199,34 @@ public class JpaAttributeDao extends JpaAbstractDaoListeningExecutorService impl
         return DaoUtil.convertDataList(Lists.newArrayList(attributes));
     }
 
+    
     /**
-
-     * Loads next batch.
-
+     * Finds next batch.
+     *
+     * @param entityId target entity identifier
+     * @param attributeType attribute type
+     * @param attributeKey attribute key
+     * @param batchSize batch size
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<AttributeKvEntity> findNextBatch(UUID entityId, int attributeType, int attributeKey, int batchSize) {
         return attributeKvRepository.findNextBatch(entityId, attributeType, attributeKey, batchSize);
     }
 
+    
     /**
-
-     * Loads all keys by device profile id.
-
+     * Finds all keys by device profile id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfileId device profile id ({@link DeviceProfileId})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<String> findAllKeysByDeviceProfileId(TenantId tenantId, DeviceProfileId deviceProfileId) {
@@ -204,11 +239,16 @@ public class JpaAttributeDao extends JpaAbstractDaoListeningExecutorService impl
         }
     }
 
+    
     /**
-
-     * Loads all keys by entity ids.
-
+     * Finds all keys by entity ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityIds entity ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<String> findAllKeysByEntityIds(TenantId tenantId, List<EntityId> entityIds) {
@@ -217,11 +257,17 @@ public class JpaAttributeDao extends JpaAbstractDaoListeningExecutorService impl
                 .stream().map(id -> keyDictionaryDao.getKey(id)).collect(Collectors.toList());
     }
 
+    
     /**
-
-     * Loads all keys by entity ids and scope.
-
+     * Finds all keys by entity ids and scope.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityIds entity ids ({@link List})
+     * @param scope attribute scope (SERVER_SCOPE, SHARED_SCOPE, etc.)
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<String> findAllKeysByEntityIdsAndScope(TenantId tenantId, List<EntityId> entityIds, AttributeScope scope) {
@@ -232,22 +278,34 @@ public class JpaAttributeDao extends JpaAbstractDaoListeningExecutorService impl
                 .toList();
     }
 
+    
     /**
-
-     * Loads all keys by entity ids and scope async.
-
+     * Finds all keys by entity ids and scope async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityIds entity ids ({@link List})
+     * @param scope attribute scope (SERVER_SCOPE, SHARED_SCOPE, etc.)
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<String>> findAllKeysByEntityIdsAndScopeAsync(TenantId tenantId, List<EntityId> entityIds, AttributeScope scope) {
         return service.submit(() -> findAllKeysByEntityIdsAndScope(tenantId, entityIds, scope));
     }
 
+    
     /**
-
-     * Loads latest by entity ids and scope.
-
+     * Finds latest by entity ids and scope.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityIds entity ids ({@link List})
+     * @param scope attribute scope (SERVER_SCOPE, SHARED_SCOPE, etc.)
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<AttributeKvEntry> findLatestByEntityIdsAndScope(TenantId tenantId, List<EntityId> entityIds, AttributeScope scope) {
@@ -261,22 +319,35 @@ public class JpaAttributeDao extends JpaAbstractDaoListeningExecutorService impl
                 .toList();
     }
 
+    
     /**
-
-     * Loads latest by entity ids and scope async.
-
+     * Finds latest by entity ids and scope async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityIds entity ids ({@link List})
+     * @param scope attribute scope (SERVER_SCOPE, SHARED_SCOPE, etc.)
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<AttributeKvEntry>> findLatestByEntityIdsAndScopeAsync(TenantId tenantId, List<EntityId> entityIds, AttributeScope scope) {
         return service.submit(() -> findLatestByEntityIdsAndScope(tenantId, entityIds, scope));
     }
 
+    
     /**
-
-     * Persists .
-
+     * Saves or persists the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param attributeScope attribute scope ({@link AttributeScope})
+     * @param attribute attribute ({@link AttributeKvEntry})
+     * @return future completing with {@link Long}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<Long> save(TenantId tenantId, EntityId entityId, AttributeScope attributeScope, AttributeKvEntry attribute) {
@@ -295,11 +366,18 @@ public class JpaAttributeDao extends JpaAbstractDaoListeningExecutorService impl
         return queue.add(entity);
     }
 
+    
     /**
-
      * Removes all.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param attributeScope attribute scope ({@link AttributeScope})
+     * @param keys keys ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<ListenableFuture<String>> removeAll(TenantId tenantId, EntityId entityId, AttributeScope attributeScope, List<String> keys) {
@@ -313,11 +391,18 @@ public class JpaAttributeDao extends JpaAbstractDaoListeningExecutorService impl
         return futuresList;
     }
 
+    
     /**
-
      * Removes all with versions.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param attributeScope attribute scope ({@link AttributeScope})
+     * @param keys keys ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<ListenableFuture<TbPair<String, Long>>> removeAllWithVersions(TenantId tenantId, EntityId entityId, AttributeScope attributeScope, List<String> keys) {
@@ -333,11 +418,16 @@ public class JpaAttributeDao extends JpaAbstractDaoListeningExecutorService impl
         return futuresList;
     }
 
+    
     /**
-
      * Removes all by entity id.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional
     @Override

@@ -50,8 +50,14 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 /**
- * Abstract chunked aggregation timeseries dao.
+ * Abstract chunked aggregation timeseries dao (time-series SQL/Timescale persistence (SQL/Timescale time-series key-value storage)).
  */
+
+
+
+
+
+
 
 @SuppressWarnings("UnstableApiUsage")
 @Slf4j
@@ -69,6 +75,12 @@ public abstract class AbstractChunkedAggregationTimeseriesDao extends AbstractSq
 
     @Autowired
     private KeyDictionaryDao keyDictionaryDao;
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PostConstruct
     protected void init() {
@@ -89,6 +101,12 @@ public abstract class AbstractChunkedAggregationTimeseriesDao extends AbstractSq
                         .thenComparing(AbstractTsKvEntity::getTs)
         );
     }
+    /**
+     * Destroy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PreDestroy
     protected void destroy() {
@@ -96,6 +114,15 @@ public abstract class AbstractChunkedAggregationTimeseriesDao extends AbstractSq
             tsQueue.destroy();
         }
     }
+    /**
+     * Removes the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param query filter and sort query definition
+     * @return future completing with {@link Void}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<Void> remove(TenantId tenantId, EntityId entityId, DeleteTsKvQuery query) {
@@ -108,16 +135,44 @@ public abstract class AbstractChunkedAggregationTimeseriesDao extends AbstractSq
             return null;
         });
     }
+    /**
+     * Saves or persists partition.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param tsKvEntryTs ts kv entry ts
+     * @param key attribute or cache key
+     * @return future completing with {@link Integer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<Integer> savePartition(TenantId tenantId, EntityId entityId, long tsKvEntryTs, String key) {
         return Futures.immediateFuture(null);
     }
+    /**
+     * Finds all async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param queries queries ({@link List})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<List<ReadTsKvQueryResult>> findAllAsync(TenantId tenantId, EntityId entityId, List<ReadTsKvQuery> queries) {
         return processFindAllAsync(tenantId, entityId, queries);
     }
+    /**
+     * Finds all async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param query filter and sort query definition
+     * @return future completing with {@link ReadTsKvQueryResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<ReadTsKvQueryResult> findAllAsync(TenantId tenantId, EntityId entityId, ReadTsKvQuery query) {
@@ -174,6 +229,17 @@ public abstract class AbstractChunkedAggregationTimeseriesDao extends AbstractSq
             }
         });
     }
+    /**
+     * Switch aggregation.
+     *
+     * @param entityId target entity identifier
+     * @param key attribute or cache key
+     * @param startTs interval start timestamp (epoch ms)
+     * @param endTs interval end timestamp (epoch ms)
+     * @param aggregation aggregation ({@link Aggregation})
+     * @return {@link TsKvEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected TsKvEntity switchAggregation(EntityId entityId, String key, long startTs, long endTs, Aggregation aggregation) {
         var keyId = keyDictionaryDao.getOrSaveKeyId(key);

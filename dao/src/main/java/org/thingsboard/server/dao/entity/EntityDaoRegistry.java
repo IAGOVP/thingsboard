@@ -24,8 +24,14 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 /**
- * Entity dao registry.
+ * Spring component for entity dao registry (generic entity services, counts, and DAO registry).
  */
+
+
+
+
+
+
 
 @Service
 @Slf4j
@@ -43,11 +49,15 @@ public class EntityDaoRegistry {
         });
     }
 
+    
     /**
-
-     * Get dao.
-
+     * Returns dao.
+     *
+     * @param entityType entity type discriminator
+     * @return {@link Dao}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     public <T> Dao<T> getDao(EntityType entityType) {
         Dao<T> dao = (Dao<T>) daos.get(entityType);

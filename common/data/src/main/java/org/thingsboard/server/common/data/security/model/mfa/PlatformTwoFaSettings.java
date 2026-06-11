@@ -56,6 +56,12 @@ public class PlatformTwoFaSettings {
 
     private boolean enforceTwoFa;
     private SystemLevelUsersFilter enforcedUsersFilter;
+    /**
+     * Returns provider config.
+     *
+     * @param providerType provider type ({@link TwoFaProviderType})
+     * @return optional {@link TwoFaProviderConfig}, empty if not found
+     */
 
     public Optional<TwoFaProviderConfig> getProviderConfig(TwoFaProviderType providerType) {
         return Optional.ofNullable(providers)

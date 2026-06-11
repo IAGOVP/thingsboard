@@ -105,6 +105,13 @@ public class DefaultCoapClientContext implements CoapClientContext {
         this.profileCache = profileCache;
         this.partitionService = partitionService;
     }
+    /**
+     * Handles application event.
+     *
+     * @param event event ({@link DeviceProfileUpdatedEvent})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @EventListener(DeviceProfileUpdatedEvent.class)
     public void onApplicationEvent(DeviceProfileUpdatedEvent event) {
@@ -122,6 +129,13 @@ public class DefaultCoapClientContext implements CoapClientContext {
             }
         });
     }
+    /**
+     * Handles application event.
+     *
+     * @param event event ({@link DeviceUpdatedEvent})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @EventListener(DeviceUpdatedEvent.class)
     public void onApplicationEvent(DeviceUpdatedEvent event) {
@@ -139,21 +153,53 @@ public class DefaultCoapClientContext implements CoapClientContext {
             state.unlock();
         }
     }
+    /**
+     * Handles application event.
+     *
+     * @param event event ({@link DeviceDeletedEvent})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @EventListener(DeviceDeletedEvent.class)
     public void onApplicationEvent(DeviceDeletedEvent event) {
         clients.remove(event.getDeviceId());
     }
+    /**
+     * Register attribute observation.
+     *
+     * @param clientState client state ({@link TbCoapClientState})
+     * @param token token ({@link String})
+     * @param exchange exchange ({@link CoapExchange})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     public boolean registerAttributeObservation(TbCoapClientState clientState, String token, CoapExchange exchange) {
         return registerFeatureObservation(clientState, token, exchange, FeatureType.ATTRIBUTES);
     }
+    /**
+     * Register rpc observation.
+     *
+     * @param clientState client state ({@link TbCoapClientState})
+     * @param token token ({@link String})
+     * @param exchange exchange ({@link CoapExchange})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     public boolean registerRpcObservation(TbCoapClientState clientState, String token, CoapExchange exchange) {
         return registerFeatureObservation(clientState, token, exchange, FeatureType.RPC);
     }
+    /**
+     * Returns notification counter by token.
+     *
+     * @param token token ({@link String})
+     * @return {@link AtomicInteger}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public AtomicInteger getNotificationCounterByToken(String token) {
@@ -174,6 +220,14 @@ public class DefaultCoapClientContext implements CoapClientContext {
         }
         return null;
     }
+    /**
+     * Register observe relation.
+     *
+     * @param token token ({@link String})
+     * @param relation relation ({@link ObserveRelation})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void registerObserveRelation(String token, ObserveRelation relation) {
@@ -193,6 +247,13 @@ public class DefaultCoapClientContext implements CoapClientContext {
             log.trace("Failed to find rpc subscription using token: {}", token);
         }
     }
+    /**
+     * Deregister observe relation.
+     *
+     * @param token token ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void deregisterObserveRelation(String token) {
@@ -212,6 +273,12 @@ public class DefaultCoapClientContext implements CoapClientContext {
             log.trace("Failed to find rpc subscription using token: {}", token);
         }
     }
+    /**
+     * Report activity.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void reportActivity() {
@@ -350,6 +417,15 @@ public class DefaultCoapClientContext implements CoapClientContext {
             state.unlock();
         }
     }
+    /**
+     * Deregister attribute observation.
+     *
+     * @param state state ({@link TbCoapClientState})
+     * @param token token ({@link String})
+     * @param exchange exchange ({@link CoapExchange})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void deregisterAttributeObservation(TbCoapClientState state, String token, CoapExchange exchange) {
@@ -373,6 +449,15 @@ public class DefaultCoapClientContext implements CoapClientContext {
             state.unlock();
         }
     }
+    /**
+     * Deregister rpc observation.
+     *
+     * @param state state ({@link TbCoapClientState})
+     * @param token token ({@link String})
+     * @param exchange exchange ({@link CoapExchange})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void deregisterRpcObservation(TbCoapClientState state, String token, CoapExchange exchange) {
@@ -396,6 +481,15 @@ public class DefaultCoapClientContext implements CoapClientContext {
             state.unlock();
         }
     }
+    /**
+     * Returns or create client.
+     *
+     * @param type type ({@link CoapSessionMsgType})
+     * @param deviceCredentials device credentials ({@link ValidateDeviceCredentialsResponse})
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @return {@link TbCoapClientState}
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public TbCoapClientState getOrCreateClient(CoapSessionMsgType type, ValidateDeviceCredentialsResponse deviceCredentials, DeviceProfile deviceProfile) throws AdaptorException {
@@ -414,6 +508,13 @@ public class DefaultCoapClientContext implements CoapClientContext {
         }
         return state;
     }
+    /**
+     * Returns new sync session.
+     *
+     * @param state state ({@link TbCoapClientState})
+     * @return the TransportProtos.SessionInfoProto value
+     * @throws Exception on processing failure
+     */
 
     @Override
     public TransportProtos.SessionInfoProto getNewSyncSession(TbCoapClientState state) {
@@ -483,6 +584,14 @@ public class DefaultCoapClientContext implements CoapClientContext {
 
         private final TbCoapClientState state;
 
+    /**
+     * Handles get attributes response.
+     *
+     * @param msg msg
+     * @return nothing
+     * @throws Exception on processing failure
+     */
+
         @Override
         public void onGetAttributesResponse(TransportProtos.GetAttributeResponseMsg msg) {
             TbCoapObservationState attrs = state.getAttrs();
@@ -500,6 +609,14 @@ public class DefaultCoapClientContext implements CoapClientContext {
                 log.debug("[{}] Get Attrs exchange is empty", state.getDeviceId());
             }
         }
+        /**
+         * Handles attribute update.
+         *
+         * @param sessionId session id ({@link UUID})
+         * @param msg msg
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onAttributeUpdate(UUID sessionId, TransportProtos.AttributeUpdateNotificationMsg msg) {
@@ -537,6 +654,14 @@ public class DefaultCoapClientContext implements CoapClientContext {
                 log.debug("[{}] Get Attrs exchange is empty", state.getDeviceId());
             }
         }
+        /**
+         * Handles device profile update.
+         *
+         * @param newSessionInfo new session info
+         * @param deviceProfile device profile ({@link DeviceProfile})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onDeviceProfileUpdate(TransportProtos.SessionInfoProto newSessionInfo, DeviceProfile deviceProfile) {
@@ -546,6 +671,15 @@ public class DefaultCoapClientContext implements CoapClientContext {
                 log.warn("[{}] Failed to update device profile: ", deviceProfile.getId(), e);
             }
         }
+        /**
+         * Handles device update.
+         *
+         * @param sessionInfo session info
+         * @param device device ({@link Device})
+         * @param deviceProfileOpt device profile opt ({@link Optional})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onDeviceUpdate(TransportProtos.SessionInfoProto sessionInfo, Device device, Optional<DeviceProfile> deviceProfileOpt) {
@@ -558,12 +692,27 @@ public class DefaultCoapClientContext implements CoapClientContext {
             }
             state.onDeviceUpdate(device);
         }
+        /**
+         * Handles device deleted.
+         *
+         * @param deviceId target device identifier
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onDeviceDeleted(DeviceId deviceId) {
             cancelRpcSubscription(state);
             cancelAttributeSubscription(state);
         }
+        /**
+         * Handles remote session close command.
+         *
+         * @param sessionId session id ({@link UUID})
+         * @param sessionCloseNotification session close notification
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onRemoteSessionCloseCommand(UUID sessionId, TransportProtos.SessionCloseNotificationProto sessionCloseNotification) {
@@ -571,6 +720,14 @@ public class DefaultCoapClientContext implements CoapClientContext {
             cancelRpcSubscription(state);
             cancelAttributeSubscription(state);
         }
+        /**
+         * Handles to device rpc request.
+         *
+         * @param sessionId session id ({@link UUID})
+         * @param msg msg
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onToDeviceRpcRequest(UUID sessionId, TransportProtos.ToDeviceRpcRequestMsg msg) {
@@ -654,11 +811,25 @@ public class DefaultCoapClientContext implements CoapClientContext {
                 }
             }
         }
+        /**
+         * Handles to server rpc response.
+         *
+         * @param msg msg
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onToServerRpcResponse(TransportProtos.ToServerRpcResponseMsg msg) {
             log.trace("[{}] Received server rpc response in the wrong session.", state.getSession());
         }
+        /**
+         * Handles uplink notification.
+         *
+         * @param notificationMsg notification msg
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onUplinkNotification(TransportProtos.UplinkNotificationMsg notificationMsg) {
@@ -680,6 +851,13 @@ public class DefaultCoapClientContext implements CoapClientContext {
         }
         return changed;
     }
+    /**
+     * Awake.
+     *
+     * @param client client ({@link TbCoapClientState})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     public boolean awake(TbCoapClientState client) {
@@ -800,7 +978,13 @@ public class DefaultCoapClientContext implements CoapClientContext {
         }
         return powerMode;
     }
-
+    /**
+     * Returns profile.
+     *
+     * @param profileId profile id ({@link DeviceProfileId})
+     * @return optional {@link CoapDeviceProfileTransportConfiguration}, empty if not found
+     * @throws Exception on processing failure
+     */
     public Optional<CoapDeviceProfileTransportConfiguration> getProfile(DeviceProfileId profileId) {
         DeviceProfile deviceProfile = profileCache.get(profileId);
         if (deviceProfile.getTransportType().equals(DeviceTransportType.COAP)) {
@@ -812,7 +996,13 @@ public class DefaultCoapClientContext implements CoapClientContext {
             throw new IllegalArgumentException("Invalid device profile type: " + deviceProfile.getTransportType());
         }
     }
-
+    /**
+     * Returns next msg id.
+     *
+     * @param multicast multicast
+     * @return monotonically increasing MQTT packet identifier
+     * @throws Exception on processing failure
+     */
     protected int getNextMsgId(boolean multicast) {
         if (multicast) {
             // Range [65000...65535]

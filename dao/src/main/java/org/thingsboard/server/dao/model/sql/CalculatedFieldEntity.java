@@ -48,8 +48,11 @@ import static org.thingsboard.server.dao.model.ModelConstants.CALCULATED_FIELD_T
 import static org.thingsboard.server.dao.model.ModelConstants.CALCULATED_FIELD_VERSION;
 import static org.thingsboard.server.dao.model.ModelConstants.DEBUG_SETTINGS;
 /**
- * Calculated field entity.
+ * JPA/Cassandra row model for calculated field.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -105,6 +108,12 @@ public class CalculatedFieldEntity extends BaseVersionedEntity<CalculatedField> 
         this.debugSettings = JacksonUtil.toString(calculatedField.getDebugSettings());
         this.additionalInfo = calculatedField.getAdditionalInfo();
     }
+    /**
+     * To data.
+     *
+     * @return {@link CalculatedField}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public CalculatedField toData() {

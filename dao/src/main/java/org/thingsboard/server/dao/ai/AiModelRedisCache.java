@@ -25,8 +25,11 @@ import org.thingsboard.server.cache.VersionedRedisTbCache;
 import org.thingsboard.server.common.data.CacheConstants;
 import org.thingsboard.server.common.data.ai.AiModel;
 /**
- * Ai model redis cache.
+ * distributed Redis cache for ai model (ThingsBoard DAO layer).
+ *
+ * <p>Implements {@link org.thingsboard.server.cache.TbTransactionalCache} with DAO-specific key types.
  */
+
 
 @Component("AiModelCache")
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "redis")

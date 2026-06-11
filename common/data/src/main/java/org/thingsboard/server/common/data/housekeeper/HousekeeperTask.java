@@ -63,38 +63,98 @@ public class HousekeeperTask implements Serializable {
         this.taskType = taskType;
         this.ts = System.currentTimeMillis();
     }
+    /**
+     * Deletes attributes.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link HousekeeperTask}
+     */
 
     public static HousekeeperTask deleteAttributes(TenantId tenantId, EntityId entityId) {
         return new HousekeeperTask(tenantId, entityId, HousekeeperTaskType.DELETE_ATTRIBUTES);
     }
+    /**
+     * Deletes telemetry.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link HousekeeperTask}
+     */
 
     public static HousekeeperTask deleteTelemetry(TenantId tenantId, EntityId entityId) {
         return new HousekeeperTask(tenantId, entityId, HousekeeperTaskType.DELETE_TELEMETRY);
     }
+    /**
+     * Deletes events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link HousekeeperTask}
+     */
 
     public static HousekeeperTask deleteEvents(TenantId tenantId, EntityId entityId) {
         return new HousekeeperTask(tenantId, entityId, HousekeeperTaskType.DELETE_EVENTS);
     }
+    /**
+     * Unassigns alarms.
+     *
+     * @param user authenticated user performing the action
+     * @return {@link HousekeeperTask}
+     */
 
     public static HousekeeperTask unassignAlarms(User user) {
         return new AlarmsUnassignHousekeeperTask(user);
     }
+    /**
+     * Deletes alarms.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link HousekeeperTask}
+     */
 
     public static HousekeeperTask deleteAlarms(TenantId tenantId, EntityId entityId) {
         return new AlarmsDeletionHousekeeperTask(tenantId, entityId);
     }
+    /**
+     * Deletes tenant entities.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityType entity type ({@link EntityType})
+     * @return {@link HousekeeperTask}
+     */
 
     public static HousekeeperTask deleteTenantEntities(TenantId tenantId, EntityType entityType) {
         return new TenantEntitiesDeletionHousekeeperTask(tenantId, entityType);
     }
+    /**
+     * Deletes calculated fields.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link HousekeeperTask}
+     */
 
     public static HousekeeperTask deleteCalculatedFields(TenantId tenantId, EntityId entityId) {
         return new HousekeeperTask(tenantId, entityId, HousekeeperTaskType.DELETE_CALCULATED_FIELDS);
     }
+    /**
+     * Deletes jobs.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link HousekeeperTask}
+     */
 
     public static HousekeeperTask deleteJobs(TenantId tenantId, EntityId entityId) {
         return new HousekeeperTask(tenantId, entityId, HousekeeperTaskType.DELETE_JOBS);
     }
+    /**
+     * Returns description.
+     *
+     * @return {@link String}
+     */
 
     @JsonIgnore
     public String getDescription() {

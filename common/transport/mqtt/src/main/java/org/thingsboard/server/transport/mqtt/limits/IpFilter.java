@@ -34,6 +34,14 @@ public class IpFilter extends AbstractRemoteAddressFilter<InetSocketAddress> {
     public IpFilter(MqttTransportContext context) {
         this.context = context;
     }
+    /**
+     * Accept.
+     *
+     * @param ctx MQTT session context
+     * @param remoteAddress remote address ({@link InetSocketAddress})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected boolean accept(ChannelHandlerContext ctx, InetSocketAddress remoteAddress) throws Exception {

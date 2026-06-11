@@ -43,8 +43,11 @@ import java.util.UUID;
 
 import static org.thingsboard.server.dao.DaoUtil.convertTenantEntityTypesToDto;
 /**
- * JPA implementation of edge dao.
+ * JPA/PostgreSQL implementation of edge dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Component
 @Slf4j
@@ -54,55 +57,75 @@ public class JpaEdgeDao extends JpaAbstractDao<EdgeEntity, Edge> implements Edge
     @Autowired
     private EdgeRepository edgeRepository;
 
+    
     /**
-
-     * Get entity class.
-
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected Class<EdgeEntity> getEntityClass() {
         return EdgeEntity.class;
     }
 
+    
     /**
-
-     * Get repository.
-
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected JpaRepository<EdgeEntity, UUID> getRepository() {
         return edgeRepository;
     }
 
+    
     /**
-
-     * Loads edge info by id.
-
+     * Finds edge info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link UUID})
+     * @return {@link EdgeInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EdgeInfo findEdgeInfoById(TenantId tenantId, UUID edgeId) {
         return DaoUtil.getData(edgeRepository.findEdgeInfoById(edgeId));
     }
 
+    
     /**
-
-     * Loads active edges.
-
+     * Finds active edges.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Edge> findActiveEdges(PageLink pageLink) {
         return DaoUtil.toPageData(edgeRepository.findActiveEdges(DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads edge ids by tenant id.
-
+     * Finds edge ids by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EdgeId> findEdgeIdsByTenantId(UUID tenantId, PageLink pageLink) {
@@ -113,11 +136,16 @@ public class JpaEdgeDao extends JpaAbstractDao<EdgeEntity, Edge> implements Edge
                         DaoUtil.toPageable(pageLink))).mapData(EdgeId::fromUUID);
     }
 
+    
     /**
-
-     * Loads edges by tenant id.
-
+     * Finds edges by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Edge> findEdgesByTenantId(UUID tenantId, PageLink pageLink) {
@@ -128,22 +156,33 @@ public class JpaEdgeDao extends JpaAbstractDao<EdgeEntity, Edge> implements Edge
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads edges by tenant id and ids async.
-
+     * Finds edges by tenant id and ids async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeIds edge ids ({@link List})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<Edge>> findEdgesByTenantIdAndIdsAsync(UUID tenantId, List<UUID> edgeIds) {
         return service.submit(() -> DaoUtil.convertDataList(edgeRepository.findEdgesByTenantIdAndIdIn(tenantId, edgeIds)));
     }
 
+    
     /**
-
-     * Loads edges by tenant id and customer id.
-
+     * Finds edges by tenant id and customer id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Edge> findEdgesByTenantIdAndCustomerId(UUID tenantId, UUID customerId, PageLink pageLink) {
@@ -155,11 +194,17 @@ public class JpaEdgeDao extends JpaAbstractDao<EdgeEntity, Edge> implements Edge
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads edges by tenant id customer id and ids async.
-
+     * Finds edges by tenant id customer id and ids async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param edgeIds edge ids ({@link List})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<Edge>> findEdgesByTenantIdCustomerIdAndIdsAsync(UUID tenantId, UUID customerId, List<UUID> edgeIds) {
@@ -167,11 +212,16 @@ public class JpaEdgeDao extends JpaAbstractDao<EdgeEntity, Edge> implements Edge
                 edgeRepository.findEdgesByTenantIdAndCustomerIdAndIdIn(tenantId, customerId, edgeIds)));
     }
 
+    
     /**
-
-     * Loads edge by tenant id and name.
-
+     * Finds edge by tenant id and name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return optional {@link Edge}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<Edge> findEdgeByTenantIdAndName(UUID tenantId, String name) {
@@ -179,11 +229,17 @@ public class JpaEdgeDao extends JpaAbstractDao<EdgeEntity, Edge> implements Edge
         return Optional.ofNullable(edge);
     }
 
+    
     /**
-
-     * Loads edges by tenant id and type.
-
+     * Finds edges by tenant id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Edge> findEdgesByTenantIdAndType(UUID tenantId, String type, PageLink pageLink) {
@@ -195,11 +251,18 @@ public class JpaEdgeDao extends JpaAbstractDao<EdgeEntity, Edge> implements Edge
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads edges by tenant id and customer id and type.
-
+     * Finds edges by tenant id and customer id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Edge> findEdgesByTenantIdAndCustomerIdAndType(UUID tenantId, UUID customerId, String type, PageLink pageLink) {
@@ -212,11 +275,17 @@ public class JpaEdgeDao extends JpaAbstractDao<EdgeEntity, Edge> implements Edge
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads edge infos by tenant id and customer id.
-
+     * Finds edge infos by tenant id and customer id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EdgeInfo> findEdgeInfosByTenantIdAndCustomerId(UUID tenantId, UUID customerId, PageLink pageLink) {
@@ -228,11 +297,18 @@ public class JpaEdgeDao extends JpaAbstractDao<EdgeEntity, Edge> implements Edge
                         DaoUtil.toPageable(pageLink, EdgeInfoEntity.edgeInfoColumnMap)));
     }
 
+    
     /**
-
-     * Loads edge infos by tenant id and customer id and type.
-
+     * Finds edge infos by tenant id and customer id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EdgeInfo> findEdgeInfosByTenantIdAndCustomerIdAndType(UUID tenantId, UUID customerId, String type, PageLink pageLink) {
@@ -245,22 +321,32 @@ public class JpaEdgeDao extends JpaAbstractDao<EdgeEntity, Edge> implements Edge
                         DaoUtil.toPageable(pageLink, EdgeInfoEntity.edgeInfoColumnMap)));
     }
 
+    
     /**
-
-     * Loads tenant edge types async.
-
+     * Finds tenant edge types async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<EntitySubtype>> findTenantEdgeTypesAsync(UUID tenantId) {
         return service.submit(() -> convertTenantEntityTypesToDto(tenantId, EntityType.EDGE, edgeRepository.findTenantEdgeTypes(tenantId)));
     }
 
+    
     /**
-
-     * Loads edge infos by tenant id and type.
-
+     * Finds edge infos by tenant id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EdgeInfo> findEdgeInfosByTenantIdAndType(UUID tenantId, String type, PageLink pageLink) {
@@ -272,11 +358,16 @@ public class JpaEdgeDao extends JpaAbstractDao<EdgeEntity, Edge> implements Edge
                         DaoUtil.toPageable(pageLink, EdgeInfoEntity.edgeInfoColumnMap)));
     }
 
+    
     /**
-
-     * Loads edge infos by tenant id.
-
+     * Finds edge infos by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EdgeInfo> findEdgeInfosByTenantId(UUID tenantId, PageLink pageLink) {
@@ -287,11 +378,16 @@ public class JpaEdgeDao extends JpaAbstractDao<EdgeEntity, Edge> implements Edge
                         DaoUtil.toPageable(pageLink, EdgeInfoEntity.edgeInfoColumnMap)));
     }
 
+    
     /**
-
-     * Loads by routing key.
-
+     * Finds by routing key.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param routingKey routing key ({@link String})
+     * @return optional {@link Edge}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<Edge> findByRoutingKey(UUID tenantId, String routingKey) {
@@ -299,11 +395,18 @@ public class JpaEdgeDao extends JpaAbstractDao<EdgeEntity, Edge> implements Edge
         return Optional.ofNullable(edge);
     }
 
+    
     /**
-
-     * Loads edges by tenant id and entity id.
-
+     * Finds edges by tenant id and entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param entityType entity type discriminator
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Edge> findEdgesByTenantIdAndEntityId(UUID tenantId, UUID entityId, EntityType entityType, PageLink pageLink) {
@@ -317,11 +420,18 @@ public class JpaEdgeDao extends JpaAbstractDao<EdgeEntity, Edge> implements Edge
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads edge ids by tenant id and entity id.
-
+     * Finds edge ids by tenant id and entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param entityType entity type discriminator
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EdgeId> findEdgeIdsByTenantIdAndEntityId(UUID tenantId, UUID entityId, EntityType entityType, PageLink pageLink) {
@@ -335,11 +445,16 @@ public class JpaEdgeDao extends JpaAbstractDao<EdgeEntity, Edge> implements Edge
                         DaoUtil.toPageable(pageLink))).mapData(EdgeId::fromUUID);
     }
 
+    
     /**
-
-     * Loads edges by tenant profile id.
-
+     * Finds edges by tenant profile id.
+     *
+     * @param tenantProfileId tenant profile id ({@link UUID})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Edge> findEdgesByTenantProfileId(UUID tenantProfileId, PageLink pageLink) {
@@ -350,44 +465,61 @@ public class JpaEdgeDao extends JpaAbstractDao<EdgeEntity, Edge> implements Edge
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
      * Counts by tenant id.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link Long}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Long countByTenantId(TenantId tenantId) {
         return edgeRepository.countByTenantId(tenantId.getId());
     }
 
+    
     /**
-
-     * Loads all by tenant id.
-
+     * Finds all by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Edge> findAllByTenantId(TenantId tenantId, PageLink pageLink) {
         return findEdgesByTenantId(tenantId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads next batch.
-
+     * Finds next batch.
+     *
+     * @param id entity UUID primary key
+     * @param batchSize batch size
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<EdgeFields> findNextBatch(UUID id, int batchSize) {
         return edgeRepository.findNextBatch(id, Limit.of(batchSize));
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

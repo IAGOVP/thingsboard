@@ -27,6 +27,11 @@ import org.thingsboard.server.common.data.CoapDeviceType;
 public class EfentoCoapDeviceTypeConfiguration implements CoapDeviceTypeConfiguration {
 
     private static final long serialVersionUID = -8523081152598707064L;
+    /**
+     * Returns coap device type.
+     *
+     * @return {@link CoapDeviceType}
+     */
 
     @Override
     public CoapDeviceType getCoapDeviceType() {

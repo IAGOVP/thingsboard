@@ -23,8 +23,14 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.util.UUID;
 /**
- * Ts kv latest composite key.
+ * Ts kv latest composite key (time-series table entity mappings (JPA/Cassandra entity mappings (database row models))).
  */
+
+
+
+
+
+
 
 @Data
 @NoArgsConstructor

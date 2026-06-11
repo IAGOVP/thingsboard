@@ -23,8 +23,11 @@ import org.springframework.context.annotation.Profile;
 import java.util.HashMap;
 import java.util.Map;
 /**
- * Device connectivity configuration.
+ * Spring configuration for device connectivityuration DAO beans.
+ *
+ * <p>Registers entity managers, repositories, and datasource routing.
  */
+
 
 @Profile("install")
 @Configuration
@@ -32,10 +35,24 @@ import java.util.Map;
 @Data
 public class DeviceConnectivityConfiguration {
     private Map<String, DeviceConnectivityInfo> connectivity = new HashMap<>();
+    /**
+     * Returns connectivity.
+     *
+     * @param protocol protocol ({@link String})
+     * @return {@link DeviceConnectivityInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public DeviceConnectivityInfo getConnectivity(String protocol) {
         return connectivity.get(protocol);
     }
+    /**
+     * Is enabled.
+     *
+     * @param protocol protocol ({@link String})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean isEnabled(String protocol) {
         var info = connectivity.get(protocol);

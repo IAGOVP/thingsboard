@@ -20,8 +20,9 @@ import org.thingsboard.server.gen.transport.TransportProtos.TaskProto;
 import org.thingsboard.server.queue.TbQueueProducer;
 import org.thingsboard.server.queue.common.TbProtoQueueMsg;
 
+
 /**
- * task producer queue factory contract.
+ * Factory for publishing background tasks to the tasks queue.
  */
 public interface TaskProducerQueueFactory {
 

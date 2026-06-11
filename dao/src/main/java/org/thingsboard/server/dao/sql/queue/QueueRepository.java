@@ -25,24 +25,69 @@ import org.thingsboard.server.dao.model.sql.QueueEntity;
 import java.util.List;
 import java.util.UUID;
 
+
 /**
 
- * queue repository contract.
+ * Spring Data JPA repository for queue entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
 
+
 public interface QueueRepository extends JpaRepository<QueueEntity, UUID> {
+    /**
+     * Finds by tenant id and topic.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param topic topic ({@link String})
+     * @return {@link QueueEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     QueueEntity findByTenantIdAndTopic(UUID tenantId, String topic);
+    /**
+     * Finds by tenant id and name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return {@link QueueEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     QueueEntity findByTenantIdAndName(UUID tenantId, String name);
+    /**
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<QueueEntity> findByTenantId(UUID tenantId);
 
     @Query("SELECT q FROM QueueEntity q WHERE q.tenantId = :tenantId " +
             "AND (:textSearch IS NULL OR ilike(q.name, CONCAT(:textSearch, '%')) = true)")
+    /**
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param textSearch text search ({@link String})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<QueueEntity> findByTenantId(@Param("tenantId") UUID tenantId,
                                      @Param("textSearch") String textSearch,
                                      Pageable pageable);
+    /**
+     * Finds all by name.
+     *
+     * @param name entity or attribute name
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<QueueEntity> findAllByName(String name);
 }

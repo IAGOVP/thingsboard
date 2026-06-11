@@ -20,12 +20,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+
+/**
+ * Kafka settings for transport API request/response queues.
+ */
 @Lazy
 @Data
 @Component
-/**
- * Tb queue transport api settings.
- */
 public class TbQueueTransportApiSettings {
 
     @Value("${queue.transport_api.requests_topic}")

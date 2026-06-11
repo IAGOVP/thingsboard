@@ -82,7 +82,13 @@ public class TbCoapClientState {
         this.deviceId = deviceId;
         this.lock = new ReentrantLock();
     }
-
+    /**
+     * Init.
+     *
+     * @param credentials credentials ({@link ValidateDeviceCredentialsResponse})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void init(ValidateDeviceCredentialsResponse credentials) {
         this.credentials = credentials;
         this.profileId = credentials.getDeviceInfo().getDeviceProfileId();
@@ -91,15 +97,31 @@ public class TbCoapClientState {
         this.psmActivityTimer = credentials.getDeviceInfo().getPsmActivityTimer();
         this.pagingTransmissionWindow = credentials.getDeviceInfo().getPagingTransmissionWindow();
     }
-
+    /**
+     * Lock.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void lock() {
         lock.lock();
     }
-
+    /**
+     * Unlock.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void unlock() {
         lock.unlock();
     }
-
+    /**
+     * Updates last uplink time.
+     *
+     * @param ts ts
+     * @return the long result
+     * @throws Exception on processing failure
+     */
     public long updateLastUplinkTime(long ts) {
         if (ts > lastUplinkTime) {
             this.lastUplinkTime = ts;
@@ -107,13 +129,24 @@ public class TbCoapClientState {
         }
         return lastUplinkTime;
     }
-
+    /**
+     * Checks first downlink.
+     *
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     public boolean checkFirstDownlink() {
         boolean result = firstEdrxDownlink;
         firstEdrxDownlink = false;
         return result;
     }
-
+    /**
+     * Handles device update.
+     *
+     * @param device device ({@link Device})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void onDeviceUpdate(Device device) {
         this.profileId = device.getDeviceProfileId();
         var data = device.getDeviceData();
@@ -125,7 +158,13 @@ public class TbCoapClientState {
             this.pagingTransmissionWindow = configuration.getPagingTransmissionWindow();
         }
     }
-
+    /**
+     * Add queued notification.
+     *
+     * @param msg msg
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void addQueuedNotification(TransportProtos.AttributeUpdateNotificationMsg msg) {
         if (missedAttributeUpdates == null) {
             missedAttributeUpdates = msg;
@@ -146,7 +185,12 @@ public class TbCoapClientState {
             missedAttributeUpdates = TransportProtos.AttributeUpdateNotificationMsg.newBuilder().addAllSharedUpdated(updatedAttrs.values()).addAllSharedDeleted(deletedKeys).build();
         }
     }
-
+    /**
+     * Returns and clear missed updates.
+     *
+     * @return the TransportProtos.AttributeUpdateNotificationMsg value
+     * @throws Exception on processing failure
+     */
     public TransportProtos.AttributeUpdateNotificationMsg getAndClearMissedUpdates() {
         var result = this.missedAttributeUpdates;
         this.missedAttributeUpdates = null;

@@ -22,8 +22,11 @@ import org.thingsboard.server.common.data.asset.AssetProfile;
 import org.thingsboard.server.common.data.id.AssetProfileId;
 import org.thingsboard.server.common.data.id.TenantId;
 /**
- * Asset profile evict event.
+ * Cache eviction event published when asset profile data changes.
+ *
+ * <p>Consumed by cache listeners to invalidate stale entries cluster-wide.
  */
+
 
 @Data
 @RequiredArgsConstructor

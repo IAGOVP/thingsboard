@@ -69,11 +69,22 @@ public class CalculatedFieldDebugEvent extends Event {
     @Getter
     @Setter
     private String error;
+    /**
+     * Returns type.
+     *
+     * @return {@link EventType}
+     */
 
     @Override
     public EventType getType() {
         return EventType.DEBUG_CALCULATED_FIELD;
     }
+    /**
+     * To info.
+     *
+     * @param entityType entity type ({@link EntityType})
+     * @return {@link EventInfo}
+     */
 
     @Override
     public EventInfo toInfo(EntityType entityType) {

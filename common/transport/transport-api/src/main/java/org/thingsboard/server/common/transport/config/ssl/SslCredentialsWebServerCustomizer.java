@@ -60,17 +60,36 @@ public class SslCredentialsWebServerCustomizer implements WebServerFactoryCustom
     public SslCredentialsWebServerCustomizer(ServerProperties serverProperties) {
         this.serverProperties = serverProperties;
     }
+    /**
+     * Http server ssl credentials.
+     *
+     * @return {@link SslCredentialsConfig}
+     * @throws Exception on processing failure
+     */
 
     @Bean
     @ConfigurationProperties(prefix = "server.ssl.credentials")
     public SslCredentialsConfig httpServerSslCredentials() {
         return new SslCredentialsConfig("HTTP Server SSL Credentials", false);
     }
+    /**
+     * Ssl bundles.
+     *
+     * @return {@link SslBundles}
+     * @throws Exception on processing failure
+     */
 
     @Bean
     public SslBundles sslBundles() {
         return new DynamicSslBundles();
     }
+    /**
+     * Customize.
+     *
+     * @param factory factory ({@link ConfigurableServletWebServerFactory})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void customize(ConfigurableServletWebServerFactory factory) {
@@ -84,6 +103,12 @@ public class SslCredentialsWebServerCustomizer implements WebServerFactoryCustom
         factory.setSsl(ssl);
         factory.setSslBundles(sslBundles);
     }
+    /**
+     * After singletons instantiated.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void afterSingletonsInstantiated() {
@@ -125,6 +150,13 @@ public class SslCredentialsWebServerCustomizer implements WebServerFactoryCustom
     }
 
     private class DynamicSslBundles implements SslBundles {
+        /**
+         * Returns bundle.
+         *
+         * @param name name ({@link String})
+         * @return {@link SslBundle}
+         * @throws Exception on processing failure
+         */
 
         @Override
         public SslBundle getBundle(String name) {
@@ -133,11 +165,25 @@ public class SslCredentialsWebServerCustomizer implements WebServerFactoryCustom
             }
             return createSslBundle();
         }
+        /**
+         * Returns bundle names.
+         *
+         * @return {@link List}
+         * @throws Exception on processing failure
+         */
 
         @Override
         public List<String> getBundleNames() {
             return List.of(DEFAULT_BUNDLE_NAME);
         }
+        /**
+         * Add bundle update handler.
+         *
+         * @param name name ({@link String})
+         * @param handler handler ({@link Consumer})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void addBundleUpdateHandler(String name, Consumer<SslBundle> handler) {
@@ -148,6 +194,13 @@ public class SslCredentialsWebServerCustomizer implements WebServerFactoryCustom
                 log.warn("Attempted to register update handler for unknown bundle: {}", name);
             }
         }
+        /**
+         * Add bundle register handler.
+         *
+         * @param registerHandler register handler ({@link BiConsumer})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void addBundleRegisterHandler(BiConsumer<String, SslBundle> registerHandler) {

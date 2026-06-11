@@ -29,8 +29,11 @@ import org.thingsboard.server.common.data.rule.RuleChainDetails;
 import org.thingsboard.server.dao.model.ModelConstants;
 import org.thingsboard.server.dao.util.mapping.JsonConverter;
 /**
- * Rule chain details entity.
+ * JPA/Cassandra row model for rule chain details.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -52,6 +55,12 @@ public class RuleChainDetailsEntity extends AbstractRuleChainEntity<RuleChainDet
             this.notes = JacksonUtil.valueToTree(ruleChainDetails.getNotes());
         }
     }
+    /**
+     * To data.
+     *
+     * @return {@link RuleChainDetails}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleChainDetails toData() {

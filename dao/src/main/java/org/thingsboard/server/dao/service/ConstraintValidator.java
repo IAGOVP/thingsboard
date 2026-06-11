@@ -41,8 +41,14 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 /**
- * Constraint validator.
+ * Constraint validator (shared DAO validators, removers, and constraints).
  */
+
+
+
+
+
+
 
 @Configuration
 public class ConstraintValidator {
@@ -53,21 +59,30 @@ public class ConstraintValidator {
         initializeValidators();
     }
 
+    
     /**
-
-     * Validate fields.
-
+     * Validates fields.
+     *
+     * @param data data ({@link Object})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     public static void validateFields(Object data) {
         validateFields(data, "Validation error: ");
     }
 
+    
     /**
-
-     * Validate fields.
-
+     * Validates fields.
+     *
+     * @param data data ({@link Object})
+     * @param errorPrefix error prefix ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     public static void validateFields(Object data, String errorPrefix) {
         Set<ConstraintViolation<Object>> constraintsViolations = fieldsValidator.validate(data);
@@ -76,11 +91,15 @@ public class ConstraintValidator {
         }
     }
 
+    
     /**
-
-     * Get error message.
-
+     * Returns error message.
+     *
+     * @param constraintsViolations constraints violations ({@link Collection})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     public static String getErrorMessage(Collection<ConstraintViolation<Object>> constraintsViolations) {
         return constraintsViolations.stream()
@@ -88,11 +107,15 @@ public class ConstraintValidator {
                 .distinct().sorted().collect(Collectors.joining(", "));
     }
 
+    
     /**
-
-     * Get error message.
-
+     * Returns error message.
+     *
+     * @param constraintViolation constraint violation ({@link ConstraintViolation})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     public static String getErrorMessage(ConstraintViolation<Object> constraintViolation) {
         ConstraintDescriptor<?> constraintDescriptor = constraintViolation.getConstraintDescriptor();
@@ -120,11 +143,14 @@ public class ConstraintValidator {
         }
     }
 
+    
     /**
-
      * Validator factory bean.
-
+     *
+     * @return {@link LocalValidatorFactoryBean}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Bean
     public LocalValidatorFactoryBean validatorFactoryBean() {

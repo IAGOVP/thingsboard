@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.UUID;
 
 /**
- * Typed identifier for edge event.
+ * Typed identifier for an edge synchronization event.
  */
 public class EdgeEventId extends UUIDBased {
 
@@ -31,6 +31,12 @@ public class EdgeEventId extends UUIDBased {
     public EdgeEventId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * From string.
+     *
+     * @param edgeEventId edge event id ({@link String})
+     * @return {@link EdgeEventId}
+     */
 
     public static EdgeEventId fromString(String edgeEventId) {
         return new EdgeEventId(UUID.fromString(edgeEventId));

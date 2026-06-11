@@ -19,8 +19,14 @@ import lombok.Data;
 
 import java.util.UUID;
 /**
- * Ts key.
+ * Ts key (time-series SQL/Timescale persistence (SQL/Timescale time-series key-value storage)).
  */
+
+
+
+
+
+
 
 @Data
 public class TsKey {

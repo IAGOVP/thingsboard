@@ -29,8 +29,14 @@ import org.thingsboard.server.dao.settings.AdminSettingsService;
 
 import java.util.Optional;
 /**
- * Default trendz settings service.
+ * Spring component for default trendz settings service (ThingsBoard DAO layer).
  */
+
+
+
+
+
+
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +46,14 @@ public class DefaultTrendzSettingsService implements TrendzSettingsService {
     private final AdminSettingsService adminSettingsService;
 
     private static final String SETTINGS_KEY = "trendz";
+    /**
+     * Saves or persists trendz settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param settings settings ({@link TrendzSettings})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @CacheEvict(cacheNames = CacheConstants.TRENDZ_SETTINGS_CACHE, key = "#tenantId")
     @Override
@@ -54,6 +68,13 @@ public class DefaultTrendzSettingsService implements TrendzSettingsService {
         adminSettings.setJsonValue(JacksonUtil.valueToTree(settings));
         adminSettingsService.saveAdminSettings(tenantId, adminSettings);
     }
+    /**
+     * Finds trendz settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link TrendzSettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Cacheable(cacheNames = CacheConstants.TRENDZ_SETTINGS_CACHE, key = "#tenantId")
     @Override
@@ -62,6 +83,13 @@ public class DefaultTrendzSettingsService implements TrendzSettingsService {
                 .map(adminSettings -> JacksonUtil.treeToValue(adminSettings.getJsonValue(), TrendzSettings.class))
                 .orElseGet(TrendzSettings::new);
     }
+    /**
+     * Deletes trendz settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @CacheEvict(cacheNames = CacheConstants.TRENDZ_SETTINGS_CACHE, key = "#tenantId")
     @Override

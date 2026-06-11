@@ -22,19 +22,36 @@ import org.thingsboard.server.edqs.data.EntityData;
 import org.thingsboard.server.edqs.data.RelationInfo;
 import org.thingsboard.server.edqs.query.EdqsQuery;
 import org.thingsboard.server.edqs.repo.TenantRepo;
+
 /**
  * EDQS query processor for entity view search entity filters.
+ *
+ * <p>Evaluates {@link org.thingsboard.server.common.data.query.EntityFilter} against a {@link org.thingsboard.server.edqs.repo.TenantRepo} (EDQS microservice — entity filter query processors).
  */
+
 public class EntityViewSearchQueryProcessor extends AbstractEntitySearchQueryProcessor<EntityViewSearchQueryFilter> {
 
     public EntityViewSearchQueryProcessor(TenantRepo repo, QueryContext ctx, EdqsQuery query) {
         super(repo, ctx, query, (EntityViewSearchQueryFilter) query.getEntityFilter());
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {
         return EntityType.ENTITY_VIEW;
     }
+    /**
+     * Checks the requested data.
+     *
+     * @param relationInfo relation info ({@link RelationInfo})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected boolean check(RelationInfo relationInfo) {

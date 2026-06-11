@@ -27,13 +27,41 @@ import org.thingsboard.server.dao.Dao;
 import java.util.UUID;
 
 /**
- * Persistence for {@link AlarmComment} rows (JPA: {@code JpaAlarmCommentDao}).
+ * Persistence contract for alarm comment.
+ *
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (alarm persistence, comments, and alarm-type caching).
  */
+
 public interface AlarmCommentDao extends Dao<AlarmComment> {
+    /**
+     * Finds alarm comment by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key attribute or cache key
+     * @return {@link AlarmComment}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     AlarmComment findAlarmCommentById(TenantId tenantId, UUID key);
+    /**
+     * Finds alarm comments.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<AlarmCommentInfo> findAlarmComments(TenantId tenantId, AlarmId id, PageLink pageLink);
+    /**
+     * Finds alarm comment by id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key attribute or cache key
+     * @return future completing with {@link AlarmComment}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     ListenableFuture<AlarmComment> findAlarmCommentByIdAsync(TenantId tenantId, UUID key);
 

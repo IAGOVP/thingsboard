@@ -33,8 +33,11 @@ import org.thingsboard.server.dao.util.SqlDao;
 
 import java.util.UUID;
 /**
- * JPA implementation of admin settings dao.
+ * JPA/PostgreSQL implementation of admin settings dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Component
 @SqlDao
@@ -42,11 +45,27 @@ import java.util.UUID;
 public class JpaAdminSettingsDao extends JpaAbstractDao<AdminSettingsEntity, AdminSettings> implements AdminSettingsDao, TenantEntityDao<AdminSettings> {
 
     private final AdminSettingsRepository adminSettingsRepository;
+    /**
+     * Finds by tenant id and key.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key attribute or cache key
+     * @return {@link AdminSettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AdminSettings findByTenantIdAndKey(UUID tenantId, String key) {
         return DaoUtil.getData(adminSettingsRepository.findByTenantIdAndKey(tenantId, key));
     }
+    /**
+     * Removes by tenant id and key.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key attribute or cache key
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     @Transactional
@@ -57,27 +76,60 @@ public class JpaAdminSettingsDao extends JpaAbstractDao<AdminSettingsEntity, Adm
         }
         return false;
     }
+    /**
+     * Removes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     @Transactional
     public void removeByTenantId(UUID tenantId) {
         adminSettingsRepository.deleteByTenantId(tenantId);
     }
+    /**
+     * Finds all by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<AdminSettings> findAllByTenantId(TenantId tenantId, PageLink pageLink) {
         return DaoUtil.toPageData(adminSettingsRepository.findByTenantId(tenantId.getId(), DaoUtil.toPageable(pageLink)));
     }
+    /**
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Class<AdminSettingsEntity> getEntityClass() {
         return AdminSettingsEntity.class;
     }
+    /**
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected JpaRepository<AdminSettingsEntity, UUID> getRepository() {
         return adminSettingsRepository;
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

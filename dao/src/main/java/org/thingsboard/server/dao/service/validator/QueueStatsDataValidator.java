@@ -22,17 +22,25 @@ import org.thingsboard.server.common.data.queue.QueueStats;
 import org.thingsboard.server.exception.DataValidationException;
 import org.thingsboard.server.dao.service.DataValidator;
 /**
- * Queue stats data validator.
+ * Validates queue stats entities before persistence.
+ *
+ * <p>Enforces constraints, uniqueness, and referential integrity at the DAO layer.
  */
+
 
 @Component
 public class QueueStatsDataValidator extends DataValidator<QueueStats> {
 
+    
     /**
-
-     * Validate data impl.
-
+     * Validates data impl.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param queueStats queue stats ({@link QueueStats})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateDataImpl(TenantId tenantId, QueueStats queueStats) {

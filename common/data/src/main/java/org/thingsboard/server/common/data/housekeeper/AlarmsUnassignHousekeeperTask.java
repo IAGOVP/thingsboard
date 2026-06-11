@@ -52,6 +52,11 @@ public class AlarmsUnassignHousekeeperTask extends HousekeeperTask {
         this.userTitle = userTitle;
         this.alarms = alarms;
     }
+    /**
+     * Returns description.
+     *
+     * @return {@link String}
+     */
 
     @Override
     public String getDescription() {

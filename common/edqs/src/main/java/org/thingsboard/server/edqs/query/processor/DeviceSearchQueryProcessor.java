@@ -28,9 +28,13 @@ import org.thingsboard.server.edqs.repo.TenantRepo;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+
 /**
  * EDQS query processor for device search entity filters.
+ *
+ * <p>Evaluates {@link org.thingsboard.server.common.data.query.EntityFilter} against a {@link org.thingsboard.server.edqs.repo.TenantRepo} (EDQS microservice — entity filter query processors).
  */
+
 public class DeviceSearchQueryProcessor extends AbstractEntitySearchQueryProcessor<DeviceSearchQueryFilter> {
 
     private final Set<UUID> entityProfileIds = new HashSet<>();
@@ -46,11 +50,24 @@ public class DeviceSearchQueryProcessor extends AbstractEntitySearchQueryProcess
             }
         }
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {
         return EntityType.DEVICE;
     }
+    /**
+     * Checks the requested data.
+     *
+     * @param relationInfo relation info ({@link RelationInfo})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected boolean check(RelationInfo relationInfo) {

@@ -15,12 +15,14 @@
  */
 package org.thingsboard.server.queue.memory;
 
-import org.thingsboard.server.queue.TbQueueMsg;
-
 import java.util.List;
 
+
+import org.thingsboard.server.queue.TbQueueMsg;
+
+
 /**
- * in memory storage contract.
+ * Thread-safe in-memory message store backing in-memory queue implementations.
  */
 public interface InMemoryStorage {
 
@@ -28,8 +30,9 @@ public interface InMemoryStorage {
 
     int getLagTotal();
 
+        
     int getLag(String topic);
-
+    
     boolean put(String topic, TbQueueMsg msg);
 
     <T extends TbQueueMsg> List<T> get(String topic) throws InterruptedException;

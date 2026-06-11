@@ -45,12 +45,24 @@ public class SnmpTransportBalancingService {
 
     private int snmpTransportsCount = 1;
     private Integer currentTransportPartitionIndex = 0;
-
+    /**
+     * Handles service list changed.
+     *
+     * @param event event ({@link ServiceListChangedEvent})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void onServiceListChanged(ServiceListChangedEvent event) {
         log.trace("Got service list changed event: {}", event);
         recalculatePartitions(event.getOtherServices(), event.getCurrentService());
     }
-
+    /**
+     * Is managed by current transport.
+     *
+     * @param entityId target entity identifier
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     public boolean isManagedByCurrentTransport(UUID entityId) {
         boolean isManaged = resolvePartitionIndexForEntity(entityId) == currentTransportPartitionIndex;
         if (!isManaged) {

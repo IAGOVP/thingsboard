@@ -29,7 +29,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Handles gateway session.
+ * Manages gateway child-device sessions over a single MQTT connection.
+ *
+ * <p>Handles connect/disconnect/telemetry/attributes topics under {@code v1/gateway/…} and coordinates per-device {@link GatewayDeviceSessionContext} instances.
  */
 @Slf4j
 public class GatewaySessionHandler extends AbstractGatewaySessionHandler<GatewayDeviceSessionContext> {
@@ -37,7 +39,13 @@ public class GatewaySessionHandler extends AbstractGatewaySessionHandler<Gateway
     public GatewaySessionHandler(DeviceSessionCtx deviceSessionCtx, UUID sessionId, boolean overwriteDevicesActivity) {
         super(deviceSessionCtx, sessionId, overwriteDevicesActivity);
     }
-
+    /**
+     * Handles device connect.
+     *
+     * @param mqttMsg mqtt msg ({@link MqttPublishMessage})
+     * @return nothing
+     * @throws AdaptorException on invalid payload or topic format
+     */
     public void onDeviceConnect(MqttPublishMessage mqttMsg) throws AdaptorException {
         if (isJsonPayloadType()) {
             onDeviceConnectJson(mqttMsg);
@@ -45,7 +53,13 @@ public class GatewaySessionHandler extends AbstractGatewaySessionHandler<Gateway
             onDeviceConnectProto(mqttMsg);
         }
     }
-
+    /**
+     * Handles device telemetry.
+     *
+     * @param mqttMsg mqtt msg ({@link MqttPublishMessage})
+     * @return nothing
+     * @throws AdaptorException on invalid payload or topic format
+     */
     public void onDeviceTelemetry(MqttPublishMessage mqttMsg) throws AdaptorException {
         int msgId = getMsgId(mqttMsg);
         ByteBuf payload = mqttMsg.payload();
@@ -55,17 +69,38 @@ public class GatewaySessionHandler extends AbstractGatewaySessionHandler<Gateway
             onDeviceTelemetryProto(msgId, payload);
         }
     }
+    /**
+     * New device session ctx.
+     *
+     * @param msg msg ({@link GetOrCreateDeviceFromGatewayResponse})
+     * @return {@link GatewayDeviceSessionContext}
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected GatewayDeviceSessionContext newDeviceSessionCtx(GetOrCreateDeviceFromGatewayResponse msg) {
         return new GatewayDeviceSessionContext(this, msg.getDeviceInfo(), msg.getDeviceProfile(), mqttQoSMap, transportService);
     }
-
+    /**
+     * Handles gateway update.
+     *
+     * @param sessionInfo session info
+     * @param device device ({@link Device})
+     * @param deviceProfileOpt device profile opt ({@link Optional})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void onGatewayUpdate(TransportProtos.SessionInfoProto sessionInfo, Device device, Optional<DeviceProfile> deviceProfileOpt) {
         this.onDeviceUpdate(sessionInfo, device, deviceProfileOpt);
         gatewayMetricsService.onDeviceUpdate(sessionInfo, gateway.getDeviceId());
     }
-
+    /**
+     * Handles gateway delete.
+     *
+     * @param deviceId target device identifier
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void onGatewayDelete(DeviceId deviceId) {
         gatewayMetricsService.onDeviceDelete(deviceId);
     }

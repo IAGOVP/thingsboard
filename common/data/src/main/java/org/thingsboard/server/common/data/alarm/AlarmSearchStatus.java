@@ -16,14 +16,19 @@
 package org.thingsboard.server.common.data.alarm;
 
 /**
- * alarm search status values.
+ * Simplified ACTIVE/CLEARED or ACK/UNACK status used in alarm search filters.
  */
 public enum AlarmSearchStatus {
 
+    /** Match alarms regardless of this dimension. */
     ANY,
+    /** Match only active (non-cleared) alarms. */
     ACTIVE,
+    /** Match only cleared alarms. */
     CLEARED,
+    /** Match only acknowledged alarms. */
     ACK,
+    /** Match only unacknowledged alarms. */
     UNACK;
 
 }

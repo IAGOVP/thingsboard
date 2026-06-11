@@ -42,6 +42,11 @@ public class EdgeConnectionNotificationInfo implements RuleOriginatedNotificatio
     private CustomerId customerId;
     private EdgeId edgeId;
     private String edgeName;
+    /**
+     * Returns template data.
+     *
+     * @return {@link Map}
+     */
 
     @Override
     public Map<String, String> getTemplateData() {
@@ -51,16 +56,31 @@ public class EdgeConnectionNotificationInfo implements RuleOriginatedNotificatio
                 "edgeName", edgeName
         );
     }
+    /**
+     * Returns affected tenant id.
+     *
+     * @return {@link TenantId}
+     */
 
     @Override
     public TenantId getAffectedTenantId() {
         return tenantId;
     }
+    /**
+     * Returns affected customer id.
+     *
+     * @return {@link CustomerId}
+     */
 
     @Override
     public CustomerId getAffectedCustomerId() {
         return customerId;
     }
+    /**
+     * Returns state entity id.
+     *
+     * @return {@link EntityId}
+     */
 
     @Override
     public EntityId getStateEntityId() {

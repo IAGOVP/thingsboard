@@ -90,8 +90,11 @@ import static org.thingsboard.server.dao.service.Validator.validateId;
 import static org.thingsboard.server.dao.service.Validator.validatePageLink;
 import static org.thingsboard.server.dao.service.Validator.validateString;
 /**
- * Spring service implementing user API.
+ * Spring {@code @Service} implementing the user DAO API.
+ *
+ * <p>Delegates to {@code *Dao} implementations and manages cache eviction (users, credentials, and user settings).
  */
+
 
 @Service("UserDaoService")
 @Slf4j
@@ -121,6 +124,13 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
     private final ApplicationEventPublisher eventPublisher;
     private final EntityCountService countService;
     private final JpaExecutorService executor;
+    /**
+     * Handles evict event.
+     *
+     * @param event event ({@link UserCacheEvictEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     @TransactionalEventListener
@@ -132,6 +142,14 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
         }
         cache.evict(keys);
     }
+    /**
+     * Finds user by email.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param email email ({@link String})
+     * @return {@link User}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public User findUserByEmail(TenantId tenantId, String email) {
@@ -143,6 +161,14 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
             return userDao.findByEmail(tenantId, email.toLowerCase());
         }
     }
+    /**
+     * Finds user by tenant id and email.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param email email ({@link String})
+     * @return {@link User}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public User findUserByTenantIdAndEmail(TenantId tenantId, String email) {
@@ -152,6 +178,14 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
         return cache.getAndPutInTransaction(new UserCacheKey(tenantId, email),
                 () -> userDao.findByTenantIdAndEmail(tenantId, email), true);
     }
+    /**
+     * Finds user by tenant id and email async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param email email ({@link String})
+     * @return future completing with {@link User}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<User> findUserByTenantIdAndEmailAsync(TenantId tenantId, String email) {
@@ -160,6 +194,14 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
         validateString(email, e -> "Incorrect email " + e);
         return executor.submit(() -> findUserByTenantIdAndEmail(tenantId, email));
     }
+    /**
+     * Finds user by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @return {@link User}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public User findUserById(TenantId tenantId, UserId userId) {
@@ -167,6 +209,14 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
         validateId(userId, id -> INCORRECT_USER_ID + id);
         return userDao.findById(tenantId, userId.getId());
     }
+    /**
+     * Finds user by id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @return future completing with {@link User}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<User> findUserByIdAsync(TenantId tenantId, UserId userId) {
@@ -174,12 +224,29 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
         validateId(userId, id -> INCORRECT_USER_ID + id);
         return userDao.findByIdAsync(tenantId, userId.getId());
     }
+    /**
+     * Saves or persists user.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param user authenticated user performing the action
+     * @return {@link User}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     @Transactional
     public User saveUser(TenantId tenantId, User user) {
         return saveUser(tenantId, user, true);
     }
+    /**
+     * Saves or persists user.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param user authenticated user performing the action
+     * @param doValidate do validate
+     * @return {@link User}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     @Transactional
@@ -225,6 +292,14 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
         }
         return savedUser;
     }
+    /**
+     * Finds user credentials by user id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @return {@link UserCredentials}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UserCredentials findUserCredentialsByUserId(TenantId tenantId, UserId userId) {
@@ -232,6 +307,14 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
         validateId(userId, id -> INCORRECT_USER_ID + id);
         return userCredentialsDao.findByUserId(tenantId, userId.getId());
     }
+    /**
+     * Finds user credentials by activate token.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param activateToken activate token ({@link String})
+     * @return {@link UserCredentials}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UserCredentials findUserCredentialsByActivateToken(TenantId tenantId, String activateToken) {
@@ -239,6 +322,14 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
         validateString(activateToken, t -> "Incorrect activateToken " + t);
         return userCredentialsDao.findByActivateToken(tenantId, activateToken);
     }
+    /**
+     * Finds user credentials by reset token.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resetToken reset token ({@link String})
+     * @return {@link UserCredentials}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UserCredentials findUserCredentialsByResetToken(TenantId tenantId, String resetToken) {
@@ -246,11 +337,28 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
         validateString(resetToken, t -> "Incorrect resetToken " + t);
         return userCredentialsDao.findByResetToken(tenantId, resetToken);
     }
+    /**
+     * Saves or persists user credentials.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userCredentials user credentials ({@link UserCredentials})
+     * @return {@link UserCredentials}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UserCredentials saveUserCredentials(TenantId tenantId, UserCredentials userCredentials) {
         return saveUserCredentials(tenantId, userCredentials, true);
     }
+    /**
+     * Saves or persists user credentials.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userCredentials user credentials ({@link UserCredentials})
+     * @param doValidate do validate
+     * @return {@link UserCredentials}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UserCredentials saveUserCredentials(TenantId tenantId, UserCredentials userCredentials, boolean doValidate) {
@@ -265,6 +373,15 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
                 .actionType(ActionType.CREDENTIALS_UPDATED).build());
         return result;
     }
+    /**
+     * Activate user credentials.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param activateToken activate token ({@link String})
+     * @param password password ({@link String})
+     * @return {@link UserCredentials}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UserCredentials activateUserCredentials(TenantId tenantId, String activateToken, String password) {
@@ -290,6 +407,14 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
         }
         return saveUserCredentials(tenantId, userCredentials);
     }
+    /**
+     * Request password reset.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param email email ({@link String})
+     * @return {@link UserCredentials}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UserCredentials requestPasswordReset(TenantId tenantId, String email) {
@@ -306,6 +431,14 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
         userCredentials = generatePasswordResetToken(userCredentials);
         return saveUserCredentials(tenantId, userCredentials);
     }
+    /**
+     * Request expired password reset.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userCredentialsId user credentials id ({@link UserCredentialsId})
+     * @return {@link UserCredentials}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UserCredentials requestExpiredPasswordReset(TenantId tenantId, UserCredentialsId userCredentialsId) {
@@ -316,6 +449,13 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
         userCredentials = generatePasswordResetToken(userCredentials);
         return saveUserCredentials(tenantId, userCredentials);
     }
+    /**
+     * Generate password reset token.
+     *
+     * @param userCredentials user credentials ({@link UserCredentials})
+     * @return {@link UserCredentials}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UserCredentials generatePasswordResetToken(UserCredentials userCredentials) {
@@ -324,6 +464,13 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
         userCredentials.setResetTokenExpTime(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(ttlHours));
         return userCredentials;
     }
+    /**
+     * Generate user activation token.
+     *
+     * @param userCredentials user credentials ({@link UserCredentials})
+     * @return {@link UserCredentials}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UserCredentials generateUserActivationToken(UserCredentials userCredentials) {
@@ -332,6 +479,14 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
         userCredentials.setActivateTokenExpTime(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(ttlHours));
         return userCredentials;
     }
+    /**
+     * Checks user activation token.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userCredentials user credentials ({@link UserCredentials})
+     * @return {@link UserCredentials}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UserCredentials checkUserActivationToken(TenantId tenantId, UserCredentials userCredentials) {
@@ -342,6 +497,14 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
         }
         return userCredentials;
     }
+    /**
+     * Replace user credentials.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userCredentials user credentials ({@link UserCredentials})
+     * @return {@link UserCredentials}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UserCredentials replaceUserCredentials(TenantId tenantId, UserCredentials userCredentials) {
@@ -359,6 +522,14 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
                 .actionType(ActionType.CREDENTIALS_UPDATED).build());
         return result;
     }
+    /**
+     * Deletes user credentials.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userCredentials user credentials ({@link UserCredentials})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteUserCredentials(TenantId tenantId, UserCredentials userCredentials) {
@@ -368,6 +539,14 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
         validateId(userCredentialsId, id -> INCORRECT_USER_CREDENTIALS_ID + id);
         userCredentialsDao.removeById(tenantId, userCredentialsId.getId());
     }
+    /**
+     * Deletes user.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     @Transactional
@@ -395,6 +574,14 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
                 .cause(cause)
                 .build());
     }
+    /**
+     * Finds users by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<User> findUsersByTenantId(TenantId tenantId, PageLink pageLink) {
@@ -403,6 +590,14 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
         validatePageLink(pageLink);
         return userDao.findByTenantId(tenantId.getId(), pageLink);
     }
+    /**
+     * Finds tenant admins.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<User> findTenantAdmins(TenantId tenantId, PageLink pageLink) {
@@ -411,31 +606,75 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
         validatePageLink(pageLink);
         return userDao.findTenantAdmins(tenantId.getId(), pageLink);
     }
+    /**
+     * Finds sys admins.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<User> findSysAdmins(PageLink pageLink) {
         return userDao.findAllByAuthority(Authority.SYS_ADMIN, pageLink);
     }
+    /**
+     * Finds all tenant admins.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<User> findAllTenantAdmins(PageLink pageLink) {
         return userDao.findAllByAuthority(Authority.TENANT_ADMIN, pageLink);
     }
+    /**
+     * Finds tenant admins by tenants ids.
+     *
+     * @param tenantsIds tenants ids ({@link List})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<User> findTenantAdminsByTenantsIds(List<TenantId> tenantsIds, PageLink pageLink) {
         return userDao.findByAuthorityAndTenantsIds(Authority.TENANT_ADMIN, tenantsIds, pageLink);
     }
+    /**
+     * Finds tenant admins by tenant profiles ids.
+     *
+     * @param tenantProfilesIds tenant profiles ids ({@link List})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<User> findTenantAdminsByTenantProfilesIds(List<TenantProfileId> tenantProfilesIds, PageLink pageLink) {
         return userDao.findByAuthorityAndTenantProfilesIds(Authority.TENANT_ADMIN, tenantProfilesIds, pageLink);
     }
+    /**
+     * Finds all users.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<User> findAllUsers(PageLink pageLink) {
         return userDao.findAll(pageLink);
     }
+    /**
+     * Deletes tenant admins.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteTenantAdmins(TenantId tenantId) {
@@ -443,17 +682,40 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
         validateId(tenantId, id -> INCORRECT_TENANT_ID + id);
         tenantAdminsRemover.removeEntities(tenantId, tenantId);
     }
+    /**
+     * Deletes all by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteAllByTenantId(TenantId tenantId) {
         log.trace("Executing deleteByTenantId, tenantId [{}]", tenantId);
         usersRemover.removeEntities(tenantId, tenantId);
     }
+    /**
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteByTenantId(TenantId tenantId) {
         deleteAllByTenantId(tenantId);
     }
+    /**
+     * Finds customer users.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<User> findCustomerUsers(TenantId tenantId, CustomerId customerId, PageLink pageLink) {
@@ -463,6 +725,15 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
         validatePageLink(pageLink);
         return userDao.findCustomerUsers(tenantId.getId(), customerId.getId(), pageLink);
     }
+    /**
+     * Finds users by customer ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerIds customer ids ({@link List})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<User> findUsersByCustomerIds(TenantId tenantId, List<CustomerId> customerIds, PageLink pageLink) {
@@ -472,6 +743,14 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
         customerIds.forEach(customerId -> validateId(customerId, id -> "Incorrect customerId " + id));
         return userDao.findUsersByCustomerIds(tenantId.getId(), customerIds, pageLink);
     }
+    /**
+     * Deletes customer users.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteCustomerUsers(TenantId tenantId, CustomerId customerId) {
@@ -480,6 +759,15 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
         validateId(customerId, id -> "Incorrect customerId " + id);
         customerUsersRemover.removeEntities(tenantId, customerId);
     }
+    /**
+     * Set user credentials enabled.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @param enabled enabled
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Transactional
     @Override
@@ -493,17 +781,43 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
         }
         saveUserCredentials(tenantId, userCredentials);
     }
+    /**
+     * Reset failed login attempts.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void resetFailedLoginAttempts(TenantId tenantId, UserId userId) {
         log.trace("Executing resetFailedLoginAttempts [{}]", userId);
         userCredentialsDao.setFailedLoginAttempts(tenantId, userId, 0);
     }
+    /**
+     * Updates last login ts.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void updateLastLoginTs(TenantId tenantId, UserId userId) {
         userCredentialsDao.setLastLoginTs(tenantId, userId, System.currentTimeMillis());
     }
+    /**
+     * Saves or persists mobile session.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @param mobileToken mobile token ({@link String})
+     * @param sessionInfo session info ({@link MobileSessionInfo})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void saveMobileSession(TenantId tenantId, UserId userId, String mobileToken, MobileSessionInfo sessionInfo) {
@@ -517,16 +831,41 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
         mobileInfo.getSessions().put(mobileToken, sessionInfo);
         userSettingsService.updateUserSettings(tenantId, userId, UserSettingsType.MOBILE, JacksonUtil.valueToTree(mobileInfo));
     }
+    /**
+     * Finds mobile sessions.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @return {@link Map}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Map<String, MobileSessionInfo> findMobileSessions(TenantId tenantId, UserId userId) {
         return findMobileSessionInfo(tenantId, userId).map(UserMobileSessionInfo::getSessions).orElse(Collections.emptyMap());
     }
+    /**
+     * Finds mobile session.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @param mobileToken mobile token ({@link String})
+     * @return {@link MobileSessionInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public MobileSessionInfo findMobileSession(TenantId tenantId, UserId userId, String mobileToken) {
         return findMobileSessionInfo(tenantId, userId).map(mobileInfo -> mobileInfo.getSessions().get(mobileToken)).orElse(null);
     }
+    /**
+     * Removes mobile session.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param mobileToken mobile token ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void removeMobileSession(TenantId tenantId, String mobileToken) {
@@ -535,11 +874,26 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
             userSettingsService.saveUserSettings(tenantId, userSettings);
         }
     }
+    /**
+     * Counts tenant admins.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public int countTenantAdmins(TenantId tenantId) {
         return userDao.countTenantAdmins(tenantId.getId());
     }
+    /**
+     * Finds user auth details by user id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @return {@link UserAuthDetails}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UserAuthDetails findUserAuthDetailsByUserId(TenantId tenantId, UserId userId) {
@@ -547,6 +901,14 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
         validateId(userId, id -> INCORRECT_USER_ID + id);
         return userDao.findUserAuthDetailsByUserId(tenantId.getId(), userId.getId());
     }
+    /**
+     * Finds users by tenant id and ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userIds user ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<User> findUsersByTenantIdAndIds(TenantId tenantId, List<UserId> userIds) {
@@ -558,12 +920,29 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
         return Optional.ofNullable(userSettingsService.findUserSettings(tenantId, userId, UserSettingsType.MOBILE))
                 .map(UserSettings::getSettings).map(settings -> JacksonUtil.treeToValue(settings, UserMobileSessionInfo.class));
     }
+    /**
+     * Increase failed login attempts.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public int increaseFailedLoginAttempts(TenantId tenantId, UserId userId) {
         log.trace("Executing increaseFailedLoginAttempts [{}]", userId);
         return userCredentialsDao.incrementFailedLoginAttempts(tenantId, userId);
     }
+    /**
+     * Finds users by filter.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param filter filter ({@link UsersFilter})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<User> findUsersByFilter(TenantId tenantId, UsersFilter filter, PageLink pageLink) {
@@ -611,6 +990,15 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
             default -> throw new IllegalArgumentException("Recipient type not supported");
         }
     }
+    /**
+     * Matches filter.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param filter filter ({@link SystemLevelUsersFilter})
+     * @param user authenticated user performing the action
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean matchesFilter(TenantId tenantId, SystemLevelUsersFilter filter, User user) {
@@ -700,22 +1088,51 @@ public class UserServiceImpl extends AbstractCachedEntityService<UserCacheKey, U
             deleteUser(tenantId, user, ActionCause.TENANT_DELETION);
         }
     };
+    /**
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findUserById(tenantId, new UserId(entityId.getId())));
     }
+    /**
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
         return FluentFuture.from(findUserByIdAsync(tenantId, new UserId(entityId.getId())))
                 .transform(Optional::ofNullable, directExecutor());
     }
+    /**
+     * Counts by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public long countByTenantId(TenantId tenantId) {
         return userDao.countByTenantId(tenantId);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

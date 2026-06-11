@@ -24,8 +24,14 @@ import java.time.temporal.TemporalUnit;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 /**
- * No sql ts partition date.
+ * Enumerates no sql ts partition date values used in Cassandra telemetry and latest-value DAO (Cassandra time-series DAO and latest-value caches).
  */
+
+
+
+
+
+
 
 @Getter
 public enum NoSqlTsPartitionDate {
@@ -42,6 +48,13 @@ public enum NoSqlTsPartitionDate {
         this.truncateUnit = truncateUnit;
         this.durationMs = TimeUnit.SECONDS.toMillis(this.truncateUnit.getDuration().getSeconds());
     }
+    /**
+     * Truncated to.
+     *
+     * @param time time ({@link LocalDateTime})
+     * @return {@link LocalDateTime}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public LocalDateTime truncatedTo(LocalDateTime time) {
         switch (this){
@@ -55,6 +68,13 @@ public enum NoSqlTsPartitionDate {
                 return time.truncatedTo(truncateUnit);
         }
     }
+    /**
+     * Parse.
+     *
+     * @param name entity or attribute name
+     * @return optional {@link NoSqlTsPartitionDate}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Optional<NoSqlTsPartitionDate> parse(String name) {
         NoSqlTsPartitionDate partition = null;

@@ -26,61 +26,103 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The Interface DashboardInfoDao.
+ * Persistence contract for dashboard info.
+ *
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (dashboard metadata, titles, and assignment).
  */
+
 public interface DashboardInfoDao extends Dao<DashboardInfo>, ImageContainerDao<DashboardInfo>, ResourceContainerDao<DashboardInfo> {
 
+    
     /**
-     * Find dashboards by tenantId and page link.
+     * Finds dashboards by tenant id.
      *
-     * @param tenantId the tenantId
-     * @param pageLink the page link
-     * @return the list of dashboard objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<DashboardInfo> findDashboardsByTenantId(UUID tenantId, PageLink pageLink);
 
+    
     /**
-     * Find dashboards not hidden for mobile by tenantId and page link.
+     * Finds mobile dashboards by tenant id.
      *
-     * @param tenantId the tenantId
-     * @param pageLink the page link
-     * @return the list of dashboard objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<DashboardInfo> findMobileDashboardsByTenantId(UUID tenantId, PageLink pageLink);
 
+    
     /**
-     * Find dashboards by tenantId, customerId and page link.
+     * Finds dashboards by tenant id and customer id.
      *
-     * @param tenantId the tenantId
-     * @param customerId the customerId
-     * @param pageLink the page link
-     * @return the list of dashboard objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<DashboardInfo> findDashboardsByTenantIdAndCustomerId(UUID tenantId, UUID customerId, PageLink pageLink);
 
+    
     /**
-     * Find dashboards not hidden for mobile by tenantId, customerId and page link.
+     * Finds mobile dashboards by tenant id and customer id.
      *
-     * @param tenantId the tenantId
-     * @param customerId the customerId
-     * @param pageLink the page link
-     * @return the list of dashboard objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<DashboardInfo> findMobileDashboardsByTenantIdAndCustomerId(UUID tenantId, UUID customerId, PageLink pageLink);
 
+    
     /**
-     * Find dashboards by tenantId, edgeId and page link.
+     * Finds dashboards by tenant id and edge id.
      *
-     * @param tenantId the tenantId
-     * @param edgeId the edgeId
-     * @param pageLink the page link
-     * @return the list of dashboard objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link UUID})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<DashboardInfo> findDashboardsByTenantIdAndEdgeId(UUID tenantId, UUID edgeId, PageLink pageLink);
+    /**
+     * Finds first by tenant id and name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return {@link DashboardInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     DashboardInfo findFirstByTenantIdAndName(UUID tenantId, String name);
+    /**
+     * Finds title by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param dashboardId dashboard id ({@link UUID})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     String findTitleById(UUID tenantId, UUID dashboardId);
+    /**
+     * Finds dashboards by ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param dashboardIds dashboard ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<DashboardInfo> findDashboardsByIds(UUID tenantId, List<UUID> dashboardIds);
 

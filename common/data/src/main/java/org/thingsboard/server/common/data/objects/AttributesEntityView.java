@@ -29,9 +29,6 @@ import java.util.List;
 @Data
 @Schema
 @NoArgsConstructor
-/**
- * Attributes entity view.
- */
 public class AttributesEntityView implements Serializable {
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "List of client-side attribute keys to expose", example = "[\"currentConfiguration\"]")

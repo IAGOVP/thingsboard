@@ -27,6 +27,11 @@ import org.thingsboard.server.common.data.DeviceProfileProvisionType;
 public class CheckPreProvisionedDevicesDeviceProfileProvisionConfiguration implements DeviceProfileProvisionConfiguration {
 
     private final String provisionDeviceSecret;
+    /**
+     * Returns type.
+     *
+     * @return {@link DeviceProfileProvisionType}
+     */
 
     @Override
     public DeviceProfileProvisionType getType() {

@@ -21,6 +21,13 @@ package org.thingsboard.server.common.data;
 public enum ApiUsageStateValue {
 
     ENABLED, WARNING, DISABLED;
+    /**
+     * To more restricted.
+     *
+     * @param a a ({@link ApiUsageStateValue})
+     * @param b b ({@link ApiUsageStateValue})
+     * @return {@link ApiUsageStateValue}
+     */
 
 
     public static ApiUsageStateValue toMoreRestricted(ApiUsageStateValue a, ApiUsageStateValue b) {

@@ -31,8 +31,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 /**
- * Notification request info entity.
+ * JPA/Cassandra row model for notification request info.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -46,6 +49,12 @@ public class NotificationRequestInfoEntity extends NotificationRequestEntity {
         this.templateName = templateName;
         this.templateConfig = (JsonNode) templateConfig;
     }
+    /**
+     * To data.
+     *
+     * @return {@link NotificationRequestInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationRequestInfo toData() {

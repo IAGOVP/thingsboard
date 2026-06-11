@@ -33,8 +33,9 @@ import org.thingsboard.server.dao.sql.JpaExecutorService;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 /**
- * Default tb resource data cache.
+ * Spring component for default tb resource data cache (tenant/system resources (images, JS modules, etc.)).
  */
+
 
 @Service
 @RequiredArgsConstructor
@@ -64,18 +65,40 @@ public class DefaultTbResourceDataCache implements TbResourceDataCache {
         cache.synchronous().invalidateAll();
         cache = null;
     }
+    /**
+     * Returns resource data info async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceId resource id ({@link TbResourceId})
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public FluentFuture<TbResourceDataInfo> getResourceDataInfoAsync(TenantId tenantId, TbResourceId resourceId) {
         log.trace("Retrieving resource data info by id [{}], tenant id [{}] from cache", resourceId, tenantId);
         return DonAsynchron.toFluentFuture(cache.get(new ResourceDataKey(tenantId, resourceId)));
     }
+    /**
+     * Evict resource data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceId resource id ({@link TbResourceId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void evictResourceData(TenantId tenantId, TbResourceId resourceId) {
         cache.asMap().remove(new ResourceDataKey(tenantId, resourceId));
         log.trace("Evicted resource data info with id [{}], tenant id [{}]", resourceId, tenantId);
     }
+
+    /**
+
+     * Spring component for resource data key (tenant/system resources (images, JS modules, etc.)).
+
+     */
 
     record ResourceDataKey (TenantId tenantId, TbResourceId resourceId) {}
 

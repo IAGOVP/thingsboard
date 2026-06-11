@@ -39,13 +39,14 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Default EDQS implementation of edqs stats service (EDQS microservice).
+ */
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
 @ConditionalOnExpression("'${queue.edqs.api.supported:true}' == 'true' && '${queue.edqs.stats.enabled:true}' == 'true'")
-/**
- * EDQS component: default edqs stats service.
- */
 public class DefaultEdqsStatsService implements EdqsStatsService {
 
     private final StatsFactory statsFactory;
@@ -63,45 +64,107 @@ public class DefaultEdqsStatsService implements EdqsStatsService {
         statsFactory.createGauge("edqsMapGauges", "bytePoolSize", TbBytePool.getPool(), Map::size);
         statsFactory.createGauge("edqsMapGauges", "tenantReposSize", DefaultEdqsRepository.getRepos(), Map::size);
     }
+    /**
+     * Report added.
+     *
+     * @param objectType object type ({@link ObjectType})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void reportAdded(ObjectType objectType) {
         getObjectGauge(objectType).incrementAndGet();
     }
+    /**
+     * Report removed.
+     *
+     * @param objectType object type ({@link ObjectType})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void reportRemoved(ObjectType objectType) {
         getObjectGauge(objectType).decrementAndGet();
     }
+    /**
+     * Report entity data query.
+     *
+     * @param tenantId tenant that owns the indexed entities
+     * @param query entity count or data query with filter, sort, and key selections
+     * @param timingNanos timing nanos
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void reportEntityDataQuery(TenantId tenantId, EntityDataQuery query, long timingNanos) {
         checkTiming(tenantId, query, timingNanos);
         getTimer("entityDataQueryTimer").record(timingNanos, TimeUnit.NANOSECONDS);
     }
+    /**
+     * Report entity count query.
+     *
+     * @param tenantId tenant that owns the indexed entities
+     * @param query entity count or data query with filter, sort, and key selections
+     * @param timingNanos timing nanos
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void reportEntityCountQuery(TenantId tenantId, EntityCountQuery query, long timingNanos) {
         checkTiming(tenantId, query, timingNanos);
         getTimer("entityCountQueryTimer").record(timingNanos, TimeUnit.NANOSECONDS);
     }
+    /**
+     * Report edqs data query.
+     *
+     * @param tenantId tenant that owns the indexed entities
+     * @param query entity count or data query with filter, sort, and key selections
+     * @param timingNanos timing nanos
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void reportEdqsDataQuery(TenantId tenantId, EntityDataQuery query, long timingNanos) {
         checkTiming(tenantId, query, timingNanos);
         getTimer("edqsDataQueryTimer").record(timingNanos, TimeUnit.NANOSECONDS);
     }
+    /**
+     * Report edqs count query.
+     *
+     * @param tenantId tenant that owns the indexed entities
+     * @param query entity count or data query with filter, sort, and key selections
+     * @param timingNanos timing nanos
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void reportEdqsCountQuery(TenantId tenantId, EntityCountQuery query, long timingNanos) {
         checkTiming(tenantId, query, timingNanos);
         getTimer("edqsCountQueryTimer").record(timingNanos, TimeUnit.NANOSECONDS);
     }
+    /**
+     * Report string compressed.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void reportStringCompressed() {
         getCounter("stringsCompressed").increment();
     }
+    /**
+     * Report string uncompressed.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void reportStringUncompressed() {

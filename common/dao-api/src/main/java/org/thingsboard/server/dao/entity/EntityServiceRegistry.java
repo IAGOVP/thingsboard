@@ -18,10 +18,17 @@ package org.thingsboard.server.dao.entity;
 import org.thingsboard.server.common.data.EntityType;
 
 /**
- * entity service registry contract.
+ * entity service registry contract for the DAO layer.
  */
+
 public interface EntityServiceRegistry {
 
+    /**
+     * Returns service by entity type.
+     *
+     * @param entityType entity type ({@link EntityType})
+     * @return {@link EntityDaoService}
+     */
     EntityDaoService getServiceByEntityType(EntityType entityType);
 
 }

@@ -39,8 +39,11 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * @author Andrew Shvayka
+ * Default DAO-layer service implementation for component descriptor.
+ *
+ * <p>Coordinates validation, caching, cluster events, and {@code *Dao} persistence (rule-engine component descriptor registry).
  */
+
 @Service
 @Slf4j
 public class BaseComponentDescriptorService implements ComponentDescriptorService {
@@ -51,11 +54,16 @@ public class BaseComponentDescriptorService implements ComponentDescriptorServic
     @Autowired
     private DataValidator<ComponentDescriptor> componentValidator;
 
+    
     /**
-
-     * Persists component.
-
+     * Saves or persists component.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param component component ({@link ComponentDescriptor})
+     * @return {@link ComponentDescriptor}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ComponentDescriptor saveComponent(TenantId tenantId, ComponentDescriptor component) {
@@ -64,11 +72,16 @@ public class BaseComponentDescriptorService implements ComponentDescriptorServic
         return result.orElseGet(() -> componentDescriptorDao.findByClazz(tenantId, component.getClazz()));
     }
 
+    
     /**
-
-     * Loads by id.
-
+     * Finds by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param componentId component id ({@link ComponentDescriptorId})
+     * @return {@link ComponentDescriptor}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ComponentDescriptor findById(TenantId tenantId, ComponentDescriptorId componentId) {
@@ -76,11 +89,16 @@ public class BaseComponentDescriptorService implements ComponentDescriptorServic
         return componentDescriptorDao.findById(tenantId, componentId);
     }
 
+    
     /**
-
-     * Loads by clazz.
-
+     * Finds by clazz.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param clazz clazz ({@link String})
+     * @return {@link ComponentDescriptor}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ComponentDescriptor findByClazz(TenantId tenantId, String clazz) {
@@ -88,11 +106,17 @@ public class BaseComponentDescriptorService implements ComponentDescriptorServic
         return componentDescriptorDao.findByClazz(tenantId, clazz);
     }
 
+    
     /**
-
-     * Loads by type and page link.
-
+     * Finds by type and page link.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link ComponentType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<ComponentDescriptor> findByTypeAndPageLink(TenantId tenantId, ComponentType type, PageLink pageLink) {
@@ -100,11 +124,18 @@ public class BaseComponentDescriptorService implements ComponentDescriptorServic
         return componentDescriptorDao.findByTypeAndPageLink(tenantId, type, pageLink);
     }
 
+    
     /**
-
-     * Loads by scope and type and page link.
-
+     * Finds by scope and type and page link.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param scope attribute scope (SERVER_SCOPE, SHARED_SCOPE, etc.)
+     * @param type type ({@link ComponentType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<ComponentDescriptor> findByScopeAndTypeAndPageLink(TenantId tenantId, ComponentScope scope, ComponentType type, PageLink pageLink) {
@@ -112,11 +143,16 @@ public class BaseComponentDescriptorService implements ComponentDescriptorServic
         return componentDescriptorDao.findByScopeAndTypeAndPageLink(tenantId, scope, type, pageLink);
     }
 
+    
     /**
-
-     * Removes by clazz.
-
+     * Deletes by clazz.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param clazz clazz ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteByClazz(TenantId tenantId, String clazz) {
@@ -124,11 +160,17 @@ public class BaseComponentDescriptorService implements ComponentDescriptorServic
         componentDescriptorDao.deleteByClazz(tenantId, clazz);
     }
 
+    
     /**
-
-     * Validate.
-
+     * Validates the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param component component ({@link ComponentDescriptor})
+     * @param configuration configuration ({@link JsonNode})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public boolean validate(TenantId tenantId, ComponentDescriptor component, JsonNode configuration) {

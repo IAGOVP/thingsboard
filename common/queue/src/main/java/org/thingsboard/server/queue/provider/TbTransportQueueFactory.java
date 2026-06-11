@@ -26,8 +26,9 @@ import org.thingsboard.server.queue.TbQueueProducer;
 import org.thingsboard.server.queue.TbQueueRequestTemplate;
 import org.thingsboard.server.queue.common.TbProtoQueueMsg;
 
+
 /**
- * tb transport queue factory contract.
+ * Factory interface for transport queue producers and consumers.
  */
 public interface TbTransportQueueFactory extends TbUsageStatsClientQueueFactory, HousekeeperClientQueueFactory {
 

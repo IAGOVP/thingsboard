@@ -41,7 +41,13 @@ public enum TbLwM2mVersion {
         this.contentFormat = contentFormat;
         this.composite = composite;
     }
-
+    /**
+     * From version.
+     *
+     * @param version version ({@link LwM2mVersion})
+     * @return {@link TbLwM2mVersion}
+     * @throws Exception on processing failure
+     */
     public static TbLwM2mVersion fromVersion(LwM2mVersion version) {
         for (TbLwM2mVersion to : TbLwM2mVersion.values()) {
             if (to.version.equals(version)) {
@@ -50,7 +56,13 @@ public enum TbLwM2mVersion {
         }
         throw new IllegalArgumentException(String.format("Unsupported typeLwM2mVersion type : %s", version));
     }
-
+    /**
+     * From version str.
+     *
+     * @param versionStr version str ({@link String})
+     * @return {@link TbLwM2mVersion}
+     * @throws Exception on processing failure
+     */
     public static TbLwM2mVersion fromVersionStr(String versionStr) {
         for (TbLwM2mVersion to : TbLwM2mVersion.values()) {
             if (to.version.toString().equals(versionStr)) {
@@ -59,7 +71,13 @@ public enum TbLwM2mVersion {
         }
         throw new IllegalArgumentException(String.format("Unsupported contentFormatLwM2mVersion version : %s", versionStr));
     }
-
+    /**
+     * From code.
+     *
+     * @param code code
+     * @return {@link TbLwM2mVersion}
+     * @throws Exception on processing failure
+     */
     public static TbLwM2mVersion fromCode(int code) {
         for (TbLwM2mVersion to : TbLwM2mVersion.values()) {
             if (to.code == code) {

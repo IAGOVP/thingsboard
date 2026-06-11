@@ -15,16 +15,18 @@
  */
 package org.thingsboard.server.queue.discovery;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.thingsboard.server.queue.discovery.event.TbApplicationEvent;
 
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * Tb application event listener.
+ * Base listener for cluster topology and partition change application events.
  */
 public abstract class TbApplicationEventListener<T extends TbApplicationEvent> implements ApplicationListener<T> {
 

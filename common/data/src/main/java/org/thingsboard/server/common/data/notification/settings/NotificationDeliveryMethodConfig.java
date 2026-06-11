@@ -43,6 +43,11 @@ import java.io.Serializable;
  * notification delivery method config contract.
  */
 public interface NotificationDeliveryMethodConfig extends Serializable {
+    /**
+     * Returns method.
+     *
+     * @return {@link NotificationDeliveryMethod}
+     */
 
     @JsonIgnore
     NotificationDeliveryMethod getMethod();

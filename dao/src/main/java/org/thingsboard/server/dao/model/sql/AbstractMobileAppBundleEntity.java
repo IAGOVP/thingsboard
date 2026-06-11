@@ -34,8 +34,11 @@ import java.util.UUID;
 
 import static org.thingsboard.server.dao.model.ModelConstants.TENANT_ID_COLUMN;
 /**
- * Abstract mobile app bundle entity.
+ * JPA/Cassandra row model for abstract mobile app bundle.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -95,6 +98,12 @@ public abstract class AbstractMobileAppBundleEntity<T extends MobileAppBundle> e
         this.layoutConfig = toJson(mobileAppBundle.getLayoutConfig());
         this.oauth2Enabled = mobileAppBundle.getOauth2Enabled();
     }
+    /**
+     * To mobile app bundle.
+     *
+     * @return {@link MobileAppBundle}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected MobileAppBundle toMobileAppBundle() {
         MobileAppBundle mobileAppBundle = new MobileAppBundle(new MobileAppBundleId(id));

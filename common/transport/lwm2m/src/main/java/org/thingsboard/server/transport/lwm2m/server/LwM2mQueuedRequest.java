@@ -16,7 +16,7 @@
 package org.thingsboard.server.transport.lwm2m.server;
 
 /**
- * lw m2m queued request contract.
+ * lw m2m queued request contract (LwM2M transport and object model (ThingsBoard common module)).
  */
 public interface LwM2mQueuedRequest {
     void send();

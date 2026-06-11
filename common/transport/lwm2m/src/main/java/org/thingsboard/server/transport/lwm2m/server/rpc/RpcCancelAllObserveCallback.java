@@ -30,6 +30,13 @@ public class RpcCancelAllObserveCallback extends RpcDownlinkRequestCallbackProxy
     public RpcCancelAllObserveCallback(TransportService transportService, LwM2mClient client, TransportProtos.ToDeviceRpcRequestMsg requestMsg, DownlinkRequestCallback<TbLwM2MCancelAllRequest, Integer> callback) {
         super(transportService, client, requestMsg, callback);
     }
+    /**
+     * Send rpc reply on success.
+     *
+     * @param response response ({@link Integer})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected void sendRpcReplyOnSuccess(Integer response) {

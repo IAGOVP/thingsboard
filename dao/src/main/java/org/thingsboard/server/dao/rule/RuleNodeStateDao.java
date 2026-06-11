@@ -23,15 +23,49 @@ import org.thingsboard.server.dao.Dao;
 import java.util.UUID;
 
 /**
- * Created by igor on 3/12/18.
+ * Persistence contract for rule node state.
+ *
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (rule chains, nodes, and node state).
  */
+
 public interface RuleNodeStateDao extends Dao<RuleNodeState> {
+    /**
+     * Finds by rule node id.
+     *
+     * @param ruleNodeId rule node id ({@link UUID})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<RuleNodeState> findByRuleNodeId(UUID ruleNodeId, PageLink pageLink);
+    /**
+     * Finds by rule node id and entity id.
+     *
+     * @param ruleNodeId rule node id ({@link UUID})
+     * @param entityId target entity identifier
+     * @return {@link RuleNodeState}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     RuleNodeState findByRuleNodeIdAndEntityId(UUID ruleNodeId, UUID entityId);
+    /**
+     * Removes by rule node id.
+     *
+     * @param ruleNodeId rule node id ({@link UUID})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void removeByRuleNodeId(UUID ruleNodeId);
+    /**
+     * Removes by rule node id and entity id.
+     *
+     * @param ruleNodeId rule node id ({@link UUID})
+     * @param entityId target entity identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void removeByRuleNodeIdAndEntityId(UUID ruleNodeId, UUID entityId);
 }

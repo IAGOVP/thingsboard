@@ -29,12 +29,13 @@ import org.thingsboard.server.queue.TbQueueCallback;
 import org.thingsboard.server.queue.TbQueueProducer;
 import org.thingsboard.server.queue.common.TbProtoQueueMsg;
 
+
+/**
+ * Tracks statistics for background job and task queue processing.
+ */
 @Lazy
 @Service
 @Slf4j
-/**
- * Job stats service.
- */
 public class JobStatsService {
 
     private final TbQueueProducer<TbProtoQueueMsg<JobStatsMsg>> producer;

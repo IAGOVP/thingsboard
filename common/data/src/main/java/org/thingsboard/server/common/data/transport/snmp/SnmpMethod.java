@@ -29,6 +29,11 @@ public enum SnmpMethod {
     SnmpMethod(int code) {
         this.code = code;
     }
+    /**
+     * Returns code.
+     *
+     * @return the int result
+     */
 
     public int getCode() {
         return code;

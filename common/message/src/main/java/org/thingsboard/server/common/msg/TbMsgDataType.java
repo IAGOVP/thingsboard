@@ -16,8 +16,9 @@
 package org.thingsboard.server.common.msg;
 
 /**
- * Created by ashvayka on 15.03.18.
+ * Enumerates tb msg data type values for message routing or payloads.
  */
+
 public enum TbMsgDataType {
 
     // Do not change ordering. We use ordinal to save some bytes on serialization

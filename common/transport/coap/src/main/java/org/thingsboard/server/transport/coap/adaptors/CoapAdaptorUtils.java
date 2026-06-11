@@ -26,10 +26,16 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Coap adaptor utils.
+ * Shared helpers for CoAP adaptors: content-format detection and response building.
  */
 public class CoapAdaptorUtils {
-
+    /**
+     * To get attribute request msg.
+     *
+     * @param inbound inbound ({@link Request})
+     * @return the TransportProtos.GetAttributeRequestMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
     public static TransportProtos.GetAttributeRequestMsg toGetAttributeRequestMsg(Request inbound) throws AdaptorException {
         List<String> queryElements = inbound.getOptions().getUriQuery();
         TransportProtos.GetAttributeRequestMsg.Builder result = TransportProtos.GetAttributeRequestMsg.newBuilder();

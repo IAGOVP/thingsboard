@@ -208,6 +208,12 @@ public class DefaultTenantProfileConfiguration implements TenantProfileConfigura
     @Builder.Default
     @Schema(example = "60")
     private long alarmsReevaluationInterval = 60;
+    /**
+     * Returns profile threshold.
+     *
+     * @param key key ({@link ApiUsageRecordKey})
+     * @return the long result
+     */
 
     @Override
     public long getProfileThreshold(ApiUsageRecordKey key) {
@@ -224,6 +230,12 @@ public class DefaultTenantProfileConfiguration implements TenantProfileConfigura
             default -> 0L;
         };
     }
+    /**
+     * Returns profile feature enabled.
+     *
+     * @param key key ({@link ApiUsageRecordKey})
+     * @return the boolean result
+     */
 
     @Override
     public boolean getProfileFeatureEnabled(ApiUsageRecordKey key) {
@@ -234,11 +246,23 @@ public class DefaultTenantProfileConfiguration implements TenantProfileConfigura
                 return true;
         }
     }
+    /**
+     * Returns warn threshold.
+     *
+     * @param key key ({@link ApiUsageRecordKey})
+     * @return the long result
+     */
 
     @Override
     public long getWarnThreshold(ApiUsageRecordKey key) {
         return (long) (getProfileThreshold(key) * (warnThreshold > 0.0 ? warnThreshold : 0.8));
     }
+    /**
+     * Returns entities limit.
+     *
+     * @param entityType entity type ({@link EntityType})
+     * @return the long result
+     */
 
     public long getEntitiesLimit(EntityType entityType) {
         return switch (entityType) {
@@ -252,24 +276,49 @@ public class DefaultTenantProfileConfiguration implements TenantProfileConfigura
             default -> 0;
         };
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link TenantProfileType}
+     */
 
     @Override
     public TenantProfileType getType() {
         return TenantProfileType.DEFAULT;
     }
+    /**
+     * Returns max rule node execs per message.
+     *
+     * @return the int result
+     */
 
     @Override
     public int getMaxRuleNodeExecsPerMessage() {
         return maxRuleNodeExecutionsPerMessage;
     }
+    /**
+     * Returns cf reevaluation check interval.
+     *
+     * @return the long result
+     */
 
     public long getCfReevaluationCheckInterval() {
         return cfReevaluationCheckInterval <= 0 ? 60 : cfReevaluationCheckInterval;
     }
+    /**
+     * Returns alarms reevaluation interval.
+     *
+     * @return the long result
+     */
 
     public long getAlarmsReevaluationInterval() {
         return alarmsReevaluationInterval <= 0 ? 60 : alarmsReevaluationInterval;
     }
+    /**
+     * Returns intermediate aggregation interval in sec for cf.
+     *
+     * @return the long result
+     */
 
     public long getIntermediateAggregationIntervalInSecForCF() {
         return intermediateAggregationIntervalInSecForCF <= 0 ? 300 : intermediateAggregationIntervalInSecForCF;

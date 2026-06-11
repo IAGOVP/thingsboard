@@ -48,6 +48,13 @@ public class TbLwM2mRedisSecurityStore implements TbEditableSecurityStore {
         this.connectionFactory = connectionFactory;
         redisLock = new RedisLockRegistry(connectionFactory, "Security");
     }
+    /**
+     * Returns by endpoint.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return {@link SecurityInfo}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public SecurityInfo getByEndpoint(String endpoint) {
@@ -92,6 +99,13 @@ public class TbLwM2mRedisSecurityStore implements TbEditableSecurityStore {
             }
         }
     }
+    /**
+     * Returns by identity.
+     *
+     * @param identity identity ({@link String})
+     * @return {@link SecurityInfo}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public SecurityInfo getByIdentity(String identity) {
@@ -116,11 +130,25 @@ public class TbLwM2mRedisSecurityStore implements TbEditableSecurityStore {
             }
         }
     }
+    /**
+     * Returns by oscore identity.
+     *
+     * @param oscoreIdentity oscore identity ({@link OscoreIdentity})
+     * @return {@link SecurityInfo}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public SecurityInfo getByOscoreIdentity(OscoreIdentity oscoreIdentity) {
         return null;
     }
+    /**
+     * Put.
+     *
+     * @param tbSecurityInfo tb security info ({@link TbLwM2MSecurityInfo})
+     * @return nothing
+     * @throws NonUniqueSecurityInfoException if non unique security info exception is thrown during processing
+     */
 
     @Override
     public void put(TbLwM2MSecurityInfo tbSecurityInfo) throws NonUniqueSecurityInfoException {
@@ -159,6 +187,13 @@ public class TbLwM2mRedisSecurityStore implements TbEditableSecurityStore {
             }
         }
     }
+    /**
+     * Returns tb lw m2msecurity info by endpoint.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return {@link TbLwM2MSecurityInfo}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public TbLwM2MSecurityInfo getTbLwM2MSecurityInfoByEndpoint(String endpoint) {
@@ -178,6 +213,13 @@ public class TbLwM2mRedisSecurityStore implements TbEditableSecurityStore {
             }
         }
     }
+    /**
+     * Removes the requested data.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void remove(String endpoint) {

@@ -159,27 +159,58 @@ public class DefaultLwM2MOtaUpdateService extends LwM2MExecutorAwareService impl
     @Autowired
     @Lazy
     private LwM2MAttributesService attributesService;
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @PostConstruct
     public void init() {
         super.init();
     }
+    /**
+     * Destroy.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @PreDestroy
     public void destroy() {
         log.trace("Destroying {}", getClass().getSimpleName());
         super.destroy();
     }
+    /**
+     * Returns executor size.
+     *
+     * @return monotonically increasing MQTT packet identifier
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected int getExecutorSize() {
         return config.getOtaPoolSize();
     }
+    /**
+     * Returns executor name.
+     *
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected String getExecutorName() {
         return "LwM2M OTA";
     }
+    /**
+     * Init.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void init(LwM2mClient client) {
@@ -240,6 +271,13 @@ public class DefaultLwM2MOtaUpdateService extends LwM2MExecutorAwareService impl
             }
         }
     }
+    /**
+     * Force firmware update.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void forceFirmwareUpdate(LwM2mClient client) {
@@ -248,6 +286,17 @@ public class DefaultLwM2MOtaUpdateService extends LwM2MExecutorAwareService impl
         fwInfo.setFailedPackageId(null);
         startFirmwareUpdateIfNeeded(client, fwInfo);
     }
+    /**
+     * Handles target firmware update.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param newFirmwareTitle new firmware title ({@link String})
+     * @param newFirmwareVersion new firmware version ({@link String})
+     * @param newFirmwareUrl new firmware url ({@link Optional})
+     * @param newFirmwareTag new firmware tag ({@link Optional})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onTargetFirmwareUpdate(LwM2mClient client, String newFirmwareTitle, String newFirmwareVersion, Optional<String> newFirmwareUrl, Optional<String> newFirmwareTag) {
@@ -256,18 +305,42 @@ public class DefaultLwM2MOtaUpdateService extends LwM2MExecutorAwareService impl
         update(fwInfo);
         startFirmwareUpdateIfNeeded(client, fwInfo);
     }
+    /**
+     * Handles current firmware name update.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param name name ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onCurrentFirmwareNameUpdate(LwM2mClient client, String name) {
         log.trace("[{}] Current fw name: {}", client.getEndpoint(), name);
         getOrInitFwInfo(client).setCurrentName(name);
     }
+    /**
+     * Handles current software name update.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param name name ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onCurrentSoftwareNameUpdate(LwM2mClient client, String name) {
         log.trace("[{}] Current sw name: {}", client.getEndpoint(), name);
         getOrInitSwInfo(client).setCurrentName(name);
     }
+    /**
+     * Handles firmware strategy update.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param configuration configuration ({@link OtherConfiguration})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onFirmwareStrategyUpdate(LwM2mClient client, OtherConfiguration configuration) {
@@ -281,6 +354,14 @@ public class DefaultLwM2MOtaUpdateService extends LwM2MExecutorAwareService impl
         fwInfo.setBaseUrl(configuration.getFwUpdateResource());
         return fwInfo;
     }
+    /**
+     * Handles current software strategy update.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param configuration configuration ({@link OtherConfiguration})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onCurrentSoftwareStrategyUpdate(LwM2mClient client, OtherConfiguration configuration) {
@@ -294,6 +375,14 @@ public class DefaultLwM2MOtaUpdateService extends LwM2MExecutorAwareService impl
         swInfo.setBaseUrl(configuration.getSwUpdateResource());
         return swInfo;
     }
+    /**
+     * Handles current firmware version3update.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param version version ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onCurrentFirmwareVersion3Update(LwM2mClient client, String version) {
@@ -301,6 +390,14 @@ public class DefaultLwM2MOtaUpdateService extends LwM2MExecutorAwareService impl
         LwM2MClientFwOtaInfo fwInfo = getOrInitFwInfo(client);
         fwInfo.setCurrentVersion3(version);
     }
+    /**
+     * Handles current firmware version update.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param version version ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onCurrentFirmwareVersionUpdate(LwM2mClient client, String version) {
@@ -308,6 +405,14 @@ public class DefaultLwM2MOtaUpdateService extends LwM2MExecutorAwareService impl
         LwM2MClientFwOtaInfo fwInfo = getOrInitFwInfo(client);
         fwInfo.setCurrentVersion(version);
     }
+    /**
+     * Handles current firmware state update.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param stateCode state code ({@link Long})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onCurrentFirmwareStateUpdate(LwM2mClient client, Long stateCode) {
@@ -332,6 +437,14 @@ public class DefaultLwM2MOtaUpdateService extends LwM2MExecutorAwareService impl
         });
         update(fwInfo);
     }
+    /**
+     * Handles current firmware result update.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param code code ({@link Long})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onCurrentFirmwareResultUpdate(LwM2mClient client, Long code) {
@@ -361,6 +474,14 @@ public class DefaultLwM2MOtaUpdateService extends LwM2MExecutorAwareService impl
         }
         update(fwInfo);
     }
+    /**
+     * Handles current firmware delivery method update.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param value value ({@link Long})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onCurrentFirmwareDeliveryMethodUpdate(LwM2mClient client, Long value) {
@@ -368,18 +489,42 @@ public class DefaultLwM2MOtaUpdateService extends LwM2MExecutorAwareService impl
         LwM2MClientFwOtaInfo fwInfo = getOrInitFwInfo(client);
         fwInfo.setDeliveryMethod(value.intValue());
     }
+    /**
+     * Handles current software version3update.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param version version ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onCurrentSoftwareVersion3Update(LwM2mClient client, String version) {
         log.trace("[{}] Current sw version(3): {}", client.getEndpoint(), version);
         getOrInitSwInfo(client).setCurrentVersion3(version);
     }
+    /**
+     * Handles current software version update.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param version version ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onCurrentSoftwareVersionUpdate(LwM2mClient client, String version) {
         log.trace("[{}] Current sw version(9): {}", client.getEndpoint(), version);
         getOrInitSwInfo(client).setCurrentVersion(version);
     }
+    /**
+     * Handles current software state update.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param stateCode state code ({@link Long})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onCurrentSoftwareStateUpdate(LwM2mClient client, Long stateCode) {
@@ -397,6 +542,14 @@ public class DefaultLwM2MOtaUpdateService extends LwM2MExecutorAwareService impl
                 otaStatus, "Firmware Update State: " + state.name()));
         update(swInfo);
     }
+    /**
+     * Handles current software result update.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param code code ({@link Long})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
 
     @Override
@@ -415,6 +568,17 @@ public class DefaultLwM2MOtaUpdateService extends LwM2MExecutorAwareService impl
         }
         update(swInfo);
     }
+    /**
+     * Handles target software update.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param newSoftwareTitle new software title ({@link String})
+     * @param newSoftwareVersion new software version ({@link String})
+     * @param newSoftwareUrl new software url ({@link Optional})
+     * @param newSoftwareTag new software tag ({@link Optional})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onTargetSoftwareUpdate(LwM2mClient client, String newSoftwareTitle, String newSoftwareVersion, Optional<String> newSoftwareUrl, Optional<String> newSoftwareTag) {
@@ -423,6 +587,13 @@ public class DefaultLwM2MOtaUpdateService extends LwM2MExecutorAwareService impl
         update(fwInfo);
         startSoftwareUpdateIfNeeded(client, fwInfo);
     }
+    /**
+     * Is ota downloading.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     public boolean isOtaDownloading(LwM2mClient client) {
@@ -490,14 +661,35 @@ public class DefaultLwM2MOtaUpdateService extends LwM2MExecutorAwareService impl
             sendStateUpdateToTelemetry(client, swInfo, OtaPackageUpdateStatus.FAILED, "Internal server error: " + e.getMessage());
         }
     }
-
+    /**
+     * Start update using binary.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param swInfo sw info ({@link LwM2MClientSwOtaInfo})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void startUpdateUsingBinary(LwM2mClient client, LwM2MClientSwOtaInfo swInfo) {
         this.transportService.process(client.getSession(), createOtaPackageRequestMsg(client.getSession(), swInfo.getType().name()),
                 new TransportServiceCallback<>() {
+                    /**
+                     * Handles success.
+                     *
+                     * @param response response
+                     * @return nothing
+                     * @throws Exception on processing failure
+                     */
                     @Override
                     public void onSuccess(TransportProtos.GetOtaPackageResponseMsg response) {
                         executor.submit(() -> doUpdateSoftwareUsingBinary(response, swInfo, client));
                     }
+                    /**
+                     * Handles error.
+                     *
+                     * @param e e ({@link Throwable})
+                     * @return nothing
+                     * @throws Exception on processing failure
+                     */
 
                     @Override
                     public void onError(Throwable e) {
@@ -511,14 +703,35 @@ public class DefaultLwM2MOtaUpdateService extends LwM2MExecutorAwareService impl
         TbLwM2MWriteReplaceRequest request = TbLwM2MWriteReplaceRequest.builder().versionedId(targetIdVer).value(url).timeout(clientContext.getRequestTimeout(client)).build();
         downlinkHandler.sendWriteReplaceRequest(client, request, new TbLwM2MWriteResponseCallback(uplinkHandler, logService, client, targetIdVer));
     }
-
+    /**
+     * Start update using binary.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param fwInfo fw info ({@link LwM2MClientFwOtaInfo})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void startUpdateUsingBinary(LwM2mClient client, LwM2MClientFwOtaInfo fwInfo) {
         this.transportService.process(client.getSession(), createOtaPackageRequestMsg(client.getSession(), fwInfo.getType().name()),
                 new TransportServiceCallback<>() {
+                    /**
+                     * Handles success.
+                     *
+                     * @param response response
+                     * @return nothing
+                     * @throws Exception on processing failure
+                     */
                     @Override
                     public void onSuccess(TransportProtos.GetOtaPackageResponseMsg response) {
                         executor.submit(() -> doUpdateFirmwareUsingBinary(response, fwInfo, client));
                     }
+                    /**
+                     * Handles error.
+                     *
+                     * @param e e ({@link Throwable})
+                     * @return nothing
+                     * @throws Exception on processing failure
+                     */
 
                     @Override
                     public void onError(Throwable e) {
@@ -685,10 +898,10 @@ public class DefaultLwM2MOtaUpdateService extends LwM2MExecutorAwareService impl
      * send to client: versionedId="/19/65533/0/0, value = FwOtaInfo in bas64 -> format json:
      * send to client: versionedId="/19/65534/0/0, value = SwOtaInfo in bas64 -> format json:
      * {"title":"BC68JAR01",
-     *  "version":"A10",
-     *  "checksum":"f2a08d4963e981c78f2a99f62d8439af4437a72ea7267a8c01d013c072c01ded",
-     *  "fileSize":59832.
-     *  "fileName" : "BC68JAR01A10_TO_BC68JAR01A09_09.bin" }
+     * "version":"A10",
+     * "checksum":"f2a08d4963e981c78f2a99f62d8439af4437a72ea7267a8c01d013c072c01ded",
+     * "fileSize":59832.
+     * "fileName" : "BC68JAR01A10_TO_BC68JAR01A09_09.bin" }
      * @param client
      * @param targetId
      * @param response
@@ -789,9 +1002,13 @@ public class DefaultLwM2MOtaUpdateService extends LwM2MExecutorAwareService impl
         }
     }
 
+    
     /**
-     * FirmwareUpdateStatus {
-     * DOWNLOADING, DOWNLOADED, VERIFIED, UPDATING, UPDATED, FAILED
+     * To ota package update status.
+     *
+     * @param softwareUpdateResult software update result ({@link SoftwareUpdateResult})
+     * @return optional {@link OtaPackageUpdateStatus}, empty if not found
+     * @throws Exception on processing failure
      */
     public static Optional<OtaPackageUpdateStatus> toOtaPackageUpdateStatus(SoftwareUpdateResult softwareUpdateResult) {
         switch (softwareUpdateResult) {

@@ -36,6 +36,13 @@ public class CoapDeviceAuthCallback implements TransportServiceCallback<Validate
         this.exchange = exchange;
         this.onSuccess = onSuccess;
     }
+    /**
+     * Handles success.
+     *
+     * @param msg msg ({@link ValidateDeviceCredentialsResponse})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onSuccess(ValidateDeviceCredentialsResponse msg) {
@@ -46,6 +53,13 @@ public class CoapDeviceAuthCallback implements TransportServiceCallback<Validate
             exchange.respond(CoAP.ResponseCode.UNAUTHORIZED);
         }
     }
+    /**
+     * Handles error.
+     *
+     * @param e e ({@link Throwable})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onError(Throwable e) {

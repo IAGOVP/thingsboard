@@ -25,7 +25,7 @@ import java.util.UUID;
 
 @Schema(allOf = EntityId.class)
 /**
- * Typed identifier for ai model.
+ * Typed identifier for an AI model integration configuration.
  */
 public final class AiModelId extends UUIDBased implements EntityId {
 
@@ -45,9 +45,20 @@ public final class AiModelId extends UUIDBased implements EntityId {
             example = "AI_MODEL",
             allowableValues = "AI_MODEL"
     )
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
     public EntityType getEntityType() {
         return EntityType.AI_MODEL;
     }
+    /**
+     * From string.
+     *
+     * @param uuid uuid ({@link String})
+     * @return {@link AiModelId}
+     */
 
     public static AiModelId fromString(String uuid) {
         return new AiModelId(UUID.fromString(uuid));

@@ -36,16 +36,32 @@ public class CoapDeviceTransportConfiguration extends PowerSavingConfiguration i
 
     @JsonIgnore
     private Map<String, Object> properties = new HashMap<>();
+    /**
+     * Properties.
+     *
+     * @return {@link Map}
+     */
 
     @JsonAnyGetter
     public Map<String, Object> properties() {
         return this.properties;
     }
+    /**
+     * Put.
+     *
+     * @param name name ({@link String})
+     * @param value value ({@link Object})
+     */
 
     @JsonAnySetter
     public void put(String name, Object value) {
         this.properties.put(name, value);
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link DeviceTransportType}
+     */
 
     @Override
     public DeviceTransportType getType() {

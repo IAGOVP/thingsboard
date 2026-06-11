@@ -90,6 +90,15 @@ public class LwM2mDefaultBootstrapSessionManager extends DefaultBootstrapSession
         this.tasksProvider = tasksProvider;
         this.modelProvider = modelProvider;
     }
+    /**
+     * Begin.
+     *
+     * @param request request payload with operation parameters
+     * @param sender sender ({@link LwM2mPeer})
+     * @param endpointUsed endpoint used ({@link URI})
+     * @return {@link BootstrapSession}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public BootstrapSession begin(BootstrapRequest request, LwM2mPeer sender, URI endpointUsed) {
@@ -123,6 +132,13 @@ public class LwM2mDefaultBootstrapSessionManager extends DefaultBootstrapSession
         }
         return session;
     }
+    /**
+     * Has config for.
+     *
+     * @param session session ({@link BootstrapSession})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     public boolean hasConfigFor(BootstrapSession session) {
@@ -133,7 +149,14 @@ public class LwM2mDefaultBootstrapSessionManager extends DefaultBootstrapSession
         initTasks(session, firstTasks);
         return true;
     }
-
+    /**
+     * Init tasks.
+     *
+     * @param bssession bssession ({@link BootstrapSession})
+     * @param tasks tasks
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     protected void initTasks(BootstrapSession bssession, BootstrapTaskProvider.Tasks tasks) {
         DefaultBootstrapSession session = (DefaultBootstrapSession) bssession;
         // set models
@@ -150,12 +173,25 @@ public class LwM2mDefaultBootstrapSessionManager extends DefaultBootstrapSession
         // is last Tasks ?
         session.setMoreTasks(!tasks.last);
     }
+    /**
+     * Returns first request.
+     *
+     * @param bsSession bs session ({@link BootstrapSession})
+     * @return {@link BootstrapDownlinkRequest}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public BootstrapDownlinkRequest<? extends LwM2mResponse> getFirstRequest(BootstrapSession bsSession) {
         return nextRequest(bsSession);
     }
-
+    /**
+     * Next request.
+     *
+     * @param bsSession bs session ({@link BootstrapSession})
+     * @return {@link BootstrapDownlinkRequest}
+     * @throws Exception on processing failure
+     */
     protected BootstrapDownlinkRequest<? extends LwM2mResponse> nextRequest(BootstrapSession bsSession) {
         DefaultBootstrapSession session = (DefaultBootstrapSession) bsSession;
         List<BootstrapDownlinkRequest<? extends LwM2mResponse>> requestsToSend = session.getRequests();
@@ -178,6 +214,15 @@ public class LwM2mDefaultBootstrapSessionManager extends DefaultBootstrapSession
             }
         }
     }
+    /**
+     * Handles response success.
+     *
+     * @param bsSession bs session ({@link BootstrapSession})
+     * @param request request payload with operation parameters
+     * @param response response ({@link LwM2mResponse})
+     * @return {@link BootstrapPolicy}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public BootstrapPolicy onResponseSuccess(BootstrapSession bsSession,
@@ -202,6 +247,15 @@ public class LwM2mDefaultBootstrapSessionManager extends DefaultBootstrapSession
             return BootstrapPolicy.finished();
         }
     }
+    /**
+     * Handles response error.
+     *
+     * @param bsSession bs session ({@link BootstrapSession})
+     * @param request request payload with operation parameters
+     * @param response response ({@link LwM2mResponse})
+     * @return {@link BootstrapPolicy}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public BootstrapPolicy onResponseError(BootstrapSession bsSession,
@@ -224,6 +278,15 @@ public class LwM2mDefaultBootstrapSessionManager extends DefaultBootstrapSession
             return BootstrapPolicy.failed();
         }
     }
+    /**
+     * Handles request failure.
+     *
+     * @param bsSession bs session ({@link BootstrapSession})
+     * @param request request payload with operation parameters
+     * @param cause cause ({@link Throwable})
+     * @return {@link BootstrapPolicy}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public BootstrapPolicy onRequestFailure(BootstrapSession bsSession,
@@ -233,6 +296,13 @@ public class LwM2mDefaultBootstrapSessionManager extends DefaultBootstrapSession
                         request.getPath().toString(), cause.toString()));
         return BootstrapPolicy.failed();
     }
+    /**
+     * End.
+     *
+     * @param bsSession bs session ({@link BootstrapSession})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void end(BootstrapSession bsSession) {
@@ -241,6 +311,14 @@ public class LwM2mDefaultBootstrapSessionManager extends DefaultBootstrapSession
         this.sendLogs(bsSession.getEndpoint(), msg);
         this.tasksProvider.remove(bsSession.getEndpoint());
     }
+    /**
+     * Failed.
+     *
+     * @param bsSession bs session ({@link BootstrapSession})
+     * @param cause cause ({@link BootstrapFailureCause})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void failed(BootstrapSession bsSession, BootstrapFailureCause cause) {

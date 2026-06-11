@@ -24,8 +24,14 @@ import org.thingsboard.server.common.data.HasVersion;
 import java.io.Serializable;
 import java.util.List;
 /**
- * Entity view cache value.
+ * Entity view cache value (ThingsBoard DAO layer).
  */
+
+
+
+
+
+
 
 @Getter
 @EqualsAndHashCode
@@ -36,6 +42,12 @@ public class EntityViewCacheValue implements Serializable, HasVersion {
 
     private final EntityView entityView;
     private final List<EntityView> entityViews;
+    /**
+     * Returns version.
+     *
+     * @return {@link Long}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Long getVersion() {

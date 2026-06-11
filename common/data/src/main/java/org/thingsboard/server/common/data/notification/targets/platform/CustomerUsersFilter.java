@@ -30,6 +30,11 @@ public class CustomerUsersFilter implements UsersFilter {
 
     @NotNull
     private UUID customerId;
+    /**
+     * Returns type.
+     *
+     * @return {@link UsersFilterType}
+     */
 
     @Override
     public UsersFilterType getType() {

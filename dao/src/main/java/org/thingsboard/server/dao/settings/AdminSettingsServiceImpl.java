@@ -38,8 +38,11 @@ import java.util.Optional;
 
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
 /**
- * Spring service implementing admin settings API.
+ * Spring {@code @Service} implementing the admin settings DAO API.
+ *
+ * <p>Delegates to {@code *Dao} implementations and manages cache eviction (system and tenant admin settings).
  */
+
 
 @Service
 @Slf4j
@@ -54,11 +57,16 @@ public class AdminSettingsServiceImpl implements AdminSettingsService {
     @Autowired
     protected ApplicationEventPublisher eventPublisher;
 
+    
     /**
-
-     * Loads admin settings by id.
-
+     * Finds admin settings by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param adminSettingsId admin settings id ({@link AdminSettingsId})
+     * @return {@link AdminSettings}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AdminSettings findAdminSettingsById(TenantId tenantId, AdminSettingsId adminSettingsId) {
@@ -67,11 +75,16 @@ public class AdminSettingsServiceImpl implements AdminSettingsService {
         return adminSettingsDao.findById(tenantId, adminSettingsId.getId());
     }
 
+    
     /**
-
-     * Loads admin settings by key.
-
+     * Finds admin settings by key.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key attribute or cache key
+     * @return {@link AdminSettings}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AdminSettings findAdminSettingsByKey(TenantId tenantId, String key) {
@@ -80,33 +93,48 @@ public class AdminSettingsServiceImpl implements AdminSettingsService {
         return findAdminSettingsByTenantIdAndKey(TenantId.SYS_TENANT_ID, key);
     }
 
+    
     /**
-
-     * Loads admin settings by tenant id and key.
-
+     * Finds admin settings by tenant id and key.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key attribute or cache key
+     * @return {@link AdminSettings}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AdminSettings findAdminSettingsByTenantIdAndKey(TenantId tenantId, String key) {
         return adminSettingsDao.findByTenantIdAndKey(tenantId.getId(), key);
     }
 
+    
     /**
-
-     * Loads all by tenant id.
-
+     * Finds all by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AdminSettings> findAllByTenantId(TenantId tenantId, PageLink pageLink) {
         return adminSettingsDao.findAllByTenantId(tenantId, pageLink);
     }
 
+    
     /**
-
-     * Persists admin settings.
-
+     * Saves or persists admin settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param adminSettings admin settings ({@link AdminSettings})
+     * @return {@link AdminSettings}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AdminSettings saveAdminSettings(TenantId tenantId, AdminSettings adminSettings) {
@@ -135,11 +163,16 @@ public class AdminSettingsServiceImpl implements AdminSettingsService {
         return savedAdminSettings;
     }
 
+    
     /**
-
-     * Removes admin settings by tenant id and key.
-
+     * Deletes admin settings by tenant id and key.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key attribute or cache key
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public boolean deleteAdminSettingsByTenantIdAndKey(TenantId tenantId, String key) {
@@ -148,44 +181,64 @@ public class AdminSettingsServiceImpl implements AdminSettingsService {
         return adminSettingsDao.removeByTenantIdAndKey(tenantId.getId(), key);
     }
 
+    
     /**
-
-     * Removes by tenant id.
-
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteByTenantId(TenantId tenantId) {
         adminSettingsDao.removeByTenantId(tenantId.getId());
     }
 
+    
     /**
-
-     * Removes entity.
-
+     * Deletes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteEntity(TenantId tenantId, EntityId id, boolean force) {
         adminSettingsDao.removeById(tenantId, id.getId());
     }
 
+    
     /**
-
-     * Loads entity.
-
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(adminSettingsDao.findById(tenantId, entityId.getId()));
     }
 
+    
     /**
-
-     * Loads entity async.
-
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
@@ -193,11 +246,14 @@ public class AdminSettingsServiceImpl implements AdminSettingsService {
                 .transform(Optional::ofNullable, directExecutor());
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

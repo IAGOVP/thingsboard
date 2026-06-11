@@ -24,7 +24,7 @@ import java.util.UUID;
 
 @Schema(allOf = EntityId.class)
 /**
- * Typed identifier for widget type.
+ * Typed identifier for a dashboard widget type definition.
  */
 public final class WidgetTypeId extends UUIDBased implements EntityId {
 
@@ -34,6 +34,11 @@ public final class WidgetTypeId extends UUIDBased implements EntityId {
     public WidgetTypeId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY, description = "string", example = "WIDGET_TYPE", allowableValues = "WIDGET_TYPE")
     @Override

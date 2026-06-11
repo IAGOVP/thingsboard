@@ -37,8 +37,11 @@ import org.thingsboard.server.dao.util.mapping.JsonConverter;
 
 import java.util.UUID;
 /**
- * Notification rule entity.
+ * JPA/Cassandra row model for notification rule.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -106,6 +109,12 @@ public class NotificationRuleEntity extends BaseSqlEntity<NotificationRule> {
         this.additionalConfig = other.additionalConfig;
         this.externalId = other.externalId;
     }
+    /**
+     * To data.
+     *
+     * @return {@link NotificationRule}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationRule toData() {

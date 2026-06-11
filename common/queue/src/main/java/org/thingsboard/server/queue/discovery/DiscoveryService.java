@@ -15,12 +15,13 @@
  */
 package org.thingsboard.server.queue.discovery;
 
-import org.thingsboard.server.gen.transport.TransportProtos;
-
 import java.util.List;
 
+
+import org.thingsboard.server.gen.transport.TransportProtos;
+
 /**
- * Service API for discovery persistence and domain operations.
+ * Cluster service discovery: tracks active ThingsBoard services and their queue assignments.
  */
 public interface DiscoveryService {
 

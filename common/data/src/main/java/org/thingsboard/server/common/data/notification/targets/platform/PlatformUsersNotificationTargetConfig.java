@@ -35,6 +35,11 @@ public class PlatformUsersNotificationTargetConfig extends NotificationTargetCon
     @NotNull
     @Valid
     private UsersFilter usersFilter;
+    /**
+     * Returns type.
+     *
+     * @return {@link NotificationTargetType}
+     */
 
     @Override
     public NotificationTargetType getType() {

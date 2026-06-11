@@ -20,12 +20,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+
+/**
+ * Kafka topic and consumer settings for Edge synchronization queues.
+ */
 @Lazy
 @Data
 @Component
-/**
- * Tb queue edge settings.
- */
 public class TbQueueEdgeSettings {
 
     @Value("${queue.edge.topic}")

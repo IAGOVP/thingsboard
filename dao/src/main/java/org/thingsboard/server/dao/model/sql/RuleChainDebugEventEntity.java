@@ -29,8 +29,11 @@ import static org.thingsboard.server.dao.model.ModelConstants.EVENT_ERROR_COLUMN
 import static org.thingsboard.server.dao.model.ModelConstants.EVENT_MESSAGE_COLUMN_NAME;
 import static org.thingsboard.server.dao.model.ModelConstants.RULE_CHAIN_DEBUG_EVENT_TABLE_NAME;
 /**
- * Rule chain debug event entity.
+ * JPA/Cassandra row model for rule chain debug event.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -49,6 +52,12 @@ public class RuleChainDebugEventEntity extends EventEntity<RuleChainDebugEvent> 
         this.message = event.getMessage();
         this.error = event.getError();
     }
+    /**
+     * To data.
+     *
+     * @return {@link RuleChainDebugEvent}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleChainDebugEvent toData() {

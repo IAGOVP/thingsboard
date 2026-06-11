@@ -21,6 +21,7 @@ import com.datastax.oss.driver.internal.core.session.SessionWrapper;
 /**
  * Default guava session.
  */
+
 public class DefaultGuavaSession extends SessionWrapper implements GuavaSession {
 
     public DefaultGuavaSession(Session delegate) {

@@ -31,7 +31,12 @@ public class ValidateDeviceCredentialsResponse implements DeviceProfileAware, Se
     private final TransportDeviceInfo deviceInfo;
     private final DeviceProfile deviceProfile;
     private final String credentials;
-
+    /**
+     * Has device info.
+     *
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     public boolean hasDeviceInfo() {
         return deviceInfo != null;
     }

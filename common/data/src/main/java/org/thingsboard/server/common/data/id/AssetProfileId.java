@@ -24,7 +24,7 @@ import java.util.UUID;
 
 @Schema(allOf = EntityId.class)
 /**
- * Typed identifier for asset profile.
+ * Typed identifier for an asset profile ({@link org.thingsboard.server.common.data.EntityType#ASSET_PROFILE}).
  */
 public class AssetProfileId extends UUIDBased implements EntityId {
 
@@ -34,10 +34,21 @@ public class AssetProfileId extends UUIDBased implements EntityId {
     public AssetProfileId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * From string.
+     *
+     * @param assetProfileId asset profile id ({@link String})
+     * @return {@link AssetProfileId}
+     */
 
     public static AssetProfileId fromString(String assetProfileId) {
         return new AssetProfileId(UUID.fromString(assetProfileId));
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY, description = "string", example = "ASSET_PROFILE", allowableValues = "ASSET_PROFILE")
     @Override

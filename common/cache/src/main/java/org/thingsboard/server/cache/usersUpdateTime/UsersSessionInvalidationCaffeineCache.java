@@ -23,11 +23,16 @@ import org.thingsboard.server.cache.CaffeineTbTransactionalCache;
 import org.thingsboard.server.common.data.CacheConstants;
 
 
+/**
+ * Caffeine cache tracking last user credential update timestamps for session invalidation.
+ *
+ * <p>Maps user identifiers ({@link String}) to update epoch millis ({@link Long}).
+ * TTL aligned with JWT refresh lifetime via {@link CacheSpecsMap#replaceTheJWTTokenRefreshExpTime()}.
+ *
+ * @see UsersSessionInvalidationRedisCache
+ */
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "caffeine", matchIfMissing = true)
 @Service("UsersSessionInvalidation")
-/**
- * Users session invalidation caffeine cache.
- */
 public class UsersSessionInvalidationCaffeineCache extends CaffeineTbTransactionalCache<String, Long> {
 
     @Autowired

@@ -19,7 +19,7 @@ import org.thingsboard.server.common.data.notification.rule.NotificationRule;
 import org.thingsboard.server.common.data.notification.rule.trigger.NotificationRuleTrigger;
 
 /**
- * Service API for notification deduplication persistence and domain operations.
+ * Notification deduplication service used by the ThingsBoard cache and queue subsystem.
  */
 public interface NotificationDeduplicationService {
 

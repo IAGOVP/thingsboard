@@ -31,21 +31,48 @@ import java.util.UUID;
 @Slf4j
 public class HashMapObserver implements HashMapObserverMBean {
     private final Map<UUID, SessionMetaData> map;
+    /**
+     * Returns size.
+     *
+     * @return monotonically increasing MQTT packet identifier
+     * @throws Exception on processing failure
+     */
 
     @Override
     public int getSize() {
         return map.size();
     }
+    /**
+     * Returns gateway count.
+     *
+     * @param unused unused ({@link String})
+     * @return the long result
+     * @throws Exception on processing failure
+     */
 
     @Override
     public long getGatewayCount(String unused) {
         return map.values().stream().filter(v-> v.getSessionInfo() != null && v.getSessionInfo().getIsGateway()).count();
     }
+    /**
+     * Returns non gateway count.
+     *
+     * @param unused unused ({@link String})
+     * @return the long result
+     * @throws Exception on processing failure
+     */
 
     @Override
     public long getNonGatewayCount(String unused) {
         return map.values().stream().filter(v-> v.getSessionInfo() != null && !v.getSessionInfo().getIsGateway()).count();
     }
+    /**
+     * Returns session by uuid.
+     *
+     * @param uuid uuid ({@link String})
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public String getSessionByUUID(String uuid) {
@@ -57,6 +84,13 @@ public class HashMapObserver implements HashMapObserverMBean {
         log.info("{} content = {}", count, lineContent);
         content.append(lineContent).append(System.lineSeparator());
     }
+    /**
+     * Returns all sessions.
+     *
+     * @param unused unused ({@link String})
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public String getAllSessions(String unused) {
@@ -73,6 +107,13 @@ public class HashMapObserver implements HashMapObserverMBean {
             throw e;
         }
     }
+    /**
+     * Returns subscribed sessions.
+     *
+     * @param unused unused ({@link String})
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public String getSubscribedSessions(String unused) {
@@ -92,6 +133,13 @@ public class HashMapObserver implements HashMapObserverMBean {
             throw e;
         }
     }
+    /**
+     * Returns non active sessions.
+     *
+     * @param unused unused ({@link String})
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public String getNonActiveSessions(String unused) {
@@ -114,6 +162,13 @@ public class HashMapObserver implements HashMapObserverMBean {
             throw e;
         }
     }
+    /**
+     * Returns active sessions.
+     *
+     * @param unused unused ({@link String})
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public String getActiveSessions(String unused) {
@@ -139,6 +194,13 @@ public class HashMapObserver implements HashMapObserverMBean {
             throw e;
         }
     }
+    /**
+     * Returns gateway device session context connected sessions.
+     *
+     * @param unused unused ({@link String})
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public String getGatewayDeviceSessionContextConnectedSessions(String unused) {
@@ -162,6 +224,13 @@ public class HashMapObserver implements HashMapObserverMBean {
             throw e;
         }
     }
+    /**
+     * Returns device aware session context not connected sessions.
+     *
+     * @param unused unused ({@link String})
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
     @Override
     public String getDeviceAwareSessionContextNotConnectedSessions(String unused) {
         log.info("getDeviceAwareSessionContextNotConnectedSessions()");

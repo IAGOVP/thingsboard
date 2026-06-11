@@ -35,6 +35,11 @@ import java.util.List;
  * Widgets bundle export data.
  */
 public class WidgetsBundleExportData extends EntityExportData<WidgetsBundle> {
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Override
     public EntityType getEntityType() { return EntityType.WIDGETS_BUNDLE; }
@@ -46,6 +51,11 @@ public class WidgetsBundleExportData extends EntityExportData<WidgetsBundle> {
 
     @JsonProperty(index = 4)
     private List<String> fqns;
+    /**
+     * Add fqn.
+     *
+     * @param fqn fqn ({@link String})
+     */
 
     public void addFqn(String fqn) {
         if (fqns == null) {

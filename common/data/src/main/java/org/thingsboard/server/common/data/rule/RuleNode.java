@@ -87,11 +87,21 @@ public class RuleNode extends BaseDataWithAdditionalInfo<RuleNodeId> implements 
         this.setConfiguration(ruleNode.getConfiguration());
         this.externalId = ruleNode.getExternalId();
     }
+    /**
+     * Returns name.
+     *
+     * @return {@link String}
+     */
 
     @Override
     public String getName() {
         return name;
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link RuleNodeId}
+     */
 
     @Schema(description = "JSON object with the Rule Node Id. " +
                           "Specify this field to update the Rule Node. " +
@@ -101,6 +111,11 @@ public class RuleNode extends BaseDataWithAdditionalInfo<RuleNodeId> implements 
     public RuleNodeId getId() {
         return super.getId();
     }
+    /**
+     * Returns created time.
+     *
+     * @return the long result
+     */
 
     @Schema(description = "Timestamp of the rule node creation, in milliseconds", example = "1609459200000", accessMode = Schema.AccessMode.READ_ONLY)
     @Override
@@ -114,18 +129,33 @@ public class RuleNode extends BaseDataWithAdditionalInfo<RuleNodeId> implements 
             "'description' (string).",
             implementation = JsonNode.class,
             example = "{\"layoutX\":320,\"layoutY\":160,\"description\":\"Filter temperature data\"}")
+    /**
+     * Returns additional info.
+     *
+     * @return {@link JsonNode}
+     */
     @Override
     public JsonNode getAdditionalInfo() {
         return super.getAdditionalInfo();
     }
 
     // Getter is ignored for serialization
+    /**
+     * Is debug mode.
+     *
+     * @return the boolean result
+     */
     @JsonIgnore
     public boolean isDebugMode() {
         return debugMode;
     }
 
     // Setter is annotated for deserialization
+    /**
+     * Set debug mode.
+     *
+     * @param debugMode debug mode
+     */
     @JsonSetter
     public void setDebugMode(boolean debugMode) {
         this.debugMode = debugMode;

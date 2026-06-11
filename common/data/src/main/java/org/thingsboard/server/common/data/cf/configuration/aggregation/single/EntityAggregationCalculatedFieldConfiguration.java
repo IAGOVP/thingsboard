@@ -53,11 +53,20 @@ public class EntityAggregationCalculatedFieldConfiguration implements ArgumentsB
     @Valid
     @NotNull
     private Output output;
+    /**
+     * Returns type.
+     *
+     * @return {@link CalculatedFieldType}
+     */
 
     @Override
     public CalculatedFieldType getType() {
         return CalculatedFieldType.ENTITY_AGGREGATION;
     }
+    /**
+     * Validates the requested data.
+     *
+     */
 
     @Override
     public void validate() {

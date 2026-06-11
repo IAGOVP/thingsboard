@@ -27,8 +27,11 @@ import org.thingsboard.server.exception.DataValidationException;
 import org.thingsboard.server.dao.service.DataValidator;
 import org.thingsboard.server.dao.tenant.TenantService;
 /**
- * Customer data validator.
+ * Validates customer entities before persistence.
+ *
+ * <p>Enforces constraints, uniqueness, and referential integrity at the DAO layer.
  */
+
 
 @Component
 public class CustomerDataValidator extends DataValidator<Customer> {
@@ -39,22 +42,32 @@ public class CustomerDataValidator extends DataValidator<Customer> {
     @Autowired
     private TenantService tenantService;
 
+    
     /**
-
-     * Validate create.
-
+     * Validates create.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customer customer ({@link Customer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateCreate(TenantId tenantId, Customer customer) {
         validateNumberOfEntitiesPerTenant(tenantId, EntityType.CUSTOMER);
     }
 
+    
     /**
-
-     * Validate update.
-
+     * Validates update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customer customer ({@link Customer})
+     * @return {@link Customer}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected Customer validateUpdate(TenantId tenantId, Customer customer) {
@@ -65,11 +78,16 @@ public class CustomerDataValidator extends DataValidator<Customer> {
         return old;
     }
 
+    
     /**
-
-     * Validate data impl.
-
+     * Validates data impl.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customer customer ({@link Customer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateDataImpl(TenantId tenantId, Customer customer) {

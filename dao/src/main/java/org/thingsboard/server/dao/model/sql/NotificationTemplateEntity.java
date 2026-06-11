@@ -34,8 +34,11 @@ import org.thingsboard.server.dao.util.mapping.JsonConverter;
 
 import java.util.UUID;
 /**
- * Notification template entity.
+ * JPA/Cassandra row model for notification template.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -71,6 +74,12 @@ public class NotificationTemplateEntity extends BaseSqlEntity<NotificationTempla
         setConfiguration(toJson(notificationTemplate.getConfiguration()));
         setExternalId(getUuid(notificationTemplate.getExternalId()));
     }
+    /**
+     * To data.
+     *
+     * @return {@link NotificationTemplate}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationTemplate toData() {

@@ -31,8 +31,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 /**
- * Latest ts kv.
+ * Latest ts kv (EDQS data).
  */
+
 public class LatestTsKv implements EdqsObject {
 
     private EntityId entityId;
@@ -57,21 +58,58 @@ public class LatestTsKv implements EdqsObject {
         this.key = key;
         this.version = version != null ? version : 0L;
     }
+    
+        /**
+         * String key.
+         *
+         * @return {@link String}
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
 
     @Override
     public String stringKey() {
         return "l_" + entityId + "_" + key;
     }
+    
+    /**
+     * Version.
+     *
+     * @return {@link Long}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public Long version() {
         return version;
     }
+    
+        /**
+         * Type.
+         *
+         * @return {@link ObjectType}
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
 
     @Override
     public ObjectType type() {
         return ObjectType.LATEST_TS_KV;
     }
+    
+
+    
+    /**
+     * Key.
+     *
+     * @param entityId target entity identifier
+     * @param key key
+     * @return the record value
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
+
 
     public record Key(UUID entityId, int key) implements EdqsObjectKey {}
 

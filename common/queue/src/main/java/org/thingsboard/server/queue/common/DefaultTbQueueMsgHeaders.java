@@ -15,13 +15,15 @@
  */
 package org.thingsboard.server.queue.common;
 
-import org.thingsboard.server.queue.TbQueueMsgHeaders;
-
 import java.util.HashMap;
 import java.util.Map;
 
+
+import org.thingsboard.server.queue.TbQueueMsgHeaders;
+
+
 /**
- * Default tb queue msg headers.
+ * Mutable header map for {@link TbQueueMsg} with string-keyed byte values.
  */
 public class DefaultTbQueueMsgHeaders implements TbQueueMsgHeaders {
 

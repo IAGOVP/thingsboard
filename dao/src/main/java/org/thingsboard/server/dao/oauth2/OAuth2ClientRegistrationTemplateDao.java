@@ -21,15 +21,34 @@ import org.thingsboard.server.dao.Dao;
 import java.util.List;
 import java.util.Optional;
 
+
 /**
 
- * Persistence contract for oauth2client registration template (see JPA/Cassandra implementations).
+ * Persistence contract for oauth2client registration template.
+
+ *
+
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (OAuth2 client registration templates).
 
  */
 
+
 public interface OAuth2ClientRegistrationTemplateDao extends Dao<OAuth2ClientRegistrationTemplate> {
+    /**
+     * Finds by provider id.
+     *
+     * @param providerId provider id ({@link String})
+     * @return optional {@link OAuth2ClientRegistrationTemplate}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     Optional<OAuth2ClientRegistrationTemplate> findByProviderId(String providerId);
+    /**
+     * Finds all.
+     *
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<OAuth2ClientRegistrationTemplate> findAll();
 }

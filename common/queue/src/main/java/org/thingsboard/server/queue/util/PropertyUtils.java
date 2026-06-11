@@ -15,16 +15,18 @@
  */
 package org.thingsboard.server.queue.util;
 
-import org.thingsboard.server.common.data.StringUtils;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+
+import org.thingsboard.server.common.data.StringUtils;
+
+
 /**
- * Property utils.
+ * Utility for reading typed configuration properties used by queue settings beans.
  */
 public class PropertyUtils {
 

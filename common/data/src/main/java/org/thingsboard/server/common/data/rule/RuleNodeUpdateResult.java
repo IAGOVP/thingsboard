@@ -21,9 +21,6 @@ import lombok.Data;
  * Created by igor on 3/13/18.
  */
 @Data
-/**
- * Rule node update result.
- */
 public class RuleNodeUpdateResult {
 
     private final RuleNode oldRuleNode;

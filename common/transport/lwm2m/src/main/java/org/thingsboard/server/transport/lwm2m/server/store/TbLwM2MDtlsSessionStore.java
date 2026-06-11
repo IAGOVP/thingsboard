@@ -19,14 +19,28 @@ package org.thingsboard.server.transport.lwm2m.server.store;
 import org.thingsboard.server.transport.lwm2m.secure.TbX509DtlsSessionInfo;
 
 /**
- * tb lw m2mdtls session store contract.
+ * tb lw m2mdtls session store contract (LwM2M transport and object model (ThingsBoard common module)).
  */
 public interface TbLwM2MDtlsSessionStore {
 
     void put(String endpoint, TbX509DtlsSessionInfo msg);
 
+    /**
+     * Returns the requested data.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return {@link TbX509DtlsSessionInfo}
+     * @throws Exception on processing failure
+     */
     TbX509DtlsSessionInfo get(String endpoint);
 
+    /**
+     * Removes the requested data.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void remove(String endpoint);
 
 }

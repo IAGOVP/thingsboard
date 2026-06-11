@@ -30,8 +30,11 @@ import java.util.UUID;
 
 import static org.thingsboard.server.dao.model.ModelConstants.TENANT_ID_COLUMN;
 /**
- * Domain entity.
+ * JPA/Cassandra row model for domain.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -64,6 +67,12 @@ public class DomainEntity extends BaseSqlEntity<Domain> {
     public DomainEntity() {
         super();
     }
+    /**
+     * To data.
+     *
+     * @return {@link Domain}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Domain toData() {

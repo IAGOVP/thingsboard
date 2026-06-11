@@ -22,19 +22,37 @@ import org.thingsboard.server.edqs.query.EdqsQuery;
 import org.thingsboard.server.edqs.repo.TenantRepo;
 
 import java.util.List;
+
 /**
  * EDQS query processor for edge type entity filters.
+ *
+ * <p>Evaluates {@link org.thingsboard.server.common.data.query.EntityFilter} against a {@link org.thingsboard.server.edqs.repo.TenantRepo} (EDQS microservice — entity filter query processors).
  */
+
 public class EdgeTypeQueryProcessor extends AbstractEntityProfileNameQueryProcessor<EdgeTypeFilter> {
 
     public EdgeTypeQueryProcessor(TenantRepo repo, QueryContext ctx, EdqsQuery query) {
         super(repo, ctx, query, (EdgeTypeFilter) query.getEntityFilter(), EntityType.EDGE);
     }
+    /**
+     * Returns entity name filter.
+     *
+     * @param filter entity filter definition (type, relations, search text, etc.)
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected String getEntityNameFilter(EdgeTypeFilter filter) {
         return filter.getEdgeNameFilter();
     }
+    /**
+     * Returns profile names.
+     *
+     * @param filter entity filter definition (type, relations, search text, etc.)
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected List<String> getProfileNames(EdgeTypeFilter filter) {

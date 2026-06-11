@@ -23,15 +23,42 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Service API for lw m2mattributes persistence and domain operations.
+ * Service contract for lw m2mattributes (LwM2M transport and object model (ThingsBoard common module)).
+ *
+ * <p>Implemented by the corresponding class in this or the dao module.
  */
 public interface LwM2MAttributesService {
 
     ListenableFuture<List<TransportProtos.TsKvProto>> getSharedAttributes(LwM2mClient client, Collection<String> keys);
 
+    /**
+     * Handles get attributes response.
+     *
+     * @param getAttributesResponse get attributes response
+     * @param sessionInfo session info
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void onGetAttributesResponse(TransportProtos.GetAttributeResponseMsg getAttributesResponse, TransportProtos.SessionInfoProto sessionInfo);
 
+    /**
+     * Handles attributes update.
+     *
+     * @param attributeUpdateNotification attribute update notification
+     * @param sessionInfo session info
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void onAttributesUpdate(TransportProtos.AttributeUpdateNotificationMsg attributeUpdateNotification, TransportProtos.SessionInfoProto sessionInfo);
 
+    /**
+     * Handles attributes update.
+     *
+     * @param lwM2MClient lw m2mclient ({@link LwM2mClient})
+     * @param tsKvProtos ts kv protos ({@link List})
+     * @param logFailedUpdateOfNonChangedValue log failed update of non changed value
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void onAttributesUpdate(LwM2mClient lwM2MClient, List<TransportProtos.TsKvProto> tsKvProtos, boolean logFailedUpdateOfNonChangedValue);
 }

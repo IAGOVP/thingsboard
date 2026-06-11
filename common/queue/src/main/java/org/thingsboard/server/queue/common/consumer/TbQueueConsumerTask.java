@@ -15,6 +15,13 @@
  */
 package org.thingsboard.server.queue.common.consumer;
 
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
+
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -22,16 +29,10 @@ import org.thingsboard.server.common.msg.queue.TopicPartitionInfo;
 import org.thingsboard.server.queue.TbQueueConsumer;
 import org.thingsboard.server.queue.TbQueueMsg;
 
-import java.util.Objects;
-import java.util.Set;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
-
-@Slf4j
 /**
- * Tb queue consumer task.
+ * Runnable task that polls a {@link TbQueueConsumer} and dispatches messages to a handler.
  */
+@Slf4j
 public class TbQueueConsumerTask<M extends TbQueueMsg> {
 
     @Getter

@@ -29,6 +29,12 @@ import java.io.ObjectOutputStream;
  * Java ser des util.
  */
 public class JavaSerDesUtil {
+    /**
+     * Decode.
+     *
+     * @param byteArray byte array
+     * @return {@link T}
+     */
 
     @SuppressWarnings("unchecked")
     public static <T> T decode(byte[] byteArray) {
@@ -43,6 +49,12 @@ public class JavaSerDesUtil {
             return null;
         }
     }
+    /**
+     * Encode.
+     *
+     * @param msq msq ({@link T})
+     * @return the byte[] value
+     */
 
     public static <T> byte[] encode(T msq) {
         if (msq == null) {

@@ -69,6 +69,12 @@ public class TbDefaultDDFFileValidator implements DDFFileValidator {
             throw new IllegalStateException(String.format("Unsupported version %s", version));
         }
     }
+    /**
+     * Validates the requested data.
+     *
+     * @param xmlToValidate xml to validate ({@link Node})
+     * @throws InvalidDDFFileException if invalid ddffile exception is thrown during processing
+     */
 
     @Override
     public void validate(Node xmlToValidate) throws InvalidDDFFileException {
@@ -79,29 +85,39 @@ public class TbDefaultDDFFileValidator implements DDFFileValidator {
         }
     }
 
+    
     /**
-     * Validate a XML {@link Source} against the embedded LWM2M Schema.
+     * Validates the requested data.
      *
-     * @param xmlToValidate an XML source to validate
-     * @throws SAXException see {@link Validator#validate(Source)}
-     * @throws IOException see {@link Validator#validate(Source)}
+     * @param xmlToValidate xml to validate ({@link Source})
+     * @throws SAXException if saxexception is thrown during processing
+     * @throws IOException if ioexception is thrown during processing
      */
+
     public void validate(Source xmlToValidate) throws SAXException, IOException {
         Validator validator = getEmbeddedLwM2mSchema().newValidator();
         validator.validate(xmlToValidate);
     }
 
+    
     /**
-     * Get the Embedded the LWM2M.xsd Schema.
+     * Returns embedded lw m2m schema.
      *
-     * @throws SAXException see {@link SchemaFactory#newSchema(Source)}
+     * @return {@link Schema}
+     * @throws SAXException if saxexception is thrown during processing
      */
+
     protected Schema getEmbeddedLwM2mSchema() throws SAXException {
         InputStream inputStream = DDFFileValidator.class.getResourceAsStream(schema);
         Source source = new StreamSource(inputStream);
         SchemaFactory schemaFactory = createSchemaFactory();
         return schemaFactory.newSchema(source);
     }
+    /**
+     * Creates schema factory.
+     *
+     * @return {@link SchemaFactory}
+     */
 
     protected SchemaFactory createSchemaFactory() {
         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);

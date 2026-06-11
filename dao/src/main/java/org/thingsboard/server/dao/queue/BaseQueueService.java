@@ -47,7 +47,10 @@ import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
 import static org.thingsboard.server.dao.service.Validator.validateId;
 /**
  * Default DAO-layer service implementation for queue.
+ *
+ * <p>Coordinates validation, caching, cluster events, and {@code *Dao} persistence (ThingsBoard DAO layer).
  */
+
 
 @Service("QueueDaoService")
 @Slf4j
@@ -64,11 +67,15 @@ public class BaseQueueService extends AbstractEntityService implements QueueServ
     @Autowired
     private DataValidator<Queue> queueValidator;
 
+    
     /**
-
-     * Persists queue.
-
+     * Saves or persists queue.
+     *
+     * @param queue queue ({@link Queue})
+     * @return {@link Queue}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Queue saveQueue(Queue queue) {
@@ -80,11 +87,16 @@ public class BaseQueueService extends AbstractEntityService implements QueueServ
         return savedQueue;
     }
 
+    
     /**
-
-     * Removes queue.
-
+     * Deletes queue.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param queueId queue id ({@link QueueId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteQueue(TenantId tenantId, QueueId queueId) {
@@ -102,22 +114,32 @@ public class BaseQueueService extends AbstractEntityService implements QueueServ
         }
     }
 
+    
     /**
-
-     * Removes entity.
-
+     * Deletes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteEntity(TenantId tenantId, EntityId id, boolean force) {
         deleteQueue(tenantId, (QueueId) id);
     }
 
+    
     /**
-
-     * Loads queues by tenant id.
-
+     * Finds queues by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<Queue> findQueuesByTenantId(TenantId tenantId) {
@@ -125,11 +147,16 @@ public class BaseQueueService extends AbstractEntityService implements QueueServ
         return queueDao.findAllByTenantId(getSystemOrIsolatedTenantId(tenantId));
     }
 
+    
     /**
-
-     * Loads queues by tenant id.
-
+     * Finds queues by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Queue> findQueuesByTenantId(TenantId tenantId, PageLink pageLink) {
@@ -138,11 +165,14 @@ public class BaseQueueService extends AbstractEntityService implements QueueServ
         return queueDao.findQueuesByTenantId(getSystemOrIsolatedTenantId(tenantId), pageLink);
     }
 
+    
     /**
-
-     * Loads all queues.
-
+     * Finds all queues.
+     *
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<Queue> findAllQueues() {
@@ -150,11 +180,16 @@ public class BaseQueueService extends AbstractEntityService implements QueueServ
         return queueDao.findAllQueues();
     }
 
+    
     /**
-
-     * Loads queue by id.
-
+     * Finds queue by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param queueId queue id ({@link QueueId})
+     * @return {@link Queue}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Queue findQueueById(TenantId tenantId, QueueId queueId) {
@@ -162,11 +197,16 @@ public class BaseQueueService extends AbstractEntityService implements QueueServ
         return queueDao.findById(tenantId, queueId.getId());
     }
 
+    
     /**
-
-     * Loads queue by tenant id and name.
-
+     * Finds queue by tenant id and name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param queueName queue name ({@link String})
+     * @return {@link Queue}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Queue findQueueByTenantIdAndName(TenantId tenantId, String queueName) {
@@ -174,11 +214,16 @@ public class BaseQueueService extends AbstractEntityService implements QueueServ
         return queueDao.findQueueByTenantIdAndName(getSystemOrIsolatedTenantId(tenantId), queueName);
     }
 
+    
     /**
-
-     * Loads queue by tenant id and name internal.
-
+     * Finds queue by tenant id and name internal.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param queueName queue name ({@link String})
+     * @return {@link Queue}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Queue findQueueByTenantIdAndNameInternal(TenantId tenantId, String queueName) {
@@ -186,11 +231,15 @@ public class BaseQueueService extends AbstractEntityService implements QueueServ
         return queueDao.findQueueByTenantIdAndName(tenantId, queueName);
     }
 
+    
     /**
-
-     * Removes queues by tenant id.
-
+     * Deletes queues by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteQueuesByTenantId(TenantId tenantId) {
@@ -198,33 +247,47 @@ public class BaseQueueService extends AbstractEntityService implements QueueServ
         tenantQueuesRemover.removeEntities(tenantId, tenantId);
     }
 
+    
     /**
-
-     * Removes by tenant id.
-
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteByTenantId(TenantId tenantId) {
         deleteQueuesByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Loads entity.
-
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findQueueById(tenantId, new QueueId(entityId.getId())));
     }
 
+    
     /**
-
-     * Loads entity async.
-
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
@@ -232,11 +295,14 @@ public class BaseQueueService extends AbstractEntityService implements QueueServ
                 .transform(Optional::ofNullable, directExecutor());
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

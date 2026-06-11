@@ -25,6 +25,6 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 @ConditionalOnExpression("'${service.type:null}'=='tb-transport' || ('${service.type:null}'=='monolith' && '${transport.api_enabled:true}'=='true' && '${coap.server.enabled}'=='true')")
 public @/**
- * tb coap server component contract.
+ * Contract for tb coap server component.
  */
 interface TbCoapServerComponent {}

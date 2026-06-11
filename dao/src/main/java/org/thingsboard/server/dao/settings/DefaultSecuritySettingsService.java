@@ -28,8 +28,14 @@ import org.thingsboard.server.dao.service.ConstraintValidator;
 
 import static org.thingsboard.server.common.data.CacheConstants.SECURITY_SETTINGS_CACHE;
 /**
- * Default security settings service.
+ * Spring component for default security settings service (system and tenant admin settings).
  */
+
+
+
+
+
+
 
 @Service
 @RequiredArgsConstructor
@@ -39,11 +45,14 @@ public class DefaultSecuritySettingsService implements SecuritySettingsService {
 
     public static final int DEFAULT_MOBILE_SECRET_KEY_LENGTH = 64;
 
+    
     /**
-
-     * Get security settings.
-
+     * Returns security settings.
+     *
+     * @return {@link SecuritySettings}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Cacheable(cacheNames = SECURITY_SETTINGS_CACHE, key = "'securitySettings'")
     @Override
@@ -68,11 +77,15 @@ public class DefaultSecuritySettingsService implements SecuritySettingsService {
         return securitySettings;
     }
 
+    
     /**
-
-     * Persists security settings.
-
+     * Saves or persists security settings.
+     *
+     * @param securitySettings security settings ({@link SecuritySettings})
+     * @return {@link SecuritySettings}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @CacheEvict(cacheNames = SECURITY_SETTINGS_CACHE, key = "'securitySettings'")
     @Override

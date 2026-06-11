@@ -38,8 +38,11 @@ import org.thingsboard.server.dao.util.mapping.JsonConverter;
 
 import java.util.UUID;
 /**
- * Abstract device entity.
+ * JPA/Cassandra row model for abstract device.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -127,6 +130,12 @@ public abstract class AbstractDeviceEntity<T extends Device> extends BaseVersion
         this.softwareId = deviceEntity.getSoftwareId();
         this.externalId = deviceEntity.getExternalId();
     }
+    /**
+     * To device.
+     *
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected Device toDevice() {
         Device device = new Device(new DeviceId(getUuid()));

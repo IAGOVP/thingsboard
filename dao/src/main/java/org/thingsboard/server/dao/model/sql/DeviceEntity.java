@@ -22,8 +22,11 @@ import lombok.EqualsAndHashCode;
 import org.thingsboard.server.common.data.Device;
 import org.thingsboard.server.dao.model.ModelConstants;
 /**
- * Device entity.
+ * JPA/Cassandra row model for device.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -38,6 +41,12 @@ public final class DeviceEntity extends AbstractDeviceEntity<Device> {
     public DeviceEntity(Device device) {
         super(device);
     }
+    /**
+     * To data.
+     *
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Device toData() {

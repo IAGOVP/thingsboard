@@ -19,6 +19,11 @@ package org.thingsboard.server.common.data.device.credentials.lwm2m;
  * Rpkbootstrap client credential.
  */
 public class RPKBootstrapClientCredential extends AbstractLwM2MBootstrapClientCredentialWithKeys {
+    /**
+     * Returns security mode.
+     *
+     * @return {@link LwM2MSecurityMode}
+     */
 
     @Override
     public LwM2MSecurityMode getSecurityMode() {

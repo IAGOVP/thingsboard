@@ -21,13 +21,28 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.data.kv.ReadTsKvQuery;
 import org.thingsboard.server.common.data.kv.ReadTsKvQueryResult;
 
+
 /**
 
- * Persistence contract for aggregation timeseries (see JPA/Cassandra implementations).
+ * Persistence contract for aggregation timeseries.
+
+ *
+
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (time-series SQL/Timescale persistence (SQL/Timescale time-series key-value storage)).
 
  */
 
+
 public interface AggregationTimeseriesDao {
+    /**
+     * Finds all async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param query filter and sort query definition
+     * @return future completing with {@link ReadTsKvQueryResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     ListenableFuture<ReadTsKvQueryResult> findAllAsync(TenantId tenantId, EntityId entityId, ReadTsKvQuery query);
 }

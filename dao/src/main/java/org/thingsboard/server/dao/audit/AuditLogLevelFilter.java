@@ -24,8 +24,14 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 /**
- * Audit log level filter.
+ * Spring component for audit log level filter (audit log persistence and log-level configuration).
  */
+
+
+
+
+
+
 
 @Component
 @ConditionalOnProperty(prefix = "audit-log", value = "enabled", havingValue = "true")
@@ -42,6 +48,14 @@ public class AuditLogLevelFilter {
             entityTypeMask.put(entityType, logLevelMask);
         });
     }
+    /**
+     * Log enabled.
+     *
+     * @param entityType entity type discriminator
+     * @param actionType action type ({@link ActionType})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean logEnabled(EntityType entityType, ActionType actionType) {
         AuditLogLevelMask logLevelMask = entityTypeMask.get(entityType);

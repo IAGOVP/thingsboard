@@ -78,7 +78,10 @@ import static org.thingsboard.server.dao.service.Validator.validateId;
 import static org.thingsboard.server.dao.service.Validator.validatePositiveNumber;
 /**
  * Default DAO-layer service implementation for relation.
+ *
+ * <p>Coordinates validation, caching, cluster events, and {@code *Dao} persistence (entity-to-entity relation graph persistence).
  */
+
 
 @Slf4j
 @Service
@@ -110,22 +113,28 @@ class BaseRelationService implements RelationService {
         this.apiLimitService = apiLimitService;
     }
 
+    
     /**
-
      * Init.
-
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @PostConstruct
     public void init() {
         timeoutExecutorService = ThingsBoardExecutors.newSingleThreadScheduledExecutor("relations-query-timeout");
     }
 
+    
     /**
-
      * Destroy.
-
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @PreDestroy
     public void destroy() {
@@ -134,11 +143,15 @@ class BaseRelationService implements RelationService {
         }
     }
 
+    
     /**
-
-     * Handle evict event.
-
+     * Handles evict event.
+     *
+     * @param event event ({@link EntityRelationEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @TransactionalEventListener(classes = EntityRelationEvent.class)
     public void handleEvictEvent(EntityRelationEvent event) {
@@ -152,11 +165,19 @@ class BaseRelationService implements RelationService {
         log.debug("Processed evict event: {}", event);
     }
 
+    
     /**
-
-     * Check relation async.
-
+     * Checks relation async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param from from ({@link EntityId})
+     * @param to to ({@link EntityId})
+     * @param relationType relation type ({@link String})
+     * @param typeGroup type group ({@link RelationTypeGroup})
+     * @return future completing with {@link Boolean}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<Boolean> checkRelationAsync(TenantId tenantId, EntityId from, EntityId to, String relationType, RelationTypeGroup typeGroup) {
@@ -165,11 +186,19 @@ class BaseRelationService implements RelationService {
         return relationDao.checkRelationAsync(tenantId, from, to, relationType, typeGroup);
     }
 
+    
     /**
-
-     * Check relation.
-
+     * Checks relation.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param from from ({@link EntityId})
+     * @param to to ({@link EntityId})
+     * @param relationType relation type ({@link String})
+     * @param typeGroup type group ({@link RelationTypeGroup})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public boolean checkRelation(TenantId tenantId, EntityId from, EntityId to, String relationType, RelationTypeGroup typeGroup) {
@@ -178,11 +207,19 @@ class BaseRelationService implements RelationService {
         return relationDao.checkRelation(tenantId, from, to, relationType, typeGroup);
     }
 
+    
     /**
-
-     * Get relation.
-
+     * Returns relation.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param from from ({@link EntityId})
+     * @param to to ({@link EntityId})
+     * @param relationType relation type ({@link String})
+     * @param typeGroup type group ({@link RelationTypeGroup})
+     * @return {@link EntityRelation}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityRelation getRelation(TenantId tenantId, EntityId from, EntityId to, String relationType, RelationTypeGroup typeGroup) {
@@ -198,11 +235,16 @@ class BaseRelationService implements RelationService {
                 relation -> RelationCacheValue.builder().relation(relation).build(), false);
     }
 
+    
     /**
-
-     * Persists relation.
-
+     * Saves or persists relation.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param relation relation ({@link EntityRelation})
+     * @return {@link EntityRelation}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityRelation saveRelation(TenantId tenantId, EntityRelation relation) {
@@ -214,11 +256,16 @@ class BaseRelationService implements RelationService {
         return result;
     }
 
+    
     /**
-
-     * Persists relations.
-
+     * Saves or persists relations.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param relations relations ({@link List})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void saveRelations(TenantId tenantId, List<EntityRelation> relations) {
@@ -236,11 +283,16 @@ class BaseRelationService implements RelationService {
         }
     }
 
+    
     /**
-
-     * Persists relation async.
-
+     * Saves or persists relation async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param relation relation ({@link EntityRelation})
+     * @return future completing with {@link Boolean}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<Boolean> saveRelationAsync(TenantId tenantId, EntityRelation relation) {
@@ -260,11 +312,16 @@ class BaseRelationService implements RelationService {
         }, directExecutor());
     }
 
+    
     /**
-
-     * Removes relation.
-
+     * Deletes relation.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param relation relation ({@link EntityRelation})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public boolean deleteRelation(TenantId tenantId, EntityRelation relation) {
@@ -278,11 +335,16 @@ class BaseRelationService implements RelationService {
         return result != null;
     }
 
+    
     /**
-
-     * Removes relation async.
-
+     * Deletes relation async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param relation relation ({@link EntityRelation})
+     * @return future completing with {@link Boolean}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<Boolean> deleteRelationAsync(TenantId tenantId, EntityRelation relation) {
@@ -302,11 +364,19 @@ class BaseRelationService implements RelationService {
         }, directExecutor());
     }
 
+    
     /**
-
-     * Removes relation.
-
+     * Deletes relation.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param from from ({@link EntityId})
+     * @param to to ({@link EntityId})
+     * @param relationType relation type ({@link String})
+     * @param typeGroup type group ({@link RelationTypeGroup})
+     * @return {@link EntityRelation}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityRelation deleteRelation(TenantId tenantId, EntityId from, EntityId to, String relationType, RelationTypeGroup typeGroup) {
@@ -320,11 +390,19 @@ class BaseRelationService implements RelationService {
         return result;
     }
 
+    
     /**
-
-     * Removes relation async.
-
+     * Deletes relation async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param from from ({@link EntityId})
+     * @param to to ({@link EntityId})
+     * @param relationType relation type ({@link String})
+     * @param typeGroup type group ({@link RelationTypeGroup})
+     * @return future completing with {@link Boolean}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<Boolean> deleteRelationAsync(TenantId tenantId, EntityId from, EntityId to, String relationType, RelationTypeGroup typeGroup) {
@@ -340,11 +418,16 @@ class BaseRelationService implements RelationService {
         }, directExecutor());
     }
 
+    
     /**
-
-     * Removes entity common relations.
-
+     * Deletes entity common relations.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional
     @Override
@@ -352,11 +435,16 @@ class BaseRelationService implements RelationService {
         deleteEntityRelations(tenantId, entityId, RelationTypeGroup.COMMON);
     }
 
+    
     /**
-
-     * Removes entity relations.
-
+     * Deletes entity relations.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional
     @Override
@@ -364,11 +452,17 @@ class BaseRelationService implements RelationService {
         deleteEntityRelations(tenantId, entityId, null);
     }
 
+    
     /**
-
-     * Removes entity relations.
-
+     * Deletes entity relations.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param relationTypeGroup relation type group ({@link RelationTypeGroup})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional
     public void deleteEntityRelations(TenantId tenantId, EntityId entityId, RelationTypeGroup relationTypeGroup) {
@@ -400,11 +494,17 @@ class BaseRelationService implements RelationService {
         }
     }
 
+    
     /**
-
-     * Loads by from.
-
+     * Finds by from.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param from from ({@link EntityId})
+     * @param typeGroup type group ({@link RelationTypeGroup})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<EntityRelation> findByFrom(TenantId tenantId, EntityId from, RelationTypeGroup typeGroup) {
@@ -417,11 +517,17 @@ class BaseRelationService implements RelationService {
                 relations -> RelationCacheValue.builder().relations(relations).build(), false);
     }
 
+    
     /**
-
-     * Loads by from async.
-
+     * Finds by from async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param from from ({@link EntityId})
+     * @param typeGroup type group ({@link RelationTypeGroup})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<EntityRelation>> findByFromAsync(TenantId tenantId, EntityId from, RelationTypeGroup typeGroup) {
@@ -439,11 +545,17 @@ class BaseRelationService implements RelationService {
         }
     }
 
+    
     /**
-
-     * Loads info by from.
-
+     * Finds info by from.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param from from ({@link EntityId})
+     * @param typeGroup type group ({@link RelationTypeGroup})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<EntityRelationInfo>> findInfoByFrom(TenantId tenantId, EntityId from, RelationTypeGroup typeGroup) {
@@ -456,11 +568,18 @@ class BaseRelationService implements RelationService {
                         .toList(), directExecutor());
     }
 
+    
     /**
-
-     * Loads by from and type.
-
+     * Finds by from and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param from from ({@link EntityId})
+     * @param relationType relation type ({@link String})
+     * @param typeGroup type group ({@link RelationTypeGroup})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<EntityRelation> findByFromAndType(TenantId tenantId, EntityId from, String relationType, RelationTypeGroup typeGroup) {
@@ -471,11 +590,18 @@ class BaseRelationService implements RelationService {
                 relations -> RelationCacheValue.builder().relations(relations).build(), false);
     }
 
+    
     /**
-
-     * Loads by from and type async.
-
+     * Finds by from and type async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param from from ({@link EntityId})
+     * @param relationType relation type ({@link String})
+     * @param typeGroup type group ({@link RelationTypeGroup})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<EntityRelation>> findByFromAndTypeAsync(TenantId tenantId, EntityId from, String relationType, RelationTypeGroup typeGroup) {
@@ -486,11 +612,17 @@ class BaseRelationService implements RelationService {
         return executor.submit(() -> findByFromAndType(tenantId, from, relationType, typeGroup));
     }
 
+    
     /**
-
-     * Loads by to.
-
+     * Finds by to.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param to to ({@link EntityId})
+     * @param typeGroup type group ({@link RelationTypeGroup})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<EntityRelation> findByTo(TenantId tenantId, EntityId to, RelationTypeGroup typeGroup) {
@@ -504,11 +636,17 @@ class BaseRelationService implements RelationService {
 
     }
 
+    
     /**
-
-     * Loads by to async.
-
+     * Finds by to async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param to to ({@link EntityId})
+     * @param typeGroup type group ({@link RelationTypeGroup})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<EntityRelation>> findByToAsync(TenantId tenantId, EntityId to, RelationTypeGroup typeGroup) {
@@ -518,11 +656,17 @@ class BaseRelationService implements RelationService {
         return executor.submit(() -> findByTo(tenantId, to, typeGroup));
     }
 
+    
     /**
-
-     * Loads info by to.
-
+     * Finds info by to.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param to to ({@link EntityId})
+     * @param typeGroup type group ({@link RelationTypeGroup})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<EntityRelationInfo>> findInfoByTo(TenantId tenantId, EntityId to, RelationTypeGroup typeGroup) {
@@ -535,11 +679,18 @@ class BaseRelationService implements RelationService {
                         .toList(), directExecutor());
     }
 
+    
     /**
-
-     * Loads by to and type.
-
+     * Finds by to and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param to to ({@link EntityId})
+     * @param relationType relation type ({@link String})
+     * @param typeGroup type group ({@link RelationTypeGroup})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<EntityRelation> findByToAndType(TenantId tenantId, EntityId to, String relationType, RelationTypeGroup typeGroup) {
@@ -555,11 +706,18 @@ class BaseRelationService implements RelationService {
 
     }
 
+    
     /**
-
-     * Loads by to and type async.
-
+     * Finds by to and type async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param to to ({@link EntityId})
+     * @param relationType relation type ({@link String})
+     * @param typeGroup type group ({@link RelationTypeGroup})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<EntityRelation>> findByToAndTypeAsync(TenantId tenantId, EntityId to, String relationType, RelationTypeGroup typeGroup) {
@@ -570,11 +728,16 @@ class BaseRelationService implements RelationService {
         return executor.submit(() -> findByToAndType(tenantId, to, relationType, typeGroup));
     }
 
+    
     /**
-
-     * Loads by query.
-
+     * Finds by query.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param query filter and sort query definition
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<EntityRelation>> findByQuery(TenantId tenantId, EntityRelationsQuery query) {
@@ -609,11 +772,16 @@ class BaseRelationService implements RelationService {
         }
     }
 
+    
     /**
-
-     * Loads info by query.
-
+     * Finds info by query.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param query filter and sort query definition
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<EntityRelationInfo>> findInfoByQuery(TenantId tenantId, EntityRelationsQuery query) {
@@ -645,11 +813,16 @@ class BaseRelationService implements RelationService {
         return relationInfo;
     }
 
+    
     /**
-
      * Removes relations.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void removeRelations(TenantId tenantId, EntityId entityId) {
@@ -666,11 +839,17 @@ class BaseRelationService implements RelationService {
         }
     }
 
+    
     /**
-
-     * Loads rule node to rule chain relations.
-
+     * Finds rule node to rule chain relations.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChainType rule chain type ({@link RuleChainType})
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<EntityRelation> findRuleNodeToRuleChainRelations(TenantId tenantId, RuleChainType ruleChainType, int limit) {
@@ -679,22 +858,33 @@ class BaseRelationService implements RelationService {
         return relationDao.findRuleNodeToRuleChainRelations(ruleChainType, limit);
     }
 
+    
     /**
-
-     * Loads by relation path query async.
-
+     * Finds by relation path query async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param relationPathQuery relation path query ({@link EntityRelationPathQuery})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<EntityRelation>> findByRelationPathQueryAsync(TenantId tenantId, EntityRelationPathQuery relationPathQuery) {
         return findFilteredRelationsByPathQueryAsync(tenantId, relationPathQuery, null);
     }
 
+    
     /**
-
-     * Loads filtered relations by path query async.
-
+     * Finds filtered relations by path query async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param relationPathQuery relation path query ({@link EntityRelationPathQuery})
+     * @param relationFilter relation filter ({@link Predicate})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<EntityRelation>> findFilteredRelationsByPathQueryAsync(TenantId tenantId, EntityRelationPathQuery relationPathQuery, Predicate<EntityRelation> relationFilter) {
@@ -735,11 +925,16 @@ class BaseRelationService implements RelationService {
                 .toList();
     }
 
+    
     /**
-
-     * Loads by relation path query.
-
+     * Finds by relation path query.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param relationPathQuery relation path query ({@link EntityRelationPathQuery})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<EntityRelation> findByRelationPathQuery(TenantId tenantId, EntityRelationPathQuery relationPathQuery) {
@@ -830,6 +1025,19 @@ class BaseRelationService implements RelationService {
             return false;
         }
     }
+    
+    
+    
+    
+    
+    /**
+     * Spring component for relation queue ctx (entity-to-entity relation graph persistence).
+     */
+
+
+
+
+
 
     @RequiredArgsConstructor
     private static class RelationQueueCtx {
@@ -846,6 +1054,45 @@ class BaseRelationService implements RelationService {
         final ConcurrentHashMap<EntityId, Boolean> uniqueMap;
 
     }
+
+    
+
+    
+
+
+    
+
+
+
+    
+
+
+
+
+    
+
+
+
+
+
+    /**
+
+
+
+
+
+     * Spring component for relation task (entity-to-entity relation graph persistence).
+
+
+
+
+
+     */
+
+
+
+
+
 
     private record RelationTask(int currentLvl, EntityId root, List<EntityRelation> prevRelations) {}
 

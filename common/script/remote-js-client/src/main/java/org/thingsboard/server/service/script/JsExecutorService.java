@@ -19,10 +19,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.thingsboard.common.util.AbstractListeningExecutor;
 
-@Component
 /**
  * Js executor service.
  */
+@Component
 public class JsExecutorService extends AbstractListeningExecutor {
 
     @Value("${js.remote.js_thread_pool_size:50}")

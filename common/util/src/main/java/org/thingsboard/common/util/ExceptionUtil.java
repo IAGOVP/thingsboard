@@ -24,10 +24,10 @@ import javax.script.ScriptException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-@Slf4j
 /**
  * Exception util.
  */
+@Slf4j
 public class ExceptionUtil {
 
     @SuppressWarnings("unchecked")

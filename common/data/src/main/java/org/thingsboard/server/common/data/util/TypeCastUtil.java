@@ -28,6 +28,12 @@ import java.math.BigDecimal;
 public class TypeCastUtil {
 
     private TypeCastUtil() {}
+    /**
+     * Cast value.
+     *
+     * @param value value ({@link String})
+     * @return {@link Pair}
+     */
 
     public static Pair<DataType, Object> castValue(String value) {
         if (isNumber(value)) {
@@ -52,6 +58,12 @@ public class TypeCastUtil {
         }
         return Pair.of(DataType.STRING, value);
     }
+    /**
+     * Cast to number.
+     *
+     * @param value value ({@link String})
+     * @return {@link Pair}
+     */
 
     public static Pair<DataType, Number> castToNumber(String value) {
         if (isNumber(value)) {

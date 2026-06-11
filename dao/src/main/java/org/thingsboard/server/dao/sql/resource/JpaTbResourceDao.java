@@ -37,8 +37,11 @@ import org.thingsboard.server.dao.util.SqlDao;
 import java.util.List;
 import java.util.UUID;
 /**
- * JPA implementation of tb resource dao.
+ * JPA/PostgreSQL implementation of tb resource dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Slf4j
 @Component
@@ -50,26 +53,65 @@ public class JpaTbResourceDao extends JpaAbstractDao<TbResourceEntity, TbResourc
     public JpaTbResourceDao(TbResourceRepository resourceRepository) {
         this.resourceRepository = resourceRepository;
     }
+    /**
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Class<TbResourceEntity> getEntityClass() {
         return TbResourceEntity.class;
     }
+    /**
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected JpaRepository<TbResourceEntity, UUID> getRepository() {
         return resourceRepository;
     }
+    /**
+     * Finds resource by tenant id and key.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceType resource type ({@link ResourceType})
+     * @param resourceKey resource key ({@link String})
+     * @return {@link TbResource}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbResource findResourceByTenantIdAndKey(TenantId tenantId, ResourceType resourceType, String resourceKey) {
         return DaoUtil.getData(resourceRepository.findByTenantIdAndResourceTypeAndResourceKey(tenantId.getId(), resourceType.name(), resourceKey));
     }
+    /**
+     * Finds all by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<TbResource> findAllByTenantId(TenantId tenantId, PageLink pageLink) {
         return DaoUtil.toPageData(resourceRepository.findAllByTenantId(tenantId.getId(), DaoUtil.toPageable(pageLink)));
     }
+    /**
+     * Finds resources by tenant id and resource type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceType resource type ({@link ResourceType})
+     * @param resourceSubType resource sub type ({@link ResourceSubType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<TbResource> findResourcesByTenantIdAndResourceType(TenantId tenantId,
@@ -85,6 +127,17 @@ public class JpaTbResourceDao extends JpaAbstractDao<TbResourceEntity, TbResourc
                 DaoUtil.toPageable(pageLink)
         ));
     }
+    /**
+     * Finds resources by tenant id and resource type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceType resource type ({@link ResourceType})
+     * @param resourceSubType resource sub type ({@link ResourceSubType})
+     * @param objectIds object ids
+     * @param searchText search text ({@link String})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<TbResource> findResourcesByTenantIdAndResourceType(TenantId tenantId, ResourceType resourceType,
@@ -103,52 +156,128 @@ public class JpaTbResourceDao extends JpaAbstractDao<TbResourceEntity, TbResourc
                         TenantId.SYS_TENANT_ID.getId(),
                         resourceType.name(), objectIds));
     }
+    /**
+     * Returns resource data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceId resource id ({@link TbResourceId})
+     * @return the byte[] value
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public byte[] getResourceData(TenantId tenantId, TbResourceId resourceId) {
         return resourceRepository.getDataById(resourceId.getId());
     }
+    /**
+     * Returns resource preview.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceId resource id ({@link TbResourceId})
+     * @return the byte[] value
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public byte[] getResourcePreview(TenantId tenantId, TbResourceId resourceId) {
         return resourceRepository.getPreviewById(resourceId.getId());
     }
+    /**
+     * Returns resource size.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceId resource id ({@link TbResourceId})
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public long getResourceSize(TenantId tenantId, TbResourceId resourceId) {
         return resourceRepository.getDataSizeById(resourceId.getId());
     }
+    /**
+     * Returns resource data info.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceId resource id ({@link TbResourceId})
+     * @return {@link TbResourceDataInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbResourceDataInfo getResourceDataInfo(TenantId tenantId, TbResourceId resourceId) {
         return resourceRepository.getDataInfoById(resourceId.getId());
     }
+    /**
+     * Sum data size by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link Long}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Long sumDataSizeByTenantId(TenantId tenantId) {
         return resourceRepository.sumDataSizeByTenantId(tenantId.getId());
     }
+    /**
+     * Finds by tenant id and external id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param externalId external id ({@link UUID})
+     * @return {@link TbResource}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbResource findByTenantIdAndExternalId(UUID tenantId, UUID externalId) {
         return DaoUtil.getData(resourceRepository.findByTenantIdAndExternalId(tenantId, externalId));
     }
+    /**
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<TbResource> findByTenantId(UUID tenantId, PageLink pageLink) {
         return findAllByTenantId(TenantId.fromUUID(tenantId), pageLink);
     }
+    /**
+     * Finds ids by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<TbResourceId> findIdsByTenantId(UUID tenantId, PageLink pageLink) {
         return DaoUtil.pageToPageData(resourceRepository.findIdsByTenantId(tenantId, DaoUtil.toPageable(pageLink))
                 .map(TbResourceId::new));
     }
+    /**
+     * Returns external id by internal.
+     *
+     * @param internalId internal id ({@link TbResourceId})
+     * @return {@link TbResourceId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbResourceId getExternalIdByInternal(TbResourceId internalId) {
         return DaoUtil.toEntityId(resourceRepository.getExternalIdByInternal(internalId.getId()), TbResourceId::new);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

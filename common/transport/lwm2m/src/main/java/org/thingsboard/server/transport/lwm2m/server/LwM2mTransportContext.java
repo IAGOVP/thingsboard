@@ -23,7 +23,7 @@ import org.thingsboard.server.common.transport.TransportContext;
 import org.thingsboard.server.queue.util.TbLwM2mTransportComponent;
 
 /**
- * Lw m2m transport context.
+ * LwM2M transport Spring context: server config, DTLS, model provider, OTA, and session manager.
  */
 @Component
 @TbLwM2mTransportComponent

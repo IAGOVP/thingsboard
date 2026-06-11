@@ -24,8 +24,14 @@ import org.thingsboard.server.common.data.relation.EntityRelation;
 import java.io.Serializable;
 import java.util.UUID;
 /**
- * Relation composite key.
+ * Relation composite key (JPA entity row mappings for PostgreSQL (JPA/Cassandra entity mappings (database row models))).
  */
+
+
+
+
+
+
 
 @NoArgsConstructor
 @AllArgsConstructor

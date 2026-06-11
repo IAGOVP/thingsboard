@@ -24,9 +24,12 @@ import org.thingsboard.server.common.msg.MsgType;
 
 /**
  * @author Andrew Shvayka
- * This  /**
-  * Used.
-  */
+ * This  
+/**
+ * Used.
+ */
+
+
 class used only to tell local rule-node actor like 'existing.getSelfActor().tellWithHighPriority(new RuleNodeUpdatedMs( ...'
  * Never serialized to/from proto, otherwise you need to change proto mappers in ProtoUtils class
  */

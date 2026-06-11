@@ -26,7 +26,14 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class ReturnCodeResolver {
-
+    /**
+     * Returns connection return code.
+     *
+     * @param mqttVersion mqtt version ({@link MqttVersion})
+     * @param returnCode return code ({@link MqttConnectReturnCode})
+     * @return {@link MqttConnectReturnCode}
+     * @throws Exception on processing failure
+     */
     public static MqttConnectReturnCode getConnectionReturnCode(MqttVersion mqttVersion, MqttConnectReturnCode returnCode) {
         if (!MqttVersion.MQTT_5.equals(mqttVersion) && !MqttConnectReturnCode.CONNECTION_ACCEPTED.equals(returnCode)) {
             switch (returnCode) {
@@ -44,7 +51,14 @@ public class ReturnCodeResolver {
         }
         return MqttConnectReturnCode.valueOf(returnCode.byteValue());
     }
-
+    /**
+     * Returns subscription return code.
+     *
+     * @param mqttVersion mqtt version ({@link MqttVersion})
+     * @param returnCode return code
+     * @return monotonically increasing MQTT packet identifier
+     * @throws Exception on processing failure
+     */
     public static int getSubscriptionReturnCode(MqttVersion mqttVersion, MqttReasonCodes.SubAck returnCode) {
         if (!MqttVersion.MQTT_5.equals(mqttVersion) && !(MqttReasonCodes.SubAck.GRANTED_QOS_0.equals(returnCode) ||
                 MqttReasonCodes.SubAck.GRANTED_QOS_1.equals(returnCode) ||

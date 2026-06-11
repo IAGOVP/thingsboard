@@ -23,9 +23,6 @@ import lombok.Data;
  */
 @Schema
 @Data
-/**
- * Node connection info.
- */
 public class NodeConnectionInfo {
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Index of rule node in the 'nodes' array of the RuleChainMetaData. Indicates the 'from' part of the connection.")
     private int fromIndex;

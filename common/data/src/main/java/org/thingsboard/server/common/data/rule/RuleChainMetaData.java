@@ -29,9 +29,6 @@ import java.util.List;
  */
 @Schema
 @Data
-/**
- * Rule chain meta data.
- */
 public class RuleChainMetaData implements HasVersion {
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "JSON object with Rule Chain Id.", accessMode = Schema.AccessMode.READ_ONLY)
@@ -55,6 +52,13 @@ public class RuleChainMetaData implements HasVersion {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED, description = "List of sticky notes placed on the rule chain canvas")
     private List<RuleChainNote> notes;
+    /**
+     * Add connection info.
+     *
+     * @param fromIndex from index
+     * @param toIndex to index
+     * @param type type ({@link String})
+     */
 
     public void addConnectionInfo(int fromIndex, int toIndex, String type) {
         NodeConnectionInfo connectionInfo = new NodeConnectionInfo();

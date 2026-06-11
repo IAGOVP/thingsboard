@@ -46,6 +46,11 @@ public class AlarmDataQuery extends AbstractDataQuery<AlarmDataPageLink> {
         super(entityFilter, pageLink, entityFields, latestValues, keyFilters, keyFiltersOperation);
         this.alarmFields = alarmFields;
     }
+    /**
+     * Next.
+     *
+     * @return {@link AlarmDataQuery}
+     */
 
     @JsonIgnore
     public AlarmDataQuery next() {

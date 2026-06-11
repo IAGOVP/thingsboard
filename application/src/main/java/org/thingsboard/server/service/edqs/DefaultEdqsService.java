@@ -78,11 +78,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-    /**
-     * Default Spring implementation for edqs service (Entity Data Query Service integration from tb-core).
-     *
-     * <p>Registered as a {@code @Service} or {@code @Component} bean.
-     */
+    
+/**
+ * Routes entity data/count queries to EDQS when enabled, otherwise falls back to SQL DAO.
+ */
+
 
 @Service
 @RequiredArgsConstructor

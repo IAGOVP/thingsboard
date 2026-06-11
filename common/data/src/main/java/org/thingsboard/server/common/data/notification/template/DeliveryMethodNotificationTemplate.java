@@ -66,12 +66,27 @@ public abstract class DeliveryMethodNotificationTemplate {
         this.enabled = other.enabled;
         this.body = other.body;
     }
+    /**
+     * Returns method.
+     *
+     * @return {@link NotificationDeliveryMethod}
+     */
 
     @JsonIgnore
     public abstract NotificationDeliveryMethod getMethod();
+    /**
+     * Copy.
+     *
+     * @return {@link DeliveryMethodNotificationTemplate}
+     */
 
     @JsonIgnore
     public abstract DeliveryMethodNotificationTemplate copy();
+    /**
+     * Returns templatable values.
+     *
+     * @return {@link List}
+     */
 
     @JsonIgnore
     public abstract List<TemplatableValue> getTemplatableValues();

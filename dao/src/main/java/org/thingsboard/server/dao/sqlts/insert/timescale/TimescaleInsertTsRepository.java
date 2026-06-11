@@ -28,8 +28,14 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
 /**
- * Timescale insert ts repository.
+ * Timescale insert ts repository (time-series SQL/Timescale persistence (SQL/Timescale time-series key-value storage)).
  */
+
+
+
+
+
+
 
 @TimescaleDBTsDao
 @Repository
@@ -39,6 +45,13 @@ public class TimescaleInsertTsRepository extends AbstractInsertRepository implem
     private static final String INSERT_OR_UPDATE =
             "INSERT INTO ts_kv (entity_id, key, ts, bool_v, str_v, long_v, dbl_v, json_v) VALUES(?, ?, ?, ?, ?, ?, ?, cast(? AS json)) " +
                     "ON CONFLICT (entity_id, key, ts) DO UPDATE SET bool_v = ?, str_v = ?, long_v = ?, dbl_v = ?, json_v = cast(? AS json);";
+    /**
+     * Saves or updates the requested data.
+     *
+     * @param entities entities ({@link List})
+     * @return nothing
+     * @throws SQLException if sqlexception is thrown during processing
+     */
 
     @Override
     public void saveOrUpdate(List<TimescaleTsKvEntity> entities) {

@@ -40,9 +40,19 @@ import org.thingsboard.server.common.data.widget.WidgetsBundle;
 import java.util.UUID;
 
 /**
- * Fields util.
+ * Fields util (EDQS data — lightweight entity field DTOs for EDQS).
  */
+
 public class FieldsUtil {
+    
+         /**
+          * To fields.
+          *
+          * @param entity entity ({@link Object})
+          * @return {@link EntityFields}
+          * @throws Exception if an unexpected error occurs during processing
+          */
+
 
     public static EntityFields toFields(Object entity) {
         if (entity instanceof Customer customer) {
@@ -290,6 +300,15 @@ public class FieldsUtil {
                 .version(entity.getVersion())
                 .build();
     }
+    
+        /**
+         * Returns text.
+         *
+         * @param node node ({@link JsonNode})
+         * @return {@link String}
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
 
     public static String getText(JsonNode node) {
         return node != null && !node.isNull() ? node.toString() : "";

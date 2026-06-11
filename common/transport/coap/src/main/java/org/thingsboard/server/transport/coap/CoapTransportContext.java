@@ -33,10 +33,7 @@ import java.util.concurrent.ConcurrentMap;
 
 
 /**
- * Created by ashvayka on 18.10.18.
- */
-/**
- * Coap transport context.
+ * CoAP transport beans: timeouts, DTLS session storage, and {@link CoapClientContext}.
  */
 @Slf4j
 @TbCoapTransportComponent

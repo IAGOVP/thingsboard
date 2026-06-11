@@ -29,6 +29,11 @@ public class SlackNotificationDeliveryMethodConfig implements NotificationDelive
 
     @NotEmpty
     private String botToken;
+    /**
+     * Returns method.
+     *
+     * @return {@link NotificationDeliveryMethod}
+     */
 
     @Override
     public NotificationDeliveryMethod getMethod() {

@@ -22,8 +22,11 @@ import org.thingsboard.server.cache.CaffeineTbTransactionalCache;
 import org.thingsboard.server.common.data.CacheConstants;
 import org.thingsboard.server.common.data.id.EdgeId;
 /**
- * Edge session caffeine cache.
+ * in-process Caffeine cache for edge session (edge instances, events, sessions, and synchronization).
+ *
+ * <p>Implements {@link org.thingsboard.server.cache.TbTransactionalCache} with DAO-specific key types.
  */
+
 
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "caffeine", matchIfMissing = true)
 @Service("EdgeSessionCache")

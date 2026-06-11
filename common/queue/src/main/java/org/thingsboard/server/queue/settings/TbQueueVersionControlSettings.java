@@ -20,12 +20,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+
+/**
+ * Kafka settings for entity version-control queues.
+ */
 @Lazy
 @Data
 @Component
-/**
- * Tb queue version control settings.
- */
 public class TbQueueVersionControlSettings {
 
     @Value("${queue.vc.topic:tb_version_control}")

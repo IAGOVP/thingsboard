@@ -21,8 +21,11 @@ import org.thingsboard.server.common.data.OtaPackageInfo;
 import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.dao.ota.OtaPackageInfoDao;
 /**
- * Ota package info data validator.
+ * Validates ota package info entities before persistence.
+ *
+ * <p>Enforces constraints, uniqueness, and referential integrity at the DAO layer.
  */
+
 
 @Component
 public class OtaPackageInfoDataValidator extends BaseOtaPackageDataValidator<OtaPackageInfo> {
@@ -30,22 +33,32 @@ public class OtaPackageInfoDataValidator extends BaseOtaPackageDataValidator<Ota
     @Autowired
     private OtaPackageInfoDao otaPackageInfoDao;
 
+    
     /**
-
-     * Validate data impl.
-
+     * Validates data impl.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param otaPackageInfo ota package info ({@link OtaPackageInfo})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateDataImpl(TenantId tenantId, OtaPackageInfo otaPackageInfo) {
         validateImpl(otaPackageInfo);
     }
 
+    
     /**
-
-     * Validate update.
-
+     * Validates update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param otaPackage ota package ({@link OtaPackageInfo})
+     * @return {@link OtaPackageInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected OtaPackageInfo validateUpdate(TenantId tenantId, OtaPackageInfo otaPackage) {

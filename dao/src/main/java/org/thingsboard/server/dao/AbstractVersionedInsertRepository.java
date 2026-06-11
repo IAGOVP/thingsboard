@@ -31,19 +31,60 @@ import java.util.Map;
 
 import static org.thingsboard.server.dao.model.ModelConstants.VERSION_COLUMN;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * Abstract versioned insert repository.
+
+
+
+
+
+ * Abstract versioned insert repository (ThingsBoard DAO layer).
+
+
+
+
+
 
  */
 
+
+
+
+
+
+
 public abstract class AbstractVersionedInsertRepository<T> extends AbstractInsertRepository {
 
+    
     /**
-
-     * Persists or update.
-
+     * Saves or updates the requested data.
+     *
+     * @param entities entities ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     public List<Long> saveOrUpdate(List<T> entities) {
         return transactionTemplate.execute(status -> {
@@ -134,35 +175,111 @@ public abstract class AbstractVersionedInsertRepository<T> extends AbstractInser
             }
         }, keyHolder);
     }
+    /**
+     * Set on batch update values.
+     *
+     * @param ps ps ({@link PreparedStatement})
+     * @param i i
+     * @param entities entities ({@link List})
+     * @return nothing
+     * @throws SQLException if sqlexception is thrown during processing
+     */
 
     protected abstract void setOnBatchUpdateValues(PreparedStatement ps, int i, List<T> entities) throws SQLException;
+    /**
+     * Set on insert or update values.
+     *
+     * @param ps ps ({@link PreparedStatement})
+     * @param i i
+     * @param entities entities ({@link List})
+     * @return nothing
+     * @throws SQLException if sqlexception is thrown during processing
+     */
 
     protected abstract void setOnInsertOrUpdateValues(PreparedStatement ps, int i, List<T> entities) throws SQLException;
+    /**
+     * Returns batch update query.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract String getBatchUpdateQuery();
+    /**
+     * Returns insert or update query.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract String getInsertOrUpdateQuery();
+
+    
+
+    
+
+
+    
+
+
+
+    
+
+
+
+
+    
+
+
+
+
+
+    /**
+
+
+
+
+
+     * Sequence prepared statement creator (ThingsBoard DAO layer).
+
+
+
+
+
+     */
+
+
+
+
+
 
     private record SequencePreparedStatementCreator(String sql) implements PreparedStatementCreator, SqlProvider {
 
         private static final String[] COLUMNS = {VERSION_COLUMN};
 
+        
         /**
-
          * Creates prepared statement.
-
+         *
+         * @param con con ({@link Connection})
+         * @return {@link PreparedStatement}
+         * @throws SQLException if sqlexception is thrown during processing
          */
+
 
         @Override
         public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
             return con.prepareStatement(sql, COLUMNS);
         }
 
+        
         /**
-
-         * Get sql.
-
+         * Returns sql.
+         *
+         * @return {@link String}
+         * @throws Exception if an unexpected error occurs during processing
          */
+
 
         @Override
         public String getSql() {

@@ -33,6 +33,13 @@ public abstract class RpcLwM2MDownlinkCallback<R extends LwM2mRequest<T>, T exte
     public RpcLwM2MDownlinkCallback(TransportService transportService, LwM2mClient client, TransportProtos.ToDeviceRpcRequestMsg requestMsg, DownlinkRequestCallback<R, T> callback) {
         super(transportService, client, requestMsg, callback);
     }
+    /**
+     * Send rpc reply on success.
+     *
+     * @param response response ({@link T})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected void sendRpcReplyOnSuccess(T response) {
@@ -49,6 +56,12 @@ public abstract class RpcLwM2MDownlinkCallback<R extends LwM2mRequest<T>, T exte
         }
         reply(builder.build());
     }
-
+    /**
+     * Serialize successful response.
+     *
+     * @param response response ({@link T})
+     * @return optional {@link String}, empty if not found
+     * @throws Exception on processing failure
+     */
     protected abstract Optional<String> serializeSuccessfulResponse(T response);
 }

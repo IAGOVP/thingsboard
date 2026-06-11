@@ -31,6 +31,11 @@ import java.util.Set;
  * Relations query filter.
  */
 public class RelationsQueryFilter implements EntityFilter {
+    /**
+     * Returns type.
+     *
+     * @return {@link EntityFilterType}
+     */
 
     @Override
     public EntityFilterType getType() {

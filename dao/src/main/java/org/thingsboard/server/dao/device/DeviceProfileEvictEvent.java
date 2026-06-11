@@ -22,8 +22,11 @@ import org.thingsboard.server.common.data.DeviceProfile;
 import org.thingsboard.server.common.data.id.DeviceProfileId;
 import org.thingsboard.server.common.data.id.TenantId;
 /**
- * Device profile evict event.
+ * Cache eviction event published when device profile data changes.
+ *
+ * <p>Consumed by cache listeners to invalidate stale entries cluster-wide.
  */
+
 
 @Data
 @RequiredArgsConstructor

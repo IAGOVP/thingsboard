@@ -18,12 +18,18 @@ package org.thingsboard.server.transport.lwm2m.server.downlink;
 import org.thingsboard.server.transport.lwm2m.utils.LwM2MTransportUtil;
 
 /**
- * has versioned id contract.
+ * has versioned id contract (LwM2M transport and object model (ThingsBoard common module)).
  */
 public interface HasVersionedId {
 
     String getVersionedId();
 
+    /**
+     * Returns object id.
+     *
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
     default String getObjectId(){
         return LwM2MTransportUtil.fromVersionedIdToObjectId(getVersionedId());
     }

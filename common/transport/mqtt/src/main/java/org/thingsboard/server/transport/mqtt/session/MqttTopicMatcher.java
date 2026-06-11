@@ -35,7 +35,13 @@ public class MqttTopicMatcher {
         this.topic = topic;
         this.topicRegex = Pattern.compile(topic.replace("+", "[^/]+").replace("#", ".+") + "$");
     }
-
+    /**
+     * Matches.
+     *
+     * @param topic topic ({@link String})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     public boolean matches(String topic) {
         return this.topicRegex.matcher(topic).matches();
     }

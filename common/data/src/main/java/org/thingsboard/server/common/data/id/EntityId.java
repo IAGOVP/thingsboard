@@ -26,10 +26,11 @@ import java.io.Serializable;
 import java.util.UUID;
 
 /**
- * Polymorphic entity identifier: {@link #getEntityType()} + {@link UUID}.
+ * Polymorphic entity identifier: {@link #getEntityType()} + {@link java.util.UUID}.
  *
  * <p>Concrete types: {@link DeviceId}, {@link TenantId}, {@link AlarmId}, etc.
- * Factory: {@link EntityIdFactory}. Used in REST JSON, DAO, and rule engine originators.
+ * Factory: {@link EntityIdFactory}. Used in REST JSON, DAO layer, and rule engine originators.
+ * {@link #NULL_UUID} represents an unset/null identifier.
  */
 @JsonDeserialize(using = EntityIdDeserializer.class)
 @JsonSerialize(using = EntityIdSerializer.class)
@@ -74,18 +75,30 @@ import java.util.UUID;
                 @DiscriminatorMapping(value = "WIDGET_TYPE", schema = WidgetTypeId.class)
         }
 )
-/**
- * entity id contract.
- */
 public interface EntityId extends HasUUID, Serializable { //NOSONAR, the constant is closely related to EntityId
 
     UUID NULL_UUID = UUID.fromString("13814000-1dd2-11b2-8080-808080808080");
+    /**
+     * Returns id.
+     *
+     * @return {@link UUID}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "ID of the entity, time-based UUID v1", example = "784f394c-42b6-435a-983c-b7beff2784f9")
     UUID getId();
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "DEVICE")
     EntityType getEntityType();
+    /**
+     * Is null uid.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     default boolean isNullUid() {

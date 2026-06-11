@@ -15,11 +15,48 @@
  */
 package org.thingsboard.server.dao.exception;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * Buffer limit exception.
+
+
+
+
+
+ * DAO exception for buffer limit exception (DAO-layer checked and runtime exceptions).
+
+
+
+
+
 
  */
+
+
+
+
+
+
 
 public class BufferLimitException extends RuntimeException {
 

@@ -77,9 +77,11 @@ import java.util.stream.Collectors;
 import static org.thingsboard.server.common.msg.queue.TopicPartitionInfo.withTopic;
 
 /**
- * Core EDQS worker: consumes entity change events from Kafka, updates the in-memory
- * {@link EdqsRepository}, and answers entity data/count queries from tb-node via request-response queue.
+ * Core EDQS worker: consumes entity change events from Kafka and answers entity queries.
+ *
+ * <p>Updates {@link org.thingsboard.server.edqs.repo.EdqsRepository} from {@link org.thingsboard.server.common.data.edqs.EdqsEvent} messages and handles request-response {@link org.thingsboard.server.common.data.edqs.query.EdqsRequest} from tb-core.
  */
+
 @EdqsComponent
 @Service
 @RequiredArgsConstructor
@@ -156,7 +158,15 @@ public class EdqsProcessor implements TbQueueHandler<TbProtoQueueMsg<ToEdqsMsg>,
         stateService.init(eventConsumer, List.of(responseTemplate.getRequestConsumer()));
     }
 
-    /** Replays state for new partitions and evicts tenant indexes dropped from this node. */
+    
+        /**
+         * Handles partitions change.
+         *
+         * @param event EDQS create/update/delete event from Kafka
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
     @EventListener
     public void onPartitionsChange(PartitionChangeEvent event) {
         if (event.getServiceType() != ServiceType.EDQS) {
@@ -189,7 +199,15 @@ public class EdqsProcessor implements TbQueueHandler<TbProtoQueueMsg<ToEdqsMsg>,
         }
     }
 
-    /** Parses {@link EdqsRequest} JSON and returns serialized {@link EdqsResponse} on the request executor. */
+    
+   /**
+    * Kafka request-response handler: parses EdqsRequest JSON and returns EdqsResponse.
+    *
+    * @param queueMsg queue msg ({@link TbProtoQueueMsg})
+    * @return future completing with {@link TbProtoQueueMsg}
+    * @throws Exception if an unexpected error occurs during processing
+    */
+
     @Override
     public ListenableFuture<TbProtoQueueMsg<FromEdqsMsg>> handle(TbProtoQueueMsg<ToEdqsMsg> queueMsg) {
         ToEdqsMsg toEdqsMsg = queueMsg.getValue();
@@ -215,7 +233,16 @@ public class EdqsProcessor implements TbQueueHandler<TbProtoQueueMsg<ToEdqsMsg>,
         });
     }
 
-    /** Builds error payload for the request-reply template when {@link #handle} fails. */
+    
+    /**
+     * Construct error response msg.
+     *
+     * @param request EDQS Kafka request payload
+     * @param e e ({@link Throwable})
+     * @return {@link TbProtoQueueMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     @Override
     public TbProtoQueueMsg<FromEdqsMsg> constructErrorResponseMsg(TbProtoQueueMsg<ToEdqsMsg> request, Throwable e) {
         EdqsResponse response = new EdqsResponse();
@@ -255,11 +282,16 @@ public class EdqsProcessor implements TbQueueHandler<TbProtoQueueMsg<ToEdqsMsg>,
         return response;
     }
 
-    /**
-     * Applies one entity event to the index; optionally persists raw message to the state topic first.
-     *
-     * @param backup when true, {@link EdqsStateService#save} is called before mutating the repository
-     */
+    
+            /**
+             * Processes the requested data.
+             *
+             * @param edqsMsg edqs msg ({@link ToEdqsMsg})
+             * @param backup backup
+             * @return nothing
+             * @throws Exception if an unexpected error occurs during processing
+             */
+
     public void process(ToEdqsMsg edqsMsg, boolean backup) {
         log.trace("Processing message: {}", edqsMsg);
         if (edqsMsg.hasEventMsg()) {
@@ -309,7 +341,14 @@ public class EdqsProcessor implements TbQueueHandler<TbProtoQueueMsg<ToEdqsMsg>,
         }
     }
 
-    /** Stops event consumer, response template, state service, and version cache. */
+    
+        /**
+         * Stops consumers and releases in-memory indexes and thread pools.
+         *
+         * @return nothing
+         * @throws InterruptedException if interrupted exception is thrown during processing
+         */
+
     @PreDestroy
     public void destroy() throws InterruptedException {
         eventConsumer.stop();

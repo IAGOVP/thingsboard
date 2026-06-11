@@ -48,6 +48,11 @@ import java.io.Serializable;
  * key filter predicate contract.
  */
 public interface KeyFilterPredicate extends Serializable {
+    /**
+     * Returns type.
+     *
+     * @return {@link FilterPredicateType}
+     */
 
     @JsonIgnore
     FilterPredicateType getType();

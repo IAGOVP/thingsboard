@@ -23,6 +23,10 @@ import org.thingsboard.server.common.data.StringUtils;
  * relation path level.
  */
 public record RelationPathLevel(@NotNull EntitySearchDirection direction, @NotBlank String relationType) {
+    /**
+     * Validates the requested data.
+     *
+     */
 
     public void validate() {
         if (direction == null) {

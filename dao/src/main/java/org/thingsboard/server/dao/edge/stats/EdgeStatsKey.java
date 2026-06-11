@@ -17,8 +17,14 @@ package org.thingsboard.server.dao.edge.stats;
 
 import lombok.Getter;
 /**
- * Edge stats key.
+ * Enumerates edge stats key values used in edge message counters and statistics (edge instances, events, sessions, and synchronization).
  */
+
+
+
+
+
+
 
 @Getter
 public enum EdgeStatsKey {

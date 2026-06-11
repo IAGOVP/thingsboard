@@ -53,11 +53,22 @@ public class LifecycleEvent extends Event {
     @Getter
     @Setter
     private String error;
+    /**
+     * Returns type.
+     *
+     * @return {@link EventType}
+     */
 
     @Override
     public EventType getType() {
         return EventType.LC_EVENT;
     }
+    /**
+     * To info.
+     *
+     * @param entityType entity type ({@link EntityType})
+     * @return {@link EventInfo}
+     */
 
     @Override
     public EventInfo toInfo(EntityType entityType) {

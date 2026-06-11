@@ -24,7 +24,7 @@ import java.util.UUID;
 
 @Schema(allOf = EntityId.class)
 /**
- * Typed identifier for device profile.
+ * Typed identifier for a device profile defining transport and alarm defaults ({@link org.thingsboard.server.common.data.EntityType#DEVICE_PROFILE}).
  */
 public class DeviceProfileId extends UUIDBased implements EntityId {
 
@@ -34,10 +34,21 @@ public class DeviceProfileId extends UUIDBased implements EntityId {
     public DeviceProfileId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * From string.
+     *
+     * @param deviceProfileId device profile id ({@link String})
+     * @return {@link DeviceProfileId}
+     */
 
     public static DeviceProfileId fromString(String deviceProfileId) {
         return new DeviceProfileId(UUID.fromString(deviceProfileId));
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY, description = "string", example = "DEVICE_PROFILE", allowableValues = "DEVICE_PROFILE")
     @Override

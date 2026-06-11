@@ -43,6 +43,11 @@ public class ResourcesShortageNotificationRuleTriggerConfig implements Notificat
     private float ramThreshold; // in percents
     @Max(1)
     private float storageThreshold; // in percents
+    /**
+     * Returns trigger type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     */
 
     @Override
     public NotificationRuleTriggerType getTriggerType() {

@@ -25,8 +25,11 @@ import org.thingsboard.server.cache.TbJsonRedisSerializer;
 import org.thingsboard.server.common.data.CacheConstants;
 import org.thingsboard.server.common.data.id.EdgeId;
 /**
- * Edge session redis cache.
+ * distributed Redis cache for edge session (edge instances, events, sessions, and synchronization).
+ *
+ * <p>Implements {@link org.thingsboard.server.cache.TbTransactionalCache} with DAO-specific key types.
  */
+
 
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "redis")
 @Service("EdgeSessionCache")

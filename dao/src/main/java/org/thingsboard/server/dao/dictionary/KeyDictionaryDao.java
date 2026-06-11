@@ -20,17 +20,44 @@ import org.thingsboard.server.common.data.page.PageData;
 import org.thingsboard.server.common.data.page.PageLink;
 import org.thingsboard.server.dao.model.sqlts.dictionary.KeyDictionaryEntry;
 
+
 /**
 
- * Persistence contract for key dictionary (see JPA/Cassandra implementations).
+ * Persistence contract for key dictionary.
+
+ *
+
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (ThingsBoard DAO layer).
 
  */
 
+
 public interface KeyDictionaryDao {
+    /**
+     * Returns or save key id.
+     *
+     * @param strKey str key ({@link String})
+     * @return {@link Integer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     Integer getOrSaveKeyId(String strKey);
+    /**
+     * Returns key.
+     *
+     * @param keyId key id ({@link Integer})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     String getKey(Integer keyId);
+    /**
+     * Finds all.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<KeyDictionaryEntry> findAll(PageLink pageLink);
 }

@@ -39,8 +39,11 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 /**
- * Ai model entity.
+ * JPA/Cassandra row model for ai model.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Getter
 @Setter
@@ -81,6 +84,12 @@ public class AiModelEntity extends BaseVersionedEntity<AiModel> {
         configuration = aiModel.getConfiguration();
         externalId = getUuid(aiModel.getExternalId());
     }
+    /**
+     * To data.
+     *
+     * @return {@link AiModel}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AiModel toData() {

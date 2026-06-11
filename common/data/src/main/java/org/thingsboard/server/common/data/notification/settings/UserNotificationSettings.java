@@ -49,6 +49,13 @@ public class UserNotificationSettings {
     public UserNotificationSettings(@JsonProperty("prefs") Map<NotificationType, NotificationPref> prefs) {
         this.prefs = prefs;
     }
+    /**
+     * Is enabled.
+     *
+     * @param notificationType notification type ({@link NotificationType})
+     * @param deliveryMethod delivery method ({@link NotificationDeliveryMethod})
+     * @return the boolean result
+     */
 
     public boolean isEnabled(NotificationType notificationType, NotificationDeliveryMethod deliveryMethod) {
         NotificationPref pref = prefs.get(notificationType);
@@ -66,6 +73,11 @@ public class UserNotificationSettings {
         private boolean enabled;
         @NotNull
         private Map<NotificationDeliveryMethod, Boolean> enabledDeliveryMethods;
+        /**
+         * Creates default.
+         *
+         * @return {@link NotificationPref}
+         */
 
         public static NotificationPref createDefault() {
             NotificationPref pref = new NotificationPref();
@@ -73,6 +85,11 @@ public class UserNotificationSettings {
             pref.setEnabledDeliveryMethods(deliveryMethods.stream().collect(Collectors.toMap(v -> v, v -> true)));
             return pref;
         }
+        /**
+         * Is valid.
+         *
+         * @return the boolean result
+         */
 
         @JsonIgnore
         @AssertTrue(message = "Only email, Web and SMS delivery methods are allowed")

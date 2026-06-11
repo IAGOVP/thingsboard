@@ -36,8 +36,11 @@ import static org.thingsboard.server.dao.model.ModelConstants.ADMIN_SETTINGS_JSO
 import static org.thingsboard.server.dao.model.ModelConstants.ADMIN_SETTINGS_KEY_PROPERTY;
 import static org.thingsboard.server.dao.model.ModelConstants.ADMIN_SETTINGS_TABLE_NAME;
 /**
- * Admin settings entity.
+ * JPA/Cassandra row model for admin settings.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -68,6 +71,12 @@ public final class AdminSettingsEntity extends BaseSqlEntity<AdminSettings> impl
         this.key = adminSettings.getKey();
         this.jsonValue = adminSettings.getJsonValue();
     }
+    /**
+     * To data.
+     *
+     * @return {@link AdminSettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AdminSettings toData() {

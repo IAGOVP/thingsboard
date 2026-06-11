@@ -21,15 +21,38 @@ import org.thingsboard.server.common.data.id.TenantId;
 
 import java.util.List;
 
+
 /**
 
- * Persistence contract for resource container (see JPA/Cassandra implementations).
+ * Persistence contract for resource container.
+
+ *
+
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (ThingsBoard DAO layer).
 
  */
 
+
 public interface ResourceContainerDao<T extends HasId<?>> {
+    /**
+     * Finds by tenant id and resource.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param reference reference ({@link String})
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<EntityInfo> findByTenantIdAndResource(TenantId tenantId, String reference, int limit);
+    /**
+     * Finds by resource.
+     *
+     * @param reference reference ({@link String})
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<EntityInfo> findByResource(String reference, int limit);
 

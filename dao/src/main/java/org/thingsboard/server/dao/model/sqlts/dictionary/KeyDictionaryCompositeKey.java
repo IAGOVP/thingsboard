@@ -22,8 +22,14 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 /**
- * Key dictionary composite key.
+ * Key dictionary composite key (time-series table entity mappings (JPA/Cassandra entity mappings (database row models))).
  */
+
+
+
+
+
+
 
 @Data
 @NoArgsConstructor

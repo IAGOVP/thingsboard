@@ -29,16 +29,31 @@ public class DoubleDataEntry extends BasicKvEntry {
         super(key);
         this.value = value;
     }
+    /**
+     * Returns data type.
+     *
+     * @return {@link DataType}
+     */
 
     @Override
     public DataType getDataType() {
         return DataType.DOUBLE;
     }
+    /**
+     * Returns double value.
+     *
+     * @return optional {@link Double}, empty if not found
+     */
 
     @Override
     public Optional<Double> getDoubleValue() {
         return Optional.ofNullable(value);
     }
+    /**
+     * Returns value.
+     *
+     * @return {@link Object}
+     */
 
     @Override
     public Object getValue() {
@@ -65,6 +80,11 @@ public class DoubleDataEntry extends BasicKvEntry {
                 "value=" + value +
                 "} " + super.toString();
     }
+    /**
+     * Returns value as string.
+     *
+     * @return {@link String}
+     */
     
     @Override
     public String getValueAsString() {

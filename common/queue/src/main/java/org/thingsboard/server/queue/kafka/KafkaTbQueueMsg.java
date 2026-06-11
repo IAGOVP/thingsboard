@@ -15,15 +15,16 @@
  */
 package org.thingsboard.server.queue.kafka;
 
+import java.util.UUID;
+
+
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.thingsboard.server.queue.TbQueueMsg;
 import org.thingsboard.server.queue.TbQueueMsgHeaders;
 import org.thingsboard.server.queue.common.DefaultTbQueueMsgHeaders;
 
-import java.util.UUID;
-
 /**
- * Message: kafka tb queue msg.
+ * Kafka-backed {@link TbQueueMsg} wrapping a {@link ConsumerRecord} payload and headers.
  */
 public class KafkaTbQueueMsg implements TbQueueMsg {
 

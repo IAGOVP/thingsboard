@@ -22,13 +22,28 @@ import org.thingsboard.server.common.data.page.PageLink;
 import org.thingsboard.server.common.data.pat.ApiKeyInfo;
 import org.thingsboard.server.dao.Dao;
 
+
 /**
 
- * Persistence contract for api key info (see JPA/Cassandra implementations).
+ * Persistence contract for api key info.
+
+ *
+
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (personal access tokens (API keys)).
 
  */
 
+
 public interface ApiKeyInfoDao extends Dao<ApiKeyInfo> {
+    /**
+     * Finds by user id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<ApiKeyInfo> findByUserId(TenantId tenantId, UserId userId, PageLink pageLink);
 

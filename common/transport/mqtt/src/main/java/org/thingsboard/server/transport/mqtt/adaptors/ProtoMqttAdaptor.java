@@ -41,11 +41,19 @@ import java.util.Optional;
 import static org.thingsboard.server.common.data.device.profile.MqttTopics.DEVICE_SOFTWARE_FIRMWARE_RESPONSES_TOPIC_FORMAT;
 
 /**
- * Proto mqtt adaptor.
+ * Protobuf payload adaptor for MQTT device API when device profile transport type is PROTOBUF.
  */
 @Component
 @Slf4j
 public class ProtoMqttAdaptor implements MqttTransportAdaptor {
+    /**
+     * Convert to post telemetry.
+     *
+     * @param ctx MQTT session context
+     * @param inbound inbound ({@link MqttPublishMessage})
+     * @return the TransportProtos.PostTelemetryMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public TransportProtos.PostTelemetryMsg convertToPostTelemetry(MqttDeviceAwareSessionContext ctx, MqttPublishMessage inbound) throws AdaptorException {
@@ -59,6 +67,14 @@ public class ProtoMqttAdaptor implements MqttTransportAdaptor {
             throw new AdaptorException(e);
         }
     }
+    /**
+     * Convert to post attributes.
+     *
+     * @param ctx MQTT session context
+     * @param inbound inbound ({@link MqttPublishMessage})
+     * @return the TransportProtos.PostAttributeMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public TransportProtos.PostAttributeMsg convertToPostAttributes(MqttDeviceAwareSessionContext ctx, MqttPublishMessage inbound) throws AdaptorException {
@@ -72,6 +88,14 @@ public class ProtoMqttAdaptor implements MqttTransportAdaptor {
             throw new AdaptorException(e);
         }
     }
+    /**
+     * Convert to claim device.
+     *
+     * @param ctx MQTT session context
+     * @param inbound inbound ({@link MqttPublishMessage})
+     * @return the TransportProtos.ClaimDeviceMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public TransportProtos.ClaimDeviceMsg convertToClaimDevice(MqttDeviceAwareSessionContext ctx, MqttPublishMessage inbound) throws AdaptorException {
@@ -83,6 +107,15 @@ public class ProtoMqttAdaptor implements MqttTransportAdaptor {
             throw new AdaptorException(e);
         }
     }
+    /**
+     * Convert to get attributes.
+     *
+     * @param ctx MQTT session context
+     * @param inbound inbound ({@link MqttPublishMessage})
+     * @param topicBase topic base ({@link String})
+     * @return the TransportProtos.GetAttributeRequestMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public TransportProtos.GetAttributeRequestMsg convertToGetAttributes(MqttDeviceAwareSessionContext ctx, MqttPublishMessage inbound, String topicBase) throws AdaptorException {
@@ -96,6 +129,15 @@ public class ProtoMqttAdaptor implements MqttTransportAdaptor {
             throw new AdaptorException(e);
         }
     }
+    /**
+     * Convert to device rpc response.
+     *
+     * @param ctx MQTT session context
+     * @param mqttMsg mqtt msg ({@link MqttPublishMessage})
+     * @param topicBase topic base ({@link String})
+     * @return the TransportProtos.ToDeviceRpcResponseMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public TransportProtos.ToDeviceRpcResponseMsg convertToDeviceRpcResponse(MqttDeviceAwareSessionContext ctx, MqttPublishMessage mqttMsg, String topicBase) throws AdaptorException {
@@ -112,6 +154,15 @@ public class ProtoMqttAdaptor implements MqttTransportAdaptor {
             throw new AdaptorException(e);
         }
     }
+    /**
+     * Convert to server rpc request.
+     *
+     * @param ctx MQTT session context
+     * @param mqttMsg mqtt msg ({@link MqttPublishMessage})
+     * @param topicBase topic base ({@link String})
+     * @return the TransportProtos.ToServerRpcRequestMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public TransportProtos.ToServerRpcRequestMsg convertToServerRpcRequest(MqttDeviceAwareSessionContext ctx, MqttPublishMessage mqttMsg, String topicBase) throws AdaptorException {
@@ -125,6 +176,14 @@ public class ProtoMqttAdaptor implements MqttTransportAdaptor {
             throw new AdaptorException(e);
         }
     }
+    /**
+     * Convert to provision request msg.
+     *
+     * @param ctx MQTT session context
+     * @param mqttMsg mqtt msg ({@link MqttPublishMessage})
+     * @return the TransportProtos.ProvisionDeviceRequestMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public TransportProtos.ProvisionDeviceRequestMsg convertToProvisionRequestMsg(MqttDeviceAwareSessionContext ctx, MqttPublishMessage mqttMsg) throws AdaptorException {
@@ -136,6 +195,15 @@ public class ProtoMqttAdaptor implements MqttTransportAdaptor {
             throw new AdaptorException(ex);
         }
     }
+    /**
+     * Convert to publish.
+     *
+     * @param ctx MQTT session context
+     * @param responseMsg response msg
+     * @param topicBase topic base ({@link String})
+     * @return MQTT publish message, or empty if conversion is not applicable
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public Optional<MqttMessage> convertToPublish(MqttDeviceAwareSessionContext ctx, TransportProtos.GetAttributeResponseMsg responseMsg, String topicBase) throws AdaptorException {
@@ -149,6 +217,15 @@ public class ProtoMqttAdaptor implements MqttTransportAdaptor {
             return Optional.empty();
         }
     }
+    /**
+     * Convert to publish.
+     *
+     * @param ctx MQTT session context
+     * @param rpcRequest rpc request
+     * @param topicBase topic base ({@link String})
+     * @return MQTT publish message, or empty if conversion is not applicable
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public Optional<MqttMessage> convertToPublish(MqttDeviceAwareSessionContext ctx, TransportProtos.ToDeviceRpcRequestMsg rpcRequest, String topicBase) throws AdaptorException {
@@ -160,21 +237,56 @@ public class ProtoMqttAdaptor implements MqttTransportAdaptor {
             return Optional.of(createMqttPublishMsg(ctx, topicBase + rpcRequest.getRequestId(), ProtoConverter.convertToRpcRequest(rpcRequest, rpcRequestDynamicMessageBuilder)));
         }
     }
+    /**
+     * Convert to publish.
+     *
+     * @param ctx MQTT session context
+     * @param rpcResponse rpc response
+     * @param topicBase topic base ({@link String})
+     * @return MQTT publish message, or empty if conversion is not applicable
+     * @throws Exception on processing failure
+     */
 
     @Override
     public Optional<MqttMessage> convertToPublish(MqttDeviceAwareSessionContext ctx, TransportProtos.ToServerRpcResponseMsg rpcResponse, String topicBase) {
         return Optional.of(createMqttPublishMsg(ctx, topicBase + rpcResponse.getRequestId(), rpcResponse.toByteArray()));
     }
+    /**
+     * Convert to publish.
+     *
+     * @param ctx MQTT session context
+     * @param notificationMsg notification msg
+     * @param topic topic ({@link String})
+     * @return MQTT publish message, or empty if conversion is not applicable
+     * @throws Exception on processing failure
+     */
 
     @Override
     public Optional<MqttMessage> convertToPublish(MqttDeviceAwareSessionContext ctx, TransportProtos.AttributeUpdateNotificationMsg notificationMsg, String topic) {
         return Optional.of(createMqttPublishMsg(ctx, topic, notificationMsg.toByteArray()));
     }
+    /**
+     * Convert to publish.
+     *
+     * @param ctx MQTT session context
+     * @param provisionResponse provision response
+     * @return MQTT publish message, or empty if conversion is not applicable
+     * @throws Exception on processing failure
+     */
 
     @Override
     public Optional<MqttMessage> convertToPublish(MqttDeviceAwareSessionContext ctx, TransportProtos.ProvisionDeviceResponseMsg provisionResponse) {
         return Optional.of(createMqttPublishMsg(ctx, MqttTopics.DEVICE_PROVISION_RESPONSE_TOPIC, provisionResponse.toByteArray()));
     }
+    /**
+     * Convert to gateway device disconnect publish.
+     *
+     * @param ctx MQTT session context
+     * @param deviceName device name ({@link String})
+     * @param reasonCode reason code
+     * @return MQTT publish message, or empty if conversion is not applicable
+     * @throws Exception on processing failure
+     */
 
     @Override
     public Optional<MqttMessage> convertToGatewayDeviceDisconnectPublish(MqttDeviceAwareSessionContext ctx, String deviceName, int reasonCode) {
@@ -184,11 +296,31 @@ public class ProtoMqttAdaptor implements MqttTransportAdaptor {
                 .build();
         return Optional.of(createMqttPublishMsg(ctx, MqttTopics.GATEWAY_DISCONNECT_TOPIC, gatewayDeviceDisconnectMsg.toByteArray()));
     }
+    /**
+     * Convert to publish.
+     *
+     * @param ctx MQTT session context
+     * @param firmwareChunk firmware chunk
+     * @param requestId request id ({@link String})
+     * @param chunk chunk
+     * @param firmwareType firmware type ({@link OtaPackageType})
+     * @return MQTT publish message, or empty if conversion is not applicable
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public Optional<MqttMessage> convertToPublish(MqttDeviceAwareSessionContext ctx, byte[] firmwareChunk, String requestId, int chunk, OtaPackageType firmwareType) throws AdaptorException {
         return Optional.of(createMqttPublishMsg(ctx, String.format(DEVICE_SOFTWARE_FIRMWARE_RESPONSES_TOPIC_FORMAT, firmwareType.getKeyPrefix(), requestId, chunk), firmwareChunk));
     }
+    /**
+     * Convert to gateway publish.
+     *
+     * @param ctx MQTT session context
+     * @param deviceName device name ({@link String})
+     * @param responseMsg response msg
+     * @return MQTT publish message, or empty if conversion is not applicable
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public Optional<MqttMessage> convertToGatewayPublish(MqttDeviceAwareSessionContext ctx, String deviceName, TransportProtos.GetAttributeResponseMsg responseMsg) throws AdaptorException {
@@ -202,6 +334,15 @@ public class ProtoMqttAdaptor implements MqttTransportAdaptor {
             return Optional.of(createMqttPublishMsg(ctx, MqttTopics.GATEWAY_ATTRIBUTES_RESPONSE_TOPIC, payloadBytes));
         }
     }
+    /**
+     * Convert to gateway publish.
+     *
+     * @param ctx MQTT session context
+     * @param deviceName device name ({@link String})
+     * @param notificationMsg notification msg
+     * @return MQTT publish message, or empty if conversion is not applicable
+     * @throws Exception on processing failure
+     */
 
     @Override
     public Optional<MqttMessage> convertToGatewayPublish(MqttDeviceAwareSessionContext ctx, String deviceName, TransportProtos.AttributeUpdateNotificationMsg notificationMsg) {
@@ -211,6 +352,15 @@ public class ProtoMqttAdaptor implements MqttTransportAdaptor {
         byte[] payloadBytes = builder.build().toByteArray();
         return Optional.of(createMqttPublishMsg(ctx, MqttTopics.GATEWAY_ATTRIBUTES_TOPIC, payloadBytes));
     }
+    /**
+     * Convert to gateway publish.
+     *
+     * @param ctx MQTT session context
+     * @param deviceName device name ({@link String})
+     * @param rpcRequest rpc request
+     * @return MQTT publish message, or empty if conversion is not applicable
+     * @throws Exception on processing failure
+     */
 
     @Override
     public Optional<MqttMessage> convertToGatewayPublish(MqttDeviceAwareSessionContext ctx, String deviceName, TransportProtos.ToDeviceRpcRequestMsg rpcRequest) {
@@ -220,7 +370,13 @@ public class ProtoMqttAdaptor implements MqttTransportAdaptor {
         byte[] payloadBytes = builder.build().toByteArray();
         return Optional.of(createMqttPublishMsg(ctx, MqttTopics.GATEWAY_RPC_TOPIC, payloadBytes));
     }
-
+    /**
+     * To bytes.
+     *
+     * @param inbound inbound ({@link ByteBuf})
+     * @return the byte[] value
+     * @throws Exception on processing failure
+     */
     public static byte[] toBytes(ByteBuf inbound) {
         byte[] bytes = new byte[inbound.readableBytes()];
         int readerIndex = inbound.readerIndex();

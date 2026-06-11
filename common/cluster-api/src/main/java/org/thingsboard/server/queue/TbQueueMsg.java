@@ -26,11 +26,14 @@ import java.util.UUID;
 public interface TbQueueMsg {
 
     /** Partition key (often tenant or entity UUID). */
+    /** Partition key for the queue message (often entity id). */
     UUID getKey();
 
     /** Headers: tenant id, component type, trace ids, etc. */
+    /** Optional metadata headers attached to the message. */
     TbQueueMsgHeaders getHeaders();
 
     /** Serialized message body (protobuf bytes in production). */
+    /** Serialized message body (protobuf or JSON bytes). */
     byte[] getData();
 }

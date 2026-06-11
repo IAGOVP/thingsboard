@@ -16,12 +16,13 @@
 package org.thingsboard.server.queue.environment;
 
 /**
- * distributed lock contract.
+ * Handle to an acquired distributed lock; must be released via {@link DistributedLockService}.
  */
 public interface DistributedLock {
 
     void lock();
 
+    
     void unlock();
 
 }

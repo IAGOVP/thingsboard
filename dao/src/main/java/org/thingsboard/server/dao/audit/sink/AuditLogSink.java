@@ -17,13 +17,57 @@ package org.thingsboard.server.dao.audit.sink;
 
 import org.thingsboard.server.common.data.audit.AuditLog;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * audit log sink contract.
+
+
+
+
+
+ * audit log sink contract (audit log persistence and log-level configuration).
+
+
+
+
+
 
  */
 
+
+
+
+
+
+
 public interface AuditLogSink {
+    /**
+     * Log action.
+     *
+     * @param auditLogEntry audit log entry ({@link AuditLog})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void logAction(AuditLog auditLogEntry);
 }

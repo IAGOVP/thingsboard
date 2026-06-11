@@ -33,7 +33,7 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Mqtt transport context.
+ * MQTT transport configuration: SSL, proxy IP filters, topic filters, and session limits.
  */
 @Slf4j
 @Component
@@ -90,6 +90,12 @@ public class MqttTransportContext extends TransportContext {
 
     private final AtomicInteger connectionsActiveCounterMQTT = new AtomicInteger();
     private final AtomicInteger connectionsActiveCounterMQTTS = new AtomicInteger();
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @PostConstruct
     public void init() {
@@ -97,7 +103,13 @@ public class MqttTransportContext extends TransportContext {
         transportService.createGaugeStats("connections_active", connectionsActiveCounterMQTT, "protocol", "MQTT");
         transportService.createGaugeStats("connections_active", connectionsActiveCounterMQTTS, "protocol", "MQTTS");
     }
-
+    /**
+     * Channel registered.
+     *
+     * @param isSSL is ssl
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void channelRegistered(boolean isSSL) {
         if (isSSL) {
             connectionsActiveCounterMQTTS.incrementAndGet();
@@ -105,7 +117,13 @@ public class MqttTransportContext extends TransportContext {
             connectionsActiveCounterMQTT.incrementAndGet();
         }
     }
-
+    /**
+     * Channel unregistered.
+     *
+     * @param isSSL is ssl
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void channelUnregistered(boolean isSSL) {
         if (isSSL) {
             connectionsActiveCounterMQTTS.decrementAndGet();
@@ -113,15 +131,33 @@ public class MqttTransportContext extends TransportContext {
             connectionsActiveCounterMQTT.decrementAndGet();
         }
     }
-
+    /**
+     * Checks address.
+     *
+     * @param address address ({@link InetSocketAddress})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     public boolean checkAddress(InetSocketAddress address) {
         return rateLimitService.checkAddress(address);
     }
-
+    /**
+     * Handles auth success.
+     *
+     * @param address address ({@link InetSocketAddress})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void onAuthSuccess(InetSocketAddress address) {
         rateLimitService.onAuthSuccess(address);
     }
-
+    /**
+     * Handles auth failure.
+     *
+     * @param address address ({@link InetSocketAddress})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void onAuthFailure(InetSocketAddress address) {
         rateLimitService.onAuthFailure(address);
     }

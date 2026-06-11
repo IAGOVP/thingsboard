@@ -37,8 +37,11 @@ import static org.thingsboard.server.dao.model.ModelConstants.ENTITY_ID_COLUMN;
 import static org.thingsboard.server.dao.model.ModelConstants.ENTITY_TYPE_COLUMN;
 import static org.thingsboard.server.dao.model.ModelConstants.TENANT_ID_COLUMN;
 /**
- * Entity alarm entity.
+ * JPA/Cassandra row model for alarm.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @Entity
@@ -84,6 +87,12 @@ public final class EntityAlarmEntity implements ToData<EntityAlarm> {
             customerId = entityAlarm.getCustomerId().getId();
         }
     }
+    /**
+     * To data.
+     *
+     * @return {@link EntityAlarm}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityAlarm toData() {

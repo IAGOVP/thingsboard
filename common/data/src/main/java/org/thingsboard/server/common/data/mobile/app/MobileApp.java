@@ -85,6 +85,11 @@ public class MobileApp extends BaseData<MobileAppId> implements HasTenantId, Has
         this.versionInfo = mobile.versionInfo;
         this.storeInfo = mobile.storeInfo;
     }
+    /**
+     * Returns name.
+     *
+     * @return {@link String}
+     */
 
     @Override
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

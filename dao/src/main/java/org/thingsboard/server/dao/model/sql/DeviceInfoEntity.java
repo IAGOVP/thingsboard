@@ -24,8 +24,11 @@ import org.hibernate.annotations.Immutable;
 import org.thingsboard.server.common.data.DeviceInfo;
 import org.thingsboard.server.dao.model.ModelConstants;
 /**
- * Device info entity.
+ * JPA/Cassandra row model for device info.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -46,6 +49,12 @@ public class DeviceInfoEntity extends AbstractDeviceEntity<DeviceInfo> {
     public DeviceInfoEntity() {
         super();
     }
+    /**
+     * To data.
+     *
+     * @return {@link DeviceInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
 
     @Override

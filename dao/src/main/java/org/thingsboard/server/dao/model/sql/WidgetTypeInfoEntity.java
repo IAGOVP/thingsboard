@@ -35,8 +35,11 @@ import org.thingsboard.server.dao.util.mapping.JsonConverter;
 import java.util.HashMap;
 import java.util.Map;
 /**
- * Widget type info entity.
+ * JPA/Cassandra row model for widget type info.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -73,6 +76,12 @@ public class WidgetTypeInfoEntity extends AbstractWidgetTypeEntity<WidgetTypeInf
     public WidgetTypeInfoEntity() {
         super();
     }
+    /**
+     * To data.
+     *
+     * @return {@link WidgetTypeInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public WidgetTypeInfo toData() {

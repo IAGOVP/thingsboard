@@ -15,21 +15,18 @@
  */
 package org.thingsboard.server.queue.kafka;
 
+import java.util.Map;
+
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.thingsboard.server.queue.TbEdgeQueueAdmin;
 import org.thingsboard.server.queue.TbQueueAdmin;
 import org.thingsboard.server.queue.util.PropertyUtils;
 
-import java.util.Map;
-
 /**
- * Created by ashvayka on 24.09.18.
+ * Kafka topic administration: create topics, list partitions, and verify cluster connectivity.
  */
 @Slf4j
-/**
- * Tb kafka admin.
- */
 public class TbKafkaAdmin implements TbQueueAdmin, TbEdgeQueueAdmin {
 
     private final TbKafkaSettings settings;
@@ -62,9 +59,7 @@ public class TbKafkaAdmin implements TbQueueAdmin, TbEdgeQueueAdmin {
     public void destroy() {
     }
 
-    /**
-     * Sync edge notifications offsets from a fat group to a single group per edge
-     * */
+    
     public void syncEdgeNotificationsOffsets(String fatGroupId, String newGroupId) {
         try {
             log.info("syncEdgeNotificationsOffsets [{}][{}]", fatGroupId, newGroupId);

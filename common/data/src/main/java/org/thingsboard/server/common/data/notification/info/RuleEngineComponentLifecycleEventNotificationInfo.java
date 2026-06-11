@@ -43,6 +43,11 @@ public class RuleEngineComponentLifecycleEventNotificationInfo implements RuleOr
     private String action;
     private ComponentLifecycleEvent eventType;
     private String error;
+    /**
+     * Returns template data.
+     *
+     * @return {@link Map}
+     */
 
     @Override
     public Map<String, String> getTemplateData() {
@@ -57,6 +62,11 @@ public class RuleEngineComponentLifecycleEventNotificationInfo implements RuleOr
                 "error", error
         );
     }
+    /**
+     * Returns state entity id.
+     *
+     * @return {@link EntityId}
+     */
 
     @Override
     public EntityId getStateEntityId() {

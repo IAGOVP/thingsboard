@@ -25,8 +25,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @SuperBuilder
 /**
- * Asset profile fields.
+ * Lightweight asset profile field selection for EDQS queries and events (EDQS data — lightweight entity field DTOs for EDQS).
  */
+
 public class AssetProfileFields extends AbstractEntityFields {
 
     private boolean isDefault;

@@ -38,7 +38,12 @@ import org.thingsboard.server.common.data.validation.NoXss;
 @EqualsAndHashCode(callSuper = true)
 @Slf4j
 /**
- * Rule chain.
+ * Directed graph of rule nodes that processes incoming messages in the rule engine.
+ *
+ * <p>Each chain belongs to a tenant, has a {@link RuleChainType} (CORE or EDGE), and points to
+ * {@code firstRuleNodeId} as entry node. Root chains receive all device telemetry by default.
+ * Metadata (nodes, connections) is stored separately in {@link RuleChainMetaData}.
+ * REST: {@code /api/ruleChain}.
  */
 public class RuleChain extends BaseDataWithAdditionalInfo<RuleChainId> implements HasName, HasTenantId, ExportableEntity<RuleChainId>, HasDefaultOption, HasVersion {
 
@@ -86,11 +91,21 @@ public class RuleChain extends BaseDataWithAdditionalInfo<RuleChainId> implement
         this.setExternalId(ruleChain.getExternalId());
         this.version = ruleChain.getVersion();
     }
+    /**
+     * Returns name.
+     *
+     * @return {@link String}
+     */
 
     @Override
     public String getName() {
         return name;
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link RuleChainId}
+     */
 
     @Schema(description = "JSON object with the Rule Chain Id. " +
             "Specify this field to update the Rule Chain. " +
@@ -100,20 +115,40 @@ public class RuleChain extends BaseDataWithAdditionalInfo<RuleChainId> implement
     public RuleChainId getId() {
         return super.getId();
     }
+    /**
+     * Returns created time.
+     *
+     * @return the long result
+     */
 
     @Schema(description = "Timestamp of the rule chain creation, in milliseconds", example = "1609459200000", accessMode = Schema.AccessMode.READ_ONLY)
     @Override
     public long getCreatedTime() {
         return super.getCreatedTime();
     }
+    /**
+     * Returns configuration.
+     *
+     * @return {@link JsonNode}
+     */
 
     public JsonNode getConfiguration() {
         return BaseDataWithAdditionalInfo.getJson(() -> configuration, () -> configurationBytes);
     }
+    /**
+     * Set configuration.
+     *
+     * @param data data ({@link JsonNode})
+     */
 
     public void setConfiguration(JsonNode data) {
         setJson(data, json -> this.configuration = json, bytes -> this.configurationBytes = bytes);
     }
+    /**
+     * Is default.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     @Override

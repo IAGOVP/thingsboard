@@ -20,8 +20,14 @@ import org.thingsboard.server.dao.device.claim.ClaimData;
 
 import java.util.List;
 /**
- * Claim data info.
+ * Claim data info (devices, credentials, profiles, and connectivity).
  */
+
+
+
+
+
+
 
 @Data
 public class ClaimDataInfo {

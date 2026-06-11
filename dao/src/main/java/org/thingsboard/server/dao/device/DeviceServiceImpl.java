@@ -99,8 +99,11 @@ import static org.thingsboard.server.dao.service.Validator.validateIds;
 import static org.thingsboard.server.dao.service.Validator.validatePageLink;
 import static org.thingsboard.server.dao.service.Validator.validateString;
 /**
- * Spring service implementing device API.
+ * Spring {@code @Service} implementing the device DAO API.
+ *
+ * <p>Delegates to {@code *Dao} implementations and manages cache eviction (devices, credentials, profiles, and connectivity).
  */
+
 
 @Service("DeviceDaoService")
 @Slf4j
@@ -122,11 +125,16 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
     private final EntityCountService countService;
     private final JpaExecutorService executor;
 
+    
     /**
-
-     * Loads device info by id.
-
+     * Finds device info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @return {@link DeviceInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceInfo findDeviceInfoById(TenantId tenantId, DeviceId deviceId) {
@@ -135,11 +143,16 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         return deviceDao.findDeviceInfoById(tenantId, deviceId.getId());
     }
 
+    
     /**
-
-     * Loads device by id.
-
+     * Finds device by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Device findDeviceById(TenantId tenantId, DeviceId deviceId) {
@@ -148,11 +161,16 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         return findDeviceByIdInternal(tenantId, deviceId);
     }
 
+    
     /**
-
-     * Loads device by id async.
-
+     * Finds device by id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @return future completing with {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<Device> findDeviceByIdAsync(TenantId tenantId, DeviceId deviceId) {
@@ -169,11 +187,16 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         }
     }
 
+    
     /**
-
-     * Loads device by tenant id and name.
-
+     * Finds device by tenant id and name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Device findDeviceByTenantIdAndName(TenantId tenantId, String name) {
@@ -183,11 +206,16 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
                 () -> deviceDao.findDeviceByTenantIdAndName(tenantId.getId(), name).orElse(null), true);
     }
 
+    
     /**
-
-     * Loads device by tenant id and name async.
-
+     * Finds device by tenant id and name async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return future completing with {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<Device> findDeviceByTenantIdAndNameAsync(TenantId tenantId, String name) {
@@ -196,11 +224,16 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         return executor.submit(() -> findDeviceByTenantIdAndName(tenantId, name));
     }
 
+    
     /**
-
-     * Persists device with access token.
-
+     * Saves or persists device with access token.
+     *
+     * @param device device ({@link Device})
+     * @param accessToken access token ({@link String})
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional
     @Override
@@ -208,11 +241,17 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         return doSaveDevice(device, accessToken, true);
     }
 
+    
     /**
-
-     * Persists device with access token.
-
+     * Saves or persists device with access token.
+     *
+     * @param device device ({@link Device})
+     * @param accessToken access token ({@link String})
+     * @param nameConflictStrategy name conflict strategy ({@link NameConflictStrategy})
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional
     @Override
@@ -220,22 +259,31 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         return doSaveDevice(device, accessToken, true, nameConflictStrategy);
     }
 
+    
     /**
-
-     * Persists device.
-
+     * Saves or persists device.
+     *
+     * @param device device ({@link Device})
+     * @param doValidate do validate
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Device saveDevice(Device device, boolean doValidate) {
         return doSaveDevice(device, null, doValidate);
     }
 
+    
     /**
-
-     * Persists device.
-
+     * Saves or persists device.
+     *
+     * @param device device ({@link Device})
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional
     @Override
@@ -243,11 +291,16 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         return doSaveDevice(device, null, true);
     }
 
+    
     /**
-
-     * Persists device with credentials.
-
+     * Saves a device with credentials the requested data.
+     *
+     * @param device device ({@link Device})
+     * @param deviceCredentials device credentials ({@link DeviceCredentials})
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional
     @Override
@@ -255,11 +308,17 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         return saveDeviceWithCredentials(device, deviceCredentials, NameConflictStrategy.DEFAULT);
     }
 
+    
     /**
-
-     * Persists device with credentials.
-
+     * Saves a device with credentials the requested data.
+     *
+     * @param device device ({@link Device})
+     * @param deviceCredentials device credentials ({@link DeviceCredentials})
+     * @param nameConflictStrategy name conflict strategy ({@link NameConflictStrategy})
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional
     @Override
@@ -352,11 +411,15 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         }
     }
 
+    
     /**
-
-     * Handle evict event.
-
+     * Handles evict event.
+     *
+     * @param event event ({@link DeviceCacheEvictEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @TransactionalEventListener
@@ -408,11 +471,17 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         return deviceData;
     }
 
+    
     /**
-
-     * Assign device to customer.
-
+     * Assigns device to customer.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @param customerId target customer identifier
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional
     @Override
@@ -425,11 +494,16 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         return saveDevice(device);
     }
 
+    
     /**
-
-     * Unassign device from customer.
-
+     * Unassigns device from customer.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional
     @Override
@@ -442,11 +516,16 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         return saveDevice(device);
     }
 
+    
     /**
-
-     * Removes device.
-
+     * Deletes device.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional
     @Override
@@ -455,11 +534,17 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         deleteEntity(tenantId, deviceId, false);
     }
 
+    
     /**
-
-     * Removes entity.
-
+     * Deletes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -486,11 +571,16 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         eventPublisher.publishEvent(DeleteEntityEvent.builder().tenantId(tenantId).entityId(device.getId()).entity(device).build());
     }
 
+    
     /**
-
-     * Loads devices by tenant id.
-
+     * Finds devices by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Device> findDevicesByTenantId(TenantId tenantId, PageLink pageLink) {
@@ -500,11 +590,16 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         return deviceDao.findDevicesByTenantId(tenantId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads device infos by filter.
-
+     * Finds device infos by filter.
+     *
+     * @param filter filter ({@link DeviceInfoFilter})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<DeviceInfo> findDeviceInfosByFilter(DeviceInfoFilter filter, PageLink pageLink) {
@@ -518,11 +613,15 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
 
     }
 
+    
     /**
-
-     * Loads device id infos.
-
+     * Finds device id infos.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<DeviceIdInfo> findDeviceIdInfos(PageLink pageLink) {
@@ -531,11 +630,15 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         return deviceDao.findDeviceIdInfos(pageLink);
     }
 
+    
     /**
-
-     * Loads profile entity id infos.
-
+     * Finds profile entity id infos.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<ProfileEntityIdInfo> findProfileEntityIdInfos(PageLink pageLink) {
@@ -544,11 +647,16 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         return deviceDao.findProfileEntityIdInfos(pageLink);
     }
 
+    
     /**
-
-     * Loads profile entity id infos by tenant id.
-
+     * Finds profile entity id infos by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<ProfileEntityIdInfo> findProfileEntityIdInfosByTenantId(TenantId tenantId, PageLink pageLink) {
@@ -558,11 +666,17 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         return deviceDao.findProfileEntityIdInfosByTenantId(tenantId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads devices by tenant id and type.
-
+     * Finds devices by tenant id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Device> findDevicesByTenantIdAndType(TenantId tenantId, String type, PageLink pageLink) {
@@ -573,11 +687,17 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         return deviceDao.findDevicesByTenantIdAndType(tenantId.getId(), type, pageLink);
     }
 
+    
     /**
-
-     * Loads device ids by tenant id and device profile id.
-
+     * Finds device ids by tenant id and device profile id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfileId device profile id ({@link DeviceProfileId})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<DeviceId> findDeviceIdsByTenantIdAndDeviceProfileId(TenantId tenantId, DeviceProfileId deviceProfileId, PageLink pageLink) {
@@ -588,11 +708,18 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         return deviceDao.findDeviceIdsByTenantIdAndDeviceProfileId(tenantId.getId(), deviceProfileId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads devices by tenant id and type and empty ota package.
-
+     * Finds devices by tenant id and type and empty ota package.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfileId device profile id ({@link DeviceProfileId})
+     * @param type type ({@link OtaPackageType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Device> findDevicesByTenantIdAndTypeAndEmptyOtaPackage(TenantId tenantId,
@@ -607,11 +734,17 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         return deviceDao.findDevicesByTenantIdAndTypeAndEmptyOtaPackage(tenantId.getId(), deviceProfileId.getId(), type, pageLink);
     }
 
+    
     /**
-
      * Counts devices by tenant id and device profile id and empty ota package.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfileId device profile id ({@link DeviceProfileId})
+     * @param type type ({@link OtaPackageType})
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public long countDevicesByTenantIdAndDeviceProfileIdAndEmptyOtaPackage(TenantId tenantId, DeviceProfileId deviceProfileId, OtaPackageType type) {
@@ -621,11 +754,16 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         return deviceDao.countDevicesByTenantIdAndDeviceProfileIdAndEmptyOtaPackage(tenantId.getId(), deviceProfileId.getId(), type);
     }
 
+    
     /**
-
-     * Loads devices by tenant id and ids async.
-
+     * Finds devices by tenant id and ids async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceIds device ids ({@link List})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<Device>> findDevicesByTenantIdAndIdsAsync(TenantId tenantId, List<DeviceId> deviceIds) {
@@ -635,11 +773,15 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         return deviceDao.findDevicesByTenantIdAndIdsAsync(tenantId.getId(), toUUIDs(deviceIds));
     }
 
+    
     /**
-
-     * Loads devices by ids.
-
+     * Finds devices by ids.
+     *
+     * @param deviceIds device ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<Device> findDevicesByIds(List<DeviceId> deviceIds) {
@@ -648,11 +790,15 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         return deviceDao.findDevicesByIds(toUUIDs(deviceIds));
     }
 
+    
     /**
-
-     * Loads devices by ids async.
-
+     * Finds devices by ids async.
+     *
+     * @param deviceIds device ids ({@link List})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<Device>> findDevicesByIdsAsync(List<DeviceId> deviceIds) {
@@ -661,11 +807,15 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         return deviceDao.findDevicesByIdsAsync(toUUIDs(deviceIds));
     }
 
+    
     /**
-
-     * Removes devices by tenant id.
-
+     * Deletes devices by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional
     @Override
@@ -675,11 +825,15 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         tenantDevicesRemover.removeEntities(tenantId, tenantId);
     }
 
+    
     /**
-
-     * Removes by tenant id.
-
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional
     @Override
@@ -687,11 +841,17 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         deleteDevicesByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Loads devices by tenant id and customer id.
-
+     * Finds devices by tenant id and customer id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Device> findDevicesByTenantIdAndCustomerId(TenantId tenantId, CustomerId customerId, PageLink pageLink) {
@@ -702,11 +862,18 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         return deviceDao.findDevicesByTenantIdAndCustomerId(tenantId.getId(), customerId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads devices by tenant id and customer id and type.
-
+     * Finds devices by tenant id and customer id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Device> findDevicesByTenantIdAndCustomerIdAndType(TenantId tenantId, CustomerId customerId, String type, PageLink pageLink) {
@@ -718,11 +885,17 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         return deviceDao.findDevicesByTenantIdAndCustomerIdAndType(tenantId.getId(), customerId.getId(), type, pageLink);
     }
 
+    
     /**
-
-     * Loads devices by tenant id customer id and ids async.
-
+     * Finds devices by tenant id customer id and ids async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param deviceIds device ids ({@link List})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<Device>> findDevicesByTenantIdCustomerIdAndIdsAsync(TenantId tenantId, CustomerId customerId, List<DeviceId> deviceIds) {
@@ -734,11 +907,16 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
                 customerId.getId(), toUUIDs(deviceIds));
     }
 
+    
     /**
-
-     * Unassign customer devices.
-
+     * Unassigns customer devices.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void unassignCustomerDevices(TenantId tenantId, CustomerId customerId) {
@@ -748,11 +926,16 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         customerDevicesRemover.removeEntities(tenantId, customerId);
     }
 
+    
     /**
-
-     * Loads devices by query.
-
+     * Finds devices by query.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param query filter and sort query definition
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<Device>> findDevicesByQuery(TenantId tenantId, DeviceSearchQuery query) {
@@ -773,11 +956,15 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         }, MoreExecutors.directExecutor());
     }
 
+    
     /**
-
-     * Loads device types by tenant id.
-
+     * Finds device types by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<EntitySubtype>> findDeviceTypesByTenantId(TenantId tenantId) {
@@ -786,11 +973,16 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         return deviceDao.findTenantDeviceTypesAsync(tenantId.getId());
     }
 
+    
     /**
-
-     * Assign device to tenant.
-
+     * Assigns device to tenant.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param device device ({@link Device})
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional
     @Override
@@ -826,11 +1018,16 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         return savedDevice;
     }
 
+    
     /**
-
-     * Persists device.
-
+     * Saves or persists device.
+     *
+     * @param provisionRequest provision request ({@link ProvisionRequest})
+     * @param profile profile ({@link DeviceProfile})
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -885,22 +1082,33 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         return savedDevice;
     }
 
+    
     /**
-
-     * Loads devices ids by device profile transport type.
-
+     * Finds devices ids by device profile transport type.
+     *
+     * @param transportType transport type ({@link DeviceTransportType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<UUID> findDevicesIdsByDeviceProfileTransportType(DeviceTransportType transportType, PageLink pageLink) {
         return deviceDao.findDevicesIdsByDeviceProfileTransportType(transportType, pageLink);
     }
 
+    
     /**
-
-     * Assign device to edge.
-
+     * Assigns device to edge.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @param edgeId edge id ({@link EdgeId})
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Device assignDeviceToEdge(TenantId tenantId, DeviceId deviceId, EdgeId edgeId) {
@@ -923,11 +1131,17 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         return device;
     }
 
+    
     /**
-
-     * Unassign device from edge.
-
+     * Unassigns device from edge.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @param edgeId edge id ({@link EdgeId})
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Device unassignDeviceFromEdge(TenantId tenantId, DeviceId deviceId, EdgeId edgeId) {
@@ -950,11 +1164,17 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         return device;
     }
 
+    
     /**
-
-     * Loads devices by tenant id and edge id.
-
+     * Finds devices by tenant id and edge id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link EdgeId})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Device> findDevicesByTenantIdAndEdgeId(TenantId tenantId, EdgeId edgeId, PageLink pageLink) {
@@ -965,11 +1185,18 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         return deviceDao.findDevicesByTenantIdAndEdgeId(tenantId.getId(), edgeId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads devices by tenant id and edge id and type.
-
+     * Finds devices by tenant id and edge id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link EdgeId})
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Device> findDevicesByTenantIdAndEdgeIdAndType(TenantId tenantId, EdgeId edgeId, String type, PageLink pageLink) {
@@ -981,11 +1208,15 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         return deviceDao.findDevicesByTenantIdAndEdgeIdAndType(tenantId.getId(), edgeId.getId(), type, pageLink);
     }
 
+    
     /**
-
      * Counts by tenant id.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public long countByTenantId(TenantId tenantId) {
@@ -1042,22 +1273,32 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
         }
     };
 
+    
     /**
-
-     * Loads entity.
-
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findDeviceById(tenantId, new DeviceId(entityId.getId())));
     }
 
+    
     /**
-
-     * Loads entity async.
-
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
@@ -1065,11 +1306,14 @@ public class DeviceServiceImpl extends CachedVersionedEntityService<DeviceCacheK
                 .transform(Optional::ofNullable, directExecutor());
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

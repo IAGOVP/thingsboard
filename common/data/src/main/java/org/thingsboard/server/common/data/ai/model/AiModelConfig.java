@@ -82,6 +82,11 @@ public interface AiModelConfig {
             description = "AI Provider",
             requiredMode = Schema.RequiredMode.REQUIRED
     )
+    /**
+     * Provider.
+     *
+     * @return {@link AiProvider}
+     */
     AiProvider provider();
 
     @Schema(hidden = true)
@@ -101,7 +106,17 @@ public interface AiModelConfig {
             @JsonSubTypes.Type(value = GitHubModelsProviderConfig.class, name = "GITHUB_MODELS"),
             @JsonSubTypes.Type(value = OllamaProviderConfig.class, name = "OLLAMA")
     })
+    /**
+     * Provider config.
+     *
+     * @return {@link AiProviderConfig}
+     */
     AiProviderConfig providerConfig();
+/**
+ * Model type.
+ *
+ * @return {@link AiModelType}
+ */
 
     AiModelType modelType();
 

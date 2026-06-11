@@ -20,18 +20,41 @@ import org.thingsboard.server.common.data.mobile.qrCodeSettings.QrCodeSettings;
 import org.thingsboard.server.dao.Dao;
 
 
+
+
 /**
 
 
- * Persistence contract for qr code settings (see JPA/Cassandra implementations).
+ * Persistence contract for qr code settings.
+
+
+ *
+
+
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (mobile apps, bundles, and QR code settings).
 
 
  */
 
 
+
 public interface QrCodeSettingsDao extends Dao<QrCodeSettings> {
+    /**
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link QrCodeSettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     QrCodeSettings findByTenantId(TenantId tenantId);
+    /**
+     * Removes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void removeByTenantId(TenantId tenantId);
 }

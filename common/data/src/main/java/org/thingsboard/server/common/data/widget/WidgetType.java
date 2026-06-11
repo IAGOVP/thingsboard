@@ -52,6 +52,11 @@ public class WidgetType extends BaseWidgetType {
         super(widgetType);
         this.descriptor = widgetType.getDescriptor();
     }
+    /**
+     * Returns default config.
+     *
+     * @return {@link JsonNode}
+     */
 
     @JsonIgnore
     public JsonNode getDefaultConfig() {
@@ -66,6 +71,11 @@ public class WidgetType extends BaseWidgetType {
                     }
                 }).orElse(null);
     }
+    /**
+     * Set default config.
+     *
+     * @param defaultConfig default config ({@link JsonNode})
+     */
 
     public void setDefaultConfig(JsonNode defaultConfig) {
         ((ObjectNode) descriptor).put("defaultConfig", defaultConfig.toString());

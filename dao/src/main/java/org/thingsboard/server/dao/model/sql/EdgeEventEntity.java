@@ -49,8 +49,11 @@ import static org.thingsboard.server.dao.model.ModelConstants.EDGE_EVENT_UID_PRO
 import static org.thingsboard.server.dao.model.ModelConstants.EPOCH_DIFF;
 import static org.thingsboard.server.dao.model.ModelConstants.TS_COLUMN;
 /**
- * Edge event entity.
+ * JPA/Cassandra row model for edge event.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -111,6 +114,12 @@ public class EdgeEventEntity extends BaseSqlEntity<EdgeEvent> implements BaseEnt
         this.entityBody = edgeEvent.getBody();
         this.edgeEventUid = edgeEvent.getUid();
     }
+    /**
+     * To data.
+     *
+     * @return {@link EdgeEvent}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EdgeEvent toData() {

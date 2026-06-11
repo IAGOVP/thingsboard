@@ -24,8 +24,14 @@ import org.thingsboard.server.common.data.alarm.EntityAlarm;
 import java.io.Serializable;
 import java.util.UUID;
 /**
- * Entity alarm composite key.
+ * Entity alarm composite key (JPA entity row mappings for PostgreSQL (JPA/Cassandra entity mappings (database row models))).
  */
+
+
+
+
+
+
 
 @NoArgsConstructor
 @AllArgsConstructor

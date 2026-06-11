@@ -22,17 +22,19 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.io.Serializable;
 
+/**
+ * Contract for perimeter definition.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonDeserialize(using = PerimeterDefinitionDeserializer.class)
 @JsonSerialize(using = PerimeterDefinitionSerializer.class)
-/**
- * perimeter definition contract.
- */
 public interface PerimeterDefinition extends Serializable {
 
     @JsonIgnore
+    /** Returns the type. */
     PerimeterType getType();
 
     @JsonIgnore
+    /** Check matches. */
     boolean checkMatches(Coordinates entityCoordinates);
 }

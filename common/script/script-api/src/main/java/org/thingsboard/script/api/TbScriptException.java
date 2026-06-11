@@ -22,7 +22,7 @@ import java.io.Serial;
 import java.util.UUID;
 
 /**
- * Exception: tb script exception.
+ * Thrown when tb script.
  */
 public class TbScriptException extends RuntimeException implements RecoveryAware {
 

@@ -44,10 +44,10 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j
 /**
  * Ssl util.
  */
+@Slf4j
 public class SslUtil {
 
     public static final char[] EMPTY_PASS = {};
@@ -92,6 +92,7 @@ public class SslUtil {
     public static PrivateKey readPrivateKey(String fileContent, String passStr) {
         if (StringUtils.isNotEmpty(fileContent)) {
             StringReader reader = new StringReader(fileContent);
+            /** Read private key. */
             return readPrivateKey(reader, passStr);
         }
         return null;
@@ -101,6 +102,7 @@ public class SslUtil {
     public static PrivateKey readPrivateKeyByFilePath(String filePath, String passStr) {
         if (StringUtils.isNotEmpty(filePath)) {
             FileReader fileReader = new FileReader(filePath);
+            /** Read private key. */
             return readPrivateKey(fileReader, passStr);
         }
         return null;

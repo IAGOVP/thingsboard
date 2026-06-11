@@ -34,11 +34,20 @@ public class SnmpDeviceProfileTransportConfiguration implements DeviceProfileTra
     private Integer retries;
     @ArraySchema(schema = @Schema(implementation = SnmpCommunicationConfig.class))
     private List<SnmpCommunicationConfig> communicationConfigs;
+    /**
+     * Returns type.
+     *
+     * @return {@link DeviceTransportType}
+     */
 
     @Override
     public DeviceTransportType getType() {
         return DeviceTransportType.SNMP;
     }
+    /**
+     * Validates the requested data.
+     *
+     */
 
     @Override
     public void validate() {

@@ -94,7 +94,10 @@ import static org.thingsboard.server.dao.service.Validator.validatePositiveNumbe
 import static org.thingsboard.server.dao.service.Validator.validateString;
 /**
  * Default DAO-layer service implementation for rule chain.
+ *
+ * <p>Coordinates validation, caching, cluster events, and {@code *Dao} persistence (rule chains, nodes, and node state).
  */
+
 
 @Service("RuleChainDaoService")
 @Slf4j
@@ -120,11 +123,15 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
     @Autowired
     private DataValidator<RuleChain> ruleChainValidator;
 
+    
     /**
-
-     * Persists rule chain.
-
+     * Saves or persists rule chain.
+     *
+     * @param ruleChain rule chain ({@link RuleChain})
+     * @return {@link RuleChain}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -132,11 +139,16 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         return saveRuleChain(ruleChain, true);
     }
 
+    
     /**
-
-     * Persists rule chain.
-
+     * Saves or persists rule chain.
+     *
+     * @param ruleChain rule chain ({@link RuleChain})
+     * @param publishSaveEvent publish save event
+     * @return {@link RuleChain}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -144,11 +156,17 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         return saveRuleChain(ruleChain, publishSaveEvent, true);
     }
 
+    
     /**
-
-     * Persists rule chain.
-
+     * Saves or persists rule chain.
+     *
+     * @param ruleChain rule chain ({@link RuleChain})
+     * @param publishSaveEvent publish save event
+     * @param doValidate do validate
+     * @return {@link RuleChain}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -176,11 +194,16 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         }
     }
 
+    
     /**
-
      * Set root rule chain.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChainId rule chain id ({@link RuleChainId})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -209,11 +232,17 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         eventPublisher.publishEvent(SaveEntityEvent.builder().tenantId(tenantId).entityId(ruleChain.getId()).entity(ruleChain).created(false).build());
     }
 
+    
     /**
-
-     * Persists rule chain meta data.
-
+     * Saves or persists rule chain meta data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChainMetaData rule chain meta data ({@link RuleChainMetaData})
+     * @param ruleNodeUpdater rule node updater ({@link Function})
+     * @return {@link RuleChainUpdateResult}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -221,11 +250,18 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         return saveRuleChainMetaData(tenantId, ruleChainMetaData, ruleNodeUpdater, true);
     }
 
+    
     /**
-
-     * Persists rule chain meta data.
-
+     * Saves or persists rule chain meta data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChainMetaData rule chain meta data ({@link RuleChainMetaData})
+     * @param ruleNodeUpdater rule node updater ({@link Function})
+     * @param publishSaveEvent publish save event
+     * @return {@link RuleChainUpdateResult}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional
     @Override
@@ -383,11 +419,16 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         }
     }
 
+    
     /**
-
-     * Load rule chain meta data.
-
+     * Loads rule chain meta data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChainId rule chain id ({@link RuleChainId})
+     * @return {@link RuleChainMetaData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public RuleChainMetaData loadRuleChainMetaData(TenantId tenantId, RuleChainId ruleChainId) {
@@ -431,11 +472,16 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         return ruleChainMetaData;
     }
 
+    
     /**
-
-     * Loads rule chain by id.
-
+     * Finds rule chain by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChainId rule chain id ({@link RuleChainId})
+     * @return {@link RuleChain}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public RuleChain findRuleChainById(TenantId tenantId, RuleChainId ruleChainId) {
@@ -443,11 +489,16 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         return ruleChainDao.findById(tenantId, ruleChainId.getId());
     }
 
+    
     /**
-
-     * Loads rule node by id.
-
+     * Finds rule node by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleNodeId rule node id ({@link RuleNodeId})
+     * @return {@link RuleNode}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public RuleNode findRuleNodeById(TenantId tenantId, RuleNodeId ruleNodeId) {
@@ -455,11 +506,16 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         return ruleNodeDao.findById(tenantId, ruleNodeId.getId());
     }
 
+    
     /**
-
-     * Loads rule chain by id async.
-
+     * Finds rule chain by id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChainId rule chain id ({@link RuleChainId})
+     * @return future completing with {@link RuleChain}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<RuleChain> findRuleChainByIdAsync(TenantId tenantId, RuleChainId ruleChainId) {
@@ -467,11 +523,16 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         return ruleChainDao.findByIdAsync(tenantId, ruleChainId.getId());
     }
 
+    
     /**
-
-     * Loads rule node by id async.
-
+     * Finds rule node by id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleNodeId rule node id ({@link RuleNodeId})
+     * @return future completing with {@link RuleNode}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<RuleNode> findRuleNodeByIdAsync(TenantId tenantId, RuleNodeId ruleNodeId) {
@@ -479,11 +540,15 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         return ruleNodeDao.findByIdAsync(tenantId, ruleNodeId.getId());
     }
 
+    
     /**
-
-     * Get root tenant rule chain.
-
+     * Returns root tenant rule chain.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link RuleChain}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public RuleChain getRootTenantRuleChain(TenantId tenantId) {
@@ -491,11 +556,16 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         return ruleChainDao.findRootRuleChainByTenantIdAndType(tenantId.getId(), RuleChainType.CORE);
     }
 
+    
     /**
-
-     * Get rule chain nodes.
-
+     * Returns rule chain nodes.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChainId rule chain id ({@link RuleChainId})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<RuleNode> getRuleChainNodes(TenantId tenantId, RuleChainId ruleChainId) {
@@ -513,11 +583,16 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         return ruleNodes;
     }
 
+    
     /**
-
-     * Get referencing rule chain nodes.
-
+     * Returns referencing rule chain nodes.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChainId rule chain id ({@link RuleChainId})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<RuleNode> getReferencingRuleChainNodes(TenantId tenantId, RuleChainId ruleChainId) {
@@ -533,11 +608,16 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         return ruleNodes;
     }
 
+    
     /**
-
-     * Get rule node relations.
-
+     * Returns rule node relations.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleNodeId rule node id ({@link RuleNodeId})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<EntityRelation> getRuleNodeRelations(TenantId tenantId, RuleNodeId ruleNodeId) {
@@ -566,11 +646,17 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         return validRelations;
     }
 
+    
     /**
-
-     * Loads tenant rule chains by type.
-
+     * Finds tenant rule chains by type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link RuleChainType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<RuleChain> findTenantRuleChainsByType(TenantId tenantId, RuleChainType type, PageLink pageLink) {
@@ -579,22 +665,33 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         return ruleChainDao.findRuleChainsByTenantIdAndType(tenantId.getId(), type, pageLink);
     }
 
+    
     /**
-
-     * Loads tenant rule chains by type and name.
-
+     * Finds tenant rule chains by type and name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link RuleChainType})
+     * @param name entity or attribute name
+     * @return {@link Collection}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Collection<RuleChain> findTenantRuleChainsByTypeAndName(TenantId tenantId, RuleChainType type, String name) {
         return ruleChainDao.findByTenantIdAndTypeAndName(tenantId, type, name);
     }
 
+    
     /**
-
-     * Removes rule chain by id.
-
+     * Deletes rule chain by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChainId rule chain id ({@link RuleChainId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -621,11 +718,17 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         checkRuleNodesAndDelete(tenantId, ruleChain, referencingRuleChainIds);
     }
 
+    
     /**
-
-     * Removes entity.
-
+     * Deletes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -641,11 +744,15 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         }
     }
 
+    
     /**
-
-     * Removes rule chains by tenant id.
-
+     * Deletes rule chains by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional
     @Override
@@ -654,11 +761,15 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         tenantRuleChainsRemover.removeEntities(tenantId, tenantId);
     }
 
+    
     /**
-
-     * Removes by tenant id.
-
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional
     @Override
@@ -666,11 +777,16 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         deleteRuleChainsByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Export tenant rule chains.
-
+     * Exports tenant rule chains.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link RuleChainData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public RuleChainData exportTenantRuleChains(TenantId tenantId, PageLink pageLink) {
@@ -687,11 +803,18 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         return rcData;
     }
 
+    
     /**
-
-     * Import tenant rule chains.
-
+     * Imports tenant rule chains.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChainData rule chain data ({@link RuleChainData})
+     * @param overwrite overwrite
+     * @param ruleNodeUpdater rule node updater ({@link Function})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<RuleChainImportResult> importTenantRuleChains(TenantId tenantId, RuleChainData ruleChainData, boolean overwrite, Function<RuleNode, RuleNode> ruleNodeUpdater) {
@@ -815,11 +938,17 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         }
     }
 
+    
     /**
-
-     * Assign rule chain to edge.
-
+     * Assigns rule chain to edge.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChainId rule chain id ({@link RuleChainId})
+     * @param edgeId edge id ({@link EdgeId})
+     * @return {@link RuleChain}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public RuleChain assignRuleChainToEdge(TenantId tenantId, RuleChainId ruleChainId, EdgeId edgeId) {
@@ -845,11 +974,18 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         return ruleChain;
     }
 
+    
     /**
-
-     * Unassign rule chain from edge.
-
+     * Unassigns rule chain from edge.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChainId rule chain id ({@link RuleChainId})
+     * @param edgeId edge id ({@link EdgeId})
+     * @param remove remove
+     * @return {@link RuleChain}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public RuleChain unassignRuleChainFromEdge(TenantId tenantId, RuleChainId ruleChainId, EdgeId edgeId, boolean remove) {
@@ -872,11 +1008,17 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         return ruleChain;
     }
 
+    
     /**
-
-     * Loads rule chains by tenant id and edge id.
-
+     * Finds rule chains by tenant id and edge id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link EdgeId})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<RuleChain> findRuleChainsByTenantIdAndEdgeId(TenantId tenantId, EdgeId edgeId, PageLink pageLink) {
@@ -887,11 +1029,15 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         return ruleChainDao.findRuleChainsByTenantIdAndEdgeId(tenantId.getId(), edgeId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Get edge template root rule chain.
-
+     * Returns edge template root rule chain.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link RuleChain}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public RuleChain getEdgeTemplateRootRuleChain(TenantId tenantId) {
@@ -899,11 +1045,16 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         return ruleChainDao.findRootRuleChainByTenantIdAndType(tenantId.getId(), RuleChainType.EDGE);
     }
 
+    
     /**
-
      * Set edge template root rule chain.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChainId rule chain id ({@link RuleChainId})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public boolean setEdgeTemplateRootRuleChain(TenantId tenantId, RuleChainId ruleChainId) {
@@ -926,11 +1077,16 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         return false;
     }
 
+    
     /**
-
      * Set auto assign to edge rule chain.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChainId rule chain id ({@link RuleChainId})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public boolean setAutoAssignToEdgeRuleChain(TenantId tenantId, RuleChainId ruleChainId) {
@@ -944,11 +1100,16 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         }
     }
 
+    
     /**
-
      * Unset auto assign to edge rule chain.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChainId rule chain id ({@link RuleChainId})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public boolean unsetAutoAssignToEdgeRuleChain(TenantId tenantId, RuleChainId ruleChainId) {
@@ -962,11 +1123,16 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         }
     }
 
+    
     /**
-
-     * Loads auto assign to edge rule chains by tenant id.
-
+     * Finds auto assign to edge rule chains by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<RuleChain> findAutoAssignToEdgeRuleChainsByTenantId(TenantId tenantId, PageLink pageLink) {
@@ -975,11 +1141,17 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         return ruleChainDao.findAutoAssignToEdgeRuleChainsByTenantId(tenantId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads rule nodes by tenant id and type.
-
+     * Finds rule nodes by tenant id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link String})
+     * @param search search ({@link String})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<RuleNode> findRuleNodesByTenantIdAndType(TenantId tenantId, String type, String search) {
@@ -990,11 +1162,16 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         return ruleNodeDao.findRuleNodesByTenantIdAndType(tenantId, type, search);
     }
 
+    
     /**
-
-     * Loads rule nodes by tenant id and type.
-
+     * Finds rule nodes by tenant id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link String})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<RuleNode> findRuleNodesByTenantIdAndType(TenantId tenantId, String type) {
@@ -1004,11 +1181,16 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         return ruleNodeDao.findRuleNodesByTenantIdAndType(tenantId, type, "");
     }
 
+    
     /**
-
-     * Loads all rule nodes by type.
-
+     * Finds all rule nodes by type.
+     *
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<RuleNode> findAllRuleNodesByType(String type, PageLink pageLink) {
@@ -1018,11 +1200,17 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         return ruleNodeDao.findAllRuleNodesByType(type, pageLink);
     }
 
+    
     /**
-
-     * Loads all rule nodes by type and version less than.
-
+     * Finds all rule nodes by type and version less than.
+     *
+     * @param type type ({@link String})
+     * @param version version
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<RuleNode> findAllRuleNodesByTypeAndVersionLessThan(String type, int version, PageLink pageLink) {
@@ -1033,11 +1221,17 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         return ruleNodeDao.findAllRuleNodesByTypeAndVersionLessThan(type, version, pageLink);
     }
 
+    
     /**
-
-     * Loads all rule node ids by type and version less than.
-
+     * Finds all rule node ids by type and version less than.
+     *
+     * @param type type ({@link String})
+     * @param version version
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<RuleNodeId> findAllRuleNodeIdsByTypeAndVersionLessThan(String type, int version, PageLink pageLink) {
@@ -1048,11 +1242,15 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         return ruleNodeDao.findAllRuleNodeIdsByTypeAndVersionLessThan(type, version, pageLink);
     }
 
+    
     /**
-
-     * Loads all rule nodes by ids.
-
+     * Finds all rule nodes by ids.
+     *
+     * @param ruleNodeIds rule node ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<RuleNode> findAllRuleNodesByIds(List<RuleNodeId> ruleNodeIds) {
@@ -1062,11 +1260,16 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         return ruleNodeDao.findAllRuleNodeByIds(ruleNodeIds);
     }
 
+    
     /**
-
-     * Persists rule node.
-
+     * Saves or persists rule node.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleNode rule node ({@link RuleNode})
+     * @return {@link RuleNode}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public RuleNode saveRuleNode(TenantId tenantId, RuleNode ruleNode) {
@@ -1103,11 +1306,16 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         }
     }
 
+    
     /**
-
-     * Removes rule nodes.
-
+     * Deletes rule nodes.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChainId rule chain id ({@link RuleChainId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -1118,11 +1326,16 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         }
     }
 
+    
     /**
-
-     * Loads rule chains by ids.
-
+     * Finds rule chains by ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChainIds rule chain ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<RuleChain> findRuleChainsByIds(TenantId tenantId, List<RuleChainId> ruleChainIds) {
@@ -1131,13 +1344,16 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
     }
 
 
+    
     /**
-
-
-     * Loads entity.
-
-
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
 
     @Override
@@ -1148,11 +1364,16 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         return Optional.ofNullable(hasId);
     }
 
+    
     /**
-
-     * Loads entity async.
-
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
@@ -1165,22 +1386,29 @@ public class BaseRuleChainService extends AbstractEntityService implements RuleC
         return FluentFuture.from(future).transform(Optional::ofNullable, directExecutor());
     }
 
+    
     /**
-
      * Counts by tenant id.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public long countByTenantId(TenantId tenantId) {
         return ruleChainDao.countByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

@@ -20,8 +20,9 @@ import org.thingsboard.server.common.msg.queue.TbMsgCallback;
 import org.thingsboard.server.queue.TbQueueCallback;
 import org.thingsboard.server.queue.TbQueueMsgMetadata;
 
+
 /**
- * Tb queue tb msg callback wrapper.
+ * Adapts a {@link TbQueueCallback} to the {@link TbMsg} callback interface.
  */
 public class TbQueueTbMsgCallbackWrapper implements TbQueueCallback {
 

@@ -44,7 +44,13 @@ public enum SoftwareUpdateState {
         this.code = code;
         this.type = type;
     }
-
+    /**
+     * From update state sw by type.
+     *
+     * @param type type ({@link String})
+     * @return {@link SoftwareUpdateState}
+     * @throws Exception on processing failure
+     */
     public static SoftwareUpdateState fromUpdateStateSwByType(String type) {
         for (SoftwareUpdateState to : SoftwareUpdateState.values()) {
             if (to.type.equals(type)) {
@@ -53,7 +59,13 @@ public enum SoftwareUpdateState {
         }
         throw new IllegalArgumentException(String.format("Unsupported SW State type  : %s", type));
     }
-
+    /**
+     * From update state sw by code.
+     *
+     * @param code code
+     * @return {@link SoftwareUpdateState}
+     * @throws Exception on processing failure
+     */
     public static SoftwareUpdateState fromUpdateStateSwByCode(int code) {
         for (SoftwareUpdateState to : SoftwareUpdateState.values()) {
             if (to.code == code) {

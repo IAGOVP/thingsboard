@@ -23,10 +23,10 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 
-@Data
 /**
  * Tbel cf related entities argument value.
  */
+@Data
 public class TbelCfRelatedEntitiesArgumentValue implements TbelCfArg {
 
     private final Map<UUID, TbelCfSingleValueArg> entityInputs;

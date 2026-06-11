@@ -52,8 +52,11 @@ import java.util.Objects;
 import static org.thingsboard.server.dao.service.Validator.validateId;
 import static org.thingsboard.server.dao.service.Validator.validateString;
 /**
- * Spring service implementing device credentials API.
+ * Spring {@code @Service} implementing the device credentials DAO API.
+ *
+ * <p>Delegates to {@code *Dao} implementations and manages cache eviction (devices, credentials, profiles, and connectivity).
  */
+
 
 @Service
 @Slf4j
@@ -63,11 +66,15 @@ public class DeviceCredentialsServiceImpl extends AbstractCachedEntityService<St
     private final DeviceCredentialsDao deviceCredentialsDao;
     private final DeviceCredentialsDataValidator credentialsValidator;
 
+    
     /**
-
-     * Handle evict event.
-
+     * Handles evict event.
+     *
+     * @param event event ({@link DeviceCredentialsEvictEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @TransactionalEventListener(classes = DeviceCredentialsEvictEvent.class)
     @Override
@@ -78,11 +85,16 @@ public class DeviceCredentialsServiceImpl extends AbstractCachedEntityService<St
         }
     }
 
+    
     /**
-
-     * Loads device credentials by device id.
-
+     * Finds device credentials by device id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @return {@link DeviceCredentials}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceCredentials findDeviceCredentialsByDeviceId(TenantId tenantId, DeviceId deviceId) {
@@ -91,11 +103,15 @@ public class DeviceCredentialsServiceImpl extends AbstractCachedEntityService<St
         return deviceCredentialsDao.findByDeviceId(tenantId, deviceId.getId());
     }
 
+    
     /**
-
-     * Loads device credentials by credentials id.
-
+     * Finds device credentials by credentials id.
+     *
+     * @param credentialsId credentials id ({@link String})
+     * @return {@link DeviceCredentials}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceCredentials findDeviceCredentialsByCredentialsId(String credentialsId) {
@@ -106,22 +122,32 @@ public class DeviceCredentialsServiceImpl extends AbstractCachedEntityService<St
                 true); // caching null values is essential for permanently invalid requests
     }
 
+    
     /**
-
      * Updates device credentials.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceCredentials device credentials ({@link DeviceCredentials})
+     * @return {@link DeviceCredentials}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceCredentials updateDeviceCredentials(TenantId tenantId, DeviceCredentials deviceCredentials) {
         return saveOrUpdate(tenantId, deviceCredentials);
     }
 
+    
     /**
-
      * Creates device credentials.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceCredentials device credentials ({@link DeviceCredentials})
+     * @return {@link DeviceCredentials}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceCredentials createDeviceCredentials(TenantId tenantId, DeviceCredentials deviceCredentials) {
@@ -158,11 +184,15 @@ public class DeviceCredentialsServiceImpl extends AbstractCachedEntityService<St
         }
     }
 
+    
     /**
-
      * Format credentials.
-
+     *
+     * @param deviceCredentials device credentials ({@link DeviceCredentials})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void formatCredentials(DeviceCredentials deviceCredentials) {
@@ -179,11 +209,15 @@ public class DeviceCredentialsServiceImpl extends AbstractCachedEntityService<St
         }
     }
 
+    
     /**
-
      * To credentials info.
-
+     *
+     * @param deviceCredentials device credentials ({@link DeviceCredentials})
+     * @return {@link JsonNode}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public JsonNode toCredentialsInfo(DeviceCredentials deviceCredentials) {
@@ -436,11 +470,16 @@ public class DeviceCredentialsServiceImpl extends AbstractCachedEntityService<St
         }
     }
 
+    
     /**
-
-     * Removes device credentials.
-
+     * Deletes device credentials.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceCredentials device credentials ({@link DeviceCredentials})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteDeviceCredentials(TenantId tenantId, DeviceCredentials deviceCredentials) {
@@ -449,11 +488,16 @@ public class DeviceCredentialsServiceImpl extends AbstractCachedEntityService<St
         publishEvictEvent(new DeviceCredentialsEvictEvent(deviceCredentials.getCredentialsId(), null));
     }
 
+    
     /**
-
-     * Removes device credentials by device id.
-
+     * Deletes device credentials by device id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteDeviceCredentialsByDeviceId(TenantId tenantId, DeviceId deviceId) {

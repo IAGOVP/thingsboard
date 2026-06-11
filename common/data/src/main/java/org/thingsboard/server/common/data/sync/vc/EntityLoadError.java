@@ -38,18 +38,44 @@ public class EntityLoadError implements Serializable {
     private EntityId source;
     private EntityId target;
     private String message;
+    /**
+     * Credentials error.
+     *
+     * @param sourceId source id ({@link EntityId})
+     * @return {@link EntityLoadError}
+     */
 
     public static EntityLoadError credentialsError(EntityId sourceId) {
         return EntityLoadError.builder().type("DEVICE_CREDENTIALS_CONFLICT").source(sourceId).build();
     }
+    /**
+     * Reference entity error.
+     *
+     * @param sourceId source id ({@link EntityId})
+     * @param targetId target id ({@link EntityId})
+     * @return {@link EntityLoadError}
+     */
 
     public static EntityLoadError referenceEntityError(EntityId sourceId, EntityId targetId) {
         return EntityLoadError.builder().type("MISSING_REFERENCED_ENTITY").source(sourceId).target(targetId).build();
     }
+    /**
+     * Runtime error.
+     *
+     * @param e e ({@link Throwable})
+     * @return {@link EntityLoadError}
+     */
 
     public static EntityLoadError runtimeError(Throwable e) {
         return runtimeError(e, null);
     }
+    /**
+     * Runtime error.
+     *
+     * @param e e ({@link Throwable})
+     * @param externalId external id ({@link EntityId})
+     * @return {@link EntityLoadError}
+     */
 
     public static EntityLoadError runtimeError(Throwable e, EntityId externalId) {
         String message = e.getMessage();

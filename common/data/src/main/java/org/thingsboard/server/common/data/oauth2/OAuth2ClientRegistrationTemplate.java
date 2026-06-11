@@ -92,6 +92,11 @@ public class OAuth2ClientRegistrationTemplate extends BaseDataWithAdditionalInfo
         this.loginButtonLabel = clientRegistrationTemplate.loginButtonLabel;
         this.helpLink = clientRegistrationTemplate.helpLink;
     }
+    /**
+     * Returns name.
+     *
+     * @return {@link String}
+     */
 
     @Override
     public String getName() {

@@ -18,12 +18,18 @@ package org.thingsboard.server.transport.lwm2m.server.downlink;
 import org.thingsboard.server.transport.lwm2m.server.LwM2MOperationType;
 
 /**
- * tb lw m2mdownlink request contract.
+ * tb lw m2mdownlink request contract (LwM2M transport and object model (ThingsBoard common module)).
  */
 public interface TbLwM2MDownlinkRequest<T> {
 
     LwM2MOperationType getType();
 
+    /**
+     * Returns timeout.
+     *
+     * @return the long result
+     * @throws Exception on processing failure
+     */
     long getTimeout();
 
 }

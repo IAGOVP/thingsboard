@@ -45,6 +45,11 @@ import java.io.Serializable;
  * transport payload type configuration contract.
  */
 public interface TransportPayloadTypeConfiguration extends Serializable {
+    /**
+     * Returns transport payload type.
+     *
+     * @return {@link TransportPayloadType}
+     */
 
     @JsonIgnore
     TransportPayloadType getTransportPayloadType();

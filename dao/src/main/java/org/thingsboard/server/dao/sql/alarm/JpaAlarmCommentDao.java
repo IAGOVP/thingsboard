@@ -41,8 +41,11 @@ import java.util.concurrent.TimeUnit;
 
 import static org.thingsboard.server.dao.model.ModelConstants.ALARM_COMMENT_TABLE_NAME;
 /**
- * JPA implementation of alarm comment dao.
+ * JPA/PostgreSQL implementation of alarm comment dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Slf4j
 @Component
@@ -56,11 +59,17 @@ public class JpaAlarmCommentDao extends JpaPartitionedAbstractDao<AlarmCommentEn
     @Autowired
     private AlarmCommentRepository alarmCommentRepository;
 
+    
     /**
-
-     * Loads alarm comments.
-
+     * Finds alarm comments.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AlarmCommentInfo> findAlarmComments(TenantId tenantId, AlarmId id, PageLink pageLink) {
@@ -69,11 +78,16 @@ public class JpaAlarmCommentDao extends JpaPartitionedAbstractDao<AlarmCommentEn
                 alarmCommentRepository.findAllByAlarmId(id.getId(), DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads alarm comment by id.
-
+     * Finds alarm comment by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key attribute or cache key
+     * @return {@link AlarmComment}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AlarmComment findAlarmCommentById(TenantId tenantId, UUID key) {
@@ -81,11 +95,16 @@ public class JpaAlarmCommentDao extends JpaPartitionedAbstractDao<AlarmCommentEn
         return DaoUtil.getData(alarmCommentRepository.findById(key));
     }
 
+    
     /**
-
-     * Loads alarm comment by id async.
-
+     * Finds alarm comment by id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key attribute or cache key
+     * @return future completing with {@link AlarmComment}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<AlarmComment> findAlarmCommentByIdAsync(TenantId tenantId, UUID key) {
@@ -93,44 +112,59 @@ public class JpaAlarmCommentDao extends JpaPartitionedAbstractDao<AlarmCommentEn
         return findByIdAsync(tenantId, key);
     }
 
+    
     /**
-
      * Creates partition.
-
+     *
+     * @param entity domain entity to persist or validate
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void createPartition(AlarmCommentEntity entity) {
         partitioningRepository.createPartitionIfNotExists(ALARM_COMMENT_TABLE_NAME, entity.getCreatedTime(), TimeUnit.HOURS.toMillis(partitionSizeInHours));
     }
 
+    
     /**
-
-     * Loads all by tenant id.
-
+     * Finds all by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AlarmComment> findAllByTenantId(TenantId tenantId, PageLink pageLink) {
         return DaoUtil.toPageData(alarmCommentRepository.findByTenantId(tenantId.getId(), DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Get entity class.
-
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected Class<AlarmCommentEntity> getEntityClass() {
         return AlarmCommentEntity.class;
     }
 
+    
     /**
-
-     * Get repository.
-
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected JpaRepository<AlarmCommentEntity, UUID> getRepository() {

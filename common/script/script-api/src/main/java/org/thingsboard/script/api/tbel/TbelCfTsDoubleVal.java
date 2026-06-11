@@ -17,10 +17,10 @@ package org.thingsboard.script.api.tbel;
 
 import lombok.Data;
 
-@Data
 /**
  * Tbel cf ts double val.
  */
+@Data
 public class TbelCfTsDoubleVal implements TbelCfObject {
 
     public static final long OBJ_SIZE = 32L; // Approximate calculation;

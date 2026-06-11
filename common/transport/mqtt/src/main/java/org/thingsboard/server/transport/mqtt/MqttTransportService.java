@@ -36,7 +36,7 @@ import org.thingsboard.server.common.data.TbTransportService;
 import java.net.InetSocketAddress;
 
 /**
- * Mqtt transport service.
+ * Starts the Netty MQTT server and wires {@link MqttTransportHandler} into the pipeline.
  */
 @Service("MqttTransportService")
 @TbMqttTransportComponent
@@ -74,6 +74,12 @@ public class MqttTransportService implements TbTransportService {
     private Channel sslServerChannel;
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @PostConstruct
     public void init() throws Exception {
@@ -125,6 +131,12 @@ public class MqttTransportService implements TbTransportService {
         }
         log.info("Mqtt transport started!");
     }
+    /**
+     * Shutdown.
+     *
+     * @return nothing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     @PreDestroy
     public void shutdown() throws InterruptedException {
@@ -140,6 +152,12 @@ public class MqttTransportService implements TbTransportService {
         }
         log.info("MQTT transport stopped!");
     }
+    /**
+     * Returns name.
+     *
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public String getName() {

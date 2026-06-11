@@ -21,11 +21,48 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.Optional;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * Sql ts partition date.
+
+
+
+
+
+ * Enumerates sql ts partition date values used in Cassandra telemetry and latest-value DAO (Cassandra time-series DAO and latest-value caches).
+
+
+
+
+
 
  */
+
+
+
+
+
+
 
 public enum SqlTsPartitionDate {
 
@@ -39,14 +76,33 @@ public enum SqlTsPartitionDate {
         this.pattern = pattern;
         this.truncateUnit = truncateUnit;
     }
+    /**
+     * Returns pattern.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getPattern() {
         return pattern;
     }
+    /**
+     * Returns truncate unit.
+     *
+     * @return {@link TemporalUnit}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public TemporalUnit getTruncateUnit() {
         return truncateUnit;
     }
+    /**
+     * Trancate to.
+     *
+     * @param time time ({@link LocalDateTime})
+     * @return {@link LocalDateTime}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public LocalDateTime trancateTo(LocalDateTime time) {
         switch (this) {
@@ -62,6 +118,13 @@ public enum SqlTsPartitionDate {
                 throw new RuntimeException("Failed to parse partitioning property!");
         }
     }
+    /**
+     * Plus to.
+     *
+     * @param time time ({@link LocalDateTime})
+     * @return {@link LocalDateTime}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public LocalDateTime plusTo(LocalDateTime time) {
         switch (this) {
@@ -75,6 +138,13 @@ public enum SqlTsPartitionDate {
                 throw new RuntimeException("Failed to parse partitioning property!");
         }
     }
+    /**
+     * Parse.
+     *
+     * @param name entity or attribute name
+     * @return optional {@link SqlTsPartitionDate}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Optional<SqlTsPartitionDate> parse(String name) {
         SqlTsPartitionDate partition = null;

@@ -78,6 +78,11 @@ public class DeviceProfileInfo extends EntityInfo {
         this(profile.getId(), profile.getTenantId(), profile.getName(), profile.getImage(), profile.getDefaultDashboardId(),
                 profile.getType(), profile.getTransportType());
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link EntityId}
+     */
 
     @Override
     @Schema(implementation = DeviceProfileId.class, description = "JSON object with the Device Profile Id.")

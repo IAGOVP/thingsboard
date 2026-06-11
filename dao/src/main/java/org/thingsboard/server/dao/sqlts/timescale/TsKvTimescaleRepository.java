@@ -28,14 +28,28 @@ import org.thingsboard.server.dao.util.TimescaleDBTsOrTsLatestDao;
 import java.util.List;
 import java.util.UUID;
 /**
- * ts kv timescale repository contract.
+ * Spring Data JPA repository for ts kv timescale entities.
+ *
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
  */
+
 
 @TimescaleDBTsOrTsLatestDao
 public interface TsKvTimescaleRepository extends JpaRepository<TimescaleTsKvEntity, TimescaleTsKvCompositeKey> {
 
     @Query(value = "SELECT * FROM ts_kv WHERE entity_id = :entityId " +
             "AND key = :entityKey AND ts >= :startTs AND ts < :endTs", nativeQuery = true)
+    /**
+     * Finds all with limit.
+     *
+     * @param entityId target entity identifier
+     * @param key attribute or cache key
+     * @param startTs interval start timestamp (epoch ms)
+     * @param endTs interval end timestamp (epoch ms)
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     List<TimescaleTsKvEntity> findAllWithLimit(@Param("entityId") UUID entityId,
                                                @Param("entityKey") int key,
                                                @Param("startTs") long startTs,
@@ -47,6 +61,16 @@ public interface TsKvTimescaleRepository extends JpaRepository<TimescaleTsKvEnti
     @Query("DELETE FROM TimescaleTsKvEntity tskv WHERE tskv.entityId = :entityId " +
             "AND tskv.key = :entityKey " +
             "AND tskv.ts >= :startTs AND tskv.ts < :endTs")
+    /**
+     * Deletes the requested data.
+     *
+     * @param entityId target entity identifier
+     * @param key attribute or cache key
+     * @param startTs interval start timestamp (epoch ms)
+     * @param endTs interval end timestamp (epoch ms)
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
     void delete(@Param("entityId") UUID entityId,
                 @Param("entityKey") int key,
                 @Param("startTs") long startTs,

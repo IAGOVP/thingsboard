@@ -17,13 +17,26 @@ package org.thingsboard.server.dao.sql.component;
 
 import org.thingsboard.server.dao.model.sql.ComponentDescriptorEntity;
 
+
 /**
 
- * component descriptor insert repository contract.
+ * Spring Data JPA repository for component descriptor insert entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
 
+
 public interface ComponentDescriptorInsertRepository {
+    /**
+     * Saves or updates the requested data.
+     *
+     * @param entity domain entity to persist or validate
+     * @return {@link ComponentDescriptorEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     ComponentDescriptorEntity saveOrUpdate(ComponentDescriptorEntity entity);
 

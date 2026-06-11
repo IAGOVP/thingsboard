@@ -27,11 +27,13 @@ import java.io.Serial;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+/**
+ * Internal actor or queue message: device attributes event notification msg.
+ *
+ * <p>Serialized between tb-core, rule-engine, transport, and edge services.
+ */
 
 @Data
-/**
- * Message: device attributes event notification msg.
- */
 public class DeviceAttributesEventNotificationMsg implements ToDeviceActorNotificationMsg {
 
     @Serial

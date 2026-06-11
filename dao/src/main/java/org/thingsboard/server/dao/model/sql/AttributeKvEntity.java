@@ -41,8 +41,11 @@ import static org.thingsboard.server.dao.model.ModelConstants.LONG_VALUE_COLUMN;
 import static org.thingsboard.server.dao.model.ModelConstants.STRING_VALUE_COLUMN;
 import static org.thingsboard.server.dao.model.ModelConstants.VERSION_COLUMN;
 /**
- * Attribute kv entity.
+ * JPA/Cassandra row model for attribute kv.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @Entity
@@ -75,6 +78,12 @@ public class AttributeKvEntity implements ToData<AttributeKvEntry>, Serializable
 
     @Transient
     protected String strKey;
+    /**
+     * To data.
+     *
+     * @return {@link AttributeKvEntry}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AttributeKvEntry toData() {

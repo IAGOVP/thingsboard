@@ -28,8 +28,11 @@ import org.thingsboard.server.dao.service.DataValidator;
 import org.thingsboard.server.dao.user.UserCredentialsDao;
 import org.thingsboard.server.dao.user.UserService;
 /**
- * User credentials data validator.
+ * Validates user credentials entities before persistence.
+ *
+ * <p>Enforces constraints, uniqueness, and referential integrity at the DAO layer.
  */
+
 
 @Component
 public class UserCredentialsDataValidator extends DataValidator<UserCredentials> {
@@ -41,22 +44,32 @@ public class UserCredentialsDataValidator extends DataValidator<UserCredentials>
     @Lazy
     private UserService userService;
 
+    
     /**
-
-     * Validate create.
-
+     * Validates create.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userCredentials user credentials ({@link UserCredentials})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateCreate(TenantId tenantId, UserCredentials userCredentials) {
         throw new IncorrectParameterException("Creation of new user credentials is prohibited.");
     }
 
+    
     /**
-
-     * Validate data impl.
-
+     * Validates data impl.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userCredentials user credentials ({@link UserCredentials})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateDataImpl(TenantId tenantId, UserCredentials userCredentials) {

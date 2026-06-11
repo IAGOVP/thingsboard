@@ -58,16 +58,31 @@ public abstract class AlarmCondition {
     private AlarmConditionExpression expression;
     @Valid
     private AlarmConditionValue<AlarmSchedule> schedule;
+    /**
+     * Has schedule.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     public boolean hasSchedule() {
         return schedule != null && !(schedule.getStaticValue() instanceof AnyTimeSchedule);
     }
+    /**
+     * Requires scheduled reevaluation.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     public boolean requiresScheduledReevaluation() {
         return hasSchedule() || expression.requiresScheduledReevaluation();
     }
+    /**
+     * Is valid.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     @AssertTrue(message = "Expressions requiring scheduled reevaluation can only be used with simple alarm conditions")
@@ -77,6 +92,11 @@ public abstract class AlarmCondition {
         }
         return true;
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link AlarmConditionType}
+     */
 
     @JsonIgnore
     public abstract AlarmConditionType getType();

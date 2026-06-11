@@ -44,15 +44,19 @@ import static org.thingsboard.common.util.JacksonUtil.newArrayNode;
 /**
  * Provides utility methods for SparkplugB MQTT Payload Metric.
  */
-/**
- * Sparkplug metric util.
- */
 @Slf4j
 public class SparkplugMetricUtil {
 
     public static final String SPARKPLUG_SEQUENCE_NUMBER_KEY = "seq";
     public static final String SPARKPLUG_BD_SEQUENCE_NUMBER_KEY = "bdSeq";
-
+    /**
+     * From sparkplug bmetric to key value proto.
+     *
+     * @param key key ({@link String})
+     * @param protoMetric proto metric
+     * @return optional the TransportProtos.KeyValueProto value, empty if not found
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
     public static Optional<TransportProtos.KeyValueProto> fromSparkplugBMetricToKeyValueProto(String key, SparkplugBProto.Payload.Metric protoMetric) throws ThingsboardException {
         // Check if the null flag has been set indicating that the value is null
         if (protoMetric.getIsNull()) {
@@ -124,21 +128,21 @@ public class SparkplugMetricUtil {
                      .createDataSet();
                      return Optional.of(builderProto.setKey(key).setType(TransportProtos.KeyValueType.STRING_V)
                      .setStringV(protoDataSet.toString()).build());
-                     **/
+                     */
                     //TODO
                     // Build the and create the Template
                     /**
                      SparkplugBProto.Payload.Template protoTemplate = protoMetric.getTemplateValue();
                      return Optional.of(builderProto.setKey(key).setType(TransportProtos.KeyValueType.STRING_V)
                      .setStringV( protoTemplate.toString()).build());
-                     **/
+                     */
                     //TODO
                     // Build the and create the File
                     /**
                      String filename = protoMetric.getMetadata().getFileName();
                      return Optional.of(builderPrbyteValueoto.setKey(key + "_" + filename).setType(TransportProtos.KeyValueType.STRING_V)
                      .setStringV(Hex.encodeHexString((protoMetric.getBytesValue().toByteArray()))).build());
-                     **/
+                     */
                     return Optional.empty();
                 case Unknown:
                 default:
@@ -149,6 +153,17 @@ public class SparkplugMetricUtil {
             return Optional.empty();
         }
     }
+    /**
+     * Creates metric.
+     *
+     * @param value value ({@link Object})
+     * @param ts ts
+     * @param key key ({@link String})
+     * @param metricDataType metric data type ({@link MetricDataType})
+     * @param alias alias ({@link Long})
+     * @return the SparkplugBProto.Payload.Metric value
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
     public static SparkplugBProto.Payload.Metric createMetric(Object value, long ts, String key, MetricDataType metricDataType, Long alias) throws ThingsboardException {
         Builder metric = Metric.newBuilder();
         metric.setTimestamp(ts)
@@ -161,7 +176,15 @@ public class SparkplugMetricUtil {
         }
         return addToMetricValue(value, metric.build(), metricDataType);
     }
-
+    /**
+     * Add to metric value.
+     *
+     * @param value value ({@link Object})
+     * @param metric metric
+     * @param metricDataType metric data type ({@link MetricDataType})
+     * @return the SparkplugBProto.Payload.Metric value
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
     public static SparkplugBProto.Payload.Metric addToMetricValue(Object value, SparkplugBProto.Payload.Metric metric, MetricDataType metricDataType) throws ThingsboardException {
         switch (metricDataType) {
             case Int8:      //  (byte)
@@ -203,13 +226,28 @@ public class SparkplugMetricUtil {
         }
         return metric;
     }
-
+    /**
+     * Returns ts kv proto from json node.
+     *
+     * @param kvProto kv proto ({@link JsonNode})
+     * @param ts ts
+     * @return the TransportProtos.TsKvProto value
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
     public static TransportProtos.TsKvProto getTsKvProtoFromJsonNode(JsonNode kvProto, long ts) throws ThingsboardException {
         String kvProtoKey = kvProto.fieldNames().next();
         String kvProtoValue = kvProto.get(kvProtoKey).asText();
         return getTsKvProto(kvProtoKey, kvProtoValue, ts);
     }
-
+    /**
+     * Returns ts kv proto.
+     *
+     * @param key key ({@link String})
+     * @param value value ({@link Object})
+     * @param ts ts
+     * @return the TransportProtos.TsKvProto value
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
     public static TransportProtos.TsKvProto getTsKvProto(String key, Object value, long ts) throws ThingsboardException {
         try {
             TransportProtos.TsKvProto.Builder tsKvProtoBuilder = TransportProtos.TsKvProto.newBuilder();
@@ -244,7 +282,14 @@ public class SparkplugMetricUtil {
             throw new ThingsboardException("Failed to convert device/node RPC command to TsKvProto for Sparkplug MQT msg: value [" + value + "]", ThingsboardErrorCode.INVALID_ARGUMENTS);
         }
     }
-
+    /**
+     * Validates d value by type metric.
+     *
+     * @param kv kv
+     * @param metricDataType metric data type ({@link MetricDataType})
+     * @return optional {@link Object}, empty if not found
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
     public static Optional<Object> validatedValueByTypeMetric(TransportProtos.KeyValueProto kv, MetricDataType metricDataType) throws ThingsboardException {
         if (kv.getTypeValue() <= 3) {
             return validatedValuePrimitiveByTypeMetric(kv, metricDataType);
@@ -258,7 +303,14 @@ public class SparkplugMetricUtil {
         }
         return Optional.empty();
     }
-
+    /**
+     * Validates d value primitive by type metric.
+     *
+     * @param kv kv
+     * @param metricDataType metric data type ({@link MetricDataType})
+     * @return optional {@link Object}, empty if not found
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
     public static Optional<Object> validatedValuePrimitiveByTypeMetric(TransportProtos.KeyValueProto kv, MetricDataType metricDataType) throws ThingsboardException {
         Optional<String> valueOpt = getValueKvProtoPrimitive(kv);
         if (valueOpt.isPresent()) {
@@ -337,7 +389,14 @@ public class SparkplugMetricUtil {
         }
         return Optional.empty();
     }
-
+    /**
+     * Validates d value json by type metric.
+     *
+     * @param arrayNodeStr array node str ({@link String})
+     * @param metricDataType metric data type ({@link MetricDataType})
+     * @return optional {@link Object}, empty if not found
+     * @throws Exception on processing failure
+     */
     public static Optional<Object> validatedValueJsonByTypeMetric(String arrayNodeStr, MetricDataType metricDataType) {
         try {
             Optional<Object> valueOpt;
@@ -422,37 +481,47 @@ public class SparkplugMetricUtil {
             this.bytes = Arrays.copyOf(bytes, bytes.length);
         }
 
+        
         /**
-         * Gets the full filename path
+         * Returns file name.
          *
-         * @return the full filename path
+         * @return {@link String}
+         * @throws Exception on processing failure
          */
         public String getFileName() {
             return fileName;
         }
 
+        
         /**
-         * Sets the full filename path
+         * Set file name.
          *
-         * @param fileName the full filename path
+         * @param fileName file name ({@link String})
+         * @return nothing
+         * @throws Exception on processing failure
          */
         public void setFileName(String fileName) {
             this.fileName = fileName;
         }
 
+        
         /**
-         * Gets the bytes that represent the contents of the file
+         * Returns bytes.
          *
-         * @return the bytes that represent the contents of the file
+         * @return the byte[] value
+         * @throws Exception on processing failure
          */
         public byte[] getBytes() {
             return bytes;
         }
 
+        
         /**
-         * Sets the bytes that represent the contents of the file
+         * Set bytes.
          *
-         * @param bytes the bytes that represent the contents of the file
+         * @param bytes bytes
+         * @return nothing
+         * @throws Exception on processing failure
          */
         public void setBytes(byte[] bytes) {
             this.bytes = bytes;

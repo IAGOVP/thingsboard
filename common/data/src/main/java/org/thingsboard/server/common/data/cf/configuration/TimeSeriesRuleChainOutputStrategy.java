@@ -26,16 +26,33 @@ import lombok.NoArgsConstructor;
  * Time series rule chain output strategy.
  */
 public class TimeSeriesRuleChainOutputStrategy implements TimeSeriesOutputStrategy {
+    /**
+     * Returns type.
+     *
+     * @return {@link OutputStrategyType}
+     */
 
     @Override
     public OutputStrategyType getType() {
         return OutputStrategyType.RULE_CHAIN;
     }
+    /**
+     * Has context only changes.
+     *
+     * @param other other ({@link OutputStrategy})
+     * @return the boolean result
+     */
 
     @Override
     public boolean hasContextOnlyChanges(OutputStrategy other) {
         return !(other instanceof TimeSeriesRuleChainOutputStrategy);
     }
+    /**
+     * Has refresh context only changes.
+     *
+     * @param other other ({@link OutputStrategy})
+     * @return the boolean result
+     */
 
     @Override
     public boolean hasRefreshContextOnlyChanges(OutputStrategy other) {

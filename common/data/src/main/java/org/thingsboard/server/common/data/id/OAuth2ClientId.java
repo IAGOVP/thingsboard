@@ -24,7 +24,7 @@ import java.util.UUID;
 
 @Schema(allOf = EntityId.class)
 /**
- * Typed identifier for oauth2client.
+ * Typed identifier for an OAuth2 client registration.
  */
 public class OAuth2ClientId extends UUIDBased implements EntityId {
 
@@ -32,10 +32,21 @@ public class OAuth2ClientId extends UUIDBased implements EntityId {
     public OAuth2ClientId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * From string.
+     *
+     * @param oauth2ClientId oauth2client id ({@link String})
+     * @return {@link OAuth2ClientId}
+     */
 
     public static OAuth2ClientId fromString(String oauth2ClientId) {
         return new OAuth2ClientId(UUID.fromString(oauth2ClientId));
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY, description = "string", example = "OAUTH2_CLIENT", allowableValues = "OAUTH2_CLIENT")
     @Override

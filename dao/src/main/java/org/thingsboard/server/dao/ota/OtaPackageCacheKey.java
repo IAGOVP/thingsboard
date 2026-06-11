@@ -24,8 +24,14 @@ import org.thingsboard.server.common.data.id.OtaPackageId;
 import java.io.Serial;
 import java.io.Serializable;
 /**
- * Ota package cache key.
+ * Serializable cache key for ota package entries (OTA firmware/software package metadata and data cache).
  */
+
+
+
+
+
+
 
 @Getter
 @EqualsAndHashCode

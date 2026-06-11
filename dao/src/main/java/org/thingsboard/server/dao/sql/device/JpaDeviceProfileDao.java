@@ -42,8 +42,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 /**
- * JPA implementation of device profile dao.
+ * JPA/PostgreSQL implementation of device profile dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Component
 @SqlDao
@@ -52,44 +55,60 @@ public class JpaDeviceProfileDao extends JpaAbstractDao<DeviceProfileEntity, Dev
     @Autowired
     private DeviceProfileRepository deviceProfileRepository;
 
+    
     /**
-
-     * Get entity class.
-
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected Class<DeviceProfileEntity> getEntityClass() {
         return DeviceProfileEntity.class;
     }
 
+    
     /**
-
-     * Get repository.
-
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected JpaRepository<DeviceProfileEntity, UUID> getRepository() {
         return deviceProfileRepository;
     }
 
+    
     /**
-
-     * Loads device profile info by id.
-
+     * Finds device profile info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfileId device profile id ({@link UUID})
+     * @return {@link DeviceProfileInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceProfileInfo findDeviceProfileInfoById(TenantId tenantId, UUID deviceProfileId) {
         return deviceProfileRepository.findDeviceProfileInfoById(deviceProfileId);
     }
 
+    
     /**
-
-     * Loads device profiles.
-
+     * Finds device profiles.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<DeviceProfile> findDeviceProfiles(TenantId tenantId, PageLink pageLink) {
@@ -100,11 +119,17 @@ public class JpaDeviceProfileDao extends JpaAbstractDao<DeviceProfileEntity, Dev
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads device profile infos.
-
+     * Finds device profile infos.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @param transportType transport type ({@link String})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<DeviceProfileInfo> findDeviceProfileInfos(TenantId tenantId, PageLink pageLink, String transportType) {
@@ -124,66 +149,92 @@ public class JpaDeviceProfileDao extends JpaAbstractDao<DeviceProfileEntity, Dev
         }
     }
 
+    
     /**
-
-     * Loads default device profile.
-
+     * Finds default device profile.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceProfile findDefaultDeviceProfile(TenantId tenantId) {
         return DaoUtil.getData(deviceProfileRepository.findByDefaultTrueAndTenantId(tenantId.getId()));
     }
 
+    
     /**
-
-     * Loads default device profile info.
-
+     * Finds default device profile info.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link DeviceProfileInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceProfileInfo findDefaultDeviceProfileInfo(TenantId tenantId) {
         return deviceProfileRepository.findDefaultDeviceProfileInfo(tenantId.getId());
     }
 
+    
     /**
-
-     * Loads by provision device key.
-
+     * Finds by provision device key.
+     *
+     * @param provisionDeviceKey provision device key ({@link String})
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceProfile findByProvisionDeviceKey(String provisionDeviceKey) {
         return DaoUtil.getData(deviceProfileRepository.findByProvisionDeviceKey(provisionDeviceKey));
     }
 
+    
     /**
-
-     * Loads by name.
-
+     * Finds by name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param profileName profile name ({@link String})
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceProfile findByName(TenantId tenantId, String profileName) {
         return DaoUtil.getData(deviceProfileRepository.findByTenantIdAndName(tenantId.getId(), profileName));
     }
 
+    
     /**
-
-     * Loads all with images.
-
+     * Finds all with images.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<DeviceProfile> findAllWithImages(PageLink pageLink) {
         return DaoUtil.toPageData(deviceProfileRepository.findAllByImageNotNull(DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads tenant device profile names.
-
+     * Finds tenant device profile names.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param activeOnly active only
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<EntityInfo> findTenantDeviceProfileNames(UUID tenantId, boolean activeOnly) {
@@ -192,55 +243,79 @@ public class JpaDeviceProfileDao extends JpaAbstractDao<DeviceProfileEntity, Dev
                 deviceProfileRepository.findAllTenantDeviceProfileNames(tenantId);
     }
 
+    
     /**
-
-     * Loads device profiles by tenant id and ids.
-
+     * Finds device profiles by tenant id and ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfileIds device profile ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<DeviceProfileInfo> findDeviceProfilesByTenantIdAndIds(UUID tenantId, List<UUID> deviceProfileIds) {
         return deviceProfileRepository.findDeviceProfileInfosByTenantIdAndIdIn(tenantId, deviceProfileIds);
     }
 
+    
     /**
-
-     * Loads by tenant id and external id.
-
+     * Finds by tenant id and external id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param externalId external id ({@link UUID})
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceProfile findByTenantIdAndExternalId(UUID tenantId, UUID externalId) {
         return DaoUtil.getData(deviceProfileRepository.findByTenantIdAndExternalId(tenantId, externalId));
     }
 
+    
     /**
-
-     * Loads by tenant id and name.
-
+     * Finds by tenant id and name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceProfile findByTenantIdAndName(UUID tenantId, String name) {
         return DaoUtil.getData(deviceProfileRepository.findByTenantIdAndName(tenantId, name));
     }
 
+    
     /**
-
-     * Loads by tenant id.
-
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<DeviceProfile> findByTenantId(UUID tenantId, PageLink pageLink) {
         return findDeviceProfiles(TenantId.fromUUID(tenantId), pageLink);
     }
 
+    
     /**
-
-     * Get external id by internal.
-
+     * Returns external id by internal.
+     *
+     * @param internalId internal id ({@link DeviceProfileId})
+     * @return {@link DeviceProfileId}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceProfileId getExternalIdByInternal(DeviceProfileId internalId) {
@@ -248,66 +323,94 @@ public class JpaDeviceProfileDao extends JpaAbstractDao<DeviceProfileEntity, Dev
                 .map(DeviceProfileId::new).orElse(null);
     }
 
+    
     /**
-
-     * Loads default entity by tenant id.
-
+     * Finds default entity by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceProfile findDefaultEntityByTenantId(UUID tenantId) {
         return findDefaultDeviceProfile(TenantId.fromUUID(tenantId));
     }
 
+    
     /**
-
-     * Loads by tenant and image link.
-
+     * Finds by tenant and image link.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param imageLink image link ({@link String})
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<DeviceProfileInfo> findByTenantAndImageLink(TenantId tenantId, String imageLink, int limit) {
         return deviceProfileRepository.findByTenantAndImageLink(tenantId.getId(), imageLink, PageRequest.of(0, limit));
     }
 
+    
     /**
-
-     * Loads by image link.
-
+     * Finds by image link.
+     *
+     * @param imageLink image link ({@link String})
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<DeviceProfileInfo> findByImageLink(String imageLink, int limit) {
         return deviceProfileRepository.findByImageLink(imageLink, PageRequest.of(0, limit));
     }
 
+    
     /**
-
-     * Loads all by tenant id.
-
+     * Finds all by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<DeviceProfile> findAllByTenantId(TenantId tenantId, PageLink pageLink) {
         return findDeviceProfiles(tenantId, pageLink);
     }
 
+    
     /**
-
-     * Loads next batch.
-
+     * Finds next batch.
+     *
+     * @param id entity UUID primary key
+     * @param batchSize batch size
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<DeviceProfileFields> findNextBatch(UUID id, int batchSize) {
         return deviceProfileRepository.findNextBatch(id, Limit.of(batchSize));
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

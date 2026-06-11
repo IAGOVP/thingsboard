@@ -17,10 +17,10 @@ package org.thingsboard.script.api.js;
 
 import lombok.Data;
 
-@Data
 /**
  * Js script info.
  */
+@Data
 public class JsScriptInfo {
 
     private final String hash;

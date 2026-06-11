@@ -82,7 +82,10 @@ import static org.thingsboard.server.dao.service.Validator.validateEntityDataPag
 import static org.thingsboard.server.dao.service.Validator.validateId;
 /**
  * Default DAO-layer service implementation for entity.
+ *
+ * <p>Coordinates validation, caching, cluster events, and {@code *Dao} persistence (generic entity services, counts, and DAO registry).
  */
+
 
 @Service
 @Slf4j
@@ -119,11 +122,17 @@ public class BaseEntityService extends AbstractEntityService implements EntitySe
     @Autowired
     private JpaExecutorService jpaExecutorService;
 
+    
     /**
-
      * Counts entities by query.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param query filter and sort query definition
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public long countEntitiesByQuery(TenantId tenantId, CustomerId customerId, EntityCountQuery query) {
@@ -147,11 +156,17 @@ public class BaseEntityService extends AbstractEntityService implements EntitySe
         return result;
     }
 
+    
     /**
-
-     * Loads entity data by query.
-
+     * Finds entity data by query.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param query filter and sort query definition
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EntityData> findEntityDataByQuery(TenantId tenantId, CustomerId customerId, EntityDataQuery query) {
@@ -175,11 +190,17 @@ public class BaseEntityService extends AbstractEntityService implements EntitySe
         return result;
     }
 
+    
     /**
-
-     * Loads entity data by query async.
-
+     * Finds entity data by query async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param query filter and sort query definition
+     * @return future completing with {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<PageData<EntityData>> findEntityDataByQueryAsync(TenantId tenantId, CustomerId customerId, EntityDataQuery query) {
@@ -249,11 +270,16 @@ public class BaseEntityService extends AbstractEntityService implements EntitySe
         }, MoreExecutors.directExecutor());
     }
 
+    
     /**
-
-     * Fetch entity name.
-
+     * Fetches entity name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link String}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<String> fetchEntityName(TenantId tenantId, EntityId entityId) {
@@ -261,11 +287,16 @@ public class BaseEntityService extends AbstractEntityService implements EntitySe
         return fetchAndConvert(tenantId, entityId, this::getName);
     }
 
+    
     /**
-
-     * Fetch entity label.
-
+     * Fetches entity label.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link String}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<String> fetchEntityLabel(TenantId tenantId, EntityId entityId) {
@@ -273,11 +304,16 @@ public class BaseEntityService extends AbstractEntityService implements EntitySe
         return fetchAndConvert(tenantId, entityId, this::getLabel);
     }
 
+    
     /**
-
-     * Fetch entity customer id.
-
+     * Fetches entity customer id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link CustomerId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<CustomerId> fetchEntityCustomerId(TenantId tenantId, EntityId entityId) {
@@ -285,22 +321,32 @@ public class BaseEntityService extends AbstractEntityService implements EntitySe
         return fetchAndConvert(tenantId, entityId, this::getCustomerId);
     }
 
+    
     /**
-
-     * Fetch entity customer id async.
-
+     * Fetches entity customer id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Optional<CustomerId>> fetchEntityCustomerIdAsync(TenantId tenantId, EntityId entityId) {
         return fetchAndConvertAsync(tenantId, entityId, this::getCustomerId);
     }
 
+    
     /**
-
-     * Fetch name label and customer details.
-
+     * Fetches name label and customer details.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link NameLabelAndCustomerDetails}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<NameLabelAndCustomerDetails> fetchNameLabelAndCustomerDetails(TenantId tenantId, EntityId entityId) {
@@ -308,22 +354,33 @@ public class BaseEntityService extends AbstractEntityService implements EntitySe
         return fetchAndConvert(tenantId, entityId, this::getNameLabelAndCustomerDetails);
     }
 
+    
     /**
-
-     * Fetch entity.
-
+     * Fetches entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<HasId<?>> fetchEntity(TenantId tenantId, EntityId entityId) {
         return fetchAndConvert(tenantId, entityId, Function.identity());
     }
 
+    
     /**
-
-     * Fetch entity infos.
-
+     * Fetches entity infos.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param entityIds entity ids ({@link Set})
+     * @return {@link Map}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Map<EntityId, EntityInfo> fetchEntityInfos(TenantId tenantId, CustomerId customerId, Set<EntityId> entityIds) {

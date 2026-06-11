@@ -54,8 +54,11 @@ import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
 import static org.thingsboard.server.dao.DaoUtil.toUUIDs;
 import static org.thingsboard.server.dao.service.Validator.validateId;
 /**
- * Spring service implementing asset profile API.
+ * Spring {@code @Service} implementing the asset profile DAO API.
+ *
+ * <p>Delegates to {@code *Dao} implementations and manages cache eviction (asset and asset-profile DAO services and caches).
  */
+
 
 @Service("AssetProfileDaoService")
 @Slf4j
@@ -84,11 +87,15 @@ public class AssetProfileServiceImpl extends CachedVersionedEntityService<AssetP
     @Autowired
     private ImageService imageService;
 
+    
     /**
-
-     * Handle evict event.
-
+     * Handles evict event.
+     *
+     * @param event event ({@link AssetProfileEvictEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @TransactionalEventListener(classes = AssetProfileEvictEvent.class)
     @Override
@@ -109,22 +116,33 @@ public class AssetProfileServiceImpl extends CachedVersionedEntityService<AssetP
         cache.evict(toEvict);
     }
 
+    
     /**
-
-     * Loads asset profile by id.
-
+     * Finds asset profile by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetProfileId asset profile id ({@link AssetProfileId})
+     * @return {@link AssetProfile}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AssetProfile findAssetProfileById(TenantId tenantId, AssetProfileId assetProfileId) {
         return findAssetProfileById(tenantId, assetProfileId, true);
     }
 
+    
     /**
-
-     * Loads asset profile by id.
-
+     * Finds asset profile by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetProfileId asset profile id ({@link AssetProfileId})
+     * @param putInCache put in cache
+     * @return {@link AssetProfile}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AssetProfile findAssetProfileById(TenantId tenantId, AssetProfileId assetProfileId, boolean putInCache) {
@@ -134,22 +152,33 @@ public class AssetProfileServiceImpl extends CachedVersionedEntityService<AssetP
                 () -> assetProfileDao.findById(tenantId, assetProfileId.getId()), putInCache);
     }
 
+    
     /**
-
-     * Loads asset profile by name.
-
+     * Finds asset profile by name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param profileName profile name ({@link String})
+     * @return {@link AssetProfile}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AssetProfile findAssetProfileByName(TenantId tenantId, String profileName) {
         return findAssetProfileByName(tenantId, profileName, true);
     }
 
+    
     /**
-
-     * Loads asset profile by name.
-
+     * Finds asset profile by name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param profileName profile name ({@link String})
+     * @param putInCache put in cache
+     * @return {@link AssetProfile}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AssetProfile findAssetProfileByName(TenantId tenantId, String profileName, boolean putInCache) {
@@ -159,11 +188,16 @@ public class AssetProfileServiceImpl extends CachedVersionedEntityService<AssetP
                 () -> assetProfileDao.findByName(tenantId, profileName), false, putInCache);
     }
 
+    
     /**
-
-     * Loads asset profile info by id.
-
+     * Finds asset profile info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetProfileId asset profile id ({@link AssetProfileId})
+     * @return {@link AssetProfileInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AssetProfileInfo findAssetProfileInfoById(TenantId tenantId, AssetProfileId assetProfileId) {
@@ -172,22 +206,32 @@ public class AssetProfileServiceImpl extends CachedVersionedEntityService<AssetP
         return toAssetProfileInfo(findAssetProfileById(tenantId, assetProfileId));
     }
 
+    
     /**
-
-     * Persists asset profile.
-
+     * Saves or persists asset profile.
+     *
+     * @param assetProfile asset profile ({@link AssetProfile})
+     * @return {@link AssetProfile}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AssetProfile saveAssetProfile(AssetProfile assetProfile) {
         return saveAssetProfile(assetProfile, true, true);
     }
 
+    
     /**
-
-     * Persists asset profile.
-
+     * Saves or persists asset profile.
+     *
+     * @param assetProfile asset profile ({@link AssetProfile})
+     * @param doValidate do validate
+     * @param publishSaveEvent publish save event
+     * @return {@link AssetProfile}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AssetProfile saveAssetProfile(AssetProfile assetProfile, boolean doValidate, boolean publishSaveEvent) {
@@ -230,11 +274,16 @@ public class AssetProfileServiceImpl extends CachedVersionedEntityService<AssetP
         return savedAssetProfile;
     }
 
+    
     /**
-
-     * Removes asset profile.
-
+     * Deletes asset profile.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetProfileId asset profile id ({@link AssetProfileId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -244,11 +293,17 @@ public class AssetProfileServiceImpl extends CachedVersionedEntityService<AssetP
         deleteEntity(tenantId, assetProfileId, false);
     }
 
+    
     /**
-
-     * Removes entity.
-
+     * Deletes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -280,11 +335,16 @@ public class AssetProfileServiceImpl extends CachedVersionedEntityService<AssetP
         }
     }
 
+    
     /**
-
-     * Loads asset profiles.
-
+     * Finds asset profiles.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AssetProfile> findAssetProfiles(TenantId tenantId, PageLink pageLink) {
@@ -294,11 +354,16 @@ public class AssetProfileServiceImpl extends CachedVersionedEntityService<AssetP
         return assetProfileDao.findAssetProfiles(tenantId, pageLink);
     }
 
+    
     /**
-
-     * Loads asset profile infos.
-
+     * Finds asset profile infos.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AssetProfileInfo> findAssetProfileInfos(TenantId tenantId, PageLink pageLink) {
@@ -308,11 +373,16 @@ public class AssetProfileServiceImpl extends CachedVersionedEntityService<AssetP
         return assetProfileDao.findAssetProfileInfos(tenantId, pageLink);
     }
 
+    
     /**
-
-     * Loads or create asset profile.
-
+     * Finds or create asset profile.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return {@link AssetProfile}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AssetProfile findOrCreateAssetProfile(TenantId tenantId, String name) {
@@ -333,11 +403,15 @@ public class AssetProfileServiceImpl extends CachedVersionedEntityService<AssetP
         return assetProfile;
     }
 
+    
     /**
-
      * Creates default asset profile.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link AssetProfile}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AssetProfile createDefaultAssetProfile(TenantId tenantId) {
@@ -355,11 +429,15 @@ public class AssetProfileServiceImpl extends CachedVersionedEntityService<AssetP
         return saveAssetProfile(assetProfile, true, publishSaveEvent);
     }
 
+    
     /**
-
-     * Loads default asset profile.
-
+     * Finds default asset profile.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link AssetProfile}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AssetProfile findDefaultAssetProfile(TenantId tenantId) {
@@ -369,11 +447,15 @@ public class AssetProfileServiceImpl extends CachedVersionedEntityService<AssetP
                 () -> assetProfileDao.findDefaultAssetProfile(tenantId), true);
     }
 
+    
     /**
-
-     * Loads default asset profile info.
-
+     * Finds default asset profile info.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link AssetProfileInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AssetProfileInfo findDefaultAssetProfileInfo(TenantId tenantId) {
@@ -382,11 +464,16 @@ public class AssetProfileServiceImpl extends CachedVersionedEntityService<AssetP
         return toAssetProfileInfo(findDefaultAssetProfile(tenantId));
     }
 
+    
     /**
-
      * Set default asset profile.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetProfileId asset profile id ({@link AssetProfileId})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public boolean setDefaultAssetProfile(TenantId tenantId, AssetProfileId assetProfileId) {
@@ -414,11 +501,15 @@ public class AssetProfileServiceImpl extends CachedVersionedEntityService<AssetP
         return false;
     }
 
+    
     /**
-
-     * Removes asset profiles by tenant id.
-
+     * Deletes asset profiles by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteAssetProfilesByTenantId(TenantId tenantId) {
@@ -427,33 +518,47 @@ public class AssetProfileServiceImpl extends CachedVersionedEntityService<AssetP
         tenantAssetProfilesRemover.removeEntities(tenantId, tenantId);
     }
 
+    
     /**
-
-     * Removes by tenant id.
-
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteByTenantId(TenantId tenantId) {
         deleteAssetProfilesByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Loads entity.
-
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findAssetProfileById(tenantId, new AssetProfileId(entityId.getId())));
     }
 
+    
     /**
-
-     * Loads entity async.
-
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
@@ -461,22 +566,30 @@ public class AssetProfileServiceImpl extends CachedVersionedEntityService<AssetP
                 .transform(Optional::ofNullable, directExecutor());
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {
         return EntityType.ASSET_PROFILE;
     }
 
+    
     /**
-
-     * Loads asset profile names by tenant id.
-
+     * Finds asset profile names by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param activeOnly active only
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<EntityInfo> findAssetProfileNamesByTenantId(TenantId tenantId, boolean activeOnly) {
@@ -487,11 +600,16 @@ public class AssetProfileServiceImpl extends CachedVersionedEntityService<AssetP
                 .collect(Collectors.toList());
     }
 
+    
     /**
-
-     * Loads asset profiles by ids.
-
+     * Finds asset profiles by ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetProfileIds asset profile ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<AssetProfileInfo> findAssetProfilesByIds(TenantId tenantId, List<AssetProfileId> assetProfileIds) {

@@ -23,8 +23,14 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.regex.Pattern;
 /**
- * Abstract insert repository.
+ * Abstract insert repository (time-series SQL/Timescale persistence (SQL/Timescale time-series key-value storage)).
  */
+
+
+
+
+
+
 
 @Repository
 public abstract class AbstractInsertRepository {
@@ -40,6 +46,13 @@ public abstract class AbstractInsertRepository {
 
     @Autowired
     protected TransactionTemplate transactionTemplate;
+    /**
+     * Replace null chars.
+     *
+     * @param strValue str value ({@link String})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected String replaceNullChars(String strValue) {
         if (removeNullChars && strValue != null) {

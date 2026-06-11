@@ -26,20 +26,60 @@ import java.util.Optional;
 public interface KvEntry extends Serializable {
 
     String getKey();
+/**
+ * Returns data type.
+ *
+ * @return {@link DataType}
+ */
 
     DataType getDataType();
+/**
+ * Returns str value.
+ *
+ * @return optional {@link String}, empty if not found
+ */
 
     Optional<String> getStrValue();
+/**
+ * Returns long value.
+ *
+ * @return optional {@link Long}, empty if not found
+ */
 
     Optional<Long> getLongValue();
+/**
+ * Returns boolean value.
+ *
+ * @return optional {@link Boolean}, empty if not found
+ */
 
     Optional<Boolean> getBooleanValue();
+/**
+ * Returns double value.
+ *
+ * @return optional {@link Double}, empty if not found
+ */
 
     Optional<Double> getDoubleValue();
+/**
+ * Returns json value.
+ *
+ * @return optional {@link String}, empty if not found
+ */
 
     Optional<String> getJsonValue();
+/**
+ * Returns value as string.
+ *
+ * @return {@link String}
+ */
 
     String getValueAsString();
+/**
+ * Returns value.
+ *
+ * @return {@link Object}
+ */
 
     Object getValue();
 }

@@ -99,13 +99,13 @@ import java.util.stream.Collectors;
 
 import static org.thingsboard.server.service.sync.vc.DefaultGitRepositoryService.fromRelativePath;
 
+/**
+ * Default cluster version control service.
+ */
 @Slf4j
 @TbVersionControlComponent
 @Service
 @RequiredArgsConstructor
-/**
- * Default cluster version control service.
- */
 public class DefaultClusterVersionControlService extends TbApplicationEventListener<PartitionChangeEvent> implements ClusterVersionControlService {
 
     private final PartitionService partitionService;
@@ -132,7 +132,6 @@ public class DefaultClusterVersionControlService extends TbApplicationEventListe
 
     //We need to manually manage the threads since tasks for particular tenant need to be processed sequentially.
     private final List<ListeningExecutorService> ioThreads = new ArrayList<>();
-
 
     @PostConstruct
     public void init() {
@@ -474,7 +473,6 @@ public class DefaultClusterVersionControlService extends TbApplicationEventListe
             reply(ctx, Optional.of(e));
         }
     }
-
 
     private void handleTestRepositoryCommand(VersionControlRequestCtx ctx) {
         try {

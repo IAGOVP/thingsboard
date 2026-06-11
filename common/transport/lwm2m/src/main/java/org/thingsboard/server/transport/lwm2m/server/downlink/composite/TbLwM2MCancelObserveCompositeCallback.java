@@ -34,6 +34,14 @@ public class TbLwM2MCancelObserveCompositeCallback extends AbstractTbLwM2MReques
         super(logService, client);
         this.versionedIds = versionedIds;
     }
+    /**
+     * Handles success.
+     *
+     * @param request request payload with operation parameters
+     * @param canceledSubscriptionsCount canceled subscriptions count ({@link Integer})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onSuccess(TbLwM2MCancelObserveCompositeRequest request, Integer canceledSubscriptionsCount) {

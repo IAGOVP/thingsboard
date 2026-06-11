@@ -23,7 +23,7 @@ import org.thingsboard.server.common.transport.auth.TransportDeviceInfo;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * Gateway device session context.
+ * Session context for a single child device behind an MQTT gateway.
  */
 @ToString(callSuper = true)
 public class GatewayDeviceSessionContext extends AbstractGatewayDeviceSessionContext<GatewaySessionHandler> {

@@ -131,6 +131,12 @@ public class LwM2MTransportServerConfig implements LwM2MSecureServerConfig {
     @Getter
     @Setter
     private Configuration coapConfig;
+    /**
+     * Lwm2m server credentials.
+     *
+     * @return {@link SslCredentialsConfig}
+     * @throws Exception on processing failure
+     */
 
     @Bean
     @ConfigurationProperties(prefix = "transport.lwm2m.server.security.credentials")
@@ -141,6 +147,12 @@ public class LwM2MTransportServerConfig implements LwM2MSecureServerConfig {
     @Autowired
     @Qualifier("lwm2mServerCredentials")
     private SslCredentialsConfig credentialsConfig;
+    /**
+     * Lwm2m trust credentials.
+     *
+     * @return {@link SslCredentialsConfig}
+     * @throws Exception on processing failure
+     */
 
     @Bean
     @ConfigurationProperties(prefix = "transport.lwm2m.security.trust-credentials")
@@ -151,6 +163,12 @@ public class LwM2MTransportServerConfig implements LwM2MSecureServerConfig {
     @Autowired
     @Qualifier("lwm2mTrustCredentials")
     private SslCredentialsConfig trustCredentialsConfig;
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @PostConstruct
     public void init() {
@@ -164,12 +182,24 @@ public class LwM2MTransportServerConfig implements LwM2MSecureServerConfig {
             scheduleServerReload();
         });
     }
+    /**
+     * Destroy.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @PreDestroy
     public void destroy() {
         reloadDebouncer.shutdownNow();
     }
-
+    /**
+     * Register server reload callback.
+     *
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void registerServerReloadCallback(Runnable callback) {
         serverReloadCallbacks.add(callback);
     }
@@ -197,12 +227,23 @@ public class LwM2MTransportServerConfig implements LwM2MSecureServerConfig {
             }
         }
     }
+    /**
+     * Returns ssl credentials.
+     *
+     * @return {@link SslCredentials}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public SslCredentials getSslCredentials() {
         return this.credentialsConfig.getCredentials();
     }
-
+    /**
+     * Returns trust ssl credentials.
+     *
+     * @return {@link SslCredentials}
+     * @throws Exception on processing failure
+     */
     public SslCredentials getTrustSslCredentials() {
         return this.trustCredentialsConfig.getCredentials();
     }

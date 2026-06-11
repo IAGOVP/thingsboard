@@ -56,11 +56,21 @@ public class MicrosoftTeamsDeliveryMethodNotificationTemplate extends DeliveryMe
         this.themeColor = other.themeColor;
         this.button = other.button != null ? new Button(other.button) : null;
     }
+    /**
+     * Returns method.
+     *
+     * @return {@link NotificationDeliveryMethod}
+     */
 
     @Override
     public NotificationDeliveryMethod getMethod() {
         return NotificationDeliveryMethod.MICROSOFT_TEAMS;
     }
+    /**
+     * Copy.
+     *
+     * @return {@link MicrosoftTeamsDeliveryMethodNotificationTemplate}
+     */
 
     @Override
     public MicrosoftTeamsDeliveryMethodNotificationTemplate copy() {

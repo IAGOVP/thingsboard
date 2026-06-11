@@ -31,6 +31,11 @@ public class TwilioSmsProviderConfiguration implements SmsProviderConfiguration 
     private String accountToken;
     @Schema(description = "The number/id of a sender.")
     private String numberFrom;
+    /**
+     * Returns type.
+     *
+     * @return {@link SmsProviderType}
+     */
 
     @Override
     public SmsProviderType getType() {

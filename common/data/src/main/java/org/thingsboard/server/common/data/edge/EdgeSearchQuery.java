@@ -38,6 +38,11 @@ public class EdgeSearchQuery {
     private String relationType;
     @Schema(description = "Array of edge types to filter the related entities (e.g. 'Silos', 'Stores').")
     private List<String> edgeTypes;
+    /**
+     * To entity search query.
+     *
+     * @return {@link EntityRelationsQuery}
+     */
 
     public EntityRelationsQuery toEntitySearchQuery() {
         EntityRelationsQuery query = new EntityRelationsQuery();

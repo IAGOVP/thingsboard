@@ -26,7 +26,7 @@ import org.thingsboard.server.transport.mqtt.limits.IpFilter;
 import org.thingsboard.server.transport.mqtt.limits.ProxyIpFilter;
 
 /**
- * Mqtt transport server initializer.
+ * Netty child-channel initializer: SSL handler, MQTT codec, idle timeout, and {@link MqttTransportHandler}.
  */
 public class MqttTransportServerInitializer extends ChannelInitializer<SocketChannel> {
 
@@ -37,6 +37,13 @@ public class MqttTransportServerInitializer extends ChannelInitializer<SocketCha
         this.context = context;
         this.sslEnabled = sslEnabled;
     }
+    /**
+     * Init channel.
+     *
+     * @param ch ch ({@link SocketChannel})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void initChannel(SocketChannel ch) {

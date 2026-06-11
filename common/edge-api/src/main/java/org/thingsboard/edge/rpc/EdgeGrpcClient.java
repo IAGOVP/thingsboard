@@ -49,11 +49,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
-@Service
-@Slf4j
 /**
  * Edge grpc client.
  */
+@Service
+@Slf4j
 public class EdgeGrpcClient implements EdgeRpcClient {
 
     @Value("${cloud.rpc.host}")

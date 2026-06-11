@@ -20,15 +20,35 @@ import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import org.thingsboard.common.util.JacksonUtil;
 /**
- * Json converter.
+ * Json converter (DAO utilities (KV conversion, rate executors, JSON mapping)).
  */
+
+
+
+
+
+
 
 @Converter
 public class JsonConverter implements AttributeConverter<JsonNode, String> {
+    /**
+     * Convert to database column.
+     *
+     * @param jsonNode json node ({@link JsonNode})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @Override
     public String convertToDatabaseColumn(JsonNode jsonNode) {
         return JacksonUtil.toString(jsonNode);
     }
+    /**
+     * Convert to entity attribute.
+     *
+     * @param s s ({@link String})
+     * @return {@link JsonNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public JsonNode convertToEntityAttribute(String s) {

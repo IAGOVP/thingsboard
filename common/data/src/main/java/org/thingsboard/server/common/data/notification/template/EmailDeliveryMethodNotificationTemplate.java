@@ -51,11 +51,21 @@ public class EmailDeliveryMethodNotificationTemplate extends DeliveryMethodNotif
         super(other);
         this.subject = other.subject;
     }
+    /**
+     * Returns method.
+     *
+     * @return {@link NotificationDeliveryMethod}
+     */
 
     @Override
     public NotificationDeliveryMethod getMethod() {
         return NotificationDeliveryMethod.EMAIL;
     }
+    /**
+     * Copy.
+     *
+     * @return {@link EmailDeliveryMethodNotificationTemplate}
+     */
 
     @Override
     public EmailDeliveryMethodNotificationTemplate copy() {

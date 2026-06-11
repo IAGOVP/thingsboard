@@ -17,6 +17,10 @@ package org.thingsboard.server.queue.provider;
 
 import com.google.protobuf.util.JsonFormat;
 import jakarta.annotation.PreDestroy;
+import java.nio.charset.StandardCharsets;
+import java.util.concurrent.atomic.AtomicLong;
+
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -66,14 +70,12 @@ import org.thingsboard.server.queue.settings.TbQueueRemoteJsInvokeSettings;
 import org.thingsboard.server.queue.settings.TbQueueRuleEngineSettings;
 import org.thingsboard.server.queue.settings.TbQueueTransportNotificationSettings;
 
-import java.nio.charset.StandardCharsets;
-import java.util.concurrent.atomic.AtomicLong;
 
+/**
+ * Creates Kafka producers and consumers for Rule Engine message processing.
+ */
 @Component
 @ConditionalOnExpression("'${queue.type:null}'=='kafka' && '${service.type:null}'=='tb-rule-engine'")
-/**
- * Factory for kafka tb rule engine queue.
- */
 public class KafkaTbRuleEngineQueueFactory implements TbRuleEngineQueueFactory {
 
     private final TopicService topicService;

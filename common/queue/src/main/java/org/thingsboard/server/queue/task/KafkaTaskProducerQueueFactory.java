@@ -29,12 +29,11 @@ import org.thingsboard.server.queue.kafka.TbKafkaProducerTemplate;
 import org.thingsboard.server.queue.kafka.TbKafkaSettings;
 import org.thingsboard.server.queue.kafka.TbKafkaTopicConfigs;
 
-@Component
-@ConditionalOnExpression("'${queue.type:null}' == 'kafka' && ('${service.type:null}' == 'monolith' || " +
-                         "'${service.type:null}' == 'tb-core' || '${service.type:null}' == 'tb-rule-engine')")
+
 /**
- * Factory for kafka task producer queue.
+ * Kafka implementation of {@link TaskProducerQueueFactory}.
  */
+@Component
 public class KafkaTaskProducerQueueFactory implements TaskProducerQueueFactory {
 
     private final TopicService topicService;

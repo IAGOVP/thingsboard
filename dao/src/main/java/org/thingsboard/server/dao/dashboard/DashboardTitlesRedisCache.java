@@ -25,8 +25,11 @@ import org.thingsboard.server.cache.TbJsonRedisSerializer;
 import org.thingsboard.server.common.data.CacheConstants;
 import org.thingsboard.server.common.data.id.DashboardId;
 /**
- * Dashboard titles redis cache.
+ * distributed Redis cache for dashboard titles (dashboard metadata, titles, and assignment).
+ *
+ * <p>Implements {@link org.thingsboard.server.cache.TbTransactionalCache} with DAO-specific key types.
  */
+
 
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "redis")
 @Service("DashboardTitlesCache")

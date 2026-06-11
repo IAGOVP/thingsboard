@@ -96,6 +96,11 @@ public class WidgetsBundle extends BaseData<WidgetsBundleId> implements HasName,
         this.externalId = widgetsBundle.getExternalId();
         this.version = widgetsBundle.getVersion();
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link WidgetsBundleId}
+     */
 
     @Schema(description = "JSON object with the Widget Bundle Id. " +
             "Specify this field to update the Widget Bundle. " +
@@ -105,12 +110,22 @@ public class WidgetsBundle extends BaseData<WidgetsBundleId> implements HasName,
     public WidgetsBundleId getId() {
         return super.getId();
     }
+    /**
+     * Returns created time.
+     *
+     * @return the long result
+     */
 
     @Schema(description = "Timestamp of the Widget Bundle creation, in milliseconds", example = "1609459200000", accessMode = Schema.AccessMode.READ_ONLY)
     @Override
     public long getCreatedTime() {
         return super.getCreatedTime();
     }
+    /**
+     * Returns name.
+     *
+     * @return {@link String}
+     */
 
     @Schema(description = "Same as title of the Widget Bundle. Read-only field. Update the 'title' to change the 'name' of the Widget Bundle.", accessMode = Schema.AccessMode.READ_ONLY)
     @Override

@@ -29,8 +29,14 @@ import org.thingsboard.server.dao.queue.QueueDao;
 import org.thingsboard.server.dao.service.DataValidator;
 import org.thingsboard.server.dao.tenant.TbTenantProfileCache;
 /**
- * Queue validator.
+ * Spring component for queue validator (entity data validators invoked before save (shared DAO validators, removers, and constraints)).
  */
+
+
+
+
+
+
 
 @Component
 public class QueueValidator extends DataValidator<Queue> {
@@ -42,11 +48,16 @@ public class QueueValidator extends DataValidator<Queue> {
     @Autowired
     private TbTenantProfileCache tenantProfileCache;
 
+    
     /**
-
-     * Validate create.
-
+     * Validates create.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param queue queue ({@link Queue})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateCreate(TenantId tenantId, Queue queue) {
@@ -58,11 +69,16 @@ public class QueueValidator extends DataValidator<Queue> {
         }
     }
 
+    
     /**
-
-     * Validate update.
-
+     * Validates update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param queue queue ({@link Queue})
+     * @return {@link Queue}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected Queue validateUpdate(TenantId tenantId, Queue queue) {
@@ -79,11 +95,16 @@ public class QueueValidator extends DataValidator<Queue> {
         return foundQueue;
     }
 
+    
     /**
-
-     * Validate data impl.
-
+     * Validates data impl.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param queue queue ({@link Queue})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateDataImpl(TenantId tenantId, Queue queue) {

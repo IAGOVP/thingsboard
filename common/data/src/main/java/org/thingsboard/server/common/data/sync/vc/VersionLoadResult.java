@@ -36,18 +36,41 @@ public class VersionLoadResult implements Serializable {
     private List<EntityTypeLoadResult> result;
     private EntityLoadError error;
     private boolean done;
+    /**
+     * Empty.
+     *
+     * @return {@link VersionLoadResult}
+     */
 
     public static VersionLoadResult empty() {
         return VersionLoadResult.builder().result(Collections.emptyList()).build();
     }
+    /**
+     * Success.
+     *
+     * @param result result ({@link List})
+     * @return {@link VersionLoadResult}
+     */
 
     public static VersionLoadResult success(List<EntityTypeLoadResult> result) {
         return VersionLoadResult.builder().result(result).build();
     }
+    /**
+     * Success.
+     *
+     * @param result result ({@link EntityTypeLoadResult})
+     * @return {@link VersionLoadResult}
+     */
 
     public static VersionLoadResult success(EntityTypeLoadResult result) {
         return VersionLoadResult.builder().result(List.of(result)).build();
     }
+    /**
+     * Error.
+     *
+     * @param error error ({@link EntityLoadError})
+     * @return {@link VersionLoadResult}
+     */
 
     public static VersionLoadResult error(EntityLoadError error) {
         return VersionLoadResult.builder().error(error).done(true).build();

@@ -23,6 +23,11 @@ import org.apache.commons.lang3.StringUtils;
 public class VcUtils {
 
     private VcUtils() {}
+    /**
+     * Checks branch name.
+     *
+     * @param branch Git branch name
+     */
 
     public static void checkBranchName(String branch) {
         if (StringUtils.isEmpty(branch)) return;

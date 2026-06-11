@@ -23,8 +23,14 @@ import org.thingsboard.server.common.data.id.EntityId;
 
 import java.io.Serial;
 /**
- * Ts latest cache key.
+ * Serializable cache key for ts latest entries (Cassandra telemetry and latest-value DAO (Cassandra time-series DAO and latest-value caches)).
  */
+
+
+
+
+
+
 
 @EqualsAndHashCode
 @Getter
@@ -41,6 +47,12 @@ public class TsLatestCacheKey implements VersionedCacheKey {
     public String toString() {
         return "{" + entityId + "}" + key;
     }
+    /**
+     * Is versioned.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isVersioned() {

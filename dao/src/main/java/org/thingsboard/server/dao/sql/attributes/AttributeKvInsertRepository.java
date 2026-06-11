@@ -24,8 +24,14 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
 /**
- * Attribute kv insert repository.
+ * Attribute kv insert repository (JPA/PostgreSQL persistence layer (JPA repositories and PostgreSQL DAO implementations)).
  */
+
+
+
+
+
+
 
 @Repository
 public class AttributeKvInsertRepository extends AbstractVersionedInsertRepository<AttributeKvEntity> {
@@ -39,11 +45,17 @@ public class AttributeKvInsertRepository extends AbstractVersionedInsertReposito
                     "ON CONFLICT (entity_id, attribute_type, attribute_key) " +
                     "DO UPDATE SET str_v = ?, long_v = ?, dbl_v = ?, bool_v = ?, json_v =  cast(? AS json), last_update_ts = ?, version = nextval('attribute_kv_version_seq') RETURNING version;";
 
+    
     /**
-
      * Set on batch update values.
-
+     *
+     * @param ps ps ({@link PreparedStatement})
+     * @param i i
+     * @param entities entities ({@link List})
+     * @return nothing
+     * @throws SQLException if sqlexception is thrown during processing
      */
+
 
     @Override
     protected void setOnBatchUpdateValues(PreparedStatement ps, int i, List<AttributeKvEntity> entities) throws SQLException {
@@ -76,11 +88,17 @@ public class AttributeKvInsertRepository extends AbstractVersionedInsertReposito
         ps.setInt(9, kvEntity.getId().getAttributeKey());
     }
 
+    
     /**
-
      * Set on insert or update values.
-
+     *
+     * @param ps ps ({@link PreparedStatement})
+     * @param i i
+     * @param insertEntities insert entities ({@link List})
+     * @return nothing
+     * @throws SQLException if sqlexception is thrown during processing
      */
+
 
     @Override
     protected void setOnInsertOrUpdateValues(PreparedStatement ps, int i, List<AttributeKvEntity> insertEntities) throws SQLException {
@@ -123,22 +141,28 @@ public class AttributeKvInsertRepository extends AbstractVersionedInsertReposito
         ps.setLong(15, kvEntity.getLastUpdateTs());
     }
 
+    
     /**
-
-     * Get batch update query.
-
+     * Returns batch update query.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected String getBatchUpdateQuery() {
         return BATCH_UPDATE;
     }
 
+    
     /**
-
-     * Get insert or update query.
-
+     * Returns insert or update query.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected String getInsertOrUpdateQuery() {

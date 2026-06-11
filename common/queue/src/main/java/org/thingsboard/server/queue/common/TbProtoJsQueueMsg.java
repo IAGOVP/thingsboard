@@ -17,13 +17,14 @@ package org.thingsboard.server.queue.common;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.util.JsonFormat;
-import org.thingsboard.server.queue.TbQueueMsgHeaders;
-
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
+
+import org.thingsboard.server.queue.TbQueueMsgHeaders;
+
 /**
- * Message: tb proto js queue msg.
+ * Protobuf queue message wrapper for remote JavaScript invoke requests and responses.
  */
 public class TbProtoJsQueueMsg<T extends com.google.protobuf.GeneratedMessageV3> extends TbProtoQueueMsg<T> {
 

@@ -32,6 +32,12 @@ import java.util.stream.Collectors;
  * Rate limit util.
  */
 public class RateLimitUtil {
+    /**
+     * Parse config.
+     *
+     * @param config config ({@link String})
+     * @return {@link List}
+     */
 
     public static List<RateLimitEntry> parseConfig(String config) {
         if (config == null || config.isEmpty()) {
@@ -41,6 +47,13 @@ public class RateLimitUtil {
                 .map(RateLimitEntry::parse)
                 .toList();
     }
+    /**
+     * Merge.
+     *
+     * @param configExtractor1 config extractor1 ({@link Function})
+     * @param configExtractor2 config extractor2 ({@link Function})
+     * @return {@link Function}
+     */
 
     public static Function<DefaultTenantProfileConfiguration, String> merge(
             Function<DefaultTenantProfileConfiguration, String> configExtractor1,
@@ -68,6 +81,12 @@ public class RateLimitUtil {
                 .map(e -> e.getValue() + ":" + e.getKey())
                 .collect(Collectors.joining(","));
     }
+    /**
+     * Is valid.
+     *
+     * @param configStr config str ({@link String})
+     * @return the boolean result
+     */
 
     public static boolean isValid(String configStr) {
         List<RateLimitEntry> limitedApiEntries = parseConfig(configStr);

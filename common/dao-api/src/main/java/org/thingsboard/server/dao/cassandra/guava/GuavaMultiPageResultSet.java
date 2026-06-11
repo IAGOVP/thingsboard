@@ -33,6 +33,7 @@ import java.util.List;
 /**
  * Guava multi page result set.
  */
+
 public class GuavaMultiPageResultSet implements ResultSet {
 
     private final RowIterator iterator;
@@ -75,6 +76,11 @@ public class GuavaMultiPageResultSet implements ResultSet {
     }
 
     @Override
+    /**
+     * Was applied.
+     *
+     * @return the boolean result
+     */
     public boolean wasApplied() {
         return iterator.wasApplied();
     }

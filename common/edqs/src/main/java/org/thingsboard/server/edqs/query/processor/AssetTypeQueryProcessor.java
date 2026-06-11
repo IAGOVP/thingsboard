@@ -22,24 +22,48 @@ import org.thingsboard.server.edqs.query.EdqsQuery;
 import org.thingsboard.server.edqs.repo.TenantRepo;
 
 import java.util.List;
+
 /**
  * EDQS query processor for asset type entity filters.
+ *
+ * <p>Evaluates {@link org.thingsboard.server.common.data.query.EntityFilter} against a {@link org.thingsboard.server.edqs.repo.TenantRepo} (EDQS microservice — entity filter query processors).
  */
+
 public class AssetTypeQueryProcessor extends AbstractEntityProfileQueryProcessor<AssetTypeFilter> {
 
     public AssetTypeQueryProcessor(TenantRepo repo, QueryContext ctx, EdqsQuery query) {
         super(repo, ctx, query, (AssetTypeFilter) query.getEntityFilter(), EntityType.ASSET);
     }
+    /**
+     * Returns entity name filter.
+     *
+     * @param filter entity filter definition (type, relations, search text, etc.)
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected String getEntityNameFilter(AssetTypeFilter filter) {
         return filter.getAssetNameFilter();
     }
+    /**
+     * Returns profile names.
+     *
+     * @param filter entity filter definition (type, relations, search text, etc.)
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected List<String> getProfileNames(AssetTypeFilter filter) {
         return filter.getAssetTypes();
     }
+    /**
+     * Returns profile entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected EntityType getProfileEntityType() {

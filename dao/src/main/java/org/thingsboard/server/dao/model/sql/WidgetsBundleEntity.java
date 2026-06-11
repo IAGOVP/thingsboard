@@ -29,8 +29,11 @@ import org.thingsboard.server.dao.model.ModelConstants;
 
 import java.util.UUID;
 /**
- * Widgets bundle entity.
+ * JPA/Cassandra row model for widgets bundle.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -81,6 +84,12 @@ public final class WidgetsBundleEntity extends BaseVersionedEntity<WidgetsBundle
             this.externalId = widgetsBundle.getExternalId().getId();
         }
     }
+    /**
+     * To data.
+     *
+     * @return {@link WidgetsBundle}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public WidgetsBundle toData() {

@@ -35,10 +35,21 @@ public enum AuthenticationProtocol {
     AuthenticationProtocol(String oid) {
         this.oid = oid;
     }
+    /**
+     * Returns oid.
+     *
+     * @return {@link String}
+     */
 
     public String getOid() {
         return oid;
     }
+    /**
+     * For name.
+     *
+     * @param name name ({@link String})
+     * @return optional {@link AuthenticationProtocol}, empty if not found
+     */
 
     public static Optional<AuthenticationProtocol> forName(String name) {
         return Arrays.stream(values())

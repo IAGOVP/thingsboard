@@ -31,57 +31,93 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by igor on 3/12/18.
+ * Persistence contract for rule chain.
+ *
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (rule chains, nodes, and node state).
  */
+
 public interface RuleChainDao extends Dao<RuleChain>, TenantEntityDao<RuleChain>, ExportableEntityDao<RuleChainId, RuleChain>, ResourceContainerDao<RuleChain> {
 
+    
     /**
-     * Find rule chains by tenantId and page link.
+     * Finds rule chains by tenant id.
      *
-     * @param tenantId the tenantId
-     * @param pageLink the page link
-     * @return the list of rule chain objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<RuleChain> findRuleChainsByTenantId(UUID tenantId, PageLink pageLink);
 
+    
     /**
-     * Find rule chains by tenantId, type and page link.
+     * Finds rule chains by tenant id and type.
      *
-     * @param tenantId the tenantId
-     * @param type the type
-     * @param pageLink the page link
-     * @return the list of rule chain objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link RuleChainType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<RuleChain> findRuleChainsByTenantIdAndType(UUID tenantId, RuleChainType type, PageLink pageLink);
 
+    
     /**
-     * Find root rule chain by tenantId and type
+     * Finds root rule chain by tenant id and type.
      *
-     * @param tenantId the tenantId
-     * @param type the type
-     * @return the rule chain object
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link RuleChainType})
+     * @return {@link RuleChain}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     RuleChain findRootRuleChainByTenantIdAndType(UUID tenantId, RuleChainType type);
 
+    
     /**
-     * Find rule chains by tenantId, edgeId and page link.
+     * Finds rule chains by tenant id and edge id.
      *
-     * @param tenantId the tenantId
-     * @param edgeId the edgeId
-     * @param pageLink the page link
-     * @return the list of rule chain objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link UUID})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<RuleChain> findRuleChainsByTenantIdAndEdgeId(UUID tenantId, UUID edgeId, PageLink pageLink);
 
+    
     /**
-     * Find auto assign to edge rule chains by tenantId.
+     * Finds auto assign to edge rule chains by tenant id.
      *
-     * @param tenantId the tenantId
-     * @return the list of rule chain objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<RuleChain> findAutoAssignToEdgeRuleChainsByTenantId(UUID tenantId, PageLink pageLink);
+    /**
+     * Finds by tenant id and type and name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link RuleChainType})
+     * @param name entity or attribute name
+     * @return {@link Collection}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     Collection<RuleChain> findByTenantIdAndTypeAndName(TenantId tenantId, RuleChainType type, String name);
+    /**
+     * Finds rule chains by tenant id and ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChainIds rule chain ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<RuleChain> findRuleChainsByTenantIdAndIds(UUID tenantId, List<UUID> ruleChainIds);
 

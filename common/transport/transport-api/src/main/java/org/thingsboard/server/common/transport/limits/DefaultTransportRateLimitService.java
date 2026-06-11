@@ -76,6 +76,17 @@ public class DefaultTransportRateLimitService implements TransportRateLimitServi
     public DefaultTransportRateLimitService(TransportTenantProfileCache tenantProfileCache) {
         this.tenantProfileCache = tenantProfileCache;
     }
+    /**
+     * Checks limits.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param gatewayId gateway id ({@link DeviceId})
+     * @param deviceId target device identifier
+     * @param dataPoints data points
+     * @param isGateway is gateway
+     * @return {@link TbPair}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public TbPair<EntityType, Boolean> checkLimits(TenantId tenantId, DeviceId gatewayId, DeviceId deviceId, int dataPoints, boolean isGateway) {
@@ -107,6 +118,13 @@ public class DefaultTransportRateLimitService implements TransportRateLimitServi
             return limits.getRegularMsgRateLimit().tryConsume();
         }
     }
+    /**
+     * Updates the requested data.
+     *
+     * @param update update ({@link TenantProfileUpdateResult})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void update(TenantProfileUpdateResult update) {
@@ -119,6 +137,13 @@ public class DefaultTransportRateLimitService implements TransportRateLimitServi
             update(tenantId, tenantRateLimitPrototype, deviceRateLimitPrototype, gatewayRateLimitPrototype, gatewayDeviceRateLimitPrototype);
         }
     }
+    /**
+     * Updates the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void update(TenantId tenantId) {
@@ -136,6 +161,13 @@ public class DefaultTransportRateLimitService implements TransportRateLimitServi
         getTenantGateways(tenantId).forEach(gatewayId -> mergeLimits(gatewayId, gatewayRateLimitPrototype, perGatewayLimits::get, perGatewayLimits::put));
         getTenantGatewayDevices(tenantId).forEach(gatewayId -> mergeLimits(gatewayId, gatewayDeviceRateLimitPrototype, perGatewayDeviceLimits::get, perGatewayDeviceLimits::put));
     }
+    /**
+     * Removes the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void remove(TenantId tenantId) {
@@ -144,6 +176,13 @@ public class DefaultTransportRateLimitService implements TransportRateLimitServi
         tenantGateways.remove(tenantId);
         tenantGatewayDevices.remove(tenantId);
     }
+    /**
+     * Removes the requested data.
+     *
+     * @param deviceId target device identifier
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void remove(DeviceId deviceId) {
@@ -154,11 +193,26 @@ public class DefaultTransportRateLimitService implements TransportRateLimitServi
         tenantGateways.values().forEach(set -> set.remove(deviceId));
         tenantGatewayDevices.values().forEach(set -> set.remove(deviceId));
     }
+    /**
+     * Updates the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param allowed allowed
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void update(TenantId tenantId, boolean allowed) {
         tenantAllowed.put(tenantId, allowed);
     }
+    /**
+     * Checks address.
+     *
+     * @param address address ({@link InetSocketAddress})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     public boolean checkAddress(InetSocketAddress address) {
@@ -168,6 +222,13 @@ public class DefaultTransportRateLimitService implements TransportRateLimitServi
         var stats = ipMap.computeIfAbsent(address.getAddress(), a -> new InetAddressRateLimitStats());
         return !stats.isBlocked() || (stats.getLastActivityTs() + ipBlockTimeout < System.currentTimeMillis());
     }
+    /**
+     * Handles auth success.
+     *
+     * @param address address ({@link InetSocketAddress})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onAuthSuccess(InetSocketAddress address) {
@@ -188,6 +249,13 @@ public class DefaultTransportRateLimitService implements TransportRateLimitServi
             stats.getLock().unlock();
         }
     }
+    /**
+     * Handles auth failure.
+     *
+     * @param address address ({@link InetSocketAddress})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onAuthFailure(InetSocketAddress address) {
@@ -209,6 +277,13 @@ public class DefaultTransportRateLimitService implements TransportRateLimitServi
             stats.getLock().unlock();
         }
     }
+    /**
+     * Invalidate rate limits ip table.
+     *
+     * @param sessionInactivityTimeout session inactivity timeout
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void invalidateRateLimitsIpTable(long sessionInactivityTimeout) {

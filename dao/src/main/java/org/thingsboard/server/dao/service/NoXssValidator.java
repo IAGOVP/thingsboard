@@ -28,8 +28,14 @@ import org.thingsboard.server.common.data.validation.NoXss;
 import java.util.Optional;
 import java.util.regex.Pattern;
 /**
- * No xss validator.
+ * No xss validator (shared DAO validators, removers, and constraints).
  */
+
+
+
+
+
+
 
 @Slf4j
 public class NoXssValidator implements ConstraintValidator<NoXss, Object> {
@@ -51,11 +57,16 @@ public class NoXssValidator implements ConstraintValidator<NoXss, Object> {
                 .orElseThrow(() -> new IllegalStateException("XSS policy file not found"));
     }
 
+    
     /**
-
      * Is valid.
-
+     *
+     * @param value value ({@link Object})
+     * @param constraintValidatorContext constraint validator context ({@link ConstraintValidatorContext})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext constraintValidatorContext) {
@@ -68,11 +79,15 @@ public class NoXssValidator implements ConstraintValidator<NoXss, Object> {
         return isValid(stringValue);
     }
 
+    
     /**
-
      * Is valid.
-
+     *
+     * @param stringValue string value ({@link String})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     public static boolean isValid(String stringValue) {
         if (stringValue.isEmpty()) {

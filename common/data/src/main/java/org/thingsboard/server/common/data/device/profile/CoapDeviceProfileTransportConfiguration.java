@@ -31,11 +31,21 @@ public class CoapDeviceProfileTransportConfiguration implements DeviceProfileTra
     private CoapDeviceTypeConfiguration coapDeviceTypeConfiguration;
     @Schema
     private PowerSavingConfiguration clientSettings;
+    /**
+     * Returns type.
+     *
+     * @return {@link DeviceTransportType}
+     */
 
     @Override
     public DeviceTransportType getType() {
         return DeviceTransportType.COAP;
     }
+    /**
+     * Returns coap device type configuration.
+     *
+     * @return {@link CoapDeviceTypeConfiguration}
+     */
 
     public CoapDeviceTypeConfiguration getCoapDeviceTypeConfiguration() {
         if (coapDeviceTypeConfiguration != null) {

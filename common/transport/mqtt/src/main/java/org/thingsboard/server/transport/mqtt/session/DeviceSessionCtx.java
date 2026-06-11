@@ -50,7 +50,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
 /**
- * Device session ctx.
+ * Per-connection MQTT session state: auth result, {@link MqttTransportAdaptor}, gateway/Sparkplug handlers, and {@link org.thingsboard.server.common.transport.TransportService} callbacks.
  */
 @Slf4j
 public class DeviceSessionCtx extends MqttDeviceAwareSessionContext {
@@ -111,36 +111,84 @@ public class DeviceSessionCtx extends MqttDeviceAwareSessionContext {
         this.context = context;
         this.adaptor = context.getJsonMqttAdaptor();
     }
-
+    /**
+     * Next msg id.
+     *
+     * @return monotonically increasing MQTT packet identifier
+     * @throws Exception on processing failure
+     */
     public int nextMsgId() {
         return msgIdSeq.incrementAndGet();
     }
-
+    /**
+     * Is device telemetry topic.
+     *
+     * @param topicName topic name ({@link String})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     public boolean isDeviceTelemetryTopic(String topicName) {
         return telemetryTopicFilter.filter(topicName);
     }
-
+    /**
+     * Is device attributes topic.
+     *
+     * @param topicName topic name ({@link String})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     public boolean isDeviceAttributesTopic(String topicName) {
         return attributesPublishTopicFilter.filter(topicName);
     }
-
+    /**
+     * Is device subscription attributes topic.
+     *
+     * @param topicName topic name ({@link String})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     public boolean isDeviceSubscriptionAttributesTopic(String topicName) {
         return attributesSubscribeTopicFilter.filter(topicName);
     }
-
+    /**
+     * Returns payload adaptor.
+     *
+     * @return {@link MqttTransportAdaptor}
+     * @throws Exception on processing failure
+     */
     public MqttTransportAdaptor getPayloadAdaptor() {
         return adaptor;
     }
-
+    /**
+     * Is json payload type.
+     *
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     public boolean isJsonPayloadType() {
         return payloadType.equals(TransportPayloadType.JSON);
     }
+    /**
+     * Set device profile.
+     *
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void setDeviceProfile(DeviceProfile deviceProfile) {
         super.setDeviceProfile(deviceProfile);
         updateDeviceSessionConfiguration(deviceProfile);
     }
+    /**
+     * Handles device profile update.
+     *
+     * @param sessionInfo session info
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onDeviceProfileUpdate(TransportProtos.SessionInfoProto sessionInfo, DeviceProfile deviceProfile) {
@@ -181,7 +229,13 @@ public class DeviceSessionCtx extends MqttDeviceAwareSessionContext {
         rpcResponseDynamicMessageDescriptor = protoTransportPayloadConfig.getRpcResponseDynamicMessageDescriptor(protoTransportPayloadConfig.getDeviceRpcResponseProtoSchema());
         rpcRequestDynamicMessageBuilder = protoTransportPayloadConfig.getRpcRequestDynamicMessageBuilder(protoTransportPayloadConfig.getDeviceRpcRequestProtoSchema());
     }
-
+    /**
+     * Returns adaptor.
+     *
+     * @param topicType topic type ({@link TopicType})
+     * @return {@link MqttTransportAdaptor}
+     * @throws Exception on processing failure
+     */
     public MqttTransportAdaptor getAdaptor(TopicType topicType) {
         return switch (topicType) {
             case V2 -> getDefaultAdaptor();
@@ -208,13 +262,25 @@ public class DeviceSessionCtx extends MqttDeviceAwareSessionContext {
             }
         }
     }
-
+    /**
+     * Add to queue.
+     *
+     * @param msg msg ({@link MqttMessage})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void addToQueue(MqttMessage msg) {
         msgQueueSize.incrementAndGet();
         ReferenceCountUtil.retain(msg);
         msgQueue.add(msg);
     }
-
+    /**
+     * Try process queued msgs.
+     *
+     * @param msgProcessor msg processor ({@link Consumer})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void tryProcessQueuedMsgs(Consumer<MqttMessage> msgProcessor) {
         while (!msgQueue.isEmpty()) {
             if (msgQueueProcessorLock.tryLock()) {
@@ -236,11 +302,21 @@ public class DeviceSessionCtx extends MqttDeviceAwareSessionContext {
             }
         }
     }
-
+    /**
+     * Returns msg queue size.
+     *
+     * @return monotonically increasing MQTT packet identifier
+     * @throws Exception on processing failure
+     */
     public int getMsgQueueSize() {
         return msgQueueSize.get();
     }
-
+    /**
+     * Release.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void release() {
         if (!msgQueue.isEmpty()) {
             log.warn("doDisconnect for device {} but unprocessed messages {} left in the msg queue", getDeviceId(), msgQueue.size());
@@ -248,7 +324,12 @@ public class DeviceSessionCtx extends MqttDeviceAwareSessionContext {
             msgQueue.clear();
         }
     }
-
+    /**
+     * Returns msg queue snapshot.
+     *
+     * @return {@link Collection}
+     * @throws Exception on processing failure
+     */
     public Collection<MqttMessage> getMsgQueueSnapshot() {
         return Collections.unmodifiableCollection(msgQueue);
     }

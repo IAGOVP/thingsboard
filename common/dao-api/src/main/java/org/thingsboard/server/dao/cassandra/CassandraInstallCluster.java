@@ -19,13 +19,12 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.thingsboard.server.dao.util.NoSqlAnyDao;
-
-@Component("CassandraInstallCluster")
-@NoSqlAnyDao
-@Profile("install")
 /**
  * Cassandra install cluster.
  */
+@Component("CassandraInstallCluster")
+@NoSqlAnyDao
+@Profile("install")
 public class CassandraInstallCluster extends AbstractCassandraCluster {
 
     @PostConstruct

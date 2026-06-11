@@ -29,14 +29,50 @@ import java.util.List;
  */
 public interface QueueStatsService extends EntityDaoService {
 
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param queueStats queue stats ({@link QueueStats})
+     * @return {@link QueueStats}
+     */
     QueueStats save(TenantId tenantId, QueueStats queueStats);
 
+    /**
+     * Finds queue stats by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param queueStatsId queue stats id ({@link QueueStatsId})
+     * @return {@link QueueStats}
+     */
     QueueStats findQueueStatsById(TenantId tenantId, QueueStatsId queueStatsId);
 
+    /**
+     * Finds queue stats by ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param queueStatsId queue stats id ({@link List})
+     * @return {@link List}
+     */
     List<QueueStats> findQueueStatsByIds(TenantId tenantId, List<QueueStatsId> queueStatsId);
 
+    /**
+     * Finds by tenant id and name and service id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param queueName queue name ({@link String})
+     * @param serviceId service id ({@link String})
+     * @return {@link QueueStats}
+     */
     QueueStats findByTenantIdAndNameAndServiceId(TenantId tenantId, String queueName, String serviceId);
 
+    /**
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<QueueStats> findByTenantId(TenantId tenantId, PageLink pageLink);
 
 }

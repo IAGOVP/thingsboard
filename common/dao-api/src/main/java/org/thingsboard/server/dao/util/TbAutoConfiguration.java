@@ -26,7 +26,8 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 @EnableAutoConfiguration(exclude = {CassandraAutoConfiguration.class, CassandraDataAutoConfiguration.class, RedisAutoConfiguration.class})
 public @/**
- * tb auto configuration contract.
+ * tb auto configuration contract for the DAO layer.
  */
+
 interface TbAutoConfiguration {
 }

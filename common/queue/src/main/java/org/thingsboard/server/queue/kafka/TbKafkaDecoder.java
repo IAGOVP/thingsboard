@@ -15,12 +15,14 @@
  */
 package org.thingsboard.server.queue.kafka;
 
-import org.thingsboard.server.queue.TbQueueMsg;
-
 import java.io.IOException;
 
+
+import org.thingsboard.server.queue.TbQueueMsg;
+
+
 /**
- * Created by ashvayka on 25.09.18.
+ * Decodes Kafka record bytes into typed {@link TbQueueMsg} instances.
  */
 public interface TbKafkaDecoder<T> {
 

@@ -18,8 +18,11 @@ package org.thingsboard.server.dao.dashboard;
 import lombok.Data;
 import org.thingsboard.server.common.data.id.DashboardId;
 /**
- * Dashboard title evict event.
+ * Cache eviction event published when dashboard title data changes.
+ *
+ * <p>Consumed by cache listeners to invalidate stale entries cluster-wide.
  */
+
 
 @Data
 public class DashboardTitleEvictEvent {

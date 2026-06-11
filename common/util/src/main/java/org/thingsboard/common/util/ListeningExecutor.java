@@ -21,7 +21,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 
 /**
- * listening executor contract.
+ * Contract for listening executor.
  */
 public interface ListeningExecutor extends Executor {
 
@@ -35,10 +35,12 @@ public interface ListeningExecutor extends Executor {
     }
 
     default <T> ListenableFuture<T> submit(Callable<T> task) {
+        /** Execute async. */
         return executeAsync(task);
     }
 
     default ListenableFuture<?> submit(Runnable task) {
+        /** Execute async. */
         return executeAsync(task);
     }
 

@@ -30,20 +30,73 @@ import java.util.List;
  */
 public interface NotificationRuleService {
 
+    /**
+     * Saves or persists notification rule.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param notificationRule notification rule ({@link NotificationRule})
+     * @return {@link NotificationRule}
+     */
     NotificationRule saveNotificationRule(TenantId tenantId, NotificationRule notificationRule);
 
+    /**
+     * Finds notification rule by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id id ({@link NotificationRuleId})
+     * @return {@link NotificationRule}
+     */
     NotificationRule findNotificationRuleById(TenantId tenantId, NotificationRuleId id);
 
+    /**
+     * Finds notification rule info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id id ({@link NotificationRuleId})
+     * @return {@link NotificationRuleInfo}
+     */
     NotificationRuleInfo findNotificationRuleInfoById(TenantId tenantId, NotificationRuleId id);
 
+    /**
+     * Finds notification rules infos by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<NotificationRuleInfo> findNotificationRulesInfosByTenantId(TenantId tenantId, PageLink pageLink);
 
+    /**
+     * Finds notification rules by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<NotificationRule> findNotificationRulesByTenantId(TenantId tenantId, PageLink pageLink);
 
+    /**
+     * Finds enabled notification rules by tenant id and trigger type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param triggerType trigger type ({@link NotificationRuleTriggerType})
+     * @return {@link List}
+     */
     List<NotificationRule> findEnabledNotificationRulesByTenantIdAndTriggerType(TenantId tenantId, NotificationRuleTriggerType triggerType);
 
+    /**
+     * Deletes notification rule by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id id ({@link NotificationRuleId})
+     */
     void deleteNotificationRuleById(TenantId tenantId, NotificationRuleId id);
 
+    /**
+     * Deletes notification rules by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     */
     void deleteNotificationRulesByTenantId(TenantId tenantId);
 
 }

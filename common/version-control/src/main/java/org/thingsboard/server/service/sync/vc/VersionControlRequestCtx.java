@@ -23,11 +23,11 @@ import org.thingsboard.server.gen.transport.TransportProtos.ToVersionControlServ
 
 import java.util.UUID;
 
-@RequiredArgsConstructor
-@Data
 /**
  * Version control request ctx.
  */
+@RequiredArgsConstructor
+@Data
 public class VersionControlRequestCtx {
     private final String nodeId;
     private final UUID requestId;

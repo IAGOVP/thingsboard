@@ -45,6 +45,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * sms provider configuration contract.
  */
 public interface SmsProviderConfiguration {
+    /**
+     * Returns type.
+     *
+     * @return {@link SmsProviderType}
+     */
 
     @JsonIgnore
     SmsProviderType getType();

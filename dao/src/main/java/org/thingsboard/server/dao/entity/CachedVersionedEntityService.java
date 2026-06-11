@@ -22,11 +22,48 @@ import org.thingsboard.server.common.data.HasVersion;
 
 import java.io.Serializable;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * Cached versioned entity service.
+
+
+
+
+
+ * Cached versioned entity service (generic entity services, counts, and DAO registry).
+
+
+
+
+
 
  */
+
+
+
+
+
+
 
 public abstract class CachedVersionedEntityService<K extends VersionedCacheKey, V extends Serializable & HasVersion, E> extends AbstractCachedEntityService<K, V, E> {
 

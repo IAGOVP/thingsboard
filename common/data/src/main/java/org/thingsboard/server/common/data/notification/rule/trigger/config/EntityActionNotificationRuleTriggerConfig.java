@@ -40,6 +40,11 @@ public class EntityActionNotificationRuleTriggerConfig implements NotificationRu
     private boolean created;
     private boolean updated;
     private boolean deleted;
+    /**
+     * Returns trigger type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     */
 
     @Override
     public NotificationRuleTriggerType getTriggerType() {

@@ -19,8 +19,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.thingsboard.common.util.AbstractListeningExecutor;
 /**
- * Cache executor service.
+ * Dedicated thread pool for asynchronous cache operations in the DAO layer.
+ *
+ * <p>Pool size is configured via {@code cache.maximumPoolSize}. Used by Redis and Caffeine cache implementations to avoid blocking request threads on cache I/O.
  */
+
 
 @Component
 public class CacheExecutorService extends AbstractListeningExecutor {
@@ -28,11 +31,14 @@ public class CacheExecutorService extends AbstractListeningExecutor {
     @Value("${cache.maximumPoolSize}")
     private int poolSize;
 
+    
     /**
-
-     * Get thread poll size.
-
+     * Returns thread poll size.
+     *
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected int getThreadPollSize() {

@@ -24,7 +24,7 @@ import java.util.UUID;
 
 @Schema(allOf = EntityId.class)
 /**
- * Typed identifier for queue stats.
+ * Typed identifier for queue statistics snapshot.
  */
 public class QueueStatsId extends UUIDBased implements EntityId {
 
@@ -34,10 +34,21 @@ public class QueueStatsId extends UUIDBased implements EntityId {
     public QueueStatsId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * From string.
+     *
+     * @param queueId queue id ({@link String})
+     * @return {@link QueueStatsId}
+     */
 
     public static QueueStatsId fromString(String queueId) {
         return new QueueStatsId(UUID.fromString(queueId));
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY, description = "string", example = "QUEUE_STATS", allowableValues = "QUEUE_STATS")
     @Override

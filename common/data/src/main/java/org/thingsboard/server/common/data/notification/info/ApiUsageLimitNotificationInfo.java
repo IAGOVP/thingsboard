@@ -44,6 +44,11 @@ public class ApiUsageLimitNotificationInfo implements RuleOriginatedNotification
     private String currentValue;
     private TenantId tenantId;
     private String tenantName;
+    /**
+     * Returns template data.
+     *
+     * @return {@link Map}
+     */
 
     @Override
     public Map<String, String> getTemplateData() {
@@ -57,6 +62,11 @@ public class ApiUsageLimitNotificationInfo implements RuleOriginatedNotification
                 "tenantName", tenantName
         );
     }
+    /**
+     * Returns affected tenant id.
+     *
+     * @return {@link TenantId}
+     */
 
     @Override
     public TenantId getAffectedTenantId() {

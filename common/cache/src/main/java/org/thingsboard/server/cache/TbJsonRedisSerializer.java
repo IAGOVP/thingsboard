@@ -21,21 +21,50 @@ import org.thingsboard.common.util.JacksonUtil;
 import java.io.IOException;
 
 /**
- * Tb json redis serializer.
+ * JSON {@link TbRedisSerializer} for entity caches stored as UTF-8 JSON in Redis.
+ *
+ * <p>Uses {@link org.thingsboard.common.util.JacksonUtil} with unknown-property ignoring
+ * on deserialize for forward-compatible schema evolution.
+ *
+ * @param <K> cache key type
+ * @param <V> concrete value class
+ * @see TbRedisSerializer
+ * @see TbTypedJsonRedisSerializer
  */
 public class TbJsonRedisSerializer<K, V> implements TbRedisSerializer<K, V> {
 
+    /** Target class for Jackson deserialization. */
+
     private final Class<V> clazz;
 
+    /**
+     * Binds deserialization to a concrete value class.
+     *
+     * @param clazz target type for JSON deserialization
+     */
     public TbJsonRedisSerializer(Class<V> clazz) {
         this.clazz = clazz;
     }
 
+/**
+         * {@inheritDoc}
+         *
+         * @param v value to serialize
+         * @return JSON UTF-8 bytes
+         */
     @Override
     public byte[] serialize(V v) throws SerializationException {
         return JacksonUtil.writeValueAsBytes(v);
     }
 
+/**
+         * {@inheritDoc}
+         *
+         * @param key   cache key (unused)
+         * @param bytes JSON bytes
+         * @return deserialized entity, or {@code null} when bytes are {@code null}
+         * @throws org.springframework.data.redis.serializer.SerializationException when JSON is invalid
+         */
     @Override
     public V deserialize(K key, byte[] bytes) throws SerializationException {
         if (bytes == null) {

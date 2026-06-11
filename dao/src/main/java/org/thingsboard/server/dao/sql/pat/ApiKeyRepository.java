@@ -28,17 +28,46 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+
 /**
 
- * api key repository contract.
+ * Spring Data JPA repository for api key entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
 
+
 public interface ApiKeyRepository extends JpaRepository<ApiKeyEntity, UUID> {
+    /**
+     * Finds by value.
+     *
+     * @param value value ({@link String})
+     * @return {@link ApiKeyEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     ApiKeyEntity findByValue(String value);
+    /**
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     Page<ApiKeyEntity> findByTenantId(UUID tenantId, Pageable pageable);
+    /**
+     * Finds by tenant id and user id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<ApiKeyEntity> findByTenantIdAndUserId(UUID tenantId, UUID userId);
 
@@ -50,6 +79,13 @@ public interface ApiKeyRepository extends JpaRepository<ApiKeyEntity, UUID> {
                 RETURNING value
             """, nativeQuery = true
     )
+    /**
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Set<String> deleteByTenantId(@Param("tenantId") UUID tenantId);
 
     @Transactional
@@ -60,7 +96,22 @@ public interface ApiKeyRepository extends JpaRepository<ApiKeyEntity, UUID> {
                 RETURNING value
             """, nativeQuery = true
     )
+    /**
+     * Deletes by user id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Set<String> deleteByUserId(@Param("tenantId") UUID tenantId,
+    /**
+     * Deletes all by expiration time before.
+     *
+     * @param ts ts
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
                                @Param("userId") UUID userId);
 
     @Transactional

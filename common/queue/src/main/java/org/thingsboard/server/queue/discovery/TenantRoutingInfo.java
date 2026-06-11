@@ -19,10 +19,11 @@ import lombok.Data;
 import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.data.id.TenantProfileId;
 
-@Data
+
 /**
- * Tenant routing info.
+ * Tenant-specific routing metadata used to select the correct rule-engine queue.
  */
+@Data
 public class TenantRoutingInfo {
     private final TenantId tenantId;
     private final TenantProfileId profileId;

@@ -18,11 +18,10 @@ package org.thingsboard.server.dao.util;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-@Component
 /**
  * Default db type info component.
  */
+@Component
 public class DefaultDbTypeInfoComponent implements DbTypeInfoComponent {
 
     @Value("${database.ts_latest.type:sql}")

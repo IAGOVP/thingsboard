@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.UUID;
 
 /**
- * Typed identifier for component descriptor.
+ * Typed identifier for a rule engine component descriptor.
  */
 public final class ComponentDescriptorId extends UUIDBased {
 

@@ -16,7 +16,7 @@
 package org.thingsboard.server.queue;
 
 /**
- * tb queue callback contract.
+ * Contract for tb queue callback.
  */
 public interface TbQueueCallback {
 
@@ -33,8 +33,10 @@ public interface TbQueueCallback {
         }
     };
 
+    /** On success. */
     void onSuccess(TbQueueMsgMetadata metadata);
 
+    /** On failure. */
     void onFailure(Throwable t);
 
 }

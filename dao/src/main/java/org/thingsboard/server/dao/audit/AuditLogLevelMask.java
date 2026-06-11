@@ -17,8 +17,14 @@ package org.thingsboard.server.dao.audit;
 
 import lombok.Getter;
 /**
- * Audit log level mask.
+ * Enumerates audit log level mask values used in audit log persistence and log-level configuration.
  */
+
+
+
+
+
+
 
 @Getter
 public enum AuditLogLevelMask {

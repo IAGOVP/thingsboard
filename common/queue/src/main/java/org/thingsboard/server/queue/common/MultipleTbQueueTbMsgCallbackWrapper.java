@@ -15,15 +15,16 @@
  */
 package org.thingsboard.server.queue.common;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
+
 import org.thingsboard.server.common.msg.queue.RuleEngineException;
 import org.thingsboard.server.common.msg.queue.TbMsgCallback;
 import org.thingsboard.server.queue.TbQueueCallback;
 import org.thingsboard.server.queue.TbQueueMsgMetadata;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 /**
- * Multiple tb queue tb msg callback wrapper.
+ * Aggregates {@link TbQueueCallback} instances for multi-partition {@link TbMsg} sends.
  */
 public class MultipleTbQueueTbMsgCallbackWrapper implements TbQueueCallback {
 

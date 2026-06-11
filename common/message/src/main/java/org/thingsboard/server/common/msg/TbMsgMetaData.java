@@ -23,11 +23,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+/**
+ * String key-value metadata map carried alongside {@link TbMsg}.
+ */
 
 @Data
-/**
- * Tb msg meta data.
- */
 public final class TbMsgMetaData implements Serializable {
 
     public static final TbMsgMetaData EMPTY = new TbMsgMetaData(0);
@@ -54,6 +54,12 @@ public final class TbMsgMetaData implements Serializable {
         return data.get(key);
     }
 
+    /**
+     * Put value.
+     *
+     * @param key key ({@link String})
+     * @param value value ({@link String})
+     */
     public void putValue(String key, String value) {
         if (key != null && value != null) {
             data.put(key, value);

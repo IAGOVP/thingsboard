@@ -19,16 +19,35 @@ package org.thingsboard.server.common.transport.limits;
  * Dummy transport rate limit.
  */
 public class DummyTransportRateLimit implements TransportRateLimit {
+    /**
+     * Returns configuration.
+     *
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public String getConfiguration() {
         return "";
     }
+    /**
+     * Try consume.
+     *
+     * @param number number
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     public boolean tryConsume(long number) {
         return true;
     }
+    /**
+     * Try consume.
+     *
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     public boolean tryConsume() {

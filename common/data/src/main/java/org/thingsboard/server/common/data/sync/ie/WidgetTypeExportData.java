@@ -28,6 +28,11 @@ import org.thingsboard.server.common.data.widget.WidgetTypeDetails;
  * Widget type export data.
  */
 public class WidgetTypeExportData extends EntityExportData<WidgetTypeDetails> {
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Override
     public EntityType getEntityType() { return EntityType.WIDGET_TYPE; }

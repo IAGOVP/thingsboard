@@ -15,13 +15,6 @@
  */
 package org.thingsboard.server.queue.common.state;
 
-import lombok.Builder;
-import lombok.extern.slf4j.Slf4j;
-import org.thingsboard.server.common.msg.queue.TopicPartitionInfo;
-import org.thingsboard.server.queue.TbQueueMsg;
-import org.thingsboard.server.queue.common.consumer.PartitionedQueueConsumerManager;
-import org.thingsboard.server.queue.discovery.QueueKey;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -29,12 +22,19 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
+import lombok.Builder;
+import lombok.extern.slf4j.Slf4j;
+import org.thingsboard.server.common.msg.queue.TopicPartitionInfo;
+import org.thingsboard.server.queue.TbQueueMsg;
+import org.thingsboard.server.queue.common.consumer.PartitionedQueueConsumerManager;
+import org.thingsboard.server.queue.discovery.QueueKey;
+
 import static org.thingsboard.server.common.msg.queue.TopicPartitionInfo.withTopic;
 
-@Slf4j
 /**
- * Kafka queue state service.
+ * Kafka-backed {@link QueueStateService} storing consumer state in a dedicated topic.
  */
+@Slf4j
 public class KafkaQueueStateService<E extends TbQueueMsg, S extends TbQueueMsg> extends QueueStateService<E, S> {
 
     private final PartitionedQueueConsumerManager<S> stateConsumer;

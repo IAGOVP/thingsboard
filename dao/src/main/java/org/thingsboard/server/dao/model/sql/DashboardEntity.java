@@ -37,8 +37,11 @@ import org.thingsboard.server.dao.util.mapping.JsonConverter;
 import java.util.HashSet;
 import java.util.UUID;
 /**
- * Dashboard entity.
+ * JPA/Cassandra row model for dashboard.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @Slf4j
@@ -100,6 +103,12 @@ public final class DashboardEntity extends BaseVersionedEntity<Dashboard> {
             this.externalId = dashboard.getExternalId().getId();
         }
     }
+    /**
+     * To data.
+     *
+     * @return {@link Dashboard}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Dashboard toData() {

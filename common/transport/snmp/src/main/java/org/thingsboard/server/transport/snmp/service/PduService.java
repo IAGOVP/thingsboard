@@ -62,7 +62,15 @@ public class PduService {
 
     @Value("${transport.snmp.response.ignore_type_cast_errors:false}")
     private boolean ignoreTypeCastErrors;
-
+    /**
+     * Creates pdus.
+     *
+     * @param sessionContext session context ({@link DeviceSessionContext})
+     * @param communicationConfig communication config ({@link SnmpCommunicationConfig})
+     * @param values values ({@link Map})
+     * @return {@link List}
+     * @throws Exception on processing failure
+     */
     public List<PDU> createPdus(DeviceSessionContext sessionContext, SnmpCommunicationConfig communicationConfig, Map<String, String> values) {
         List<PDU> pdus = new ArrayList<>();
         List<SnmpMapping> allMappings = communicationConfig.getAllMappings();
@@ -86,7 +94,17 @@ public class PduService {
 
         return pdus;
     }
-
+    /**
+     * Creates single variable pdu.
+     *
+     * @param sessionContext session context ({@link DeviceSessionContext})
+     * @param snmpMethod snmp method ({@link SnmpMethod})
+     * @param oid oid ({@link String})
+     * @param value value ({@link String})
+     * @param dataType data type ({@link DataType})
+     * @return {@link PDU}
+     * @throws Exception on processing failure
+     */
     public PDU createSingleVariablePdu(DeviceSessionContext sessionContext, SnmpMethod snmpMethod, String oid, String value, DataType dataType) {
         PDU pdu = setUpPdu(sessionContext);
         pdu.setType(snmpMethod.getCode());
@@ -137,8 +155,14 @@ public class PduService {
         }
         return pdu;
     }
-
-
+    /**
+     * Processes pdus.
+     *
+     * @param pdus pdus ({@link List})
+     * @param responseMappings response mappings ({@link List})
+     * @return {@link JsonObject}
+     * @throws Exception on processing failure
+     */
     public JsonObject processPdus(List<PDU> pdus, List<SnmpMapping> responseMappings) {
         Map<OID, String> values = processPdus(pdus);
 
@@ -165,7 +189,13 @@ public class PduService {
 
         return data;
     }
-
+    /**
+     * Processes pdus.
+     *
+     * @param pdus pdus ({@link List})
+     * @return {@link Map}
+     * @throws Exception on processing failure
+     */
     public Map<OID, String> processPdus(List<PDU> pdus) {
         return pdus.stream()
                 .flatMap(pdu -> pdu.getVariableBindings().stream())
@@ -173,7 +203,16 @@ public class PduService {
                 .filter(variableBinding -> !(variableBinding.getVariable() instanceof Null))
                 .collect(Collectors.toMap(VariableBinding::getOid, VariableBinding::toValueString));
     }
-
+    /**
+     * Processes value.
+     *
+     * @param key key ({@link String})
+     * @param dataType data type ({@link DataType})
+     * @param value value ({@link String})
+     * @param result result ({@link JsonObject})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void processValue(String key, DataType dataType, String value, JsonObject result) {
         try {
             switch (dataType) {

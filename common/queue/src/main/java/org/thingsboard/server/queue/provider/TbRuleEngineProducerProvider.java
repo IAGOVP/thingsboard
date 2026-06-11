@@ -34,11 +34,12 @@ import org.thingsboard.server.gen.transport.TransportProtos.ToVersionControlServ
 import org.thingsboard.server.queue.TbQueueProducer;
 import org.thingsboard.server.queue.common.TbProtoQueueMsg;
 
+
+/**
+ * Provides rule-engine Kafka producers for tenant message routing.
+ */
 @Service
 @ConditionalOnExpression("'${service.type:null}'=='tb-rule-engine'")
-/**
- * Tb rule engine producer provider.
- */
 public class TbRuleEngineProducerProvider implements TbQueueProducerProvider {
 
     private final TbRuleEngineQueueFactory tbQueueProvider;

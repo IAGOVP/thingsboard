@@ -15,16 +15,18 @@
  */
 package org.thingsboard.server.queue.discovery.event;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
+
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.context.ApplicationEvent;
 
-import java.util.concurrent.atomic.AtomicInteger;
 
-@ToString
 /**
- * Tb application event.
+ * Base class for queue/discovery-related Spring application events.
  */
+@ToString
 public class TbApplicationEvent extends ApplicationEvent {
 
     private static final long serialVersionUID = 3884264064887765146L;

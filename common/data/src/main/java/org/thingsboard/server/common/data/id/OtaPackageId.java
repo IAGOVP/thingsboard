@@ -25,7 +25,7 @@ import java.util.UUID;
 
 @Schema(allOf = EntityId.class)
 /**
- * Typed identifier for ota package.
+ * Typed identifier for firmware/software OTA package ({@link org.thingsboard.server.common.data.EntityType#OTA_PACKAGE}).
  */
 public class OtaPackageId extends UUIDBased implements EntityId {
 
@@ -36,10 +36,21 @@ public class OtaPackageId extends UUIDBased implements EntityId {
     public OtaPackageId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * From string.
+     *
+     * @param firmwareId firmware id ({@link String})
+     * @return {@link OtaPackageId}
+     */
 
     public static OtaPackageId fromString(String firmwareId) {
         return new OtaPackageId(UUID.fromString(firmwareId));
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY, description = "string", example = "OTA_PACKAGE", allowableValues = "OTA_PACKAGE")
     @Override

@@ -41,6 +41,11 @@ public class SmsDeliveryMethodNotificationTemplate extends DeliveryMethodNotific
     public SmsDeliveryMethodNotificationTemplate(SmsDeliveryMethodNotificationTemplate other) {
         super(other);
     }
+    /**
+     * Returns body.
+     *
+     * @return {@link String}
+     */
 
     @NoXss(fieldName = "SMS message")
     @Length(fieldName = "SMS message", max = 320, message = "cannot be longer than 320 chars")
@@ -48,11 +53,21 @@ public class SmsDeliveryMethodNotificationTemplate extends DeliveryMethodNotific
     public String getBody() {
         return super.getBody();
     }
+    /**
+     * Returns method.
+     *
+     * @return {@link NotificationDeliveryMethod}
+     */
 
     @Override
     public NotificationDeliveryMethod getMethod() {
         return NotificationDeliveryMethod.SMS;
     }
+    /**
+     * Copy.
+     *
+     * @return {@link DeliveryMethodNotificationTemplate}
+     */
 
     @Override
     public DeliveryMethodNotificationTemplate copy() {

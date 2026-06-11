@@ -28,8 +28,9 @@ import static org.thingsboard.server.common.data.edqs.fields.FieldsUtil.getText;
 @NoArgsConstructor
 @SuperBuilder
 /**
- * Tenant fields.
+ * Lightweight tenant field selection for EDQS queries and events (EDQS data — lightweight entity field DTOs for EDQS).
  */
+
 public class TenantFields extends AbstractEntityFields {
 
     private String additionalInfo;
@@ -58,6 +59,14 @@ public class TenantFields extends AbstractEntityFields {
         this.email = email;
         this.region = region;
     }
+    
+    /**
+     * Returns tenant id.
+     *
+     * @return {@link UUID}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public UUID getTenantId() {

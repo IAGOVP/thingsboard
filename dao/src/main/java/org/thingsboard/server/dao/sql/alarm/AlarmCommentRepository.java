@@ -25,11 +25,17 @@ import org.thingsboard.server.dao.model.sql.AlarmCommentInfoEntity;
 
 import java.util.UUID;
 
+
 /**
 
- * alarm comment repository contract.
+ * Spring Data JPA repository for alarm comment entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
+
 
 public interface AlarmCommentRepository extends JpaRepository<AlarmCommentEntity, UUID> {
 
@@ -40,8 +46,24 @@ public interface AlarmCommentRepository extends JpaRepository<AlarmCommentEntity
                     "SELECT count(a) " +
                     "FROM AlarmCommentEntity a " +
                     "WHERE a.alarmId = :alarmId ")
+    /**
+     * Finds all by alarm id.
+     *
+     * @param alarmId alarm id ({@link UUID})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<AlarmCommentInfoEntity> findAllByAlarmId(@Param("alarmId") UUID alarmId,
                                                   Pageable pageable);
+    /**
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Query("SELECT c FROM AlarmCommentEntity c WHERE c.userId IN (SELECT u.id FROM UserEntity u WHERE u.tenantId = :tenantId)")
     Page<AlarmCommentEntity> findByTenantId(@Param("tenantId") UUID tenantId, Pageable pageable);

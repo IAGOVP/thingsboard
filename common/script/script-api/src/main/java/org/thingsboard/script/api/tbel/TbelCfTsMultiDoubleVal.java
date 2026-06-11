@@ -18,10 +18,10 @@ package org.thingsboard.script.api.tbel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
-@Data
 /**
  * Tbel cf ts multi double val.
  */
+@Data
 public class TbelCfTsMultiDoubleVal implements TbelCfObject {
 
     public static final long OBJ_SIZE = 32L; // Approximate calculation;
@@ -31,26 +31,31 @@ public class TbelCfTsMultiDoubleVal implements TbelCfObject {
 
     @JsonIgnore
     public double getV1() {
+        /** Returns the v. */
         return getV(0);
     }
 
     @JsonIgnore
     public double getV2() {
+        /** Returns the v. */
         return getV(1);
     }
 
     @JsonIgnore
     public double getV3() {
+        /** Returns the v. */
         return getV(2);
     }
 
     @JsonIgnore
     public double getV4() {
+        /** Returns the v. */
         return getV(3);
     }
 
     @JsonIgnore
     public double getV5() {
+        /** Returns the v. */
         return getV(4);
     }
 

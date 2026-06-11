@@ -51,41 +51,81 @@ public class AdminSettings extends BaseData<AdminSettingsId> implements HasTenan
         this.key = adminSettings.getKey();
         this.jsonValue = adminSettings.getJsonValue();
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link AdminSettingsId}
+     */
 
     @Schema(description = "The Id of the Administration Settings, auto-generated, UUID")
     @Override
     public AdminSettingsId getId() {
         return super.getId();
     }
+    /**
+     * Returns created time.
+     *
+     * @return the long result
+     */
 
     @Schema(description = "Timestamp of the settings creation, in milliseconds", example = "1609459200000", accessMode = Schema.AccessMode.READ_ONLY)
     @Override
     public long getCreatedTime() {
         return super.getCreatedTime();
     }
+    /**
+     * Returns tenant id.
+     *
+     * @return {@link TenantId}
+     */
 
     @Schema(description = "JSON object with Tenant Id.", accessMode = Schema.AccessMode.READ_ONLY)
     public TenantId getTenantId() {
         return tenantId;
     }
+    /**
+     * Set tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     */
 
     public void setTenantId(TenantId tenantId) {
         this.tenantId = tenantId;
     }
+    /**
+     * Returns key.
+     *
+     * @return {@link String}
+     */
 
     @Schema(description = "The Administration Settings key, (e.g. 'general' or 'mail')", example = "mail")
     public String getKey() {
         return key;
     }
+    /**
+     * Set key.
+     *
+     * @param key key ({@link String})
+     */
 
     public void setKey(String key) {
         this.key = key;
     }
+    /**
+     * Returns json value.
+     *
+     * @return {@link JsonNode}
+     */
 
     @Schema(description = "JSON representation of the Administration Settings value")
     public JsonNode getJsonValue() {
         return jsonValue;
     }
+    /**
+     * Set json value.
+     *
+     * @param jsonValue json value ({@link JsonNode})
+     */
 
     public void setJsonValue(JsonNode jsonValue) {
         this.jsonValue = jsonValue;

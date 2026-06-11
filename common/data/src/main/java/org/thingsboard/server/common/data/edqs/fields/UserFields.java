@@ -28,8 +28,9 @@ import static org.thingsboard.server.common.data.edqs.fields.FieldsUtil.getText;
 @NoArgsConstructor
 @SuperBuilder
 /**
- * User fields.
+ * Lightweight user field selection for EDQS queries and events (EDQS data — lightweight entity field DTOs for EDQS).
  */
+
 public class UserFields extends AbstractEntityFields {
 
     private String firstName;
@@ -37,6 +38,14 @@ public class UserFields extends AbstractEntityFields {
     private String email;
     private String phone;
     private String additionalInfo;
+    
+    /**
+     * Returns name.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public String getName() {

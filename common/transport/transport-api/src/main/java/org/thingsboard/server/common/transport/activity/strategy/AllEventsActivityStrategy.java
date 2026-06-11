@@ -24,15 +24,32 @@ public final class AllEventsActivityStrategy implements ActivityStrategy {
 
     private AllEventsActivityStrategy() {
     }
-
+    /**
+     * Returns instance.
+     *
+     * @return {@link AllEventsActivityStrategy}
+     * @throws Exception on processing failure
+     */
     public static AllEventsActivityStrategy getInstance() {
         return INSTANCE;
     }
+    /**
+     * Handles activity.
+     *
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     public boolean onActivity() {
         return true;
     }
+    /**
+     * Handles reporting period end.
+     *
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     public boolean onReportingPeriodEnd() {

@@ -26,6 +26,7 @@ public interface TbActorId {
      * This method is added for performance optimization.
      *
      */
+    /** Returns the entity type. */
     EntityType getEntityType();
 
 }

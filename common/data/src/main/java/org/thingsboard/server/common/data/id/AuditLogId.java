@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.UUID;
 
 /**
- * Typed identifier for audit log.
+ * Typed identifier for an audit log entry.
  */
 public class AuditLogId extends UUIDBased {
 
@@ -31,6 +31,12 @@ public class AuditLogId extends UUIDBased {
     public AuditLogId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * From string.
+     *
+     * @param auditLogId audit log id ({@link String})
+     * @return {@link AuditLogId}
+     */
 
     public static AuditLogId fromString(String auditLogId) {
         return new AuditLogId(UUID.fromString(auditLogId));

@@ -31,11 +31,10 @@ import org.thingsboard.server.dao.cassandra.guava.GuavaSessionBuilder;
 import org.thingsboard.server.dao.cassandra.guava.GuavaSessionUtils;
 
 import java.nio.file.Paths;
-
-@Slf4j
 /**
  * Abstract cassandra cluster.
  */
+@Slf4j
 public abstract class AbstractCassandraCluster {
 
     @Value("${cassandra.jmx}")

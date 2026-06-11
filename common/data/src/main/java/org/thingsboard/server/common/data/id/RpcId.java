@@ -24,7 +24,7 @@ import java.util.UUID;
 
 @Schema(allOf = EntityId.class)
 /**
- * Typed identifier for rpc.
+ * Typed identifier for a server-side RPC request to a device ({@link org.thingsboard.server.common.data.EntityType#RPC}).
  */
 public final class RpcId extends UUIDBased implements EntityId {
 
@@ -34,6 +34,11 @@ public final class RpcId extends UUIDBased implements EntityId {
     public RpcId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY, description = "string", example = "RPC", allowableValues = "RPC")
     @Override

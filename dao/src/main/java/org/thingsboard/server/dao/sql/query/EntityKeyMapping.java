@@ -53,8 +53,14 @@ import static org.thingsboard.server.common.data.StringUtils.splitByCommaWithout
 import static org.thingsboard.server.common.data.id.EntityId.NULL_UUID;
 import static org.thingsboard.server.dao.sql.query.DefaultEntityQueryRepository.resolveEntityType;
 /**
- * Entity key mapping.
+ * Entity key mapping (JPA/PostgreSQL persistence layer (JPA repositories and PostgreSQL DAO implementations)).
  */
+
+
+
+
+
+
 
 @Data
 public class EntityKeyMapping {
@@ -209,10 +215,22 @@ public class EntityKeyMapping {
     private List<KeyFilter> keyFilters;
     private EntityKey entityKey;
     private int paramIdx = 0;
+    /**
+     * Has filter.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean hasFilter() {
         return keyFilters != null && !keyFilters.isEmpty();
     }
+    /**
+     * Returns value alias.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getValueAlias() {
         if (entityKey.getType().equals(EntityKeyType.ENTITY_FIELD)) {
@@ -221,10 +239,24 @@ public class EntityKeyMapping {
             return alias + "_value";
         }
     }
+    /**
+     * Returns ts alias.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getTsAlias() {
         return alias + "_ts";
     }
+    /**
+     * To selection.
+     *
+     * @param filterType filter type ({@link EntityFilterType})
+     * @param entityType entity type discriminator
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String toSelection(EntityFilterType filterType, EntityType entityType) {
         if (entityKey.getType().equals(EntityKeyType.ENTITY_FIELD)) {
@@ -285,10 +317,27 @@ public class EntityKeyMapping {
         }
         return alias;
     }
+    /**
+     * To queries.
+     *
+     * @param ctx calculated-field execution context
+     * @param filterType filter type ({@link EntityFilterType})
+     * @return {@link Stream}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Stream<String> toQueries(SqlQueryContext ctx, EntityFilterType filterType) {
         return toQueries(ctx, filterType, false);
     }
+    /**
+     * To queries.
+     *
+     * @param ctx calculated-field execution context
+     * @param filterType filter type ({@link EntityFilterType})
+     * @param outerContext outer context
+     * @return {@link Stream}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Stream<String> toQueries(SqlQueryContext ctx, EntityFilterType filterType, boolean outerContext) {
         if (!hasFilter()) {
@@ -314,10 +363,29 @@ public class EntityKeyMapping {
         return keyFilters.stream().map(keyFilter ->
                 this.buildKeyQuery(ctx, keyAlias, keyFilter, filterType, aliasAsField));
     }
+    /**
+     * To latest join.
+     *
+     * @param ctx calculated-field execution context
+     * @param entityFilter entity filter ({@link EntityFilter})
+     * @param entityType entity type discriminator
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String toLatestJoin(SqlQueryContext ctx, EntityFilter entityFilter, EntityType entityType) {
         return toLatestJoin(ctx, entityFilter, entityType, false);
     }
+    /**
+     * To latest join.
+     *
+     * @param ctx calculated-field execution context
+     * @param entityFilter entity filter ({@link EntityFilter})
+     * @param entityType entity type discriminator
+     * @param forceLeftJoin force left join
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String toLatestJoin(SqlQueryContext ctx, EntityFilter entityFilter, EntityType entityType, boolean forceLeftJoin) {
         String entityTypeStr;
@@ -374,15 +442,47 @@ public class EntityKeyMapping {
     private String getKeyId() {
         return alias + "_key_id";
     }
+    /**
+     * Build selections.
+     *
+     * @param mappings mappings ({@link List})
+     * @param filterType filter type ({@link EntityFilterType})
+     * @param entityType entity type discriminator
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String buildSelections(List<EntityKeyMapping> mappings, EntityFilterType filterType, EntityType entityType) {
         return mappings.stream().map(mapping -> mapping.toSelection(filterType, entityType)).collect(
                 Collectors.joining(", "));
     }
+    /**
+     * Build latest joins.
+     *
+     * @param ctx calculated-field execution context
+     * @param entityFilter entity filter ({@link EntityFilter})
+     * @param entityType entity type discriminator
+     * @param latestMappings latest mappings ({@link List})
+     * @param countQuery count query
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String buildLatestJoins(SqlQueryContext ctx, EntityFilter entityFilter, EntityType entityType, List<EntityKeyMapping> latestMappings, boolean countQuery) {
         return buildLatestJoins(ctx, entityFilter, entityType, latestMappings, countQuery, false);
     }
+    /**
+     * Build latest joins.
+     *
+     * @param ctx calculated-field execution context
+     * @param entityFilter entity filter ({@link EntityFilter})
+     * @param entityType entity type discriminator
+     * @param latestMappings latest mappings ({@link List})
+     * @param countQuery count query
+     * @param forceLeftJoin force left join
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String buildLatestJoins(SqlQueryContext ctx, EntityFilter entityFilter, EntityType entityType,
                                            List<EntityKeyMapping> latestMappings, boolean countQuery, boolean forceLeftJoin) {
@@ -391,10 +491,29 @@ public class EntityKeyMapping {
                 .map(mapping -> mapping.toLatestJoin(ctx, entityFilter, entityType, forceLeftJoin))
                 .collect(Collectors.joining(" "));
     }
+    /**
+     * Build query.
+     *
+     * @param ctx calculated-field execution context
+     * @param mappings mappings ({@link List})
+     * @param filterType filter type ({@link EntityFilterType})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String buildQuery(SqlQueryContext ctx, List<EntityKeyMapping> mappings, EntityFilterType filterType) {
         return buildQuery(ctx, mappings, filterType, ComplexOperation.AND);
     }
+    /**
+     * Build query.
+     *
+     * @param ctx calculated-field execution context
+     * @param mappings mappings ({@link List})
+     * @param filterType filter type ({@link EntityFilterType})
+     * @param operation operation ({@link ComplexOperation})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String buildQuery(SqlQueryContext ctx, List<EntityKeyMapping> mappings,
                                      EntityFilterType filterType, ComplexOperation operation) {
@@ -407,6 +526,14 @@ public class EntityKeyMapping {
                 .filter(StringUtils::isNotEmpty)
                 .collect(Collectors.joining(joiner));
     }
+    /**
+     * Prepare key mapping.
+     *
+     * @param entityType entity type discriminator
+     * @param query filter and sort query definition
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static List<EntityKeyMapping> prepareKeyMapping(EntityType entityType, EntityDataQuery query) {
         EntityFilterType entityFilterType = query.getEntityFilter().getType();
@@ -533,6 +660,13 @@ public class EntityKeyMapping {
             entityKeyColumn = entityFieldColumnMap.get(entityFieldAlias);
         }
     }
+    /**
+     * Prepare entity count key mapping.
+     *
+     * @param query filter and sort query definition
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static List<EntityKeyMapping> prepareEntityCountKeyMapping(EntityCountQuery query) {
         EntityType entityType = resolveEntityType(query.getEntityFilter());
@@ -611,10 +745,22 @@ public class EntityKeyMapping {
             return String.join(", ", attrValSelection, attrTsSelection);
         }
     }
+    /**
+     * Returns sort order str alias.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getSortOrderStrAlias() {
         return getValueAlias() + "_so_varchar";
     }
+    /**
+     * Returns sort order num alias.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getSortOrderNumAlias() {
         return getValueAlias() + "_so_num";

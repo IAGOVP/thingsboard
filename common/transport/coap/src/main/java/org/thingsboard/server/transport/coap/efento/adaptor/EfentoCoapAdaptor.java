@@ -35,7 +35,14 @@ import java.util.UUID;
 public class EfentoCoapAdaptor {
 
     private static final Gson gson = new Gson();
-
+    /**
+     * Convert to post telemetry.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param telemetryList telemetry list ({@link List})
+     * @return the TransportProtos.PostTelemetryMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
     public TransportProtos.PostTelemetryMsg convertToPostTelemetry(UUID sessionId, List<CoapEfentoTransportResource.EfentoTelemetry> telemetryList) throws AdaptorException {
         try {
             return JsonConverter.convertToTelemetryProto(gson.toJsonTree(telemetryList));
@@ -44,7 +51,14 @@ public class EfentoCoapAdaptor {
             throw new AdaptorException(ex);
         }
     }
-
+    /**
+     * Convert to post attributes.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param deviceInfo device info ({@link JsonElement})
+     * @return the TransportProtos.PostAttributeMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
     public TransportProtos.PostAttributeMsg convertToPostAttributes(UUID sessionId, JsonElement deviceInfo) throws AdaptorException {
         try {
             return JsonConverter.convertToAttributesProto(deviceInfo);

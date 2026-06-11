@@ -28,21 +28,50 @@ import org.thingsboard.server.dao.model.sql.UserSettingsEntity;
 import java.util.List;
 import java.util.UUID;
 
+
 /**
 
- * user settings repository contract.
+ * Spring Data JPA repository for user settings entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
 
+
 public interface UserSettingsRepository extends JpaRepository<UserSettingsEntity, UserSettingsCompositeKey> {
+    /**
+     * Deletes by user id.
+     *
+     * @param userId target user identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Transactional
     @Modifying
     @Query("DELETE FROM UserSettingsEntity s WHERE s.userId = :userId")
     void deleteByUserId(@Param("userId") UUID userId);
+    /**
+     * Finds by type and path existing.
+     *
+     * @param type type ({@link String})
+     * @param path path
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Query(value = "SELECT * FROM user_settings WHERE type = :type AND (settings #> :path) IS NOT NULL", nativeQuery = true)
     List<UserSettingsEntity> findByTypeAndPathExisting(@Param("type") String type, @Param("path") String[] path);
+    /**
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Query("SELECT s FROM UserSettingsEntity s WHERE s.userId IN (SELECT u.id FROM UserEntity u WHERE u.tenantId = :tenantId)")
     Page<UserSettingsEntity> findByTenantId(@Param("tenantId") UUID tenantId, Pageable pageable);

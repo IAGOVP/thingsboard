@@ -22,11 +22,11 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.data.query.EntityCountQuery;
 import org.thingsboard.server.common.data.query.EntityDataQuery;
 
-@Service
-@ConditionalOnMissingBean(value = EdqsStatsService.class, ignored = DummyEdqsStatsService.class)
 /**
  * Dummy edqs stats service.
  */
+@Service
+@ConditionalOnMissingBean(value = EdqsStatsService.class, ignored = DummyEdqsStatsService.class)
 public class DummyEdqsStatsService implements EdqsStatsService {
 
     @Override

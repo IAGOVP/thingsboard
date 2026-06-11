@@ -15,16 +15,18 @@
  */
 package org.thingsboard.server.queue.util;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
-
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+
+
+/**
+ * Classpath marker for Version Control service components.
+ */
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @ConditionalOnExpression("'${service.type:null}'=='monolith' || '${service.type:null}'=='tb-vc-executor'")
-public @/**
- * tb version control component contract.
- */
-interface TbVersionControlComponent {}
+public @interface TbVersionControlComponent {}

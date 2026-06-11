@@ -34,13 +34,28 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+/**
+ * Spring configuration registering Caffeine-backed caches from {@link CacheSpecsMap}.
+ *
+ * <p>Activated when {@code cache.type=caffeine} (default when property is absent).
+ * Builds a {@link org.springframework.cache.support.SimpleCacheManager} with one
+ * {@link org.springframework.cache.caffeine.CaffeineCache} per configured spec.
+ *
+ * <p>Each cache uses:
+ * <ul>
+ *   <li>{@link CacheSpecs#getMaxSize()} as Caffeine maximum weight</li>
+ *   <li>{@link CacheSpecs#getTimeToLiveInMinutes()} for {@code expireAfterWrite} (skipped when 0)</li>
+ *   <li>A collection-aware weigher so list-valued entries count by element count</li>
+ * </ul>
+ *
+ * @see CacheSpecsMap
+ * @see CaffeineTbTransactionalCache
+ * @see TBRedisCacheConfiguration
+ */
 @Configuration
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "caffeine", matchIfMissing = true)
 @EnableCaching
 @Slf4j
-/**
- * Configuration for tb caffeine cacheuration.
- */
 public class TbCaffeineCacheConfiguration {
 
     private final CacheSpecsMap configuration;
@@ -49,6 +64,11 @@ public class TbCaffeineCacheConfiguration {
         this.configuration = configuration;
     }
 
+/**
+         * Creates the Spring {@link CacheManager} with all configured Caffeine caches.
+         *
+         * @return initialized simple cache manager
+         */
     /**
      * Transaction aware CaffeineCache implementation with TransactionAwareCacheManagerProxy
      * to synchronize cache put/evict operations with ongoing Spring-managed transactions.
@@ -84,6 +104,11 @@ public class TbCaffeineCacheConfiguration {
         return new CaffeineCache(name, caffeineBuilder.build());
     }
 
+/**
+         * Supplies the Caffeine {@link com.github.benmanes.caffeine.cache.Ticker} for TTL measurement.
+         *
+         * @return system nano-time ticker
+         */
     @Bean
     public Ticker ticker() {
         return Ticker.systemTicker();

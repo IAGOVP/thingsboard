@@ -18,13 +18,25 @@ package org.thingsboard.server.edqs.query.processor;
 import org.thingsboard.server.common.data.permission.QueryContext;
 import org.thingsboard.server.edqs.query.EdqsQuery;
 import org.thingsboard.server.edqs.repo.TenantRepo;
+
 /**
- * Maps {@link org.thingsboard.server.common.data.query.EntityFilter} type to a concrete {@link EntityQueryProcessor} implementation.
+ * Maps {@link org.thingsboard.server.common.data.query.EntityFilter} types to concrete query processors.
  */
+
 public class EntityQueryProcessorFactory {
 
-    /** Selects processor implementation for the query's {@link org.thingsboard.server.common.data.query.EntityFilter} type. */
-    public static EntityQueryProcessor create(TenantRepo repo, QueryContext ctx, EdqsQuery query) {
+    
+        /**
+         * Selects the query processor implementation for the query's entity filter type.
+         *
+         * @param repo tenant-scoped in-memory index to query
+         * @param ctx query permission context (user, customer, authority)
+         * @param query entity count or data query with filter, sort, and key selections
+         * @return {@link EntityQueryProcessor}
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
+public static EntityQueryProcessor create(TenantRepo repo, QueryContext ctx, EdqsQuery query) {
         return switch (query.getEntityFilter().getType()) {
             case SINGLE_ENTITY -> new SingleEntityQueryProcessor(repo, ctx, query);
             case ENTITY_LIST -> new EntityListQueryProcessor(repo, ctx, query);

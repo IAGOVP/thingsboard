@@ -79,6 +79,11 @@ public class MobileAppBundle extends BaseData<MobileAppBundleId> implements HasT
         this.layoutConfig = mobile.layoutConfig;
         this.oauth2Enabled = mobile.oauth2Enabled;
     }
+    /**
+     * Returns name.
+     *
+     * @return {@link String}
+     */
 
     @Override
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

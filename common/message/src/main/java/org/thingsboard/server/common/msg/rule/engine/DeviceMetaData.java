@@ -24,9 +24,6 @@ import org.thingsboard.server.common.data.id.DeviceId;
  * @author ashvayka
  */
 @Data
-/**
- * Device meta data.
- */
 public final class DeviceMetaData {
 
     final DeviceId deviceId;

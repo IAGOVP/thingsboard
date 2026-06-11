@@ -25,7 +25,7 @@ import java.util.List;
 
 @Data
 /**
- * Alarm api call result.
+ * Result wrapper for alarm REST API operations.
  */
 public class AlarmApiCallResult implements Serializable {
 
@@ -60,6 +60,11 @@ public class AlarmApiCallResult implements Serializable {
         this.old = other.old;
         this.propagatedEntitiesList = propagatedEntitiesList;
     }
+    /**
+     * Is severity changed.
+     *
+     * @return the boolean result
+     */
 
     public boolean isSeverityChanged() {
         if (alarm == null || old == null) {
@@ -68,6 +73,11 @@ public class AlarmApiCallResult implements Serializable {
             return !alarm.getSeverity().equals(old.getSeverity());
         }
     }
+    /**
+     * Is acknowledged.
+     *
+     * @return the boolean result
+     */
 
     public boolean isAcknowledged() {
         if (alarm == null || old == null) {
@@ -76,10 +86,20 @@ public class AlarmApiCallResult implements Serializable {
             return alarm.isAcknowledged() != old.isAcknowledged();
         }
     }
+    /**
+     * Returns old severity.
+     *
+     * @return {@link AlarmSeverity}
+     */
 
     public AlarmSeverity getOldSeverity() {
         return isSeverityChanged() ? old.getSeverity() : null;
     }
+    /**
+     * Is propagation changed.
+     *
+     * @return the boolean result
+     */
 
     public boolean isPropagationChanged() {
         if (created) {

@@ -26,11 +26,21 @@ import org.thingsboard.server.common.data.transport.snmp.SnmpMethod;
  */
 public abstract class RepeatingQueryingSnmpCommunicationConfig extends MultipleMappingsSnmpCommunicationConfig {
     private Long queryingFrequencyMs;
+    /**
+     * Returns method.
+     *
+     * @return {@link SnmpMethod}
+     */
 
     @Override
     public SnmpMethod getMethod() {
         return SnmpMethod.GET;
     }
+    /**
+     * Is valid.
+     *
+     * @return the boolean result
+     */
 
     @Override
     public boolean isValid() {

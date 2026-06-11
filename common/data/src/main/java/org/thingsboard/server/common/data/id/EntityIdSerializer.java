@@ -23,9 +23,18 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import java.io.IOException;
 
 /**
- * Created by ashvayka on 11.05.17.
+ * Jackson serializer for {@link EntityId} polymorphic JSON output.
  */
 public class EntityIdSerializer extends JsonSerializer<EntityId> {
+    /**
+     * Serialize.
+     *
+     * @param value value ({@link EntityId})
+     * @param gen gen ({@link JsonGenerator})
+     * @param serializers serializers ({@link SerializerProvider})
+     * @throws IOException if ioexception is thrown during processing
+     * @throws JsonProcessingException if json processing exception is thrown during processing
+     */
 
     @Override
     public void serialize(EntityId value, JsonGenerator gen, SerializerProvider serializers) throws IOException, JsonProcessingException {

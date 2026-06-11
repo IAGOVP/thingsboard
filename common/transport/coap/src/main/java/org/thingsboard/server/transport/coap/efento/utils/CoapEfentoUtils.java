@@ -44,8 +44,13 @@ public class CoapEfentoUtils {
     public static final int CO2_GAS_METADATA_FACTOR = 3;
     public static final int CO2_EQUIVALENT_METADATA_FACTOR = 3;
     public static final int BREATH_VOC_METADATA_FACTOR = 3;
-
-
+    /**
+     * Convert byte array to string.
+     *
+     * @param a a
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
     public static String convertByteArrayToString(byte[] a) {
         StringBuilder out = new StringBuilder();
         for (byte b : a) {
@@ -53,7 +58,13 @@ public class CoapEfentoUtils {
         }
         return out.toString();
     }
-
+    /**
+     * Convert timestamp to utc string.
+     *
+     * @param timestampInMillis timestamp in millis
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
     public static String convertTimestampToUtcString(long timestampInMillis) {
         String dateFormat = "yyyy-MM-dd HH:mm:ss";
         String utcZone = "UTC";
@@ -61,7 +72,16 @@ public class CoapEfentoUtils {
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone(utcZone));
         return String.format("%s UTC", simpleDateFormat.format(new Date(timestampInMillis)));
     }
-
+    /**
+     * Set default measurements.
+     *
+     * @param serialNumber serial number ({@link String})
+     * @param batteryStatus battery status
+     * @param nextTransmissionAtMillis next transmission at millis
+     * @param signal signal
+     * @return {@link JsonObject}
+     * @throws Exception on processing failure
+     */
     public static JsonObject setDefaultMeasurements(String serialNumber, boolean batteryStatus, long nextTransmissionAtMillis, long signal) {
         JsonObject values = new JsonObject();
         values.addProperty("serial", serialNumber);
@@ -70,11 +90,23 @@ public class CoapEfentoUtils {
         values.addProperty("signal", signal);
         return values;
     }
-
+    /**
+     * Is binary sensor.
+     *
+     * @param type type ({@link MeasurementType})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     public static boolean isBinarySensor(MeasurementType type) {
         return type == MEASUREMENT_TYPE_OK_ALARM || type == MEASUREMENT_TYPE_FLOODING || type == MEASUREMENT_TYPE_OUTPUT_CONTROL;
     }
-
+    /**
+     * Is sensor error.
+     *
+     * @param sampleOffset sample offset
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     public static boolean isSensorError(int sampleOffset) {
         return sampleOffset >= 8355840 && sampleOffset <= 8388607;
     }

@@ -32,6 +32,15 @@ import java.util.UUID;
  * Alias entity id deserializer.
  */
 public class AliasEntityIdDeserializer extends JsonDeserializer<AliasEntityId> {
+    /**
+     * Deserialize.
+     *
+     * @param jsonParser json parser ({@link JsonParser})
+     * @param ctx calculated-field execution context
+     * @return {@link AliasEntityId}
+     * @throws IOException if ioexception is thrown during processing
+     * @throws JacksonException if jackson exception is thrown during processing
+     */
 
     @Override
     public AliasEntityId deserialize(JsonParser jsonParser, DeserializationContext ctx) throws IOException, JacksonException {

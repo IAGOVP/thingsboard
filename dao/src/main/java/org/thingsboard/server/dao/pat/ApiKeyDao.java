@@ -25,23 +25,74 @@ import org.thingsboard.server.dao.Dao;
 import java.util.List;
 import java.util.Set;
 
+
 /**
 
- * Persistence contract for api key (see JPA/Cassandra implementations).
+ * Persistence contract for api key.
+
+ *
+
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (personal access tokens (API keys)).
 
  */
 
+
 public interface ApiKeyDao extends Dao<ApiKey> {
+    /**
+     * Finds by value.
+     *
+     * @param value value ({@link String})
+     * @return {@link ApiKey}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     ApiKey findByValue(String value);
+    /**
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<ApiKey> findByTenantId(TenantId tenantId, PageLink pageLink);
+    /**
+     * Finds by tenant id and user id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<ApiKey> findByTenantIdAndUserId(TenantId tenantId, UserId userId);
+    /**
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     Set<String> deleteByTenantId(TenantId tenantId);
+    /**
+     * Deletes by user id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     Set<String> deleteByUserId(TenantId tenantId, UserId userId);
+    /**
+     * Deletes all by expiration time before.
+     *
+     * @param ts ts
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     int deleteAllByExpirationTimeBefore(long ts);
 

@@ -26,11 +26,21 @@ import java.util.List;
  */
 public abstract class MultipleMappingsSnmpCommunicationConfig implements SnmpCommunicationConfig {
     protected List<SnmpMapping> mappings;
+    /**
+     * Is valid.
+     *
+     * @return the boolean result
+     */
 
     @Override
     public boolean isValid() {
         return mappings != null && !mappings.isEmpty() && mappings.stream().allMatch(mapping -> mapping != null && mapping.isValid());
     }
+    /**
+     * Returns all mappings.
+     *
+     * @return {@link List}
+     */
 
     @Override
     public List<SnmpMapping> getAllMappings() {

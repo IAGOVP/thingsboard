@@ -28,6 +28,11 @@ import lombok.NoArgsConstructor;
 public class AggFunctionInput implements AggInput {
 
     private String function;
+    /**
+     * Returns type.
+     *
+     * @return {@link String}
+     */
 
     @Override
     public String getType() {

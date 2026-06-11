@@ -22,14 +22,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.thingsboard.server.queue.util.TbKafkaComponent;
 
+
+/**
+ * Configuration for Kafka consumer statistic collection intervals and thresholds.
+ */
 @Component
 @TbKafkaComponent
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-/**
- * Configuration for tb kafka consumer statistic.
- */
 public class TbKafkaConsumerStatisticConfig {
     @Value("${queue.kafka.consumer-stats.enabled:true}")
     private Boolean enabled;

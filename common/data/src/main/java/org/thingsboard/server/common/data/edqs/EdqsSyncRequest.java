@@ -28,8 +28,9 @@ import java.util.Set;
 @NoArgsConstructor
 @JsonIgnoreProperties
 /**
- * Edqs sync request.
+ * Edqs sync request (EDQS data).
  */
+
 public class EdqsSyncRequest {
     Set<ObjectType> objectTypes;
 }

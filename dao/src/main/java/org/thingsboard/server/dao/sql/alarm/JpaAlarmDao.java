@@ -80,8 +80,11 @@ import static org.thingsboard.server.common.data.page.SortOrder.Direction.ASC;
 import static org.thingsboard.server.dao.DaoUtil.convertTenantEntityTypesToDto;
 import static org.thingsboard.server.dao.DaoUtil.toPageable;
 /**
- * JPA implementation of alarm dao.
+ * JPA/PostgreSQL implementation of alarm dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Slf4j
 @Component
@@ -97,33 +100,45 @@ public class JpaAlarmDao extends JpaAbstractDao<AlarmEntity, Alarm> implements A
     @Autowired
     private EntityAlarmRepository entityAlarmRepository;
 
+    
     /**
-
-     * Get entity class.
-
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected Class<AlarmEntity> getEntityClass() {
         return AlarmEntity.class;
     }
 
+    
     /**
-
-     * Get repository.
-
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected JpaRepository<AlarmEntity, UUID> getRepository() {
         return alarmRepository;
     }
 
+    
     /**
-
-     * Loads latest by originator and type.
-
+     * Finds latest by originator and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param originator originator ({@link EntityId})
+     * @param type type ({@link String})
+     * @return {@link Alarm}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Alarm findLatestByOriginatorAndType(TenantId tenantId, EntityId originator, String type) {
@@ -134,11 +149,17 @@ public class JpaAlarmDao extends JpaAbstractDao<AlarmEntity, Alarm> implements A
         return latest.isEmpty() ? null : DaoUtil.getData(latest.get(0));
     }
 
+    
     /**
-
-     * Loads latest active by originator and type.
-
+     * Finds latest active by originator and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param originator originator ({@link EntityId})
+     * @param type type ({@link String})
+     * @return {@link Alarm}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Alarm findLatestActiveByOriginatorAndType(TenantId tenantId, EntityId originator, String type) {
@@ -149,66 +170,98 @@ public class JpaAlarmDao extends JpaAbstractDao<AlarmEntity, Alarm> implements A
         return latest.isEmpty() ? null : DaoUtil.getData(latest.get(0));
     }
 
+    
     /**
-
-     * Loads latest active by originator and type async.
-
+     * Finds latest active by originator and type async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param originator originator ({@link EntityId})
+     * @param type type ({@link String})
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Alarm> findLatestActiveByOriginatorAndTypeAsync(TenantId tenantId, EntityId originator, String type) {
         return FluentFuture.from(service.submit(() -> findLatestActiveByOriginatorAndType(tenantId, originator, type)));
     }
 
+    
     /**
-
-     * Loads latest by originator and type async.
-
+     * Finds latest by originator and type async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param originator originator ({@link EntityId})
+     * @param type type ({@link String})
+     * @return future completing with {@link Alarm}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<Alarm> findLatestByOriginatorAndTypeAsync(TenantId tenantId, EntityId originator, String type) {
         return service.submit(() -> findLatestByOriginatorAndType(tenantId, originator, type));
     }
 
+    
     /**
-
-     * Loads alarm by id.
-
+     * Finds alarm by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key attribute or cache key
+     * @return {@link Alarm}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Alarm findAlarmById(TenantId tenantId, UUID key) {
         return findById(tenantId, key);
     }
 
+    
     /**
-
-     * Loads alarm info by id.
-
+     * Finds alarm info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key attribute or cache key
+     * @return {@link AlarmInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AlarmInfo findAlarmInfoById(TenantId tenantId, UUID key) {
         return DaoUtil.getData(alarmRepository.findAlarmInfoById(tenantId.getId(), key));
     }
 
+    
     /**
-
-     * Loads alarm by id async.
-
+     * Finds alarm by id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key attribute or cache key
+     * @return future completing with {@link Alarm}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<Alarm> findAlarmByIdAsync(TenantId tenantId, UUID key) {
         return findByIdAsync(tenantId, key);
     }
 
+    
     /**
-
-     * Loads alarms.
-
+     * Finds alarms.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param query filter and sort query definition
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AlarmInfo> findAlarms(TenantId tenantId, AlarmQuery query) {
@@ -250,11 +303,17 @@ public class JpaAlarmDao extends JpaAbstractDao<AlarmEntity, Alarm> implements A
         }
     }
 
+    
     /**
-
-     * Loads customer alarms.
-
+     * Finds customer alarms.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param query filter and sort query definition
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AlarmInfo> findCustomerAlarms(TenantId tenantId, CustomerId customerId, AlarmQuery query) {
@@ -277,11 +336,16 @@ public class JpaAlarmDao extends JpaAbstractDao<AlarmEntity, Alarm> implements A
         );
     }
 
+    
     /**
-
-     * Loads alarms v2.
-
+     * Finds alarms v2.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param query filter and sort query definition
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AlarmInfo> findAlarmsV2(TenantId tenantId, AlarmQueryV2 query) {
@@ -329,11 +393,17 @@ public class JpaAlarmDao extends JpaAbstractDao<AlarmEntity, Alarm> implements A
         }
     }
 
+    
     /**
-
-     * Loads customer alarms v2.
-
+     * Finds customer alarms v2.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param query filter and sort query definition
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AlarmInfo> findCustomerAlarmsV2(TenantId tenantId, CustomerId customerId, AlarmQueryV2 query) {
@@ -360,22 +430,35 @@ public class JpaAlarmDao extends JpaAbstractDao<AlarmEntity, Alarm> implements A
         );
     }
 
+    
     /**
-
-     * Loads alarm data by query for entities.
-
+     * Finds alarm data by query for entities.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param query filter and sort query definition
+     * @param orderedEntityIds ordered entity ids ({@link Collection})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AlarmData> findAlarmDataByQueryForEntities(TenantId tenantId, AlarmDataQuery query, Collection<EntityId> orderedEntityIds) {
         return alarmQueryRepository.findAlarmDataByQueryForEntities(tenantId, query, orderedEntityIds);
     }
 
+    
     /**
-
-     * Loads alarm severities.
-
+     * Finds alarm severities.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param asf asf ({@link AlarmStatusFilter})
+     * @param assigneeId assignee id ({@link String})
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Set<AlarmSeverity> findAlarmSeverities(TenantId tenantId, EntityId entityId, AlarmStatusFilter asf, String assigneeId) {
@@ -387,11 +470,17 @@ public class JpaAlarmDao extends JpaAbstractDao<AlarmEntity, Alarm> implements A
                 StringUtils.isNotBlank(assigneeId) ? UUID.fromString(assigneeId) : null);
     }
 
+    
     /**
-
-     * Loads alarms ids by end ts before and tenant id.
-
+     * Finds alarms ids by end ts before and tenant id.
+     *
+     * @param time time ({@link Long})
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AlarmId> findAlarmsIdsByEndTsBeforeAndTenantId(Long time, TenantId tenantId, PageLink pageLink) {
@@ -399,11 +488,19 @@ public class JpaAlarmDao extends JpaAbstractDao<AlarmEntity, Alarm> implements A
                 .mapData(AlarmId::new);
     }
 
+    
     /**
-
-     * Loads alarm ids by assignee id.
-
+     * Finds alarm ids by assignee id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @param createdTimeOffset created time offset
+     * @param idOffset cursor for batch id scan (exclusive lower bound)
+     * @param limit maximum number of records to return
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<TbPair<UUID, Long>> findAlarmIdsByAssigneeId(TenantId tenantId, UserId userId, long createdTimeOffset, AlarmId idOffset, int limit) {
@@ -417,11 +514,19 @@ public class JpaAlarmDao extends JpaAbstractDao<AlarmEntity, Alarm> implements A
         return DaoUtil.pageToPageData(result);
     }
 
+    
     /**
-
-     * Loads alarm ids by originator id.
-
+     * Finds alarm ids by originator id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param originatorId originator id ({@link EntityId})
+     * @param createdTimeOffset created time offset
+     * @param idOffset cursor for batch id scan (exclusive lower bound)
+     * @param limit maximum number of records to return
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<TbPair<UUID, Long>> findAlarmIdsByOriginatorId(TenantId tenantId, EntityId originatorId, long createdTimeOffset, AlarmId idOffset, int limit) {
@@ -435,11 +540,15 @@ public class JpaAlarmDao extends JpaAbstractDao<AlarmEntity, Alarm> implements A
         return DaoUtil.pageToPageData(result);
     }
 
+    
     /**
-
      * Creates entity alarm record.
-
+     *
+     * @param entityAlarm entity alarm ({@link EntityAlarm})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void createEntityAlarmRecord(EntityAlarm entityAlarm) {
@@ -447,11 +556,16 @@ public class JpaAlarmDao extends JpaAbstractDao<AlarmEntity, Alarm> implements A
         entityAlarmRepository.save(new EntityAlarmEntity(entityAlarm));
     }
 
+    
     /**
-
-     * Loads entity alarm records.
-
+     * Finds entity alarm records.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<EntityAlarm> findEntityAlarmRecords(TenantId tenantId, AlarmId id) {
@@ -459,44 +573,63 @@ public class JpaAlarmDao extends JpaAbstractDao<AlarmEntity, Alarm> implements A
         return DaoUtil.convertDataList(entityAlarmRepository.findAllByAlarmId(id.getId()));
     }
 
+    
     /**
-
-     * Loads entity alarm records by entity id.
-
+     * Finds entity alarm records by entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<EntityAlarm> findEntityAlarmRecordsByEntityId(TenantId tenantId, EntityId entityId) {
         return DaoUtil.convertDataList(entityAlarmRepository.findAllByEntityId(entityId.getId()));
     }
 
+    
     /**
-
-     * Removes entity alarm records.
-
+     * Deletes entity alarm records.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public int deleteEntityAlarmRecords(TenantId tenantId, EntityId entityId) {
         return entityAlarmRepository.deleteByEntityId(entityId.getId());
     }
 
+    
     /**
-
-     * Removes entity alarm records by tenant id.
-
+     * Deletes entity alarm records by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteEntityAlarmRecordsByTenantId(TenantId tenantId) {
         entityAlarmRepository.deleteByTenantId(tenantId.getId());
     }
 
+    
     /**
-
      * Creates or update active alarm.
-
+     *
+     * @param request request payload with operation parameters
+     * @param alarmCreationEnabled alarm creation enabled
+     * @return {@link AlarmApiCallResult}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AlarmApiCallResult createOrUpdateActiveAlarm(AlarmCreateOrUpdateActiveRequest request, boolean alarmCreationEnabled) {
@@ -523,11 +656,15 @@ public class JpaAlarmDao extends JpaAbstractDao<AlarmEntity, Alarm> implements A
         ));
     }
 
+    
     /**
-
      * Updates alarm.
-
+     *
+     * @param request request payload with operation parameters
+     * @return {@link AlarmApiCallResult}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AlarmApiCallResult updateAlarm(AlarmUpdateRequest request) {
@@ -549,11 +686,17 @@ public class JpaAlarmDao extends JpaAbstractDao<AlarmEntity, Alarm> implements A
         ));
     }
 
+    
     /**
-
      * Acknowledge alarm.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param ackTs ack ts
+     * @return {@link AlarmApiCallResult}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AlarmApiCallResult acknowledgeAlarm(TenantId tenantId, AlarmId id, long ackTs) {
@@ -561,11 +704,18 @@ public class JpaAlarmDao extends JpaAbstractDao<AlarmEntity, Alarm> implements A
         return toAlarmApiResult(alarmRepository.acknowledgeAlarm(tenantId.getId(), id.getId(), ackTs));
     }
 
+    
     /**
-
      * Clear alarm.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param clearTs clear ts
+     * @param details details ({@link JsonNode})
+     * @return {@link AlarmApiCallResult}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AlarmApiCallResult clearAlarm(TenantId tenantId, AlarmId id, long clearTs, JsonNode details) {
@@ -573,44 +723,69 @@ public class JpaAlarmDao extends JpaAbstractDao<AlarmEntity, Alarm> implements A
         return toAlarmApiResult(alarmRepository.clearAlarm(tenantId.getId(), id.getId(), clearTs, details != null ? getDetailsAsString(details) : null));
     }
 
+    
     /**
-
-     * Assign alarm.
-
+     * Assigns alarm.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param assigneeId assignee id ({@link UserId})
+     * @param assignTime assign time
+     * @return {@link AlarmApiCallResult}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AlarmApiCallResult assignAlarm(TenantId tenantId, AlarmId id, UserId assigneeId, long assignTime) {
         return toAlarmApiResult(alarmRepository.assignAlarm(tenantId.getId(), id.getId(), assigneeId.getId(), assignTime));
     }
 
+    
     /**
-
-     * Unassign alarm.
-
+     * Unassigns alarm.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param unassignTime unassign time
+     * @return {@link AlarmApiCallResult}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AlarmApiCallResult unassignAlarm(TenantId tenantId, AlarmId id, long unassignTime) {
         return toAlarmApiResult(alarmRepository.unassignAlarm(tenantId.getId(), id.getId(), unassignTime));
     }
 
+    
     /**
-
      * Counts alarms by query.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param query filter and sort query definition
+     * @param orderedEntityIds ordered entity ids ({@link Collection})
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public long countAlarmsByQuery(TenantId tenantId, CustomerId customerId, AlarmCountQuery query, Collection<EntityId> orderedEntityIds) {
         return alarmQueryRepository.countAlarmsByQuery(tenantId, customerId, query, orderedEntityIds);
     }
 
+    
     /**
-
-     * Loads tenant alarm types.
-
+     * Finds tenant alarm types.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EntitySubtype> findTenantAlarmTypes(UUID tenantId, PageLink pageLink) {
@@ -623,22 +798,33 @@ public class JpaAlarmDao extends JpaAbstractDao<AlarmEntity, Alarm> implements A
         return new PageData<>(data, page.getTotalPages(), page.getTotalElements(), page.hasNext());
     }
 
+    
     /**
-
      * Removes alarm types if no alarms present.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param types types ({@link Set})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public boolean removeAlarmTypesIfNoAlarmsPresent(UUID tenantId, Set<String> types) {
         return alarmRepository.deleteTypeIfNoAlarmsExist(tenantId, types) > 0;
     }
 
+    
     /**
-
-     * Loads active originator alarms.
-
+     * Finds active originator alarms.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param filter filter ({@link OriginatorAlarmFilter})
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<UUID> findActiveOriginatorAlarms(TenantId tenantId, OriginatorAlarmFilter filter, int limit) {
@@ -756,22 +942,30 @@ public class JpaAlarmDao extends JpaAbstractDao<AlarmEntity, Alarm> implements A
         }
     }
 
+    
     /**
-
-     * Loads all by tenant id.
-
+     * Finds all by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Alarm> findAllByTenantId(TenantId tenantId, PageLink pageLink) {
         return DaoUtil.toPageData(alarmRepository.findByTenantId(tenantId.getId(), DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

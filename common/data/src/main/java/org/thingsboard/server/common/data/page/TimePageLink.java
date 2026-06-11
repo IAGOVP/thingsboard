@@ -24,7 +24,9 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 /**
- * Time page link.
+ * Time-bounded variant of {@link PageLink} for historical data queries.
+ *
+ * <p>Adds start/end timestamps for event, audit, and telemetry pagination.
  */
 public class TimePageLink extends PageLink {
 
@@ -58,6 +60,11 @@ public class TimePageLink extends PageLink {
         this.startTime = startTime;
         this.endTime = endTime;
     }
+    /**
+     * Next page link.
+     *
+     * @return {@link TimePageLink}
+     */
 
     @JsonIgnore
     public TimePageLink nextPageLink() {

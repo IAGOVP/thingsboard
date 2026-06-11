@@ -28,13 +28,28 @@ import org.thingsboard.server.dao.model.sql.LifecycleEventEntity;
 import java.util.List;
 import java.util.UUID;
 
+
 /**
 
- * lifecycle event repository contract.
+ * Spring Data JPA repository for lifecycle event entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
 
+
 public interface LifecycleEventRepository extends EventRepository<LifecycleEventEntity, LifecycleEvent>, JpaRepository<LifecycleEventEntity, UUID> {
+    /**
+     * Finds latest events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     @Query(nativeQuery = true, value = "SELECT * FROM lc_event e WHERE e.tenant_id = :tenantId AND e.entity_id = :entityId ORDER BY e.ts DESC LIMIT :limit")
@@ -47,6 +62,17 @@ public interface LifecycleEventRepository extends EventRepository<LifecycleEvent
             "AND (:startTime IS NULL OR e.ts >= :startTime) " +
             "AND (:endTime IS NULL OR e.ts <= :endTime)"
     )
+    /**
+     * Finds events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<LifecycleEventEntity> findEvents(@Param("tenantId") UUID tenantId,
                                           @Param("entityId") UUID entityId,
                                           @Param("startTime") Long startTime,
@@ -74,6 +100,22 @@ public interface LifecycleEventRepository extends EventRepository<LifecycleEvent
                     "AND ((:statusFilterEnabled = FALSE) OR e.e_success = :statusFilter) " +
                     "AND (:error IS NULL OR e.e_error ILIKE concat('%', :error, '%'))"
     )
+    /**
+     * Finds events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @param server server ({@link String})
+     * @param eventType event type ({@link String})
+     * @param statusFilterEnabled status filter enabled
+     * @param statusFilter status filter
+     * @param error error ({@link String})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<LifecycleEventEntity> findEvents(@Param("tenantId") UUID tenantId,
                                           @Param("entityId") UUID entityId,
                                           @Param("startTime") Long startTime,
@@ -93,6 +135,16 @@ public interface LifecycleEventRepository extends EventRepository<LifecycleEvent
             "AND (:startTime IS NULL OR e.ts >= :startTime) " +
             "AND (:endTime IS NULL OR e.ts <= :endTime)"
     )
+    /**
+     * Removes events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
     void removeEvents(@Param("tenantId") UUID tenantId,
                       @Param("entityId") UUID entityId,
                       @Param("startTime") Long startTime,
@@ -111,6 +163,21 @@ public interface LifecycleEventRepository extends EventRepository<LifecycleEvent
                     "AND ((:statusFilterEnabled = FALSE) OR e.e_success = :statusFilter) " +
                     "AND (:error IS NULL OR e.e_error ILIKE concat('%', :error, '%'))"
     )
+    /**
+     * Removes events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @param server server ({@link String})
+     * @param eventType event type ({@link String})
+     * @param statusFilterEnabled status filter enabled
+     * @param statusFilter status filter
+     * @param error error ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
     void removeEvents(@Param("tenantId") UUID tenantId,
                       @Param("entityId") UUID entityId,
                       @Param("startTime") Long startTime,

@@ -29,7 +29,7 @@ import org.thingsboard.server.common.transport.TransportContext;
 @Slf4j
 @ConditionalOnExpression("'${service.type:null}'=='tb-transport' || ('${service.type:null}'=='monolith' && '${transport.api_enabled:true}'=='true' && '${transport.http.enabled}'=='true')")
 /**
- * Http transport context.
+ * Spring context for HTTP transport: {@link TransportService}, request timeouts, SSL.
  */
 @Component
 public class HttpTransportContext extends TransportContext {
@@ -41,6 +41,12 @@ public class HttpTransportContext extends TransportContext {
     @Getter
     @Value("${transport.http.max_request_timeout}")
     private long maxRequestTimeout;
+    /**
+     * Tomcat async timeout connector customizer.
+     *
+     * @return {@link TomcatConnectorCustomizer}
+     * @throws Exception on processing failure
+     */
 
     @Bean
     public TomcatConnectorCustomizer tomcatAsyncTimeoutConnectorCustomizer() {

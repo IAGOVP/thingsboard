@@ -24,8 +24,11 @@ import org.thingsboard.server.cache.TbJsonRedisSerializer;
 import org.thingsboard.server.cache.VersionedRedisTbCache;
 import org.thingsboard.server.common.data.CacheConstants;
 /**
- * Entity view redis cache.
+ * distributed Redis cache for entity view (ThingsBoard DAO layer).
+ *
+ * <p>Implements {@link org.thingsboard.server.cache.TbTransactionalCache} with DAO-specific key types.
  */
+
 
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "redis")
 @Service("EntityViewCache")

@@ -24,20 +24,59 @@ import org.thingsboard.server.queue.TbQueueProducer;
 import org.thingsboard.server.queue.common.PartitionedQueueResponseTemplate;
 import org.thingsboard.server.queue.common.TbProtoQueueMsg;
 
+
 /**
- * edqs queue factory contract.
+ * Factory for EDQS Kafka topics, producers, and request-response templates.
  */
+
 public interface EdqsQueueFactory {
+    /**
+     * Creates edqs events consumer.
+     *
+     * @return {@link TbQueueConsumer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     TbQueueConsumer<TbProtoQueueMsg<ToEdqsMsg>> createEdqsEventsConsumer();
+    /**
+     * Creates edqs events to backup consumer.
+     *
+     * @return {@link TbQueueConsumer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     TbQueueConsumer<TbProtoQueueMsg<ToEdqsMsg>> createEdqsEventsToBackupConsumer();
+    /**
+     * Creates edqs state consumer.
+     *
+     * @return {@link TbQueueConsumer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     TbQueueConsumer<TbProtoQueueMsg<ToEdqsMsg>> createEdqsStateConsumer();
+    /**
+     * Creates edqs state producer.
+     *
+     * @return {@link TbQueueProducer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     TbQueueProducer<TbProtoQueueMsg<ToEdqsMsg>> createEdqsStateProducer();
+    /**
+     * Creates edqs response template.
+     *
+     * @param handler handler ({@link TbQueueHandler})
+     * @return {@link PartitionedQueueResponseTemplate}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PartitionedQueueResponseTemplate<TbProtoQueueMsg<ToEdqsMsg>, TbProtoQueueMsg<FromEdqsMsg>> createEdqsResponseTemplate(TbQueueHandler<TbProtoQueueMsg<ToEdqsMsg>, TbProtoQueueMsg<FromEdqsMsg>> handler);
+    /**
+     * Returns edqs queue admin.
+     *
+     * @return {@link TbQueueAdmin}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     TbQueueAdmin getEdqsQueueAdmin();
 

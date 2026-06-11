@@ -31,8 +31,11 @@ import org.thingsboard.server.dao.model.ModelConstants;
 
 import java.util.UUID;
 /**
- * Device credentials entity.
+ * JPA/Cassandra row model for device credentials.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -66,6 +69,12 @@ public final class DeviceCredentialsEntity extends BaseVersionedEntity<DeviceCre
         this.credentialsId = deviceCredentials.getCredentialsId();
         this.credentialsValue = deviceCredentials.getCredentialsValue();
     }
+    /**
+     * To data.
+     *
+     * @return {@link DeviceCredentials}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public DeviceCredentials toData() {

@@ -25,8 +25,11 @@ import org.thingsboard.server.exception.DataValidationException;
 import org.thingsboard.server.dao.service.DataValidator;
 import org.thingsboard.server.dao.tenant.TenantService;
 /**
- * Api usage data validator.
+ * Validates api usage entities before persistence.
+ *
+ * <p>Enforces constraints, uniqueness, and referential integrity at the DAO layer.
  */
+
 
 @Component
 public class ApiUsageDataValidator extends DataValidator<ApiUsageState> {
@@ -35,11 +38,16 @@ public class ApiUsageDataValidator extends DataValidator<ApiUsageState> {
     @Autowired
     private TenantService tenantService;
 
+    
     /**
-
-     * Validate data impl.
-
+     * Validates data impl.
+     *
+     * @param requestTenantId request tenant id ({@link TenantId})
+     * @param apiUsageState api usage state ({@link ApiUsageState})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateDataImpl(TenantId requestTenantId, ApiUsageState apiUsageState) {

@@ -35,8 +35,11 @@ import org.thingsboard.server.dao.util.mapping.JsonConverter;
 
 import java.util.UUID;
 /**
- * User entity.
+ * JPA/Cassandra row model for user.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -88,6 +91,12 @@ public class UserEntity extends BaseVersionedEntity<User> {
         this.phone = user.getPhone();
         this.additionalInfo = user.getAdditionalInfo();
     }
+    /**
+     * To data.
+     *
+     * @return {@link User}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public User toData() {

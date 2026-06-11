@@ -30,8 +30,14 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 /**
- * Default tb tenant profile cache.
+ * Spring component for default tb tenant profile cache (tenants, tenant profiles, and profile caching).
  */
+
+
+
+
+
+
 
 @Service
 @Slf4j
@@ -49,6 +55,13 @@ public class DefaultTbTenantProfileCache implements TbTenantProfileCache, Tenant
         this.tenantProfileService = tenantProfileService;
         this.tenantService = tenantService;
     }
+    /**
+     * Returns the requested data.
+     *
+     * @param tenantProfileId tenant profile id ({@link TenantProfileId})
+     * @return {@link TenantProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TenantProfile get(TenantProfileId tenantProfileId) {
@@ -69,6 +82,13 @@ public class DefaultTbTenantProfileCache implements TbTenantProfileCache, Tenant
         }
         return profile;
     }
+    /**
+     * Returns the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link TenantProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TenantProfile get(TenantId tenantId) {
@@ -84,6 +104,13 @@ public class DefaultTbTenantProfileCache implements TbTenantProfileCache, Tenant
         }
         return get(profileId);
     }
+    /**
+     * Put.
+     *
+     * @param profile profile ({@link TenantProfile})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void put(TenantProfile profile) {
@@ -92,12 +119,26 @@ public class DefaultTbTenantProfileCache implements TbTenantProfileCache, Tenant
             notifyTenantListeners(profile);
         }
     }
+    /**
+     * Evict.
+     *
+     * @param profileId profile id ({@link TenantProfileId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void evict(TenantProfileId profileId) {
         tenantProfilesMap.remove(profileId);
         notifyTenantListeners(get(profileId));
     }
+    /**
+     * Notify tenant listeners.
+     *
+     * @param tenantProfile tenant profile ({@link TenantProfile})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void notifyTenantListeners(TenantProfile tenantProfile) {
         if (tenantProfile != null) {
@@ -111,6 +152,13 @@ public class DefaultTbTenantProfileCache implements TbTenantProfileCache, Tenant
             }));
         }
     }
+    /**
+     * Evict.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void evict(TenantId tenantId) {
@@ -123,6 +171,15 @@ public class DefaultTbTenantProfileCache implements TbTenantProfileCache, Tenant
             }
         }
     }
+    /**
+     * Add listener.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param listenerId listener id ({@link EntityId})
+     * @param profileListener profile listener ({@link Consumer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void addListener(TenantId tenantId, EntityId listenerId, Consumer<TenantProfile> profileListener) {
@@ -132,6 +189,14 @@ public class DefaultTbTenantProfileCache implements TbTenantProfileCache, Tenant
             profileListeners.computeIfAbsent(tenantId, id -> new ConcurrentHashMap<>()).put(listenerId, profileListener);
         }
     }
+    /**
+     * Removes listener.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param listenerId listener id ({@link EntityId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void removeListener(TenantId tenantId, EntityId listenerId) {

@@ -26,8 +26,14 @@ import org.thingsboard.server.common.data.relation.RelationTypeGroup;
 import java.io.Serial;
 import java.io.Serializable;
 /**
- * Relation cache key.
+ * Serializable cache key for relation entries (entity-to-entity relation graph persistence).
  */
+
+
+
+
+
+
 
 @EqualsAndHashCode
 @Getter

@@ -55,8 +55,14 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 /**
- * Timescale timeseries dao.
+ * Spring component for timescale timeseries dao (time-series SQL/Timescale persistence (SQL/Timescale time-series key-value storage)).
  */
+
+
+
+
+
+
 
 @Component
 @Slf4j
@@ -79,6 +85,12 @@ public class TimescaleTimeseriesDao extends AbstractSqlTimeseriesDao implements 
     protected KeyDictionaryDao keyDictionaryDao;
 
     protected TbSqlBlockingQueueWrapper<TimescaleTsKvEntity, Void> tsQueue;
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PostConstruct
     protected void init() {
@@ -100,6 +112,12 @@ public class TimescaleTimeseriesDao extends AbstractSqlTimeseriesDao implements 
                         .thenComparing(AbstractTsKvEntity::getTs)
         );
     }
+    /**
+     * Destroy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PreDestroy
     protected void destroy() {
@@ -107,11 +125,30 @@ public class TimescaleTimeseriesDao extends AbstractSqlTimeseriesDao implements 
             tsQueue.destroy();
         }
     }
+    /**
+     * Finds all async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param queries queries ({@link List})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<List<ReadTsKvQueryResult>> findAllAsync(TenantId tenantId, EntityId entityId, List<ReadTsKvQuery> queries) {
         return processFindAllAsync(tenantId, entityId, queries);
     }
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param tsKvEntry ts kv entry ({@link TsKvEntry})
+     * @param ttl ttl
+     * @return future completing with {@link Integer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<Integer> save(TenantId tenantId, EntityId entityId, TsKvEntry tsKvEntry, long ttl) {
@@ -130,11 +167,30 @@ public class TimescaleTimeseriesDao extends AbstractSqlTimeseriesDao implements 
         log.trace("Saving entity to timescale db: {}", entity);
         return Futures.transform(tsQueue.add(entity), v -> dataPointDays, MoreExecutors.directExecutor());
     }
+    /**
+     * Saves or persists partition.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param tsKvEntryTs ts kv entry ts
+     * @param key attribute or cache key
+     * @return future completing with {@link Integer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<Integer> savePartition(TenantId tenantId, EntityId entityId, long tsKvEntryTs, String key) {
         return Futures.immediateFuture(0);
     }
+    /**
+     * Removes the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param query filter and sort query definition
+     * @return future completing with {@link Void}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<Void> remove(TenantId tenantId, EntityId entityId, DeleteTsKvQuery query) {
@@ -149,6 +205,15 @@ public class TimescaleTimeseriesDao extends AbstractSqlTimeseriesDao implements 
             return null;
         });
     }
+    /**
+     * Finds all async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param query filter and sort query definition
+     * @return future completing with {@link ReadTsKvQueryResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<ReadTsKvQueryResult> findAllAsync(TenantId tenantId, EntityId entityId, ReadTsKvQuery query) {
@@ -176,6 +241,13 @@ public class TimescaleTimeseriesDao extends AbstractSqlTimeseriesDao implements 
             return getReadTsKvQueryResultFuture(query, Futures.immediateFuture(toResultList(entityId, query.getKey(), timescaleTsKvEntities)));
         }
     }
+    /**
+     * Cleanup.
+     *
+     * @param systemTtl system ttl
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void cleanup(long systemTtl) {

@@ -35,11 +35,21 @@ public class AlarmAssignmentTrigger implements NotificationRuleTrigger {
     private final AlarmInfo alarmInfo;
     private final ActionType actionType;
     private final User user;
+    /**
+     * Returns originator entity id.
+     *
+     * @return {@link EntityId}
+     */
 
     @Override
     public EntityId getOriginatorEntityId() {
         return alarmInfo.getOriginator();
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     */
 
     @Override
     public NotificationRuleTriggerType getType() {

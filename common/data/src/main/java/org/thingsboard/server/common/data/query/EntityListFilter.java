@@ -25,6 +25,11 @@ import java.util.List;
  * Entity list filter.
  */
 public class EntityListFilter implements EntityFilter {
+    /**
+     * Returns type.
+     *
+     * @return {@link EntityFilterType}
+     */
     @Override
     public EntityFilterType getType() {
         return EntityFilterType.ENTITY_LIST;

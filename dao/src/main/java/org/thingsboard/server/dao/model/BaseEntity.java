@@ -17,19 +17,82 @@ package org.thingsboard.server.dao.model;
 
 import java.util.UUID;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * base entity contract.
+
+
+
+
+
+ * base entity contract (JPA/Cassandra entity mappings (database row models)).
+
+
+
+
+
 
  */
 
+
+
+
+
+
+
 public interface BaseEntity<D> extends ToData<D> {
+    /**
+     * Returns uuid.
+     *
+     * @return {@link UUID}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     UUID getUuid();
+    /**
+     * Set uuid.
+     *
+     * @param id entity UUID primary key
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void setUuid(UUID id);
+    /**
+     * Returns created time.
+     *
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     long getCreatedTime();
+    /**
+     * Set created time.
+     *
+     * @param createdTime created time
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void setCreatedTime(long createdTime);
 

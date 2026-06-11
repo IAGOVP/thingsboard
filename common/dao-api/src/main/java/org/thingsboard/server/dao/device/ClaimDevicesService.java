@@ -28,10 +28,34 @@ import org.thingsboard.server.dao.device.claim.ReclaimResult;
  */
 public interface ClaimDevicesService {
 
+    /**
+     * Register claiming info.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @param secretKey secret key ({@link String})
+     * @param durationMs duration ms
+     * @return future completing with {@link Void}
+     */
     ListenableFuture<Void> registerClaimingInfo(TenantId tenantId, DeviceId deviceId, String secretKey, long durationMs);
 
+    /**
+     * Claim device.
+     *
+     * @param device device ({@link Device})
+     * @param customerId customer to assign or filter by
+     * @param secretKey secret key ({@link String})
+     * @return future completing with {@link ClaimResult}
+     */
     ListenableFuture<ClaimResult> claimDevice(Device device, CustomerId customerId, String secretKey);
 
+    /**
+     * Re claim device.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param device device ({@link Device})
+     * @return future completing with {@link ReclaimResult}
+     */
     ListenableFuture<ReclaimResult> reClaimDevice(TenantId tenantId, Device device);
 
 }

@@ -27,8 +27,11 @@ import org.thingsboard.server.dao.tenant.TenantService;
 import org.thingsboard.server.dao.widget.WidgetTypeDao;
 import org.thingsboard.server.dao.widget.WidgetsBundleDao;
 /**
- * Widget type data validator.
+ * Validates widget type entities before persistence.
+ *
+ * <p>Enforces constraints, uniqueness, and referential integrity at the DAO layer.
  */
+
 
 @Component
 @AllArgsConstructor
@@ -38,11 +41,16 @@ public class WidgetTypeDataValidator extends DataValidator<WidgetTypeDetails> {
     private final WidgetsBundleDao widgetsBundleDao;
     private final TenantService tenantService;
 
+    
     /**
-
-     * Validate data impl.
-
+     * Validates data impl.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetTypeDetails widget type details ({@link WidgetTypeDetails})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateDataImpl(TenantId tenantId, WidgetTypeDetails widgetTypeDetails) {
@@ -60,11 +68,16 @@ public class WidgetTypeDataValidator extends DataValidator<WidgetTypeDetails> {
         }
     }
 
+    
     /**
-
-     * Validate create.
-
+     * Validates create.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetTypeDetails widget type details ({@link WidgetTypeDetails})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateCreate(TenantId tenantId, WidgetTypeDetails widgetTypeDetails) {
@@ -84,11 +97,16 @@ public class WidgetTypeDataValidator extends DataValidator<WidgetTypeDetails> {
         widgetTypeDetails.setFqn(fqn);
     }
 
+    
     /**
-
-     * Validate update.
-
+     * Validates update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetTypeDetails widget type details ({@link WidgetTypeDetails})
+     * @return {@link WidgetTypeDetails}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected WidgetTypeDetails validateUpdate(TenantId tenantId, WidgetTypeDetails widgetTypeDetails) {

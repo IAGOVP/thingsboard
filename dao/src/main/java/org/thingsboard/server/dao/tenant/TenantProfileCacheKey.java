@@ -21,8 +21,14 @@ import org.thingsboard.server.common.data.id.TenantProfileId;
 import java.io.Serial;
 import java.io.Serializable;
 /**
- * Tenant profile cache key.
+ * Serializable cache key for tenant profile entries (tenants, tenant profiles, and profile caching).
  */
+
+
+
+
+
+
 
 @Data
 public class TenantProfileCacheKey implements Serializable {
@@ -37,10 +43,23 @@ public class TenantProfileCacheKey implements Serializable {
         this.tenantProfileId = tenantProfileId;
         this.defaultProfile = defaultProfile;
     }
+    /**
+     * From id.
+     *
+     * @param id entity UUID primary key
+     * @return {@link TenantProfileCacheKey}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static TenantProfileCacheKey fromId(TenantProfileId id) {
         return new TenantProfileCacheKey(id, false);
     }
+    /**
+     * Default profile.
+     *
+     * @return {@link TenantProfileCacheKey}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static TenantProfileCacheKey defaultProfile() {
         return new TenantProfileCacheKey(null, true);

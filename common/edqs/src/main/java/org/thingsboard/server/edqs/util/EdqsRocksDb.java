@@ -27,11 +27,12 @@ import org.thingsboard.server.queue.edqs.InMemoryEdqsComponent;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+/**
+ * RocksDB wrapper for EDQS local persistence (state snapshots, versions, key dictionary).
+ */
+
 @Component
 @InMemoryEdqsComponent
-/**
- * RocksDB wrapper for EDQS local persistence (state, versions, key dictionary).
- */
 public class EdqsRocksDb extends TbRocksDb {
 
     @Getter
@@ -40,6 +41,12 @@ public class EdqsRocksDb extends TbRocksDb {
     public EdqsRocksDb(@Value("${queue.edqs.local.rocksdb_path:${user.home}/.rocksdb/edqs}") String path) {
         super(path, new Options().setCreateIfMissing(true), new WriteOptions());
     }
+    /**
+     * Starts Kafka consumers and wires partition/state services.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PostConstruct
     @Override
@@ -47,6 +54,12 @@ public class EdqsRocksDb extends TbRocksDb {
         isNew = !Files.exists(Path.of(path));
         super.init();
     }
+    /**
+     * Close.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PreDestroy
     @Override

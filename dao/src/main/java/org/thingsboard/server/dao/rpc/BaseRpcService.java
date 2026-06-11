@@ -39,7 +39,10 @@ import static org.thingsboard.server.dao.service.Validator.validateId;
 import static org.thingsboard.server.dao.service.Validator.validatePageLink;
 /**
  * Default DAO-layer service implementation for rpc.
+ *
+ * <p>Coordinates validation, caching, cluster events, and {@code *Dao} persistence (device RPC request persistence).
  */
+
 
 @Service("RpcDaoService")
 @Slf4j
@@ -51,11 +54,15 @@ public class BaseRpcService implements RpcService {
 
     private final RpcDao rpcDao;
 
+    
     /**
-
-     * Persists .
-
+     * Saves or persists the requested data.
+     *
+     * @param rpc rpc ({@link Rpc})
+     * @return {@link Rpc}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Rpc save(Rpc rpc) {
@@ -63,11 +70,16 @@ public class BaseRpcService implements RpcService {
         return rpcDao.save(rpc.getTenantId(), rpc);
     }
 
+    
     /**
-
-     * Removes rpc.
-
+     * Deletes rpc.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param rpcId rpc id ({@link RpcId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteRpc(TenantId tenantId, RpcId rpcId) {
@@ -77,22 +89,32 @@ public class BaseRpcService implements RpcService {
         rpcDao.removeById(tenantId, rpcId.getId());
     }
 
+    
     /**
-
-     * Removes entity.
-
+     * Deletes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteEntity(TenantId tenantId, EntityId id, boolean force) {
         deleteRpc(tenantId, (RpcId) id);
     }
 
+    
     /**
-
-     * Removes all rpc by tenant id.
-
+     * Deletes all rpc by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteAllRpcByTenantId(TenantId tenantId) {
@@ -101,22 +123,31 @@ public class BaseRpcService implements RpcService {
         tenantRpcRemover.removeEntities(tenantId, tenantId);
     }
 
+    
     /**
-
-     * Removes by tenant id.
-
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteByTenantId(TenantId tenantId) {
         deleteAllRpcByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Loads by id.
-
+     * Finds by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param rpcId rpc id ({@link RpcId})
+     * @return {@link Rpc}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Rpc findById(TenantId tenantId, RpcId rpcId) {
@@ -126,11 +157,16 @@ public class BaseRpcService implements RpcService {
         return rpcDao.findById(tenantId, rpcId.getId());
     }
 
+    
     /**
-
-     * Loads rpc by id async.
-
+     * Finds rpc by id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param rpcId rpc id ({@link RpcId})
+     * @return future completing with {@link Rpc}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<Rpc> findRpcByIdAsync(TenantId tenantId, RpcId rpcId) {
@@ -140,11 +176,18 @@ public class BaseRpcService implements RpcService {
         return rpcDao.findByIdAsync(tenantId, rpcId.getId());
     }
 
+    
     /**
-
-     * Loads all by device id and status.
-
+     * Finds all by device id and status.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @param rpcStatus rpc status ({@link RpcStatus})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Rpc> findAllByDeviceIdAndStatus(TenantId tenantId, DeviceId deviceId, RpcStatus rpcStatus, PageLink pageLink) {
@@ -154,11 +197,17 @@ public class BaseRpcService implements RpcService {
         return rpcDao.findAllByDeviceIdAndStatus(tenantId, deviceId, rpcStatus, pageLink);
     }
 
+    
     /**
-
-     * Loads all by device id.
-
+     * Finds all by device id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Rpc> findAllByDeviceId(TenantId tenantId, DeviceId deviceId, PageLink pageLink) {
@@ -168,22 +217,32 @@ public class BaseRpcService implements RpcService {
         return rpcDao.findAllByDeviceId(tenantId, deviceId, pageLink);
     }
 
+    
     /**
-
-     * Loads entity.
-
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findById(tenantId, new RpcId(entityId.getId())));
     }
 
+    
     /**
-
-     * Loads entity async.
-
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
@@ -191,11 +250,14 @@ public class BaseRpcService implements RpcService {
                 .transform(Optional::ofNullable, directExecutor());
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

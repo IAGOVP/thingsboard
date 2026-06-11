@@ -27,6 +27,11 @@ import lombok.Data;
  * Simple alarm condition spec.
  */
 public class SimpleAlarmConditionSpec implements AlarmConditionSpec {
+    /**
+     * Returns type.
+     *
+     * @return {@link AlarmConditionSpecType}
+     */
     @Override
     public AlarmConditionSpecType getType() {
         return AlarmConditionSpecType.SIMPLE;

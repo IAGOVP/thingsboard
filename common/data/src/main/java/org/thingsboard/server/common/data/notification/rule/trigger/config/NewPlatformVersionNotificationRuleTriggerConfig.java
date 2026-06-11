@@ -24,6 +24,11 @@ import lombok.Data;
  * Configuration for new platform version notification rule trigger.
  */
 public class NewPlatformVersionNotificationRuleTriggerConfig implements NotificationRuleTriggerConfig {
+    /**
+     * Returns trigger type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     */
 
     @Override
     public NotificationRuleTriggerType getTriggerType() {

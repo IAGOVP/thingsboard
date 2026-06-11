@@ -17,11 +17,48 @@ package org.thingsboard.server.dao.exception;
 
 import org.thingsboard.server.exception.DataValidationException;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * Device credentials validation exception.
+
+
+
+
+
+ * DAO exception for device credentials validation exception (DAO-layer checked and runtime exceptions).
+
+
+
+
+
 
  */
+
+
+
+
+
+
 
 public class DeviceCredentialsValidationException extends DataValidationException {
 

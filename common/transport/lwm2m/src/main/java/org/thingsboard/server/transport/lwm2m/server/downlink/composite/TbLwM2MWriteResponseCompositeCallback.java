@@ -30,6 +30,14 @@ public class TbLwM2MWriteResponseCompositeCallback extends TbLwM2MUplinkTargeted
     public TbLwM2MWriteResponseCompositeCallback(LwM2mUplinkMsgHandler handler, LwM2MTelemetryLogService logService, LwM2mClient client, String targetId) {
         super(handler, logService, client, targetId);
     }
+    /**
+     * Handles success.
+     *
+     * @param request request payload with operation parameters
+     * @param response response ({@link WriteCompositeResponse})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onSuccess(WriteCompositeRequest request, WriteCompositeResponse response) {

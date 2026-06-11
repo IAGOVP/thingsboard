@@ -33,6 +33,12 @@ public class TbLwM2MExecuteRequest extends AbstractTbLwM2MTargetedDownlinkReques
         super(versionedId, timeout);
         this.params = params;
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link LwM2MOperationType}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public LwM2MOperationType getType() {

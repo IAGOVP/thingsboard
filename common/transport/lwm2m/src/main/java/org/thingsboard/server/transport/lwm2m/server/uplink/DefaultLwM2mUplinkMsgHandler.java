@@ -152,7 +152,7 @@ import static org.thingsboard.server.transport.lwm2m.utils.LwM2MTransportUtil.gr
 
 
 /**
- * Handles default lw m2m uplink msg.
+ * Default {@link LwM2mUplinkMsgHandler}: registration lifecycle, observe analysis, telemetry/attribute posting, and RPC response handling.
  */
 @Slf4j
 @Service("lwM2mUplinkMsgHandler")
@@ -180,42 +180,61 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
     private final RegistrationStore registrationStore;
     private final TbLwM2mSecurityStore securityStore;
     private final LwM2MModelConfigService modelConfigService;
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @PostConstruct
     public void init() {
         super.init();
         this.context.getScheduler().scheduleAtFixedRate(this::reportActivity, new Random().nextInt((int) config.getSessionReportTimeout()), config.getSessionReportTimeout(), TimeUnit.MILLISECONDS);
     }
+    /**
+     * Destroy.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @PreDestroy
     public void destroy() {
         log.trace("Destroying {}", getClass().getSimpleName());
         super.destroy();
     }
+    /**
+     * Returns executor name.
+     *
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected String getExecutorName() {
         return "LwM2M uplink";
     }
+    /**
+     * Returns executor size.
+     *
+     * @return monotonically increasing MQTT packet identifier
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected int getExecutorSize() {
         return config.getUplinkPoolSize();
     }
 
+    
     /**
-     * Start registration device
-     * Create session: Map<String <registrationId >, LwM2MClient>
-     * 1. replaceNewRegistration -> (solving the problem of incorrect termination of the previous session with this endpoint)
-     * 1.1 When we initialize the registration, we register the session by endpoint.
-     * 1.2 If the server has incomplete requests (canceling the registration of the previous session),
-     * delete the previous session only by the previous registration.getId
-     * 1.2 Add Model (Entity) for client (from registration & observe) by registration.getId
-     * 1.2 Remove from sessions Model by enpPoint
-     * Next ->  Create new LwM2MClient for current session -> setModelClient...
+     * Handles registered.
      *
-     * @param registration         - Registration LwM2M Client
-     * @param previousObservations - may be null
+     * @param registration registration ({@link Registration})
+     * @param previousObservations previous observations ({@link Collection})
+     * @return nothing
+     * @throws Exception on processing failure
      */
     public void onRegistered(Registration registration, Collection<Observation> previousObservations) {
         executor.submit(() -> {
@@ -256,10 +275,13 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
         });
     }
 
+    
     /**
-     * if sessionInfo removed from sessions, then new registerAsyncSession
+     * Updates d reg.
      *
-     * @param registration - Registration LwM2M Client
+     * @param registration registration ({@link Registration})
+     * @return nothing
+     * @throws Exception on processing failure
      */
     public void updatedReg(Registration registration) {
         executor.submit(() -> {
@@ -282,9 +304,14 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
         });
     }
 
+    
     /**
-     * @param registration - Registration LwM2M Client
-     * @param observations - !!! Warn: if have not finishing unReg, then this operation will be finished on next Client`s connect
+     * Un reg.
+     *
+     * @param registration registration ({@link Registration})
+     * @param observations observations ({@link Collection})
+     * @return nothing
+     * @throws Exception on processing failure
      */
     public void unReg(Registration registration, Collection<Observation> observations) {
         executor.submit(() -> doUnReg(registration, clientContext.getClientByEndpoint(registration.getEndpoint())));
@@ -309,6 +336,13 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
             logService.log(client, LOG_LWM2M_ERROR + String.format(": Client Unable un Registration, %s", t.getMessage()));
         }
     }
+    /**
+     * Handles sleeping dev.
+     *
+     * @param registration registration ({@link Registration})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onSleepingDev(Registration registration) {
@@ -316,13 +350,17 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
         clientContext.asleep(clientContext.getClientByEndpoint(registration.getEndpoint()));
     }
 
+    
     /**
-     * Sending observe value to thingsboard from ObservationListener.onResponse: object, instance, SingleResource or MultipleResource
+     * Handles update value after read response.
      *
-     * @param registration - Registration LwM2M Client
-     * @param path         - observe
-     * @param response     - observe
+     * @param registration registration ({@link Registration})
+     * @param path path ({@link String})
+     * @param response response ({@link ReadResponse})
+     * @return nothing
+     * @throws Exception on processing failure
      */
+
     @Override
     public void onUpdateValueAfterReadResponse(Registration registration, String path, ReadResponse response) {
         LwM2mNode content = response.getContent();
@@ -344,7 +382,14 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
             tryAwake(lwM2MClient);
         }
     }
-
+    /**
+     * Handles update value after read composite response.
+     *
+     * @param registration registration ({@link Registration})
+     * @param response response ({@link ReadCompositeResponse})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void onUpdateValueAfterReadCompositeResponse(Registration registration, ReadCompositeResponse response) {
         log.trace("ReadCompositeResponse before onUpdateValueAfterReadCompositeResponse: [{}]", response);
         if (response.getContent() != null) {
@@ -369,19 +414,30 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
             tryAwake(lwM2MClient);
         }
     }
-
+    /**
+     * Handles error observation.
+     *
+     * @param registration registration ({@link Registration})
+     * @param errorMsg error msg ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void onErrorObservation(Registration registration, String errorMsg) {
         LwM2mClient lwM2MClient = this.clientContext.getClientByEndpoint(registration.getEndpoint());
         logService.log(lwM2MClient, LOG_LWM2M_ERROR + ": " + errorMsg);
     }
 
 
+    
     /**
-     * Sending updated value to thingsboard from SendListener.dataReceived: object, instance, SingleResource or MultipleResource
+     * Handles update value with send request.
      *
-     * @param registration - Registration LwM2M Client
-     * @param data  - TimestampedLwM2mNodes (send From Client CollectedValue)
+     * @param registration registration ({@link Registration})
+     * @param data data ({@link TimestampedLwM2mNodes})
+     * @return nothing
+     * @throws Exception on processing failure
      */
+
     @Override
     public void onUpdateValueWithSendRequest(Registration registration, TimestampedLwM2mNodes data) {
         for (Instant ts : data.getTimestamps()) {
@@ -407,10 +463,16 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
         }
     }
 
+    
     /**
-     * @param sessionInfo   -
-     * @param deviceProfile -
+     * Handles device profile update.
+     *
+     * @param sessionInfo session info ({@link SessionInfoProto})
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @return nothing
+     * @throws Exception on processing failure
      */
+
     @Override
     public void onDeviceProfileUpdate(SessionInfoProto sessionInfo, DeviceProfile deviceProfile) {
         try {
@@ -429,6 +491,15 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
             log.warn("[{}] failed to update profile: {} [{}]", deviceProfile.getId(), e.getMessage(), deviceProfile);
         }
     }
+    /**
+     * Handles device update.
+     *
+     * @param sessionInfo session info ({@link SessionInfoProto})
+     * @param device device ({@link Device})
+     * @param newDeviceProfileOpt new device profile opt ({@link Optional})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onDeviceUpdate(SessionInfoProto sessionInfo, Device device, Optional<DeviceProfile> newDeviceProfileOpt) {
@@ -444,11 +515,25 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
             log.warn("[{}] failed to update device: {} [{}]", device.getId(), e.getMessage(), device);
         }
     }
+    /**
+     * Handles device delete.
+     *
+     * @param deviceId target device identifier
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onDeviceDelete(DeviceId deviceId) {
         clearAndUnregister(clientContext.getClientByDeviceId(deviceId.getId()));
     }
+    /**
+     * Handles resource update.
+     *
+     * @param resourceUpdateMsgOpt resource update msg opt
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onResourceUpdate(TransportProtos.ResourceUpdateMsg resourceUpdateMsgOpt) {
@@ -457,6 +542,13 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
         modelProvider.evict(tenantId, idVer);
         clientContext.getLwM2mClients().forEach(e -> e.updateResourceModel(idVer, modelProvider));
     }
+    /**
+     * Handles resource delete.
+     *
+     * @param resourceDeleteMsgOpt resource delete msg opt
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onResourceDelete(TransportProtos.ResourceDeleteMsg resourceDeleteMsgOpt) {
@@ -466,12 +558,15 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
         clientContext.getLwM2mClients().forEach(e -> e.deleteResources(pathIdVer, modelProvider));
     }
 
+    
     /**
-     * Those methods are called by the protocol stage thread pool, this means that execution MUST be done in a short delay,
-     * * if you need to do long time processing use a dedicated thread pool.
+     * Handles awake dev.
      *
-     * @param registration -
+     * @param registration registration ({@link Registration})
+     * @return nothing
+     * @throws Exception on processing failure
      */
+
     @Override
     public void onAwakeDev(Registration registration) {
         log.debug("[{}] [{}] Received endpoint awake event", registration.getId(), registration.getEndpoint());
@@ -682,14 +777,14 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
         }
     }
 
+    
     /**
-     * send Attribute and Telemetry to Thingsboard
-     * #1 - get AttrName/TelemetryName with value from LwM2MClient:
-     * -- resourceId == path from LwM2MClientProfile.postAttributeProfile/postTelemetryProfile/postObserveProfile
-     * -- AttrName/TelemetryName == resourceName from ModelObject.objectModel, value from ModelObject.instance.resource(resourceId)
-     * #2 - set Attribute/Telemetry
+     * Updates attr telemetry.
      *
-     * @param updateResource - updateResource resource of LwM2M Client
+     * @param updateResource update resource ({@link ResourceUpdateResult})
+     * @param ts ts ({@link Instant})
+     * @return nothing
+     * @throws Exception on processing failure
      */
     public void updateAttrTelemetry(ResourceUpdateResult updateResource, Instant ts) {
         log.trace("UpdateAttrTelemetry paths [{}]", updateResource.getPaths());
@@ -820,6 +915,16 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
         }
         return null;
     }
+    /**
+     * Handles write response ok.
+     *
+     * @param lwM2MClient lw m2mclient ({@link LwM2mClient})
+     * @param path path ({@link String})
+     * @param request request payload with operation parameters
+     * @param code code
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onWriteResponseOk(LwM2mClient lwM2MClient, String path, WriteRequest request, int code) {
@@ -836,6 +941,15 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
         }
         this.updateAttrTelemetry(updateResource, null);
     }
+    /**
+     * Handles createbject instances response ok.
+     *
+     * @param lwM2MClient lw m2mclient ({@link LwM2mClient})
+     * @param versionId entity version identifier in the repository
+     * @param request request payload with operation parameters
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onCreatebjectInstancesResponseOk(LwM2mClient lwM2MClient, String versionId, CreateRequest request) {
@@ -851,6 +965,15 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
             this.updateAttrTelemetry(updateResource, null);
         }
     }
+    /**
+     * Handles write composite response ok.
+     *
+     * @param lwM2MClient lw m2mclient ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param code code
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onWriteCompositeResponseOk(LwM2mClient lwM2MClient, WriteCompositeRequest request, int code) {
@@ -1023,10 +1146,16 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
         }
     }
 
+    
     /**
-     * @param sessionInfo
-     * @param updateCredentials - Credentials include config only security Client (without config attr/telemetry...)
+     * Handles to transport update credentials.
+     *
+     * @param sessionInfo session info ({@link SessionInfoProto})
+     * @param updateCredentials update credentials
+     * @return nothing
+     * @throws Exception on processing failure
      */
+
     @Override
     public void onToTransportUpdateCredentials(SessionInfoProto sessionInfo, TransportProtos.ToTransportUpdateCredentialsProto updateCredentials) {
         log.info("[{}] updateCredentials", sessionInfo);
@@ -1044,9 +1173,13 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
         return null;
     }
 
+    
     /**
-     * @param registration - Registration LwM2M Client
-     * @return - sessionInfo after access connect client
+     * Returns session info or close session.
+     *
+     * @param registration registration ({@link Registration})
+     * @return {@link SessionInfoProto}
+     * @throws Exception on processing failure
      */
     public SessionInfoProto getSessionInfoOrCloseSession(Registration registration) {
         return getSessionInfo(clientContext.getClientByEndpoint(registration.getEndpoint()));
@@ -1068,16 +1201,16 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
         clientContext.getLwM2mClients().forEach(client -> reportActivityAndRegister(client.getSession()));
     }
 
+    
     /**
-     * #1. !!!  sharedAttr === profileAttr  !!!
-     * - If there is a difference in values between the current resource values and the shared attribute values
-     * - when the client connects to the server
-     * #1.1 get attributes name from profile include name resources in ModelObject if resource  isWritable
-     * #1.2 #1 size > 0 => send Request getAttributes to thingsboard
-     * #2. FirmwareAttribute subscribe:
+     * Init attributes.
      *
-     * @param lwM2MClient - LwM2M Client
+     * @param lwM2MClient lw m2mclient ({@link LwM2mClient})
+     * @param logFailedUpdateOfNonChangedValue log failed update of non changed value
+     * @return nothing
+     * @throws Exception on processing failure
      */
+
     @Override
     public void initAttributes(LwM2mClient lwM2MClient, boolean logFailedUpdateOfNonChangedValue) {
         Map<String, String> keyNamesMap = this.getNamesFromProfileForSharedAttributes(lwM2MClient);
@@ -1094,7 +1227,12 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
             logService.log(lwM2MClient, "Failed to process initAttributes. Profile is null. Update procedure may not have completed after reboot yet");
         }
     }
-
+    /**
+     * Returns client context.
+     *
+     * @return {@link LwM2mClientContext}
+     * @throws Exception on processing failure
+     */
     public LwM2mClientContext getClientContext() {
         return this.clientContext;
     }
@@ -1103,7 +1241,12 @@ public class DefaultLwM2mUplinkMsgHandler extends LwM2MExecutorAwareService impl
         Lwm2mDeviceProfileTransportConfiguration profile = clientContext.getProfile(lwM2MClient.getRegistration());
         return profile != null ? profile.getObserveAttr().getKeyName() : Collections.emptyMap();
     }
-
+    /**
+     * Returns config.
+     *
+     * @return {@link LwM2MTransportServerConfig}
+     * @throws Exception on processing failure
+     */
     public LwM2MTransportServerConfig getConfig() {
         return this.config;
     }

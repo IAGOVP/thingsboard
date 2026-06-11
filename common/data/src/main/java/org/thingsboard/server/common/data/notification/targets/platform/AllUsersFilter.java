@@ -24,6 +24,11 @@ import lombok.Data;
  * All users filter.
  */
 public class AllUsersFilter implements SystemLevelUsersFilter {
+    /**
+     * Returns type.
+     *
+     * @return {@link UsersFilterType}
+     */
 
     @Override
     public UsersFilterType getType() {

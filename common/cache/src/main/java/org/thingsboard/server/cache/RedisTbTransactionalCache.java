@@ -15,6 +15,15 @@
  */
 package org.thingsboard.server.cache;
 
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,37 +44,72 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.util.JedisClusterCRC16;
 
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
-@Slf4j
 /**
- * Redis tb transactional cache.
+ * Abstract Redis-backed implementation of {@link TbTransactionalCache}.
+ *
+ * <p>Activated when {@code cache.type=redis}. Each entity cache (e.g. {@link org.thingsboard.server.cache.user.UserRedisCache})
+ * extends this class with a typed {@link TbRedisSerializer} and cache name constant.
+ *
+ * <p>Key design points:
+ * <ul>
+ *   <li>Keys are stored as {@code <cacheName><key.toString()>} UTF-8 strings</li>
+ *   <li>Values are serialized via {@link TbRedisSerializer}; {@code null} is stored as Spring's
+ *       {@link NullValue} sentinel for negative caching</li>
+ *   <li>TTL comes from {@link CacheSpecsMap} ({@code timeToLiveInMinutes}); {@code 0} means persistent</li>
+ *   <li>Cache is disabled when {@link CacheSpecs#getMaxSize()} is {@code 0} or specs are missing</li>
+ *   <li>Eviction tombstones use {@link TBRedisCacheConfiguration#getEvictTtlInMs()} via {@link #evictOrPut}</li>
+ *   <li>Cluster mode routes transactions to the correct slot via {@link JedisClusterCRC16}</li>
+ * </ul>
+ *
+ * <p>Versioned entities extend {@link VersionedRedisTbCache} which prepends an 8-byte version
+ * prefix and uses Lua scripts for compare-and-set writes.
+ *
+ * @param <K> serializable key type
+ * @param <V> serializable value type
+ * @see RedisTbCacheTransaction
+ * @see TBRedisCacheConfiguration
+ * @see VersionedRedisTbCache
  */
+@Slf4j
 public abstract class RedisTbTransactionalCache<K extends Serializable, V extends Serializable> implements TbTransactionalCache<K, V> {
 
+    /** Serialized Spring {@link NullValue} marker for negative cache entries. */
     static final byte[] BINARY_NULL_VALUE = RedisSerializer.java().serialize(NullValue.INSTANCE);
-    static final JedisPool MOCK_POOL = new JedisPool(); //non-null pool required for JedisConnection to trigger closing jedis connection
+
+    /** Non-null pool placeholder required by {@link JedisConnection} for proper connection closing. */
+    static final JedisPool MOCK_POOL = new JedisPool();
 
     @Autowired
     private FstStatsService fstStatsService;
 
     @Getter
     private final String cacheName;
+
     @Getter
     private final JedisConnectionFactory connectionFactory;
+
     private final RedisSerializer<String> keySerializer = StringRedisSerializer.UTF_8;
+
     private final TbRedisSerializer<K, V> valueSerializer;
+
+    /** Expiration applied to eviction tombstones written by {@link #evictOrPut}. */
     protected final Expiration evictExpiration;
+
+    /** TTL for normal cache entries; persistent when {@link CacheSpecs#getTimeToLiveInMinutes()} is 0. */
     protected final Expiration cacheTtl;
+
+    /** When {@code false}, all operations are no-ops (cache disabled via {@code maxSize=0}). */
     protected final boolean cacheEnabled;
 
+    /**
+     * Initializes the Redis cache with connection factory, serialization, and TTL from configuration.
+     *
+     * @param cacheName         logical name matching {@link CacheSpecsMap} keys
+     * @param cacheSpecsMap     per-cache size and TTL settings; may be {@code null} to disable caching
+     * @param connectionFactory   Redis connection factory from {@link TBRedisCacheConfiguration}
+     * @param configuration       Redis global settings (evict TTL, pool, SSL)
+     * @param valueSerializer     serializer for cache values (JSON, Java, or typed JSON)
+     */
     public RedisTbTransactionalCache(String cacheName,
                                      CacheSpecsMap cacheSpecsMap,
                                      RedisConnectionFactory connectionFactory,
@@ -90,6 +134,12 @@ public abstract class RedisTbTransactionalCache<K extends Serializable, V extend
                 .orElse(false);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param key cache key
+     * @return value wrapper, empty wrapper for negative hit, or {@code null} on miss/disabled cache
+     */
     @Override
     public TbCacheValueWrapper<V> get(K key) {
         if (!cacheEnabled) {
@@ -113,10 +163,24 @@ public abstract class RedisTbTransactionalCache<K extends Serializable, V extend
         }
     }
 
+    /**
+     * Performs the low-level Redis GET for a key. Overridden by {@link VersionedRedisTbCache}
+     * to strip the version prefix.
+     *
+     * @param key        cache key
+     * @param connection open Redis connection
+     * @return raw serialized bytes, or {@code null} on miss
+     */
     protected byte[] doGet(K key, RedisConnection connection) {
         return connection.stringCommands().get(getRawKey(key));
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param key   cache key
+     * @param value value to store
+     */
     @Override
     public void put(K key, V value) {
         if (!cacheEnabled) {
@@ -127,10 +191,23 @@ public abstract class RedisTbTransactionalCache<K extends Serializable, V extend
         }
     }
 
+    /**
+     * Stores a value using an existing Redis connection (used inside transactions).
+     *
+     * @param key        cache key
+     * @param value      value to store
+     * @param connection open Redis connection participating in a MULTI/EXEC block
+     */
     public void put(K key, V value, RedisConnection connection) {
         put(connection, key, value, RedisStringCommands.SetOption.UPSERT);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param key   cache key
+     * @param value value to store when absent
+     */
     @Override
     public void putIfAbsent(K key, V value) {
         if (!cacheEnabled) {
@@ -141,6 +218,11 @@ public abstract class RedisTbTransactionalCache<K extends Serializable, V extend
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param key cache key to delete
+     */
     @Override
     public void evict(K key) {
         if (!cacheEnabled) {
@@ -151,6 +233,11 @@ public abstract class RedisTbTransactionalCache<K extends Serializable, V extend
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param keys keys to delete; no-op when empty (Redis DEL requires at least one key)
+     */
     @Override
     public void evict(Collection<K> keys) {
         if (!cacheEnabled) {
@@ -165,6 +252,15 @@ public abstract class RedisTbTransactionalCache<K extends Serializable, V extend
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * <p>Deletes the key; if absent, writes a short-lived tombstone so concurrent
+     * {@link #getAndPutInTransaction} calls do not repopulate stale data.
+     *
+     * @param key   cache key
+     * @param value tombstone value when delete finds no existing entry
+     */
     @Override
     public void evictOrPut(K key, V value) {
         if (!cacheEnabled) {
@@ -180,6 +276,12 @@ public abstract class RedisTbTransactionalCache<K extends Serializable, V extend
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param key key to watch in a Redis MULTI/EXEC transaction
+     * @return {@link RedisTbCacheTransaction} bound to a watched connection
+     */
     @Override
     public TbCacheTransaction<K, V> newTransactionForKey(K key) {
         byte[][] rawKey = new byte[][]{getRawKey(key)};
@@ -187,12 +289,29 @@ public abstract class RedisTbTransactionalCache<K extends Serializable, V extend
         return new RedisTbCacheTransaction<>(this, connection);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param keys keys to watch atomically
+     * @return {@link RedisTbCacheTransaction} bound to a watched connection
+     */
     @Override
     public TbCacheTransaction<K, V> newTransactionForKeys(List<K> keys) {
         RedisConnection connection = watch(keys.stream().map(this::getRawKey).toArray(byte[][]::new));
         return new RedisTbCacheTransaction<>(this, connection);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param key                 cache key
+     * @param dbCall              database supplier
+     * @param cacheValueToResult  result mapper
+     * @param dbValueToCacheValue cache value mapper
+     * @param cacheNullValue      negative-cache flag
+     * @param <R>                 result type
+     * @return loaded value, or direct DB result when cache is disabled
+     */
     @Override
     public <R> R getAndPutInTransaction(K key, Supplier<R> dbCall, Function<V, R> cacheValueToResult, Function<R, V> dbValueToCacheValue, boolean cacheNullValue) {
         if (!cacheEnabled) {
@@ -201,6 +320,12 @@ public abstract class RedisTbTransactionalCache<K extends Serializable, V extend
         return TbTransactionalCache.super.getAndPutInTransaction(key, dbCall, cacheValueToResult, dbValueToCacheValue, cacheNullValue);
     }
 
+    /**
+     * Obtains a Redis connection pinned to the correct cluster slot for the given raw key.
+     *
+     * @param rawKey serialized Redis key bytes
+     * @return standalone or slot-specific cluster connection
+     */
     protected RedisConnection getConnection(byte[] rawKey) {
         if (!connectionFactory.isRedisClusterAware()) {
             return connectionFactory.getConnection();
@@ -216,6 +341,13 @@ public abstract class RedisTbTransactionalCache<K extends Serializable, V extend
         return jedisConnection;
     }
 
+    /**
+     * Starts a Redis WATCH/MULTI transaction on the connection for the given keys.
+     *
+     * @param rawKeysList serialized key bytes to watch
+     * @return open connection in MULTI state; caller must commit or discard via {@link RedisTbCacheTransaction}
+     * @throws RuntimeException connection is closed and re-thrown on watch failure
+     */
     protected RedisConnection watch(byte[][] rawKeysList) {
         RedisConnection connection = getConnection(rawKeysList[0]);
         try {
@@ -228,6 +360,14 @@ public abstract class RedisTbTransactionalCache<K extends Serializable, V extend
         return connection;
     }
 
+    /**
+     * Serializes the cache key to Redis bytes with the cache name prefix.
+     *
+     * @param key logical cache key
+     * @return UTF-8 bytes of {@code cacheName + key.toString()}
+     * @throws RuntimeException         when serialization throws
+     * @throws IllegalArgumentException when serialization returns {@code null}
+     */
     protected byte[] getRawKey(K key) {
         String keyString = cacheName + key.toString();
         byte[] rawKey;
@@ -244,6 +384,13 @@ public abstract class RedisTbTransactionalCache<K extends Serializable, V extend
         return rawKey;
     }
 
+    /**
+     * Serializes a cache value, mapping {@code null} to the {@link #BINARY_NULL_VALUE} sentinel.
+     *
+     * @param value value to serialize
+     * @return serialized bytes
+     * @throws RuntimeException when serialization fails
+     */
     protected byte[] getRawValue(V value) {
         if (value == null) {
             return BINARY_NULL_VALUE;
@@ -261,6 +408,14 @@ public abstract class RedisTbTransactionalCache<K extends Serializable, V extend
         }
     }
 
+    /**
+     * Stages a SET inside an open Redis transaction.
+     *
+     * @param connection open MULTI connection
+     * @param key        cache key
+     * @param value      value to set
+     * @param setOption  Redis SET option (UPSERT or SET_IF_ABSENT)
+     */
     public void put(RedisConnection connection, K key, V value, RedisStringCommands.SetOption setOption) {
         if (!cacheEnabled) {
             return;
@@ -269,11 +424,30 @@ public abstract class RedisTbTransactionalCache<K extends Serializable, V extend
         put(connection, rawKey, value, setOption);
     }
 
+    /**
+     * Stages a SET with a pre-serialized key inside an open Redis transaction.
+     *
+     * @param connection open MULTI connection
+     * @param rawKey     serialized Redis key
+     * @param value      value to set
+     * @param setOption  Redis SET option
+     */
     public void put(RedisConnection connection, byte[] rawKey, V value, RedisStringCommands.SetOption setOption) {
         byte[] rawValue = getRawValue(value);
         connection.stringCommands().set(rawKey, rawValue, this.cacheTtl, setOption);
     }
 
+    /**
+     * Executes a Lua script by SHA with automatic script loading and fallback to {@code EVAL}.
+     *
+     * @param connection  Redis connection (must support scripting)
+     * @param scriptSha   expected SHA-1 digest of {@code luaScript}
+     * @param luaScript   Lua source text
+     * @param returnType  Redis return type for the script result
+     * @param numKeys     number of KEYS arguments
+     * @param keysAndArgs KEYS followed by ARGV bytes
+     * @throws IllegalStateException when loaded script SHA does not match expected SHA
+     */
     protected void executeScript(RedisConnection connection, byte[] scriptSha, byte[] luaScript, ReturnType returnType, int numKeys, byte[]... keysAndArgs) {
         try {
             connection.scriptingCommands().evalSha(scriptSha, returnType, numKeys, keysAndArgs);

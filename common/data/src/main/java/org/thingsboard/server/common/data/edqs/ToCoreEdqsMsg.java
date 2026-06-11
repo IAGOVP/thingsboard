@@ -26,8 +26,9 @@ import org.thingsboard.server.common.data.edqs.EdqsState.EdqsSyncStatus;
 @NoArgsConstructor
 @Builder
 /**
- * Message: to core edqs msg.
+ * To core edqs msg (EDQS data).
  */
+
 public class ToCoreEdqsMsg {
 
     private EdqsSyncRequest syncRequest;

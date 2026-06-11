@@ -25,8 +25,11 @@ import org.thingsboard.server.cache.TbJsonRedisSerializer;
 import org.thingsboard.server.common.data.CacheConstants;
 import org.thingsboard.server.common.data.security.DeviceCredentials;
 /**
- * Device credentials redis cache.
+ * distributed Redis cache for device credentials (devices, credentials, profiles, and connectivity).
+ *
+ * <p>Implements {@link org.thingsboard.server.cache.TbTransactionalCache} with DAO-specific key types.
  */
+
 
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "redis")
 @Service("DeviceCredentialsCache")

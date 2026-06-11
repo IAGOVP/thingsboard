@@ -23,8 +23,14 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.util.UUID;
 /**
- * Widgets bundle widget composite key.
+ * Widgets bundle widget composite key (JPA entity row mappings for PostgreSQL (JPA/Cassandra entity mappings (database row models))).
  */
+
+
+
+
+
+
 
 @NoArgsConstructor
 @AllArgsConstructor

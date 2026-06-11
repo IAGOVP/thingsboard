@@ -32,6 +32,14 @@ public class TbLwM2MReadCompositeCallback extends TbLwM2MUplinkTargetedCallback<
     public TbLwM2MReadCompositeCallback(LwM2mUplinkMsgHandler handler, LwM2MTelemetryLogService logService, LwM2mClient client, String[] versionedIds) {
         super(handler, logService, client, versionedIds);
     }
+    /**
+     * Handles success.
+     *
+     * @param request request payload with operation parameters
+     * @param response response ({@link ReadCompositeResponse})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onSuccess(ReadCompositeRequest request, ReadCompositeResponse response) {

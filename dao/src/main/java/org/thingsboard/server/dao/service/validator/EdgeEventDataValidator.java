@@ -21,17 +21,25 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.exception.DataValidationException;
 import org.thingsboard.server.dao.service.DataValidator;
 /**
- * Edge event data validator.
+ * Validates edge event entities before persistence.
+ *
+ * <p>Enforces constraints, uniqueness, and referential integrity at the DAO layer.
  */
+
 
 @Component
 public class EdgeEventDataValidator extends DataValidator<EdgeEvent> {
 
+    
     /**
-
-     * Validate data impl.
-
+     * Validates data impl.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeEvent edge event ({@link EdgeEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateDataImpl(TenantId tenantId, EdgeEvent edgeEvent) {

@@ -17,10 +17,11 @@ package org.thingsboard.server.edqs.data;
 
 import lombok.Data;
 
-@Data
 /**
- * EDQS component: relation info.
+ * Relation info (EDQS microservice — in-memory entity projections).
  */
+
+@Data
 public class RelationInfo {
 
     private final String type;

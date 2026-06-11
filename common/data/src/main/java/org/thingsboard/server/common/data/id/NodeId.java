@@ -18,7 +18,7 @@ package org.thingsboard.server.common.data.id;
 import java.util.UUID;
 
 /**
- * Typed identifier for node.
+ * Generic node identifier used in rule chain graph structures.
  */
 public class NodeId extends UUIDBased {
 

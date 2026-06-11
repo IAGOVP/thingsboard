@@ -29,10 +29,22 @@ public class WidgetsBundleFilter {
     private TenantId tenantId;
     private boolean fullSearch;
     private boolean scadaFirst;
+    /**
+     * From tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link WidgetsBundleFilter}
+     */
 
     public static WidgetsBundleFilter fromTenantId(TenantId tenantId) {
         return WidgetsBundleFilter.builder().tenantId(tenantId).fullSearch(false).scadaFirst(false).build();
     }
+    /**
+     * Full search from tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link WidgetsBundleFilter}
+     */
 
     public static WidgetsBundleFilter fullSearchFromTenantId(TenantId tenantId) {
         return WidgetsBundleFilter.builder().tenantId(tenantId).fullSearch(true).scadaFirst(false).build();

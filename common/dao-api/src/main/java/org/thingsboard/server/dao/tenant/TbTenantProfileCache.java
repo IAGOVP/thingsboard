@@ -23,22 +23,63 @@ import org.thingsboard.server.common.data.id.TenantProfileId;
 import java.util.function.Consumer;
 
 /**
- * tb tenant profile cache contract.
+ * tb tenant profile cache contract for the DAO layer.
  */
+
 public interface TbTenantProfileCache {
 
+    /**
+     * Returns the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link TenantProfile}
+     */
     TenantProfile get(TenantId tenantId);
 
+    /**
+     * Returns the requested data.
+     *
+     * @param tenantProfileId tenant profile id ({@link TenantProfileId})
+     * @return {@link TenantProfile}
+     */
     TenantProfile get(TenantProfileId tenantProfileId);
 
+    /**
+     * Put.
+     *
+     * @param profile profile ({@link TenantProfile})
+     */
     void put(TenantProfile profile);
 
+    /**
+     * Evict.
+     *
+     * @param id id ({@link TenantProfileId})
+     */
     void evict(TenantProfileId id);
 
+    /**
+     * Evict.
+     *
+     * @param id id ({@link TenantId})
+     */
     void evict(TenantId id);
 
+    /**
+     * Add listener.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param listenerId listener id ({@link EntityId})
+     * @param profileListener profile listener ({@link Consumer})
+     */
     void addListener(TenantId tenantId, EntityId listenerId, Consumer<TenantProfile> profileListener);
 
+    /**
+     * Removes listener.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param listenerId listener id ({@link EntityId})
+     */
     void removeListener(TenantId tenantId, EntityId listenerId);
 
 }

@@ -23,10 +23,11 @@ import org.thingsboard.server.queue.kafka.TbKafkaAdmin;
 import org.thingsboard.server.queue.kafka.TbKafkaSettings;
 import org.thingsboard.server.queue.kafka.TbKafkaTopicConfigs;
 
-@Configuration
+
 /**
- * Factory for rule engine tb queue admin.
+ * Creates {@link TbQueueAdmin} instances for rule-engine topic management.
  */
+@Configuration
 public class RuleEngineTbQueueAdminFactory {
 
     @Autowired(required = false)

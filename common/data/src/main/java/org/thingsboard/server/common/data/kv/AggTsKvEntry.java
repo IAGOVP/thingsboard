@@ -32,6 +32,11 @@ public class AggTsKvEntry extends BasicTsKvEntry {
         super(ts, kv);
         this.count = count;
     }
+    /**
+     * To ts value.
+     *
+     * @return {@link TsValue}
+     */
 
     @Override
     public TsValue toTsValue() {

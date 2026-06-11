@@ -29,20 +29,70 @@ import java.util.Map;
  */
 public interface NotificationSettingsService {
 
+    /**
+     * Saves or persists notification settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param settings settings ({@link NotificationSettings})
+     */
     void saveNotificationSettings(TenantId tenantId, NotificationSettings settings);
 
+    /**
+     * Finds notification settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link NotificationSettings}
+     */
     NotificationSettings findNotificationSettings(TenantId tenantId);
 
+    /**
+     * Deletes notification settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     */
     void deleteNotificationSettings(TenantId tenantId);
 
+    /**
+     * Saves or persists user notification settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId user id ({@link UserId})
+     * @param settings settings ({@link UserNotificationSettings})
+     * @return {@link UserNotificationSettings}
+     */
     UserNotificationSettings saveUserNotificationSettings(TenantId tenantId, UserId userId, UserNotificationSettings settings);
 
+    /**
+     * Returns user notification settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId user id ({@link UserId})
+     * @param format format
+     * @return {@link UserNotificationSettings}
+     */
     UserNotificationSettings getUserNotificationSettings(TenantId tenantId, UserId userId, boolean format);
 
+    /**
+     * Creates default notification configs.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     */
     void createDefaultNotificationConfigs(TenantId tenantId);
 
+    /**
+     * Updates default notification configs.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     */
     void updateDefaultNotificationConfigs(TenantId tenantId);
 
+    /**
+     * Move mail templates to notification center.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param mailTemplates mail templates ({@link JsonNode})
+     * @param mailTemplatesNames mail templates names ({@link Map})
+     */
     void moveMailTemplatesToNotificationCenter(TenantId tenantId, JsonNode mailTemplates, Map<String, NotificationType> mailTemplatesNames);
 
 }

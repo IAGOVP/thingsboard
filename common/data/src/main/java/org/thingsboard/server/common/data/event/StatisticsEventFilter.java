@@ -36,11 +36,21 @@ public class StatisticsEventFilter implements EventFilter {
     protected Integer minErrorsOccurred;
     @Schema(description = "The maximum number of errors occurred during messages processing", example = "300")
     protected Integer maxErrorsOccurred;
+    /**
+     * Returns event type.
+     *
+     * @return {@link EventType}
+     */
 
     @Override
     public EventType getEventType() {
         return EventType.STATS;
     }
+    /**
+     * Is not empty.
+     *
+     * @return the boolean result
+     */
 
     @Override
     public boolean isNotEmpty() {

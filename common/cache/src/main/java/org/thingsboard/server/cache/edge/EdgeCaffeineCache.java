@@ -22,13 +22,24 @@ import org.thingsboard.server.cache.CaffeineTbTransactionalCache;
 import org.thingsboard.server.common.data.CacheConstants;
 import org.thingsboard.server.common.data.edge.Edge;
 
+/**
+ * Caffeine {@link CaffeineTbTransactionalCache} for {@link org.thingsboard.server.common.data.Edge} entities.
+ *
+ * <p>Spring bean {@code "EdgeCache"} activated when
+ * {@code cache.type=caffeine} (default). Cache name: {@link org.thingsboard.server.common.data.CacheConstants#EDGE_CACHE}.
+ *
+ * @see EdgeCacheKey
+ * @see CaffeineTbTransactionalCache
+ */
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "caffeine", matchIfMissing = true)
 @Service("EdgeCache")
-/**
- * Edge caffeine cache.
- */
 public class EdgeCaffeineCache extends CaffeineTbTransactionalCache<EdgeCacheKey, Edge> {
 
+    /**
+     * Wires the cache from the Spring {@link org.springframework.cache.CacheManager}.
+     *
+     * @param cacheManager manager built by {@link TbCaffeineCacheConfiguration}
+     */
     public EdgeCaffeineCache(CacheManager cacheManager) {
         super(cacheManager, CacheConstants.EDGE_CACHE);
     }

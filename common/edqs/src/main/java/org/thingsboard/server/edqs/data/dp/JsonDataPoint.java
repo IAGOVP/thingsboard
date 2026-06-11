@@ -18,9 +18,11 @@ package org.thingsboard.server.edqs.data.dp;
 import lombok.Getter;
 import org.thingsboard.server.common.data.kv.DataType;
 import org.thingsboard.common.util.TbStringPool;
+
 /**
- * Typed attribute/latest-TS value stored in EDQS (json data point).
+ * Typed attribute or latest-TS value stored in the EDQS index (json data point).
  */
+
 public class JsonDataPoint extends AbstractDataPoint {
 
     @Getter
@@ -30,16 +32,34 @@ public class JsonDataPoint extends AbstractDataPoint {
         super(ts);
         this.value = TbStringPool.intern(value);
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link DataType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public DataType getType() {
         return DataType.JSON;
     }
+    /**
+     * Returns json.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String getJson() {
         return value;
     }
+    /**
+     * Value to string.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String valueToString() {

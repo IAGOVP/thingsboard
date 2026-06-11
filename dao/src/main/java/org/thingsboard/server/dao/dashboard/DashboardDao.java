@@ -28,21 +28,51 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The Interface DashboardDao.
+ * Persistence contract for dashboard.
+ *
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (dashboard metadata, titles, and assignment).
  */
+
 public interface DashboardDao extends Dao<Dashboard>, TenantEntityDao<Dashboard>, ExportableEntityDao<DashboardId, Dashboard> {
 
+    
     /**
-     * Save or update dashboard object
+     * Saves or persists the requested data.
      *
-     * @param dashboard the dashboard object
-     * @return saved dashboard object
+     * @param tenantId tenant that owns the entity or operation
+     * @param dashboard dashboard ({@link Dashboard})
+     * @return {@link Dashboard}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     Dashboard save(TenantId tenantId, Dashboard dashboard);
+    /**
+     * Finds by tenant id and title.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param title title ({@link String})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<Dashboard> findByTenantIdAndTitle(UUID tenantId, String title);
+    /**
+     * Finds ids by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<DashboardId> findIdsByTenantId(TenantId tenantId, PageLink pageLink);
+    /**
+     * Finds all ids.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<DashboardId> findAllIds(PageLink pageLink);
 

@@ -40,6 +40,7 @@ import java.util.function.Function;
 /**
  * Tb result set.
  */
+
 public class TbResultSet implements AsyncResultSet {
 
     private final Statement originalStatement;
@@ -92,6 +93,12 @@ public class TbResultSet implements AsyncResultSet {
         return delegate.wasApplied();
     }
 
+    /**
+     * All rows.
+     *
+     * @param executor executor ({@link Executor})
+     * @return future completing with {@link List}
+     */
     public ListenableFuture<List<Row>> allRows(Executor executor) {
         return allRows(executor, 0);
     }

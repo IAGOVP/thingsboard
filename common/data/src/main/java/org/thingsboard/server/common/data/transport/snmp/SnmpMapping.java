@@ -40,6 +40,11 @@ public class SnmpMapping implements Serializable {
     private DataType dataType;
 
     private static final Pattern OID_PATTERN = Pattern.compile("^\\.?([0-2])((\\.0)|(\\.[1-9][0-9]*))*$");
+    /**
+     * Is valid.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     public boolean isValid() {

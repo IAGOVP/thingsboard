@@ -30,6 +30,11 @@ import java.util.Map;
 public class GeneralNotificationInfo implements RuleOriginatedNotificationInfo {
 
     private Map<String, String> data;
+    /**
+     * Returns template data.
+     *
+     * @return {@link Map}
+     */
 
     @Override
     public Map<String, String> getTemplateData() {

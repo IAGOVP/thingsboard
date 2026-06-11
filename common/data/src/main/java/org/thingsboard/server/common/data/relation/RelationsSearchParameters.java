@@ -31,9 +31,6 @@ import java.util.UUID;
 @Schema
 @Data
 @AllArgsConstructor
-/**
- * Relations search parameters.
- */
 public class RelationsSearchParameters {
 
     @Schema(description = "Root entity id to start search from.", example = "784f394c-42b6-435a-983c-b7beff2784f9")
@@ -61,6 +58,11 @@ public class RelationsSearchParameters {
         this.relationTypeGroup = relationTypeGroup;
         this.fetchLastLevelOnly = fetchLastLevelOnly;
     }
+    /**
+     * Returns entity id.
+     *
+     * @return {@link EntityId}
+     */
 
     @JsonIgnore
     public EntityId getEntityId() {

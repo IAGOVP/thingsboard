@@ -19,7 +19,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 import org.mvel2.ExecutionContext;
 import org.thingsboard.script.api.TbScriptExecutionTask;
 
-
 /**
  * Tbel script execution task.
  */

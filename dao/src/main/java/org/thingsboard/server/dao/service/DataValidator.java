@@ -38,8 +38,11 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 /**
- * Data validator.
+ * Validates  entities before persistence.
+ *
+ * <p>Enforces constraints, uniqueness, and referential integrity at the DAO layer.
  */
+
 
 @Slf4j
 public abstract class DataValidator<D extends BaseData<?>> {
@@ -59,9 +62,16 @@ public abstract class DataValidator<D extends BaseData<?>> {
     private ApiLimitService apiLimitService;
 
     // Returns old instance of the same object that is fetched during validation.
+    
     /**
-     * Validate.
+     * Validates the requested data.
+     *
+     * @param data data ({@link D})
+     * @param tenantIdFunction tenant id function ({@link Function})
+     * @return {@link D}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     public D validate(D data, Function<D, TenantId> tenantIdFunction) {
         try {
             if (data == null) {
@@ -86,48 +96,73 @@ public abstract class DataValidator<D extends BaseData<?>> {
         }
     }
 
+    
     /**
-
-     * Validate data impl.
-
+     * Validates data impl.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param data data ({@link D})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected void validateDataImpl(TenantId tenantId, D data) {
     }
 
+    
     /**
-
-     * Validate create.
-
+     * Validates create.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param data data ({@link D})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected void validateCreate(TenantId tenantId, D data) {
     }
 
+    
     /**
-
-     * Validate update.
-
+     * Validates update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param data data ({@link D})
+     * @return {@link D}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected D validateUpdate(TenantId tenantId, D data) {
         return null;
     }
 
+    
     /**
-
-     * Validate delete.
-
+     * Validates delete.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     public void validateDelete(TenantId tenantId, EntityId entityId) {
     }
 
+    
     /**
-
-     * Validate string.
-
+     * Validates string.
+     *
+     * @param exceptionPrefix exception prefix ({@link String})
+     * @param name entity or attribute name
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     public void validateString(String exceptionPrefix, String name) {
         if (StringUtils.isBlank(name)) {
@@ -138,21 +173,30 @@ public abstract class DataValidator<D extends BaseData<?>> {
         }
     }
 
+    
     /**
-
      * Is same data.
-
+     *
+     * @param existentData existent data ({@link D})
+     * @param actualData actual data ({@link D})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected boolean isSameData(D existentData, D actualData) {
         return actualData.getId() != null && existentData.getId().equals(actualData.getId());
     }
 
+    
     /**
-
-     * Validate email.
-
+     * Validates email.
+     *
+     * @param email email ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     public static void validateEmail(String email) {
         if (!doValidateEmail(email)) {
@@ -160,11 +204,15 @@ public abstract class DataValidator<D extends BaseData<?>> {
         }
     }
 
+    
     /**
-
      * Do validate email.
-
+     *
+     * @param email email ({@link String})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     public static boolean doValidateEmail(String email) {
         if (email == null) {
@@ -175,11 +223,16 @@ public abstract class DataValidator<D extends BaseData<?>> {
         return emailMatcher.matches();
     }
 
+    
     /**
-
-     * Validate number of entities per tenant.
-
+     * Validates number of entities per tenant.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityType entity type discriminator
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected void validateNumberOfEntitiesPerTenant(TenantId tenantId,
                                                      EntityType entityType) {
@@ -189,11 +242,19 @@ public abstract class DataValidator<D extends BaseData<?>> {
         }
     }
 
+    
     /**
-
-     * Validate max sum data size per tenant.
-
+     * Validates max sum data size per tenant.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param dataDao data dao ({@link TenantEntityWithDataDao})
+     * @param maxSumDataSize max sum data size
+     * @param currentDataSize current data size
+     * @param entityType entity type discriminator
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected void validateMaxSumDataSizePerTenant(TenantId tenantId,
                                                    TenantEntityWithDataDao dataDao,
@@ -207,11 +268,16 @@ public abstract class DataValidator<D extends BaseData<?>> {
         }
     }
 
+    
     /**
-
-     * Validate json structure.
-
+     * Validates json structure.
+     *
+     * @param expectedNode expected node ({@link JsonNode})
+     * @param actualNode actual node ({@link JsonNode})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected static void validateJsonStructure(JsonNode expectedNode, JsonNode actualNode) {
         Set<String> expectedFields = new HashSet<>();
@@ -231,11 +297,15 @@ public abstract class DataValidator<D extends BaseData<?>> {
         }
     }
 
+    
     /**
-
-     * Validate queue name.
-
+     * Validates queue name.
+     *
+     * @param name entity or attribute name
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected static void validateQueueName(String name) {
         validateQueueNameOrTopic(name, NAME);
@@ -244,11 +314,15 @@ public abstract class DataValidator<D extends BaseData<?>> {
         }
     }
 
+    
     /**
-
-     * Validate queue topic.
-
+     * Validates queue topic.
+     *
+     * @param topic topic ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected static void validateQueueTopic(String topic) {
         validateQueueNameOrTopic(topic, TOPIC);
@@ -264,11 +338,15 @@ public abstract class DataValidator<D extends BaseData<?>> {
         }
     }
 
+    
     /**
-
      * Is valid domain.
-
+     *
+     * @param domainName domain name ({@link String})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     public static boolean isValidDomain(String domainName) {
         if (domainName == null) {

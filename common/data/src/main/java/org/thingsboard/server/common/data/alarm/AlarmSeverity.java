@@ -16,10 +16,19 @@
 package org.thingsboard.server.common.data.alarm;
 
 /**
- * alarm severity values.
+ * Severity level assigned to an alarm, ordered from most to least critical.
  */
 public enum AlarmSeverity {
 
-    CRITICAL, MAJOR, MINOR, WARNING, INDETERMINATE;
+    /** Highest severity; immediate action required. */
+    CRITICAL,
+    /** Significant impact on operations. */
+    MAJOR,
+    /** Low impact; should be addressed. */
+    MINOR,
+    /** Potential issue or threshold warning. */
+    WARNING,
+    /** Severity not yet classified. */
+    INDETERMINATE;
 
 }

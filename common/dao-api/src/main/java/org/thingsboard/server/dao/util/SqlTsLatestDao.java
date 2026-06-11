@@ -23,7 +23,8 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 @ConditionalOnProperty(prefix = "database.ts_latest", value = "type", havingValue = "sql")
 public @/**
- * DAO contract for sql ts latest.
+ * sql ts latest dao contract for the DAO layer.
  */
+
 interface SqlTsLatestDao {
 }

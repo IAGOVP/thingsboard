@@ -30,8 +30,11 @@ import static org.thingsboard.server.dao.model.ModelConstants.EVENT_SUCCESS_COLU
 import static org.thingsboard.server.dao.model.ModelConstants.EVENT_TYPE_COLUMN_NAME;
 import static org.thingsboard.server.dao.model.ModelConstants.LC_EVENT_TABLE_NAME;
 /**
- * Lifecycle event entity.
+ * JPA/Cassandra row model for lifecycle event.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -53,6 +56,12 @@ public class LifecycleEventEntity extends EventEntity<LifecycleEvent> implements
         this.success = event.isSuccess();
         this.error = event.getError();
     }
+    /**
+     * To data.
+     *
+     * @return {@link LifecycleEvent}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public LifecycleEvent toData() {

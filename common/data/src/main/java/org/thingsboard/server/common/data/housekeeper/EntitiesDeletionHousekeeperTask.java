@@ -47,6 +47,11 @@ public class EntitiesDeletionHousekeeperTask extends HousekeeperTask {
         this.entityType = entityType;
         this.entities = entities;
     }
+    /**
+     * Returns description.
+     *
+     * @return {@link String}
+     */
 
     @JsonIgnore
     @Override

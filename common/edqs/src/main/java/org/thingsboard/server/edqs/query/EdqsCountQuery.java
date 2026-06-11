@@ -20,9 +20,11 @@ import org.thingsboard.server.common.data.query.ComplexOperation;
 import org.thingsboard.server.common.data.query.EntityFilter;
 
 import java.util.List;
+
 /**
- * EDQS component: edqs count query.
+ * Edqs count query (EDQS microservice).
  */
+
 public class EdqsCountQuery extends EdqsQuery {
 
     @Builder

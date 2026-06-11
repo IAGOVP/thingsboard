@@ -58,11 +58,26 @@ public class PemSslCredentials extends AbstractSslCredentials {
     private String certFile;
     private String keyFile;
     private String keyPassword;
+    /**
+     * Can use.
+     *
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected boolean canUse() {
         return ResourceUtils.resourceExists(this, this.certFile);
     }
+    /**
+     * Loads key store.
+     *
+     * @param trustsOnly trusts only
+     * @param keyPasswordArray key password array
+     * @return {@link KeyStore}
+     * @throws IOException if ioexception is thrown during processing
+     * @throws GeneralSecurityException if general security exception is thrown during processing
+     */
 
     @Override
     protected KeyStore loadKeyStore(boolean trustsOnly, char[] keyPasswordArray) throws IOException, GeneralSecurityException {
@@ -135,14 +150,33 @@ public class PemSslCredentials extends AbstractSslCredentials {
         }
         return keyStore;
     }
+    /**
+     * Returns key alias.
+     *
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public String getKeyAlias() {
         return DEFAULT_KEY_ALIAS;
     }
+    /**
+     * Updates key alias.
+     *
+     * @param keyAlias key alias ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected void updateKeyAlias(String keyAlias) {}
+    /**
+     * Returns certificate file paths.
+     *
+     * @return {@link List}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public List<Path> getCertificateFilePaths() {

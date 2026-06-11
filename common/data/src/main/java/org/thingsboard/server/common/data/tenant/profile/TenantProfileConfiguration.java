@@ -38,18 +38,46 @@ import java.io.Serializable;
  * tenant profile configuration contract.
  */
 public interface TenantProfileConfiguration extends Serializable {
+    /**
+     * Returns type.
+     *
+     * @return {@link TenantProfileType}
+     */
 
     @JsonIgnore
     TenantProfileType getType();
+    /**
+     * Returns profile threshold.
+     *
+     * @param key key ({@link ApiUsageRecordKey})
+     * @return the long result
+     */
 
     @JsonIgnore
     long getProfileThreshold(ApiUsageRecordKey key);
+    /**
+     * Returns profile feature enabled.
+     *
+     * @param key key ({@link ApiUsageRecordKey})
+     * @return the boolean result
+     */
 
     @JsonIgnore
     boolean getProfileFeatureEnabled(ApiUsageRecordKey key);
+    /**
+     * Returns warn threshold.
+     *
+     * @param key key ({@link ApiUsageRecordKey})
+     * @return the long result
+     */
 
     @JsonIgnore
     long getWarnThreshold(ApiUsageRecordKey key);
+    /**
+     * Returns max rule node execs per message.
+     *
+     * @return the int result
+     */
 
     @JsonIgnore
     int getMaxRuleNodeExecsPerMessage();

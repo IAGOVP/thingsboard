@@ -26,8 +26,11 @@ import org.thingsboard.server.common.data.CacheConstants;
 import org.thingsboard.server.common.data.Tenant;
 import org.thingsboard.server.common.data.id.TenantId;
 /**
- * Tenant redis cache.
+ * distributed Redis cache for tenant (tenants, tenant profiles, and profile caching).
+ *
+ * <p>Implements {@link org.thingsboard.server.cache.TbTransactionalCache} with DAO-specific key types.
  */
+
 
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "redis")
 @Service("TenantCache")

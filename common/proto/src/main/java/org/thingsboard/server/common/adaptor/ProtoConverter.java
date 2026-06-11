@@ -35,10 +35,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Slf4j
 /**
  * Proto converter.
  */
+@Slf4j
 public class ProtoConverter {
 
     public static final Gson GSON = new Gson();
@@ -85,11 +85,13 @@ public class ProtoConverter {
 
     public static TransportProtos.ClaimDeviceMsg convertToClaimDeviceProto(DeviceId deviceId, byte[] bytes) throws InvalidProtocolBufferException {
         if (bytes == null) {
+            /** Build claim device msg. */
             return buildClaimDeviceMsg(deviceId, DataConstants.DEFAULT_SECRET_KEY, 0);
         }
         TransportApiProtos.ClaimDevice proto = TransportApiProtos.ClaimDevice.parseFrom(bytes);
         String secretKey = proto.getSecretKey() != null ? proto.getSecretKey() : DataConstants.DEFAULT_SECRET_KEY;
         long durationMs = proto.getDurationMs();
+        /** Build claim device msg. */
         return buildClaimDeviceMsg(deviceId, secretKey, durationMs);
     }
 

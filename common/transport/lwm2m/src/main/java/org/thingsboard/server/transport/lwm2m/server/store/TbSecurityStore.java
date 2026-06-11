@@ -19,7 +19,7 @@ import org.eclipse.leshan.server.security.SecurityStore;
 import org.thingsboard.server.transport.lwm2m.secure.TbLwM2MSecurityInfo;
 
 /**
- * tb security store contract.
+ * tb security store contract (LwM2M transport and object model (ThingsBoard common module)).
  */
 public interface TbSecurityStore extends SecurityStore {
 

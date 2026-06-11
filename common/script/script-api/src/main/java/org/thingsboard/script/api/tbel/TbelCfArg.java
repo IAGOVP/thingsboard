@@ -32,11 +32,12 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = TbelCfRelatedEntitiesArgumentValue.class, name = "RELATED_ENTITIES_ARGUMENT_VALUE")
 })
 /**
- * tbel cf arg contract.
+ * Contract for tbel cf arg.
  */
 public interface TbelCfArg extends TbelCfObject {
 
     @JsonIgnore
+    /** Returns the type. */
     String getType();
 
 }

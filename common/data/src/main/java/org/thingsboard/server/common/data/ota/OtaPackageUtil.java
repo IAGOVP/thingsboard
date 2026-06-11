@@ -47,6 +47,12 @@ public class OtaPackageUtil {
 
         }
     }
+    /**
+     * Returns attribute keys.
+     *
+     * @param firmwareType firmware type ({@link OtaPackageType})
+     * @return {@link List}
+     */
 
     public static List<String> getAttributeKeys(OtaPackageType firmwareType) {
         switch (firmwareType) {
@@ -57,14 +63,35 @@ public class OtaPackageUtil {
         }
         return Collections.emptyList();
     }
+    /**
+     * Returns attribute key.
+     *
+     * @param type type ({@link OtaPackageType})
+     * @param key key ({@link OtaPackageKey})
+     * @return {@link String}
+     */
 
     public static String getAttributeKey(OtaPackageType type, OtaPackageKey key) {
         return type.getKeyPrefix() + "_" + key.getValue();
     }
+    /**
+     * Returns target telemetry key.
+     *
+     * @param type type ({@link OtaPackageType})
+     * @param key key ({@link OtaPackageKey})
+     * @return {@link String}
+     */
 
     public static String getTargetTelemetryKey(OtaPackageType type, OtaPackageKey key) {
         return getTelemetryKey("target_", type, key);
     }
+    /**
+     * Returns current telemetry key.
+     *
+     * @param type type ({@link OtaPackageType})
+     * @param key key ({@link OtaPackageKey})
+     * @return {@link String}
+     */
 
     public static String getCurrentTelemetryKey(OtaPackageType type, OtaPackageKey key) {
         return getTelemetryKey("current_", type, key);
@@ -73,10 +100,24 @@ public class OtaPackageUtil {
     private static String getTelemetryKey(String prefix, OtaPackageType type, OtaPackageKey key) {
         return prefix + type.getKeyPrefix() + "_" + key.getValue();
     }
+    /**
+     * Returns telemetry key.
+     *
+     * @param type type ({@link OtaPackageType})
+     * @param key key ({@link OtaPackageKey})
+     * @return {@link String}
+     */
 
     public static String getTelemetryKey(OtaPackageType type, OtaPackageKey key) {
         return type.getKeyPrefix() + "_" + key.getValue();
     }
+    /**
+     * Returns ota package id.
+     *
+     * @param entity entity ({@link HasOtaPackage})
+     * @param type type ({@link OtaPackageType})
+     * @return {@link OtaPackageId}
+     */
 
     public static OtaPackageId getOtaPackageId(HasOtaPackage entity, OtaPackageType type) {
         switch (type) {
@@ -89,6 +130,14 @@ public class OtaPackageUtil {
                 return null;
         }
     }
+    /**
+     * Returns by ota package type.
+     *
+     * @param firmwareSupplier firmware supplier ({@link Supplier})
+     * @param softwareSupplier software supplier ({@link Supplier})
+     * @param type type ({@link OtaPackageType})
+     * @return {@link T}
+     */
 
     public static <T> T getByOtaPackageType(Supplier<T> firmwareSupplier, Supplier<T> softwareSupplier, OtaPackageType type) {
         switch (type) {

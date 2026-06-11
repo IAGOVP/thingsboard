@@ -38,6 +38,11 @@ public class WebViewPage extends AbstractMobilePage {
     @Schema(description = "Url", example = "/url")
     @JsonView(Views.Public.class)
     private String url;
+    /**
+     * Returns type.
+     *
+     * @return {@link MobilePageType}
+     */
 
     @Override
     public MobilePageType getType() {

@@ -25,18 +25,39 @@ import org.thingsboard.server.common.data.id.CustomerId;
 import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.msg.edqs.EdqsApiService;
 /**
- * Dummy edqs api service.
+ * Spring component for dummy edqs api service (JPA/PostgreSQL persistence layer (JPA repositories and PostgreSQL DAO implementations)).
  */
+
+
+
+
+
+
 
 @Service
 @Slf4j
 @ConditionalOnMissingBean(value = EdqsApiService.class, ignored = DummyEdqsApiService.class)
 public class DummyEdqsApiService implements EdqsApiService {
+    /**
+     * Processes request.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param request request payload with operation parameters
+     * @return future completing with {@link EdqsResponse}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<EdqsResponse> processRequest(TenantId tenantId, CustomerId customerId, EdqsRequest request) {
         throw new UnsupportedOperationException();
     }
+    /**
+     * Is supported.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isSupported() {

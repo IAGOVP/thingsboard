@@ -50,6 +50,11 @@ public class AlarmAssignmentNotificationRuleTriggerConfig implements Notificatio
     @NotEmpty
     @ArraySchema(schema = @Schema(implementation = Action.class))
     private Set<Action> notifyOn;
+    /**
+     * Returns trigger type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     */
 
     @Override
     public NotificationRuleTriggerType getTriggerType() {

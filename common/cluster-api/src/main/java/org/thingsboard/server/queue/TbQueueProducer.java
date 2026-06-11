@@ -18,14 +18,17 @@ package org.thingsboard.server.queue;
 import org.thingsboard.server.common.msg.queue.TopicPartitionInfo;
 
 /**
- * tb queue producer contract.
+ * Contract for tb queue producer.
  */
 public interface TbQueueProducer<T extends TbQueueMsg> {
 
+    /** Returns the default topic. */
     String getDefaultTopic();
 
+    /** Send. */
     void send(TopicPartitionInfo tpi, T msg, TbQueueCallback callback);
 
+    /** Stops the actor and releases its resources. */
     void stop();
 
 }

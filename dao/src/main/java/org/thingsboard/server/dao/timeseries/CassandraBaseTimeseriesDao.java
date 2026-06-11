@@ -76,8 +76,14 @@ import java.util.stream.Collectors;
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.literal;
 
 /**
- * @author Andrew Shvayka
+ * Spring component for cassandra base timeseries dao (Cassandra telemetry and latest-value DAO (Cassandra time-series DAO and latest-value caches)).
  */
+
+
+
+
+
+
 @SuppressWarnings("UnstableApiUsage")
 @Component
 @Slf4j
@@ -143,6 +149,12 @@ public class CassandraBaseTimeseriesDao extends AbstractCassandraBaseTimeseriesD
     private boolean isInstall() {
         return environment.acceptsProfiles(Profiles.of("install"));
     }
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PostConstruct
     public void init() {
@@ -161,11 +173,26 @@ public class CassandraBaseTimeseriesDao extends AbstractCassandraBaseTimeseriesD
             throw new RuntimeException("Failed to parse partitioning property: " + partitioning + "!");
         }
     }
+    /**
+     * Stop.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PreDestroy
     public void stop() {
         super.stopExecutor();
     }
+    /**
+     * Finds all async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param queries queries ({@link List})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<List<ReadTsKvQueryResult>> findAllAsync(TenantId tenantId, EntityId entityId, List<ReadTsKvQuery> queries) {
@@ -173,6 +200,16 @@ public class CassandraBaseTimeseriesDao extends AbstractCassandraBaseTimeseriesD
                 .map(query -> findAllAsync(tenantId, entityId, query)).collect(Collectors.toList());
         return Futures.allAsList(futures);
     }
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param tsKvEntry ts kv entry ({@link TsKvEntry})
+     * @param ttl ttl
+     * @return future completing with {@link Integer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<Integer> save(TenantId tenantId, EntityId entityId, TsKvEntry tsKvEntry, long ttl) {
@@ -215,6 +252,16 @@ public class CassandraBaseTimeseriesDao extends AbstractCassandraBaseTimeseriesD
         futures.add(getFuture(executeAsyncWrite(tenantId, stmt), rs -> null));
         return Futures.transform(Futures.allAsList(futures), result -> dataPointDays, MoreExecutors.directExecutor());
     }
+    /**
+     * Saves or persists partition.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param tsKvEntryTs ts kv entry ts
+     * @param key attribute or cache key
+     * @return future completing with {@link Integer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<Integer> savePartition(TenantId tenantId, EntityId entityId, long tsKvEntryTs, String key) {
@@ -239,6 +286,15 @@ public class CassandraBaseTimeseriesDao extends AbstractCassandraBaseTimeseriesD
             }
         }
     }
+    /**
+     * Removes the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param query filter and sort query definition
+     * @return future completing with {@link Void}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<Void> remove(TenantId tenantId, EntityId entityId, DeleteTsKvQuery query) {
@@ -263,6 +319,15 @@ public class CassandraBaseTimeseriesDao extends AbstractCassandraBaseTimeseriesD
         }, readResultsProcessingExecutor);
         return resultFuture;
     }
+    /**
+     * Finds all async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param query filter and sort query definition
+     * @return future completing with {@link ReadTsKvQueryResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<ReadTsKvQueryResult> findAllAsync(TenantId tenantId, EntityId entityId, ReadTsKvQuery query) {
@@ -311,6 +376,13 @@ public class CassandraBaseTimeseriesDao extends AbstractCassandraBaseTimeseriesD
             }, readResultsProcessingExecutor);
         }
     }
+    /**
+     * Cleanup.
+     *
+     * @param systemTtl system ttl
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void cleanup(long systemTtl) {
@@ -526,17 +598,70 @@ public class CassandraBaseTimeseriesDao extends AbstractCassandraBaseTimeseriesD
         return getFuture(executeAsyncWrite(tenantId, stmt), rs -> 0);
     }
 
+    
+
+    
+
+
+    
+
+
+
+    
+
+
+
+
+    
+
+
+
+
+
+    /**
+
+
+
+
+
+     * Spring component for cache callback (Cassandra telemetry and latest-value DAO (Cassandra time-series DAO and latest-value caches)).
+
+
+
+
+
+     */
+
+
+
+
+
+
     private class CacheCallback<Void> implements FutureCallback<Void> {
         private final CassandraPartitionCacheKey key;
 
         private CacheCallback(CassandraPartitionCacheKey key) {
             this.key = key;
         }
+        /**
+         * Handles success.
+         *
+         * @param result result ({@link Void})
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         @Override
         public void onSuccess(Void result) {
             cassandraTsPartitionsCache.put(key);
         }
+        /**
+         * Handles failure.
+         *
+         * @param t t ({@link Throwable})
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         @Override
         public void onFailure(Throwable t) {

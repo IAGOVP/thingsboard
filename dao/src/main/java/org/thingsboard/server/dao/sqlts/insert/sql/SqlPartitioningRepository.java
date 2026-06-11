@@ -33,8 +33,14 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 /**
- * Sql partitioning repository.
+ * Sql partitioning repository (time-series SQL/Timescale persistence (SQL/Timescale time-series key-value storage)).
  */
+
+
+
+
+
+
 
 @Primary
 @Repository
@@ -51,11 +57,27 @@ public class SqlPartitioningRepository {
 
     private final Map<String, Map<Long, SqlPartition>> tablesPartitions = new ConcurrentHashMap<>();
     private final ReentrantLock partitionCreationLock = new ReentrantLock();
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param partition partition ({@link SqlPartition})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public void save(SqlPartition partition) {
         getJdbcTemplate().execute(partition.getQuery());
     }
+    /**
+     * Creates partition if not exists.
+     *
+     * @param table table ({@link String})
+     * @param entityTs entity ts
+     * @param partitionDurationMs partition duration ms
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED) // executing non-transactionally, so that parent transaction is not aborted on partition save error
     public void createPartitionIfNotExists(String table, long entityTs, long partitionDurationMs) {
@@ -83,6 +105,15 @@ public class SqlPartitioningRepository {
             }
         }
     }
+    /**
+     * Drop partitions before.
+     *
+     * @param table table ({@link String})
+     * @param ts ts
+     * @param partitionDurationMs partition duration ms
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public long dropPartitionsBefore(String table, long ts, long partitionDurationMs) {
         List<Long> partitions = fetchPartitions(table);
@@ -102,6 +133,15 @@ public class SqlPartitioningRepository {
         }
         return lastDroppedPartitionEndTime;
     }
+    /**
+     * Cleanup partitions cache.
+     *
+     * @param table table ({@link String})
+     * @param expTime exp time
+     * @param partitionDurationMs partition duration ms
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void cleanupPartitionsCache(String table, long expTime, long partitionDurationMs) {
         Map<Long, SqlPartition> partitions = tablesPartitions.get(table);
@@ -136,6 +176,13 @@ public class SqlPartitioningRepository {
     private static long getPartitionEndTime(long startTime, long partitionDurationMs) {
         return startTime + partitionDurationMs;
     }
+    /**
+     * Fetches partitions.
+     *
+     * @param table table ({@link String})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public List<Long> fetchPartitions(String table) {
         List<Long> partitions = new ArrayList<>();
@@ -150,6 +197,14 @@ public class SqlPartitioningRepository {
         }
         return partitions;
     }
+    /**
+     * Calculate partition start time.
+     *
+     * @param ts ts
+     * @param partitionDuration partition duration
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public long calculatePartitionStartTime(long ts, long partitionDuration) {
         return ts - (ts % partitionDuration);
@@ -168,6 +223,12 @@ public class SqlPartitioningRepository {
         }
         return currentServerVersion;
     }
+    /**
+     * Returns jdbc template.
+     *
+     * @return {@link JdbcTemplate}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected JdbcTemplate getJdbcTemplate() {
         return jdbcTemplate;

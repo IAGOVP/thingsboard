@@ -25,8 +25,11 @@ import org.thingsboard.server.cache.TbJsonRedisSerializer;
 import org.thingsboard.server.common.data.CacheConstants;
 import org.thingsboard.server.common.data.OtaPackageInfo;
 /**
- * Ota package redis cache.
+ * distributed Redis cache for ota package (OTA firmware/software package metadata and data cache).
+ *
+ * <p>Implements {@link org.thingsboard.server.cache.TbTransactionalCache} with DAO-specific key types.
  */
+
 
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "redis")
 @Service("OtaPackageCache")

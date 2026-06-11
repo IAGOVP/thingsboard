@@ -27,8 +27,14 @@ import org.thingsboard.server.dao.timeseries.SqlPartition;
 import static org.thingsboard.server.dao.config.DedicatedEventsJpaDaoConfig.EVENTS_JDBC_TEMPLATE;
 import static org.thingsboard.server.dao.config.DedicatedEventsJpaDaoConfig.EVENTS_TRANSACTION_MANAGER;
 /**
- * Dedicated events sql partitioning repository.
+ * Dedicated events sql partitioning repository (time-series SQL/Timescale persistence (SQL/Timescale time-series key-value storage)).
  */
+
+
+
+
+
+
 
 @DedicatedEventsDataSource
 @Repository
@@ -37,18 +43,40 @@ public class DedicatedEventsSqlPartitioningRepository extends SqlPartitioningRep
     @Autowired
     @Qualifier(EVENTS_JDBC_TEMPLATE)
     private JdbcTemplate jdbcTemplate;
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param partition partition ({@link SqlPartition})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED, transactionManager = EVENTS_TRANSACTION_MANAGER)
     @Override
     public void save(SqlPartition partition) {
         super.save(partition);
     }
+    /**
+     * Creates partition if not exists.
+     *
+     * @param table table ({@link String})
+     * @param entityTs entity ts
+     * @param partitionDurationMs partition duration ms
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED, transactionManager = EVENTS_TRANSACTION_MANAGER)
     @Override
     public void createPartitionIfNotExists(String table, long entityTs, long partitionDurationMs) {
         super.createPartitionIfNotExists(table, entityTs, partitionDurationMs);
     }
+    /**
+     * Returns jdbc template.
+     *
+     * @return {@link JdbcTemplate}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected JdbcTemplate getJdbcTemplate() {

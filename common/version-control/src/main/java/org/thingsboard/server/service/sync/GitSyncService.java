@@ -25,12 +25,16 @@ import java.util.List;
  */
 public interface GitSyncService {
 
+    /** Register sync. */
     void registerSync(String key, String repoUri, String branch, long fetchFrequencyMs, Runnable onUpdate);
 
+    /** List files. */
     List<RepoFile> listFiles(String key, String path, int depth, FileType type);
 
+    /** Returns the file content. */
     byte[] getFileContent(String key, String path);
 
+    /** Returns the github raw content url. */
     String getGithubRawContentUrl(String key, String path);
 
 }

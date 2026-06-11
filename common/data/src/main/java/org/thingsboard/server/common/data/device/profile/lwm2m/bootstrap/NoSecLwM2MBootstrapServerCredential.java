@@ -26,6 +26,11 @@ public class NoSecLwM2MBootstrapServerCredential extends AbstractLwM2MBootstrapS
 
     @Serial
     private static final long serialVersionUID = 5540417758424747066L;
+    /**
+     * Returns security mode.
+     *
+     * @return {@link LwM2MSecurityMode}
+     */
 
     @Override
     public LwM2MSecurityMode getSecurityMode() {

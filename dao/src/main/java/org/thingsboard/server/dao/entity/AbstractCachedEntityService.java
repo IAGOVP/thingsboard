@@ -21,22 +21,63 @@ import org.thingsboard.server.cache.TbTransactionalCache;
 
 import java.io.Serializable;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * Abstract cached entity service.
+
+
+
+
+
+ * Abstract cached entity service (generic entity services, counts, and DAO registry).
+
+
+
+
+
 
  */
+
+
+
+
+
+
 
 public abstract class AbstractCachedEntityService<K extends Serializable, V extends Serializable, E> extends AbstractEntityService {
 
     @Autowired
     protected TbTransactionalCache<K, V> cache;
 
+    
     /**
-
      * Publish evict event.
-
+     *
+     * @param event event ({@link E})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected void publishEvictEvent(E event) {
         if (TransactionSynchronizationManager.isActualTransactionActive()) {
@@ -45,6 +86,13 @@ public abstract class AbstractCachedEntityService<K extends Serializable, V exte
             handleEvictEvent(event);
         }
     }
+    /**
+     * Handles evict event.
+     *
+     * @param event event ({@link E})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public abstract void handleEvictEvent(E event);
 

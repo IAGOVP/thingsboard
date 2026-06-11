@@ -16,27 +16,49 @@
 package org.thingsboard.server.common.data.alarm;
 
 /**
- * alarm status values.
+ * Combined acknowledgment and clearance state of an alarm.
  */
 public enum AlarmStatus {
 
-    ACTIVE_UNACK, ACTIVE_ACK, CLEARED_UNACK, CLEARED_ACK;
+    /** Alarm is active and not acknowledged. */
+    ACTIVE_UNACK,
+    /** Alarm is active and acknowledged. */
+    ACTIVE_ACK,
+    /** Alarm condition cleared but not acknowledged. */
+    CLEARED_UNACK,
+    /** Alarm cleared and acknowledged. */
+    CLEARED_ACK;
 
+    /**
+     * Returns whether this status represents an acknowledged alarm.
+     */
     public boolean isAck() {
         return this == ACTIVE_ACK || this == CLEARED_ACK;
     }
 
+    /**
+     * Returns whether this status represents a cleared alarm.
+     */
     public boolean isCleared() {
         return this == CLEARED_ACK || this == CLEARED_UNACK;
     }
 
+    /**
+     * Maps this status to a cleared/active search dimension.
+     *
+     * @return {@link AlarmSearchStatus#CLEARED} or {@link AlarmSearchStatus#ACTIVE}
+     */
     public AlarmSearchStatus getClearSearchStatus() {
         return this.isCleared() ? AlarmSearchStatus.CLEARED : AlarmSearchStatus.ACTIVE;
     }
 
+    /**
+     * Maps this status to an ack/unack search dimension.
+     *
+     * @return {@link AlarmSearchStatus#ACK} or {@link AlarmSearchStatus#UNACK}
+     */
     public AlarmSearchStatus getAckSearchStatus() {
         return this.isAck() ? AlarmSearchStatus.ACK : AlarmSearchStatus.UNACK;
     }
-
 
 }

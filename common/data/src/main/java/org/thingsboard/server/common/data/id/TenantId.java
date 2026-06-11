@@ -28,7 +28,7 @@ import java.util.UUID;
 
 @Schema(allOf = EntityId.class)
 /**
- * Typed identifier for tenant.
+ * Typed identifier for a {@link Tenant} entity ({@link org.thingsboard.server.common.data.EntityType#TENANT}).
  */
 public final class TenantId extends UUIDBased implements EntityId {
 
@@ -40,6 +40,12 @@ public final class TenantId extends UUIDBased implements EntityId {
 
     @Serial
     private static final long serialVersionUID = 1L;
+    /**
+     * From uuid.
+     *
+     * @param id id ({@link UUID})
+     * @return {@link TenantId}
+     */
 
     @JsonCreator
     public static TenantId fromUUID(@JsonProperty("id") UUID id) {
@@ -52,11 +58,21 @@ public final class TenantId extends UUIDBased implements EntityId {
     public TenantId(UUID id) {
         super(id);
     }
+    /**
+     * Is sys tenant id.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     public boolean isSysTenantId() {
         return this.equals(SYS_TENANT_ID);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY, description = "string", example = "TENANT", allowableValues = "TENANT")
     @Override

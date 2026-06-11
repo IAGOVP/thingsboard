@@ -36,8 +36,11 @@ import static org.thingsboard.server.dao.model.ModelConstants.ALARM_COMMENT_ALAR
 import static org.thingsboard.server.dao.model.ModelConstants.ALARM_COMMENT_COMMENT;
 import static org.thingsboard.server.dao.model.ModelConstants.ALARM_COMMENT_TYPE;
 /**
- * Abstract alarm comment entity.
+ * JPA/Cassandra row model for abstract alarm comment.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -84,6 +87,12 @@ public abstract class AbstractAlarmCommentEntity<T extends AlarmComment> extends
         this.type = alarmCommentEntity.getType();
         this.comment = alarmCommentEntity.getComment();
     }
+    /**
+     * To alarm comment.
+     *
+     * @return {@link AlarmComment}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected AlarmComment toAlarmComment() {
         AlarmComment alarmComment = new AlarmComment(new AlarmCommentId(id));

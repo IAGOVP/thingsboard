@@ -28,11 +28,11 @@ import lombok.With;
 import org.thingsboard.server.common.data.ai.provider.AiProvider;
 import org.thingsboard.server.common.data.ai.provider.AmazonBedrockProviderConfig;
 
-@Schema
-@Builder
 /**
  * Configuration for amazon bedrock chat model.
  */
+@Schema
+@Builder
 public record AmazonBedrockChatModelConfig(
         @Schema(ref = "#/components/schemas/AmazonBedrockProviderConfig")
         @NotNull @Valid AmazonBedrockProviderConfig providerConfig,
@@ -43,16 +43,32 @@ public record AmazonBedrockChatModelConfig(
         @With @Positive Integer timeoutSeconds,
         @With @PositiveOrZero Integer maxRetries
 ) implements AiChatModelConfig<AmazonBedrockChatModelConfig> {
+    /**
+     * Provider.
+     *
+     * @return {@link AiProvider}
+     */
 
     @Override
     public AiProvider provider() {
         return AiProvider.AMAZON_BEDROCK;
     }
+    /**
+     * Configure.
+     *
+     * @param configurer configurer ({@link Langchain4jChatModelConfigurer})
+     * @return {@link ChatModel}
+     */
 
     @Override
     public ChatModel configure(Langchain4jChatModelConfigurer configurer) {
         return configurer.configureChatModel(this);
     }
+    /**
+     * Supports json mode.
+     *
+     * @return the boolean result
+     */
 
     @Override
     public boolean supportsJsonMode() {

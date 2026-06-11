@@ -43,6 +43,11 @@ public class TsHistoryDeletionHousekeeperTask extends HousekeeperTask {
         super(tenantId, entityId, HousekeeperTaskType.DELETE_TS_HISTORY);
         this.key = key;
     }
+    /**
+     * Returns description.
+     *
+     * @return {@link String}
+     */
 
     @Override
     public String getDescription() {

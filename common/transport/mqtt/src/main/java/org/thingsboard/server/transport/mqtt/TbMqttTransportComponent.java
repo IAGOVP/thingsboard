@@ -22,13 +22,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * See also @TbMqttSslTransportComponent
+ * Conditional marker for MQTT transport Spring beans (plain TCP).
+ * Active when {@code transport.mqtt.enabled=true} in transport or monolith mode.
+ *
+ * @see TbMqttSslTransportComponent
  */
-
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @ConditionalOnExpression("'${service.type:null}'=='tb-transport' || ('${service.type:null}'=='monolith' && '${transport.api_enabled:true}'=='true' && '${transport.mqtt.enabled:true}'=='true')")
-public @/**
- * tb mqtt transport component contract.
- */
-interface TbMqttTransportComponent {}
+public @interface TbMqttTransportComponent {}

@@ -27,8 +27,9 @@ import org.thingsboard.server.common.data.query.EntityDataQuery;
 @NoArgsConstructor
 @Builder
 /**
- * Edqs request.
+ * Kafka request payload from tb-core asking EDQS to run an entity count or data query.
  */
+
 public class EdqsRequest {
 
     private EntityDataQuery entityDataQuery;

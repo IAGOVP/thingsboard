@@ -113,6 +113,11 @@ public abstract class EntityExportData<E extends ExportableEntity<? extends Enti
     @JsonTbEntity
     @Schema(implementation = ExportableEntity.class)
     private E entity;
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
     @JsonProperty(index = 1)
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
     public abstract EntityType getEntityType();
@@ -127,6 +132,12 @@ public abstract class EntityExportData<E extends ExportableEntity<? extends Enti
     @JsonIgnoreProperties({"id", "entityId", "createdTime", "version"})
     @ArraySchema(schema = @Schema(implementation = CalculatedField.class))
     private List<CalculatedField> calculatedFields;
+    /**
+     * New instance.
+     *
+     * @param entityType entity type ({@link EntityType})
+     * @return {@link EntityExportData}
+     */
 
     public static EntityExportData<?> newInstance(EntityType entityType) {
         return switch (entityType) {
@@ -149,6 +160,11 @@ public abstract class EntityExportData<E extends ExportableEntity<? extends Enti
             default -> throw new IllegalArgumentException("Unsupported entity type: " + entityType);
         };
     }
+    /**
+     * Sort.
+     *
+     * @return {@link EntityExportData}
+     */
 
     public EntityExportData<E> sort() {
         if (relations != null && !relations.isEmpty()) {
@@ -162,26 +178,51 @@ public abstract class EntityExportData<E extends ExportableEntity<? extends Enti
         }
         return this;
     }
+    /**
+     * Returns external id.
+     *
+     * @return {@link EntityId}
+     */
 
     @JsonIgnore
     public EntityId getExternalId() {
         return entity.getExternalId() != null ? entity.getExternalId() : entity.getId();
     }
+    /**
+     * Has credentials.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     public boolean hasCredentials() {
         return false;
     }
+    /**
+     * Has attributes.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     public boolean hasAttributes() {
         return attributes != null;
     }
+    /**
+     * Has relations.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     public boolean hasRelations() {
         return relations != null;
     }
+    /**
+     * Has calculated fields.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     public boolean hasCalculatedFields() {
@@ -190,6 +231,11 @@ public abstract class EntityExportData<E extends ExportableEntity<? extends Enti
 
     @Schema
     public static class CustomerExportData extends EntityExportData<Customer> {
+        /**
+         * Returns entity type.
+         *
+         * @return {@link EntityType}
+         */
         @Override
         public EntityType getEntityType() {
             return EntityType.CUSTOMER;
@@ -198,6 +244,11 @@ public abstract class EntityExportData<E extends ExportableEntity<? extends Enti
 
     @Schema
     public static class TbResourceExportData extends EntityExportData<TbResource> {
+        /**
+         * Returns entity type.
+         *
+         * @return {@link EntityType}
+         */
         @Override
         public EntityType getEntityType() {
             return EntityType.TB_RESOURCE;
@@ -206,6 +257,11 @@ public abstract class EntityExportData<E extends ExportableEntity<? extends Enti
 
     @Schema
     public static class DashboardExportData extends EntityExportData<Dashboard> {
+        /**
+         * Returns entity type.
+         *
+         * @return {@link EntityType}
+         */
         @Override
         public EntityType getEntityType() {
             return EntityType.DASHBOARD;
@@ -214,6 +270,11 @@ public abstract class EntityExportData<E extends ExportableEntity<? extends Enti
 
     @Schema
     public static class AssetProfileExportData extends EntityExportData<AssetProfile> {
+        /**
+         * Returns entity type.
+         *
+         * @return {@link EntityType}
+         */
         @Override
         public EntityType getEntityType() {
             return EntityType.ASSET_PROFILE;
@@ -222,6 +283,11 @@ public abstract class EntityExportData<E extends ExportableEntity<? extends Enti
 
     @Schema
     public static class AssetExportData extends EntityExportData<Asset> {
+        /**
+         * Returns entity type.
+         *
+         * @return {@link EntityType}
+         */
         @Override
         public EntityType getEntityType() {
             return EntityType.ASSET;
@@ -230,6 +296,11 @@ public abstract class EntityExportData<E extends ExportableEntity<? extends Enti
 
     @Schema
     public static class DeviceProfileExportData extends EntityExportData<DeviceProfile> {
+        /**
+         * Returns entity type.
+         *
+         * @return {@link EntityType}
+         */
         @Override
         public EntityType getEntityType() {
             return EntityType.DEVICE_PROFILE;
@@ -238,6 +309,11 @@ public abstract class EntityExportData<E extends ExportableEntity<? extends Enti
 
     @Schema
     public static class EntityViewExportData extends EntityExportData<EntityView> {
+        /**
+         * Returns entity type.
+         *
+         * @return {@link EntityType}
+         */
         @Override
         public EntityType getEntityType() {
             return EntityType.ENTITY_VIEW;
@@ -246,6 +322,11 @@ public abstract class EntityExportData<E extends ExportableEntity<? extends Enti
 
     @Schema
     public static class NotificationTemplateExportData extends EntityExportData<NotificationTemplate> {
+        /**
+         * Returns entity type.
+         *
+         * @return {@link EntityType}
+         */
         @Override
         public EntityType getEntityType() {
             return EntityType.NOTIFICATION_TEMPLATE;
@@ -254,6 +335,11 @@ public abstract class EntityExportData<E extends ExportableEntity<? extends Enti
 
     @Schema
     public static class NotificationTargetExportData extends EntityExportData<NotificationTarget> {
+        /**
+         * Returns entity type.
+         *
+         * @return {@link EntityType}
+         */
         @Override
         public EntityType getEntityType() {
             return EntityType.NOTIFICATION_TARGET;
@@ -262,6 +348,11 @@ public abstract class EntityExportData<E extends ExportableEntity<? extends Enti
 
     @Schema
     public static class NotificationRuleExportData extends EntityExportData<NotificationRule> {
+        /**
+         * Returns entity type.
+         *
+         * @return {@link EntityType}
+         */
         @Override
         public EntityType getEntityType() {
             return EntityType.NOTIFICATION_RULE;
@@ -270,6 +361,11 @@ public abstract class EntityExportData<E extends ExportableEntity<? extends Enti
 
     @Schema
     public static class AiModelExportData extends EntityExportData<AiModel> {
+        /**
+         * Returns entity type.
+         *
+         * @return {@link EntityType}
+         */
         @Override
         public EntityType getEntityType() {
             return EntityType.AI_MODEL;

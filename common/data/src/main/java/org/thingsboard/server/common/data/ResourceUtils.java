@@ -31,10 +31,24 @@ import java.net.URL;
 public class ResourceUtils {
 
     public static final String CLASSPATH_URL_PREFIX = "classpath:";
+    /**
+     * Resource exists.
+     *
+     * @param classLoaderSource class loader source ({@link Object})
+     * @param filePath file path ({@link String})
+     * @return the boolean result
+     */
 
     public static boolean resourceExists(Object classLoaderSource, String filePath) {
         return resourceExists(classLoaderSource.getClass().getClassLoader(), filePath);
     }
+    /**
+     * Resource exists.
+     *
+     * @param classLoader class loader ({@link ClassLoader})
+     * @param filePath file path ({@link String})
+     * @return the boolean result
+     */
 
     public static boolean resourceExists(ClassLoader classLoader, String filePath) {
         boolean classPathResource = false;
@@ -60,10 +74,24 @@ public class ResourceUtils {
         }
         return false;
     }
+    /**
+     * Returns input stream.
+     *
+     * @param classLoaderSource class loader source ({@link Object})
+     * @param filePath file path ({@link String})
+     * @return {@link InputStream}
+     */
 
     public static InputStream getInputStream(Object classLoaderSource, String filePath) {
         return getInputStream(classLoaderSource.getClass().getClassLoader(), filePath);
     }
+    /**
+     * Returns input stream.
+     *
+     * @param classLoader class loader ({@link ClassLoader})
+     * @param filePath file path ({@link String})
+     * @return {@link InputStream}
+     */
 
     public static InputStream getInputStream(ClassLoader classLoader, String filePath) {
         boolean classPathResource = false;
@@ -101,10 +129,24 @@ public class ResourceUtils {
         }
         throw new RuntimeException("Unable to find resource: " + filePath);
     }
+    /**
+     * Returns uri.
+     *
+     * @param classLoaderSource class loader source ({@link Object})
+     * @param filePath file path ({@link String})
+     * @return {@link String}
+     */
 
     public static String getUri(Object classLoaderSource, String filePath) {
         return getUri(classLoaderSource.getClass().getClassLoader(), filePath);
     }
+    /**
+     * Returns uri.
+     *
+     * @param classLoader class loader ({@link ClassLoader})
+     * @param filePath file path ({@link String})
+     * @return {@link String}
+     */
 
     public static String getUri(ClassLoader classLoader, String filePath) {
         try {

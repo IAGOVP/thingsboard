@@ -34,26 +34,105 @@ import java.util.List;
  */
 public interface NotificationRequestService {
 
+    /**
+     * Saves or persists notification request.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param notificationRequest notification request ({@link NotificationRequest})
+     * @return {@link NotificationRequest}
+     */
     NotificationRequest saveNotificationRequest(TenantId tenantId, NotificationRequest notificationRequest);
 
+    /**
+     * Finds notification request by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id id ({@link NotificationRequestId})
+     * @return {@link NotificationRequest}
+     */
     NotificationRequest findNotificationRequestById(TenantId tenantId, NotificationRequestId id);
 
+    /**
+     * Finds notification request info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id id ({@link NotificationRequestId})
+     * @return {@link NotificationRequestInfo}
+     */
     NotificationRequestInfo findNotificationRequestInfoById(TenantId tenantId, NotificationRequestId id);
 
+    /**
+     * Finds notification requests by tenant id and originator type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param originatorType originator type ({@link EntityType})
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<NotificationRequest> findNotificationRequestsByTenantIdAndOriginatorType(TenantId tenantId, EntityType originatorType, PageLink pageLink);
 
+    /**
+     * Finds notification requests infos by tenant id and originator type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param originatorType originator type ({@link EntityType})
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<NotificationRequestInfo> findNotificationRequestsInfosByTenantIdAndOriginatorType(TenantId tenantId, EntityType originatorType, PageLink pageLink);
 
+    /**
+     * Finds notification requests ids by status and rule id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param requestStatus request status ({@link NotificationRequestStatus})
+     * @param ruleId rule id ({@link NotificationRuleId})
+     * @return {@link List}
+     */
     List<NotificationRequestId> findNotificationRequestsIdsByStatusAndRuleId(TenantId tenantId, NotificationRequestStatus requestStatus, NotificationRuleId ruleId);
 
+    /**
+     * Finds notification requests by rule id and originator entity id and status.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleId rule id ({@link NotificationRuleId})
+     * @param originatorEntityId originator entity id ({@link EntityId})
+     * @param status status ({@link NotificationRequestStatus})
+     * @return {@link List}
+     */
     List<NotificationRequest> findNotificationRequestsByRuleIdAndOriginatorEntityIdAndStatus(TenantId tenantId, NotificationRuleId ruleId, EntityId originatorEntityId, NotificationRequestStatus status);
 
+    /**
+     * Deletes notification request.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param request request payload with operation parameters
+     */
     void deleteNotificationRequest(TenantId tenantId, NotificationRequest request);
 
+    /**
+     * Finds scheduled notification requests.
+     *
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<NotificationRequest> findScheduledNotificationRequests(PageLink pageLink);
 
+    /**
+     * Updates notification request.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param requestId request id ({@link NotificationRequestId})
+     * @param requestStatus request status ({@link NotificationRequestStatus})
+     * @param stats stats ({@link NotificationRequestStats})
+     */
     void updateNotificationRequest(TenantId tenantId, NotificationRequestId requestId, NotificationRequestStatus requestStatus, NotificationRequestStats stats);
 
+    /**
+     * Deletes notification requests by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     */
     void deleteNotificationRequestsByTenantId(TenantId tenantId);
 
 }

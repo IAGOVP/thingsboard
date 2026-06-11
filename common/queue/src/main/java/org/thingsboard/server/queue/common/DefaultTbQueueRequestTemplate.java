@@ -19,6 +19,18 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
 import jakarta.annotation.Nullable;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.LockSupport;
+import java.util.concurrent.locks.ReentrantLock;
+
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -34,21 +46,10 @@ import org.thingsboard.server.queue.TbQueueMsgMetadata;
 import org.thingsboard.server.queue.TbQueueProducer;
 import org.thingsboard.server.queue.TbQueueRequestTemplate;
 
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.LockSupport;
-import java.util.concurrent.locks.ReentrantLock;
-
-@Slf4j
 /**
- * Default tb queue request template.
+ * Request-reply template over queues: sends a request message and awaits a correlated response.
  */
+@Slf4j
 public class DefaultTbQueueRequestTemplate<Request extends TbQueueMsg, Response extends TbQueueMsg> extends AbstractTbQueueTemplate
         implements TbQueueRequestTemplate<Request, Response> {
 
@@ -242,17 +243,12 @@ public class DefaultTbQueueRequestTemplate<Request extends TbQueueMsg, Response 
         return future;
     }
 
-    /**
-     * MONOTONIC clock instead jumping wall clock.
-     * Wrapped into the method for the test purposes to travel through the time
-     * */
+    
     long getCurrentClockNs() {
         return System.nanoTime();
     }
 
-    /**
-     * Wall clock to send timestamp to an external service
-     * */
+    
     long getCurrentTimeMs() {
         return System.currentTimeMillis();
     }

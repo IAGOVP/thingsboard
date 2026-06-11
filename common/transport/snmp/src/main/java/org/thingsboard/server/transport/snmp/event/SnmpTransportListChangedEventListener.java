@@ -29,6 +29,13 @@ import org.thingsboard.server.transport.snmp.SnmpTransportContext;
 @RequiredArgsConstructor
 public class SnmpTransportListChangedEventListener extends TbApplicationEventListener<SnmpTransportListChangedEvent> {
     private final SnmpTransportContext snmpTransportContext;
+    /**
+     * Handles tb application event.
+     *
+     * @param event event ({@link SnmpTransportListChangedEvent})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected void onTbApplicationEvent(SnmpTransportListChangedEvent event) {

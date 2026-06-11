@@ -22,13 +22,26 @@ import org.thingsboard.server.dao.model.sql.DomainOauth2ClientEntity;
 import java.util.List;
 import java.util.UUID;
 
+
 /**
 
- * domain oauth2client repository contract.
+ * Spring Data JPA repository for domain oauth2client entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
 
+
 public interface DomainOauth2ClientRepository extends JpaRepository<DomainOauth2ClientEntity, DomainOauth2ClientCompositeKey> {
+    /**
+     * Finds all by domain id.
+     *
+     * @param domainId domain id ({@link UUID})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<DomainOauth2ClientEntity> findAllByDomainId(UUID domainId);
 

@@ -31,6 +31,11 @@ import java.time.temporal.TemporalAdjusters;
  * Week sun sat interval.
  */
 public class WeekSunSatInterval extends BaseAggInterval {
+    /**
+     * Returns type.
+     *
+     * @return {@link AggIntervalType}
+     */
 
     @Override
     public AggIntervalType getType() {
@@ -40,11 +45,23 @@ public class WeekSunSatInterval extends BaseAggInterval {
     public WeekSunSatInterval(String tz, Long offsetSec) {
         super(tz, offsetSec);
     }
+    /**
+     * Align to interval start.
+     *
+     * @param reference reference ({@link ZonedDateTime})
+     * @return {@link ZonedDateTime}
+     */
 
     @Override
     protected ZonedDateTime alignToIntervalStart(ZonedDateTime reference) {
         return reference.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY)).truncatedTo(ChronoUnit.DAYS);
     }
+    /**
+     * Returns next interval start.
+     *
+     * @param currentStart current start ({@link ZonedDateTime})
+     * @return {@link ZonedDateTime}
+     */
 
     @Override
     public ZonedDateTime getNextIntervalStart(ZonedDateTime currentStart) {

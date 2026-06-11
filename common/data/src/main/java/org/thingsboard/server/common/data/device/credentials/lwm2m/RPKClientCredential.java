@@ -22,11 +22,23 @@ import org.apache.commons.codec.binary.Base64;
  * Rpkclient credential.
  */
 public class RPKClientCredential extends AbstractLwM2MClientSecurityCredential {
+    /**
+     * Returns security config client mode.
+     *
+     * @return {@link LwM2MSecurityMode}
+     */
 
     @Override
     public LwM2MSecurityMode getSecurityConfigClientMode() {
         return LwM2MSecurityMode.RPK;
     }
+    /**
+     * Returns decoded.
+     *
+     * @return the byte[] value
+     * @throws IllegalArgumentException if illegal argument exception is thrown during processing
+     * @throws DecoderException if decoder exception is thrown during processing
+     */
 
     @Override
     public byte[] getDecoded() throws IllegalArgumentException, DecoderException {

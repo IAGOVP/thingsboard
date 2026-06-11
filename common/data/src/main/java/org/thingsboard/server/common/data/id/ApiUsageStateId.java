@@ -24,7 +24,7 @@ import java.util.UUID;
 
 @Schema(allOf = EntityId.class)
 /**
- * Typed identifier for api usage state.
+ * Typed identifier for API usage metering state per tenant.
  */
 public class ApiUsageStateId extends UUIDBased implements EntityId {
 
@@ -32,10 +32,21 @@ public class ApiUsageStateId extends UUIDBased implements EntityId {
     public ApiUsageStateId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * From string.
+     *
+     * @param userId user id ({@link String})
+     * @return {@link ApiUsageStateId}
+     */
 
     public static ApiUsageStateId fromString(String userId) {
         return new ApiUsageStateId(UUID.fromString(userId));
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY, description = "string", example = "API_USAGE_STATE", allowableValues = "API_USAGE_STATE")
     @Override

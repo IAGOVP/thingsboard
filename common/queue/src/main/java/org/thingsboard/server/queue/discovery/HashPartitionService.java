@@ -18,30 +18,6 @@ package org.thingsboard.server.queue.discovery;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import jakarta.annotation.PostConstruct;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Service;
-import org.thingsboard.server.common.data.DataConstants;
-import org.thingsboard.server.common.data.exception.TenantNotFoundException;
-import org.thingsboard.server.common.data.id.EntityId;
-import org.thingsboard.server.common.data.id.TenantId;
-import org.thingsboard.server.common.data.id.TenantProfileId;
-import org.thingsboard.server.common.data.job.JobType;
-import org.thingsboard.server.common.data.util.CollectionsUtil;
-import org.thingsboard.server.common.msg.queue.ServiceType;
-import org.thingsboard.server.common.msg.queue.TopicPartitionInfo;
-import org.thingsboard.server.gen.transport.TransportProtos;
-import org.thingsboard.server.gen.transport.TransportProtos.ServiceInfo;
-import org.thingsboard.server.queue.discovery.event.ClusterTopologyChangeEvent;
-import org.thingsboard.server.queue.discovery.event.PartitionChangeEvent;
-import org.thingsboard.server.queue.discovery.event.ServiceListChangedEvent;
-import org.thingsboard.server.queue.util.AfterStartUp;
-import org.thingsboard.server.queue.util.PropertyUtils;
-
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -60,17 +36,41 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Service;
+import org.thingsboard.server.common.data.DataConstants;
+import org.thingsboard.server.common.data.exception.TenantNotFoundException;
+import org.thingsboard.server.common.data.id.EntityId;
+import org.thingsboard.server.common.data.id.TenantId;
+import org.thingsboard.server.common.data.id.TenantProfileId;
+import org.thingsboard.server.common.data.job.JobType;
+import org.thingsboard.server.common.data.util.CollectionsUtil;
+import org.thingsboard.server.common.msg.queue.ServiceType;
+import org.thingsboard.server.common.msg.queue.TopicPartitionInfo;
+import org.thingsboard.server.gen.transport.TransportProtos.ServiceInfo;
+import org.thingsboard.server.gen.transport.TransportProtos;
+import org.thingsboard.server.queue.discovery.event.ClusterTopologyChangeEvent;
+import org.thingsboard.server.queue.discovery.event.PartitionChangeEvent;
+import org.thingsboard.server.queue.discovery.event.ServiceListChangedEvent;
+import org.thingsboard.server.queue.util.AfterStartUp;
+import org.thingsboard.server.queue.util.PropertyUtils;
+
 import static org.thingsboard.server.common.data.DataConstants.CF_QUEUE_NAME;
 import static org.thingsboard.server.common.data.DataConstants.CF_STATES_QUEUE_NAME;
 import static org.thingsboard.server.common.data.DataConstants.EDGE_QUEUE_NAME;
 import static org.thingsboard.server.common.data.DataConstants.MAIN_QUEUE_NAME;
 
+/**
+ * Consistent-hash partition service mapping tenants and queues to service instances.
+ */
 @Service
 @Slf4j
 @RequiredArgsConstructor
-/**
- * Hash partition service.
- */
 public class HashPartitionService implements PartitionService {
 
     @Value("${queue.core.topic:tb_core}")

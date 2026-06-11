@@ -30,7 +30,12 @@ import org.thingsboard.server.common.data.validation.NoXss;
 @Schema
 @EqualsAndHashCode(callSuper = true)
 /**
- * Tenant.
+ * Top-level multi-tenant isolation boundary in ThingsBoard.
+ *
+ * <p>A tenant owns devices, assets, dashboards, rule chains, and users. Linked to a
+ * {@link org.thingsboard.server.common.data.id.TenantProfileId} that defines rate limits, queue
+ * configuration, and feature flags. Contact fields (address, phone, email) support billing
+ * and administration. Only system administrators create tenants via REST ({@code /api/tenant}).
  */
 public class Tenant extends ContactBased<TenantId> implements HasTenantId, HasTitle, HasVersion {
 
@@ -66,20 +71,40 @@ public class Tenant extends ContactBased<TenantId> implements HasTenantId, HasTi
         this.tenantProfileId = tenant.getTenantProfileId();
         this.version = tenant.getVersion();
     }
+    /**
+     * Returns title.
+     *
+     * @return {@link String}
+     */
 
     public String getTitle() {
         return title;
     }
+    /**
+     * Set title.
+     *
+     * @param title title ({@link String})
+     */
 
     public void setTitle(String title) {
         this.title = title;
     }
+    /**
+     * Returns tenant id.
+     *
+     * @return {@link TenantId}
+     */
 
     @Override
     @JsonIgnore
     public TenantId getTenantId() {
         return getId();
     }
+    /**
+     * Returns name.
+     *
+     * @return {@link String}
+     */
 
     @Override
     @Schema(description = "Name of the tenant. Read-only, duplicated from title for backward compatibility", example = "Company A", accessMode = Schema.AccessMode.READ_ONLY)
@@ -87,22 +112,47 @@ public class Tenant extends ContactBased<TenantId> implements HasTenantId, HasTi
     public String getName() {
         return title;
     }
+    /**
+     * Returns region.
+     *
+     * @return {@link String}
+     */
 
     public String getRegion() {
         return region;
     }
+    /**
+     * Set region.
+     *
+     * @param region region ({@link String})
+     */
 
     public void setRegion(String region) {
         this.region = region;
     }
+    /**
+     * Returns tenant profile id.
+     *
+     * @return {@link TenantProfileId}
+     */
 
     public TenantProfileId getTenantProfileId() {
         return tenantProfileId;
     }
+    /**
+     * Set tenant profile id.
+     *
+     * @param tenantProfileId tenant profile id ({@link TenantProfileId})
+     */
 
     public void setTenantProfileId(TenantProfileId tenantProfileId) {
         this.tenantProfileId = tenantProfileId;
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link TenantId}
+     */
 
     @Schema(description = "JSON object with the tenant Id. " +
             "Specify this field to update the tenant. " +
@@ -112,54 +162,99 @@ public class Tenant extends ContactBased<TenantId> implements HasTenantId, HasTi
     public TenantId getId() {
         return super.getId();
     }
+    /**
+     * Returns created time.
+     *
+     * @return the long result
+     */
 
     @Schema(description = "Timestamp of the tenant creation, in milliseconds", example = "1609459200000", accessMode = Schema.AccessMode.READ_ONLY)
     @Override
     public long getCreatedTime() {
         return super.getCreatedTime();
     }
+    /**
+     * Returns country.
+     *
+     * @return {@link String}
+     */
 
     @Schema(description = "Country", example = "US")
     @Override
     public String getCountry() {
         return super.getCountry();
     }
+    /**
+     * Returns state.
+     *
+     * @return {@link String}
+     */
 
     @Schema(description = "State", example = "NY")
     @Override
     public String getState() {
         return super.getState();
     }
+    /**
+     * Returns city.
+     *
+     * @return {@link String}
+     */
 
     @Schema(description = "City", example = "New York")
     @Override
     public String getCity() {
         return super.getCity();
     }
+    /**
+     * Returns address.
+     *
+     * @return {@link String}
+     */
 
     @Schema(description = "Address Line 1", example = "42 Broadway Suite 12-400")
     @Override
     public String getAddress() {
         return super.getAddress();
     }
+    /**
+     * Returns address2.
+     *
+     * @return {@link String}
+     */
 
     @Schema(description = "Address Line 2", example = "")
     @Override
     public String getAddress2() {
         return super.getAddress2();
     }
+    /**
+     * Returns zip.
+     *
+     * @return {@link String}
+     */
 
     @Schema(description = "Zip code", example = "10004")
     @Override
     public String getZip() {
         return super.getZip();
     }
+    /**
+     * Returns phone.
+     *
+     * @return {@link String}
+     */
 
     @Schema(description = "Phone number", example = "+1(415)777-7777")
     @Override
     public String getPhone() {
         return super.getPhone();
     }
+    /**
+     * Returns email.
+     *
+     * @return {@link String}
+     */
 
     @Schema(description = "Email", example = "example@company.com")
     @Override
@@ -172,6 +267,11 @@ public class Tenant extends ContactBased<TenantId> implements HasTenantId, HasTi
             "'homeDashboardHideToolbar' (boolean, whether to hide the dashboard toolbar).",
             implementation = com.fasterxml.jackson.databind.JsonNode.class,
             example = "{\"description\":\"Main tenant\",\"homeDashboardId\":\"784f394c-42b6-435a-983c-b7beff2784f9\",\"homeDashboardHideToolbar\":true}")
+    /**
+     * Returns additional info.
+     *
+     * @return {@link JsonNode}
+     */
     @Override
     public JsonNode getAdditionalInfo() {
         return super.getAdditionalInfo();

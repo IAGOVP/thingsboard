@@ -47,8 +47,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 /**
- * Elasticsearch audit log sink.
+ * Spring component for elasticsearch audit log sink (audit log persistence and log-level configuration).
  */
+
+
+
+
+
+
 
 @Component
 @ConditionalOnProperty(prefix = "audit-log.sink", value = "type", havingValue = "elasticsearch")
@@ -76,6 +82,12 @@ public class ElasticsearchAuditLogSink implements AuditLogSink {
 
     private RestClient restClient;
     private ExecutorService executor;
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PostConstruct
     public void init() {
@@ -108,6 +120,13 @@ public class ElasticsearchAuditLogSink implements AuditLogSink {
             executor.shutdownNow();
         }
     }
+    /**
+     * Log action.
+     *
+     * @param auditLogEntry audit log entry ({@link AuditLog})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void logAction(AuditLog auditLogEntry) {

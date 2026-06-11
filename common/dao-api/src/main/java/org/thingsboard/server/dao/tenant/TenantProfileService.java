@@ -31,28 +31,106 @@ import java.util.UUID;
  */
 public interface TenantProfileService extends EntityDaoService {
 
+    /**
+     * Finds tenant profile by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param tenantProfileId tenant profile id ({@link TenantProfileId})
+     * @return {@link TenantProfile}
+     */
     TenantProfile findTenantProfileById(TenantId tenantId, TenantProfileId tenantProfileId);
 
+    /**
+     * Finds tenant profile info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param tenantProfileId tenant profile id ({@link TenantProfileId})
+     * @return {@link EntityInfo}
+     */
     EntityInfo findTenantProfileInfoById(TenantId tenantId, TenantProfileId tenantProfileId);
 
+    /**
+     * Saves or persists tenant profile.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param tenantProfile tenant profile ({@link TenantProfile})
+     * @return {@link TenantProfile}
+     */
     TenantProfile saveTenantProfile(TenantId tenantId, TenantProfile tenantProfile);
 
+    /**
+     * Deletes tenant profile.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param tenantProfileId tenant profile id ({@link TenantProfileId})
+     */
     void deleteTenantProfile(TenantId tenantId, TenantProfileId tenantProfileId);
 
+    /**
+     * Finds tenant profiles.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<TenantProfile> findTenantProfiles(TenantId tenantId, PageLink pageLink);
 
+    /**
+     * Finds tenant profile infos.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<EntityInfo> findTenantProfileInfos(TenantId tenantId, PageLink pageLink);
 
+    /**
+     * Finds or create default tenant profile.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link TenantProfile}
+     */
     TenantProfile findOrCreateDefaultTenantProfile(TenantId tenantId);
 
+    /**
+     * Finds default tenant profile.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link TenantProfile}
+     */
     TenantProfile findDefaultTenantProfile(TenantId tenantId);
 
+    /**
+     * Finds default tenant profile info.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link EntityInfo}
+     */
     EntityInfo findDefaultTenantProfileInfo(TenantId tenantId);
 
+    /**
+     * Set default tenant profile.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param tenantProfileId tenant profile id ({@link TenantProfileId})
+     * @return {@link TenantProfile}
+     */
     TenantProfile setDefaultTenantProfile(TenantId tenantId, TenantProfileId tenantProfileId);
 
+    /**
+     * Deletes tenant profiles.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     */
     void deleteTenantProfiles(TenantId tenantId);
 
+    /**
+     * Finds tenant profiles by ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ids ids
+     * @return {@link List}
+     */
     List<TenantProfile> findTenantProfilesByIds(TenantId tenantId, UUID[] ids);
 
 }

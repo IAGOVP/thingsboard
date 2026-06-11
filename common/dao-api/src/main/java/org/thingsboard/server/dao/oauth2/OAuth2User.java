@@ -18,11 +18,10 @@ package org.thingsboard.server.dao.oauth2;
 import lombok.Data;
 import org.thingsboard.server.common.data.id.CustomerId;
 import org.thingsboard.server.common.data.id.TenantId;
-
-@Data
 /**
  * Oauth2user.
  */
+@Data
 public class OAuth2User {
     private String tenantName;
     private TenantId tenantId;

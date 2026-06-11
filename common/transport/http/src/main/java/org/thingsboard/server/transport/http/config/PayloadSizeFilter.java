@@ -53,6 +53,16 @@ public class PayloadSizeFilter extends OncePerRequestFilter {
         }
         log.info("Initialized payload size filter with configuration: {}" , limitsConfiguration);
     }
+    /**
+     * Do filter internal.
+     *
+     * @param request request payload with operation parameters
+     * @param response response ({@link HttpServletResponse})
+     * @param chain chain ({@link FilterChain})
+     * @return nothing
+     * @throws IOException if ioexception is thrown during processing
+     * @throws ServletException if servlet exception is thrown during processing
+     */
 
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -75,11 +85,23 @@ public class PayloadSizeFilter extends OncePerRequestFilter {
         }
         return false;
     }
+    /**
+     * Should not filter async dispatch.
+     *
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected boolean shouldNotFilterAsyncDispatch() {
         return false;
     }
+    /**
+     * Should not filter error dispatch.
+     *
+     * @return the boolean result
+     * @throws IOException if ioexception is thrown during processing
+     */
 
     @Override
     protected boolean shouldNotFilterErrorDispatch() {

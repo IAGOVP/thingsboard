@@ -34,8 +34,11 @@ import org.thingsboard.server.dao.model.ModelConstants;
 import java.util.HashSet;
 import java.util.UUID;
 /**
- * Dashboard info entity.
+ * JPA/Cassandra row model for dashboard info.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @Slf4j
@@ -86,6 +89,12 @@ public class DashboardInfoEntity extends BaseVersionedEntity<DashboardInfo> {
         this.mobileHide = dashboardInfo.isMobileHide();
         this.mobileOrder = dashboardInfo.getMobileOrder();
     }
+    /**
+     * To data.
+     *
+     * @return {@link DashboardInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public DashboardInfo toData() {

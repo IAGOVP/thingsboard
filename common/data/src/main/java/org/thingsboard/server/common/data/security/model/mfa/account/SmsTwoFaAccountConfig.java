@@ -33,6 +33,11 @@ public class SmsTwoFaAccountConfig extends OtpBasedTwoFaAccountConfig {
     @NotBlank
     @Pattern(regexp = "^\\+[1-9]\\d{1,14}$", message = "is not of E.164 format")
     private String phoneNumber;
+    /**
+     * Returns provider type.
+     *
+     * @return {@link TwoFaProviderType}
+     */
 
     @Override
     public TwoFaProviderType getProviderType() {

@@ -35,6 +35,11 @@ public class SpecificTimeSchedule implements AlarmSchedule {
     private long endsOn;
 
     private DynamicValue<String> dynamicValue;
+    /**
+     * Returns type.
+     *
+     * @return {@link AlarmScheduleType}
+     */
 
     @Override
     public AlarmScheduleType getType() {

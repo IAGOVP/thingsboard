@@ -32,6 +32,11 @@ public class SmsTwoFaProviderConfig extends OtpBasedTwoFaProviderConfig {
     @NotBlank(message = "is required")
     @Pattern(regexp = ".*\\$\\{code}.*", message = "must contain verification code")
     private String smsVerificationMessageTemplate;
+    /**
+     * Returns provider type.
+     *
+     * @return {@link TwoFaProviderType}
+     */
 
     @Override
     public TwoFaProviderType getProviderType() {

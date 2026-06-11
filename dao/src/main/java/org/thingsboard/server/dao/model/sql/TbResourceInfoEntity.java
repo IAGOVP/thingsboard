@@ -47,8 +47,11 @@ import static org.thingsboard.server.dao.model.ModelConstants.RESOURCE_TITLE_COL
 import static org.thingsboard.server.dao.model.ModelConstants.RESOURCE_TYPE_COLUMN;
 import static org.thingsboard.server.dao.model.ModelConstants.SEARCH_TEXT_PROPERTY;
 /**
- * Tb resource info entity.
+ * JPA/Cassandra row model for tb resource info.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -116,6 +119,12 @@ public class TbResourceInfoEntity extends BaseSqlEntity<TbResourceInfo> implemen
         this.publicResourceKey = resource.getPublicResourceKey();
         this.externalId = getUuid(resource.getExternalId());
     }
+    /**
+     * To data.
+     *
+     * @return {@link TbResourceInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbResourceInfo toData() {

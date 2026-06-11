@@ -19,15 +19,36 @@ import org.thingsboard.server.transport.lwm2m.server.ota.firmware.LwM2MClientFwO
 import org.thingsboard.server.transport.lwm2m.server.ota.software.LwM2MClientSwOtaInfo;
 
 /**
- * tb lw m2mclient ota info store contract.
+ * tb lw m2mclient ota info store contract (LwM2M transport and object model (ThingsBoard common module)).
  */
 public interface TbLwM2MClientOtaInfoStore {
 
     LwM2MClientFwOtaInfo getFw(String endpoint);
 
+    /**
+     * Returns sw.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return {@link LwM2MClientSwOtaInfo}
+     * @throws Exception on processing failure
+     */
     LwM2MClientSwOtaInfo getSw(String endpoint);
 
+    /**
+     * Put fw.
+     *
+     * @param info info ({@link LwM2MClientFwOtaInfo})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void putFw(LwM2MClientFwOtaInfo info);
 
+    /**
+     * Put sw.
+     *
+     * @param info info ({@link LwM2MClientSwOtaInfo})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void putSw(LwM2MClientSwOtaInfo info);
 }

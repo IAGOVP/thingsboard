@@ -34,17 +34,37 @@ import org.thingsboard.server.common.msg.tools.TbRateLimits;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Default {@link RateLimitService} using Caffeine-cached {@link org.thingsboard.server.common.msg.tools.TbRateLimits} buckets.
+ *
+ * <p>Configuration:
+ * <ul>
+ *   <li>{@code cache.rateLimits.timeToLiveInMinutes} — bucket cache idle TTL (default 120)</li>
+ *   <li>{@code cache.rateLimits.maxSize} — max cached buckets (default 200000)</li>
+ * </ul>
+ *
+ * <p>On limit breach, publishes a {@link org.thingsboard.server.common.data.notification.rule.trigger.RateLimitsTrigger}
+ * via {@link org.thingsboard.server.common.msg.notification.NotificationRuleProcessor}.
+ *
+ * @see TenantProfileProvider
+ */
 @Lazy
 @Service
 @Slf4j
-/**
- * Default rate limit service.
- */
 public class DefaultRateLimitService implements RateLimitService {
 
+    /** Resolves tenant-specific rate limit config strings. */
+
     private final TenantProfileProvider tenantProfileProvider;
+    /** Fires notifications on limit breaches. */
     private final NotificationRuleProcessor notificationRuleProcessor;
 
+    /**
+     * @param tenantProfileProvider      source of per-tenant limit configuration
+     * @param notificationRuleProcessor  publishes rate-limit breach notifications
+     * @param rateLimitsTtl              bucket cache TTL in minutes
+     * @param rateLimitsCacheMaxSize     maximum cached buckets
+     */
     public DefaultRateLimitService(TenantProfileProvider tenantProfileProvider,
                                    @Lazy NotificationRuleProcessor notificationRuleProcessor,
                                    @Value("${cache.rateLimits.timeToLiveInMinutes:120}") int rateLimitsTtl,
@@ -57,18 +77,23 @@ public class DefaultRateLimitService implements RateLimitService {
                 .build();
     }
 
+    /** Cached token-bucket limiters per API/level pair. */
+
     private final Cache<RateLimitKey, TbRateLimits> rateLimits;
 
+/** {@inheritDoc} */
     @Override
     public boolean checkRateLimit(LimitedApi api, TenantId tenantId) {
         return checkRateLimit(api, tenantId, tenantId);
     }
 
+/** {@inheritDoc} */
     @Override
     public boolean checkRateLimit(LimitedApi api, TenantId tenantId, Object level) {
         return checkRateLimit(api, tenantId, level, false);
     }
 
+/** {@inheritDoc} */
     @Override
     public boolean checkRateLimit(LimitedApi api, TenantId tenantId, Object level, boolean ignoreTenantNotFound) {
         if (tenantId.isSysTenantId()) {
@@ -97,6 +122,7 @@ public class DefaultRateLimitService implements RateLimitService {
         return success;
     }
 
+/** {@inheritDoc} */
     @Override
     public boolean checkRateLimit(LimitedApi api, Object level, String rateLimitConfig) {
         RateLimitKey key = new RateLimitKey(api, level);
@@ -120,6 +146,7 @@ public class DefaultRateLimitService implements RateLimitService {
         return success;
     }
 
+/** {@inheritDoc} */
     @Override
     public void cleanUp(LimitedApi api, Object level) {
         RateLimitKey key = new RateLimitKey(api, level);

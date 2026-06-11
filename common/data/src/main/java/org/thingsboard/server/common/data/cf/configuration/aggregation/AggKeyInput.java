@@ -28,6 +28,11 @@ import lombok.NoArgsConstructor;
 public class AggKeyInput implements AggInput {
 
     private String key;
+    /**
+     * Returns type.
+     *
+     * @return {@link String}
+     */
 
     @Override
     public String getType() {

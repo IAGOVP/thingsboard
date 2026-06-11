@@ -35,11 +35,22 @@ public abstract class DefaultNotificationRuleRecipientsConfig implements Notific
 
     @NotEmpty
     private List<UUID> targets;
+    /**
+     * Returns targets table.
+     *
+     * @return {@link Map}
+     */
 
     @Override
     public Map<Integer, List<UUID>> getTargetsTable() {
         return Map.of(0, targets);
     }
+    /**
+     * For trigger type.
+     *
+     * @param triggerType trigger type ({@link NotificationRuleTriggerType})
+     * @return {@link DefaultNotificationRuleRecipientsConfig}
+     */
 
     public static DefaultNotificationRuleRecipientsConfig forTriggerType(NotificationRuleTriggerType triggerType) {
         return switch (triggerType) {
@@ -61,6 +72,11 @@ public abstract class DefaultNotificationRuleRecipientsConfig implements Notific
     }
 
     public static class EntityActionRecipientsConfig extends DefaultNotificationRuleRecipientsConfig {
+        /**
+         * Returns trigger type.
+         *
+         * @return {@link NotificationRuleTriggerType}
+         */
         @Override
         public NotificationRuleTriggerType getTriggerType() {
             return NotificationRuleTriggerType.ENTITY_ACTION;
@@ -68,6 +84,11 @@ public abstract class DefaultNotificationRuleRecipientsConfig implements Notific
     }
 
     public static class AlarmCommentRecipientsConfig extends DefaultNotificationRuleRecipientsConfig {
+        /**
+         * Returns trigger type.
+         *
+         * @return {@link NotificationRuleTriggerType}
+         */
         @Override
         public NotificationRuleTriggerType getTriggerType() {
             return NotificationRuleTriggerType.ALARM_COMMENT;
@@ -75,6 +96,11 @@ public abstract class DefaultNotificationRuleRecipientsConfig implements Notific
     }
 
     public static class AlarmAssignmentRecipientsConfig extends DefaultNotificationRuleRecipientsConfig {
+        /**
+         * Returns trigger type.
+         *
+         * @return {@link NotificationRuleTriggerType}
+         */
         @Override
         public NotificationRuleTriggerType getTriggerType() {
             return NotificationRuleTriggerType.ALARM_ASSIGNMENT;
@@ -82,6 +108,11 @@ public abstract class DefaultNotificationRuleRecipientsConfig implements Notific
     }
 
     public static class DeviceActivityRecipientsConfig extends DefaultNotificationRuleRecipientsConfig {
+        /**
+         * Returns trigger type.
+         *
+         * @return {@link NotificationRuleTriggerType}
+         */
         @Override
         public NotificationRuleTriggerType getTriggerType() {
             return NotificationRuleTriggerType.DEVICE_ACTIVITY;
@@ -89,6 +120,11 @@ public abstract class DefaultNotificationRuleRecipientsConfig implements Notific
     }
 
     public static class RuleEngineComponentLifecycleEventRecipientsConfig extends DefaultNotificationRuleRecipientsConfig {
+        /**
+         * Returns trigger type.
+         *
+         * @return {@link NotificationRuleTriggerType}
+         */
         @Override
         public NotificationRuleTriggerType getTriggerType() {
             return NotificationRuleTriggerType.RULE_ENGINE_COMPONENT_LIFECYCLE_EVENT;
@@ -96,6 +132,11 @@ public abstract class DefaultNotificationRuleRecipientsConfig implements Notific
     }
 
     public static class EdgeConnectionRecipientsConfig extends DefaultNotificationRuleRecipientsConfig {
+        /**
+         * Returns trigger type.
+         *
+         * @return {@link NotificationRuleTriggerType}
+         */
         @Override
         public NotificationRuleTriggerType getTriggerType() {
             return NotificationRuleTriggerType.EDGE_CONNECTION;
@@ -103,6 +144,11 @@ public abstract class DefaultNotificationRuleRecipientsConfig implements Notific
     }
 
     public static class EdgeCommunicationFailureRecipientsConfig extends DefaultNotificationRuleRecipientsConfig {
+        /**
+         * Returns trigger type.
+         *
+         * @return {@link NotificationRuleTriggerType}
+         */
         @Override
         public NotificationRuleTriggerType getTriggerType() {
             return NotificationRuleTriggerType.EDGE_COMMUNICATION_FAILURE;
@@ -110,6 +156,11 @@ public abstract class DefaultNotificationRuleRecipientsConfig implements Notific
     }
 
     public static class NewPlatformVersionRecipientsConfig extends DefaultNotificationRuleRecipientsConfig {
+        /**
+         * Returns trigger type.
+         *
+         * @return {@link NotificationRuleTriggerType}
+         */
         @Override
         public NotificationRuleTriggerType getTriggerType() {
             return NotificationRuleTriggerType.NEW_PLATFORM_VERSION;
@@ -117,6 +168,11 @@ public abstract class DefaultNotificationRuleRecipientsConfig implements Notific
     }
 
     public static class EntitiesLimitRecipientsConfig extends DefaultNotificationRuleRecipientsConfig {
+        /**
+         * Returns trigger type.
+         *
+         * @return {@link NotificationRuleTriggerType}
+         */
         @Override
         public NotificationRuleTriggerType getTriggerType() {
             return NotificationRuleTriggerType.ENTITIES_LIMIT;
@@ -124,6 +180,11 @@ public abstract class DefaultNotificationRuleRecipientsConfig implements Notific
     }
 
     public static class ApiUsageLimitRecipientsConfig extends DefaultNotificationRuleRecipientsConfig {
+        /**
+         * Returns trigger type.
+         *
+         * @return {@link NotificationRuleTriggerType}
+         */
         @Override
         public NotificationRuleTriggerType getTriggerType() {
             return NotificationRuleTriggerType.API_USAGE_LIMIT;
@@ -131,6 +192,11 @@ public abstract class DefaultNotificationRuleRecipientsConfig implements Notific
     }
 
     public static class RateLimitsRecipientsConfig extends DefaultNotificationRuleRecipientsConfig {
+        /**
+         * Returns trigger type.
+         *
+         * @return {@link NotificationRuleTriggerType}
+         */
         @Override
         public NotificationRuleTriggerType getTriggerType() {
             return NotificationRuleTriggerType.RATE_LIMITS;
@@ -138,6 +204,11 @@ public abstract class DefaultNotificationRuleRecipientsConfig implements Notific
     }
 
     public static class TaskProcessingFailureRecipientsConfig extends DefaultNotificationRuleRecipientsConfig {
+        /**
+         * Returns trigger type.
+         *
+         * @return {@link NotificationRuleTriggerType}
+         */
         @Override
         public NotificationRuleTriggerType getTriggerType() {
             return NotificationRuleTriggerType.TASK_PROCESSING_FAILURE;
@@ -145,6 +216,11 @@ public abstract class DefaultNotificationRuleRecipientsConfig implements Notific
     }
 
     public static class ResourceShortageRecipientsConfig extends DefaultNotificationRuleRecipientsConfig {
+        /**
+         * Returns trigger type.
+         *
+         * @return {@link NotificationRuleTriggerType}
+         */
         @Override
         public NotificationRuleTriggerType getTriggerType() {
             return NotificationRuleTriggerType.RESOURCES_SHORTAGE;

@@ -30,8 +30,11 @@ import org.thingsboard.server.dao.util.mapping.JsonConverter;
 
 import java.util.UUID;
 /**
- * Abstract tenant entity.
+ * JPA/Cassandra row model for abstract tenant.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -112,6 +115,12 @@ public abstract class AbstractTenantEntity<T extends Tenant> extends BaseVersion
         this.additionalInfo = tenantEntity.getAdditionalInfo();
         this.tenantProfileId = tenantEntity.getTenantProfileId();
     }
+    /**
+     * To tenant.
+     *
+     * @return {@link Tenant}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected Tenant toTenant() {
         Tenant tenant = new Tenant(TenantId.fromUUID(this.getUuid()));

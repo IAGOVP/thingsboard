@@ -27,8 +27,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 /**
- * Notification rule info entity.
+ * JPA/Cassandra row model for notification rule info.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -42,6 +45,12 @@ public class NotificationRuleInfoEntity extends NotificationRuleEntity {
         this.templateName = templateName;
         this.templateConfig = (JsonNode) templateConfig;
     }
+    /**
+     * To data.
+     *
+     * @return {@link NotificationRuleInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationRuleInfo toData() {

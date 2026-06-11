@@ -23,21 +23,28 @@ import org.springframework.stereotype.Service;
 
 import static org.thingsboard.server.common.data.CacheConstants.OTA_PACKAGE_DATA_CACHE;
 
+/**
+ * Redis implementation of {@link OtaPackageDataCache} for cluster-wide firmware blob sharing.
+ *
+ * <p>Activated when {@code cache.type=redis}. Keys are formatted as
+ * {@code OTA_PACKAGE_DATA_CACHE::<packageId>}. Chunk reads use Redis GETRANGE.
+ */
 @Service
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "redis")
 @RequiredArgsConstructor
-/**
- * Redis ota package data cache.
- */
 public class RedisOtaPackageDataCache implements OtaPackageDataCache {
+
+    /** Redis connection from {@link TBRedisCacheConfiguration}. */
 
     private final RedisConnectionFactory redisConnectionFactory;
 
+/** {@inheritDoc} */
     @Override
     public byte[] get(String key) {
         return get(key, 0, 0);
     }
 
+/** {@inheritDoc} */
     @Override
     public byte[] get(String key, int chunkSize, int chunk) {
         try (RedisConnection connection = redisConnectionFactory.getConnection()) {
@@ -51,6 +58,7 @@ public class RedisOtaPackageDataCache implements OtaPackageDataCache {
         }
     }
 
+/** {@inheritDoc} */
     @Override
     public void put(String key, byte[] value) {
         try (RedisConnection connection = redisConnectionFactory.getConnection()) {
@@ -58,6 +66,7 @@ public class RedisOtaPackageDataCache implements OtaPackageDataCache {
         }
     }
 
+/** {@inheritDoc} */
     @Override
     public void evict(String key) {
         try (RedisConnection connection = redisConnectionFactory.getConnection()) {

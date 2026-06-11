@@ -15,6 +15,10 @@
  */
 package org.thingsboard.server.queue.discovery;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ConcurrentReferenceHashMap;
@@ -23,13 +27,10 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.msg.queue.ServiceType;
 import org.thingsboard.server.common.msg.queue.TopicPartitionInfo;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
-@Service
 /**
- * Topic service.
+ * Resolves Kafka topic names for core, rule-engine, transport, and edge message flows.
  */
+@Service
 public class TopicService {
 
     @Value("${queue.prefix:}")
@@ -57,15 +58,8 @@ public class TopicService {
     private final ConcurrentMap<String, TopicPartitionInfo> tbRuleEngineNotificationTopics = new ConcurrentHashMap<>();
     private final ConcurrentMap<String, TopicPartitionInfo> tbEdgeNotificationTopics = new ConcurrentHashMap<>();
     private final ConcurrentMap<String, TopicPartitionInfo> tbCalculatedFieldNotificationTopics = new ConcurrentHashMap<>();
+        
     private final ConcurrentReferenceHashMap<EdgeId, TopicPartitionInfo> tbEdgeEventsNotificationTopics = new ConcurrentReferenceHashMap<>();
-
-    /**
-     * Each Service should start a consumer for messages that target individual service instance based on serviceId.
-     * This topic is likely to have single partition, and is always assigned to the service.
-     * @param serviceType
-     * @param serviceId
-     * @return
-     */
     public TopicPartitionInfo getNotificationsTopic(ServiceType serviceType, String serviceId) {
         return switch (serviceType) {
             case TB_CORE -> tbCoreNotificationTopics.computeIfAbsent(serviceId,

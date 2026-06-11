@@ -24,6 +24,11 @@ import lombok.Data;
  * Affected tenant administrators filter.
  */
 public class AffectedTenantAdministratorsFilter implements UsersFilter {
+    /**
+     * Returns type.
+     *
+     * @return {@link UsersFilterType}
+     */
 
     @Override
     public UsersFilterType getType() {

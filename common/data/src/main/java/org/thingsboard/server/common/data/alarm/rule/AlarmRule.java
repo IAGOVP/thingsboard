@@ -39,6 +39,11 @@ public class AlarmRule {
     private AlarmCondition condition;
     private String alarmDetails;
     private DashboardId dashboardId;
+    /**
+     * Requires scheduled reevaluation.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     public boolean requiresScheduledReevaluation() {

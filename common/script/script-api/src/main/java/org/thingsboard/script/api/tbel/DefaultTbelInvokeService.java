@@ -62,12 +62,12 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-@Slf4j
-@ConditionalOnProperty(prefix = "tbel", value = "enabled", havingValue = "true", matchIfMissing = true)
-@Service
 /**
  * Default tbel invoke service.
  */
+@Slf4j
+@ConditionalOnProperty(prefix = "tbel", value = "enabled", havingValue = "true", matchIfMissing = true)
+@Service
 public class DefaultTbelInvokeService extends AbstractScriptInvokeService implements TbelInvokeService {
 
     private final ConcurrentMap<UUID, String> scriptIdToHash = new ConcurrentHashMap<>();

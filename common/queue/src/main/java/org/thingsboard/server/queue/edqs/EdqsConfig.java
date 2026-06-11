@@ -19,11 +19,13 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+
+/**
+ * EDQS Spring configuration properties ({@code queue.edqs.*}).
+ */
+
 @Component
 @Data
-/**
- * Configuration for edqs.
- */
 public class EdqsConfig {
 
     @Value("${queue.edqs.partitions:12}")
@@ -51,6 +53,12 @@ public class EdqsConfig {
     private int requestExecutorSize;
     @Value("${queue.edqs.versions_cache_ttl:60}")
     private int versionsCacheTtl;
+    /**
+     * Returns label.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getLabel() {
         if (partitioningStrategy == EdqsPartitioningStrategy.NONE) {
@@ -58,6 +66,12 @@ public class EdqsConfig {
         }
         return label;
     }
+
+    /**
+
+     * Enumerates edqs partitioning strategy values used by EDQS (EDQS queue).
+
+     */
 
     public enum EdqsPartitioningStrategy {
         TENANT, NONE

@@ -38,11 +38,21 @@ public class SimpleAlarmConditionExpression implements AlarmConditionExpression 
     @NotEmpty
     private List<AlarmConditionFilter> filters;
     private ComplexOperation operation;
+    /**
+     * Returns type.
+     *
+     * @return {@link AlarmConditionExpressionType}
+     */
 
     @Override
     public AlarmConditionExpressionType getType() {
         return AlarmConditionExpressionType.SIMPLE;
     }
+    /**
+     * Requires scheduled reevaluation.
+     *
+     * @return the boolean result
+     */
 
     @Override
     public boolean requiresScheduledReevaluation() {

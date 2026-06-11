@@ -82,6 +82,11 @@ public class NotificationRule extends BaseData<NotificationRuleId> implements Ha
         this.additionalConfig = other.additionalConfig;
         this.externalId = other.externalId;
     }
+    /**
+     * Is valid.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     @AssertTrue(message = "trigger type not matching")
@@ -89,6 +94,11 @@ public class NotificationRule extends BaseData<NotificationRuleId> implements Ha
         return triggerType == triggerConfig.getTriggerType() &&
                 triggerType == recipientsConfig.getTriggerType();
     }
+    /**
+     * Returns deduplication key.
+     *
+     * @return {@link String}
+     */
 
     @JsonIgnore
     public String getDeduplicationKey() {

@@ -28,6 +28,11 @@ import java.util.List;
  * Asset search query filter.
  */
 public class AssetSearchQueryFilter extends EntitySearchQueryFilter {
+    /**
+     * Returns type.
+     *
+     * @return {@link EntityFilterType}
+     */
 
     @Override
     public EntityFilterType getType() {

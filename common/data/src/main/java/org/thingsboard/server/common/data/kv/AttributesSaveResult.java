@@ -24,6 +24,12 @@ import java.util.List;
 public record AttributesSaveResult(List<Long> versions) {
 
     public static final AttributesSaveResult EMPTY = new AttributesSaveResult(Collections.emptyList());
+    /**
+     * Of.
+     *
+     * @param versions versions ({@link List})
+     * @return {@link AttributesSaveResult}
+     */
 
     public static AttributesSaveResult of(List<Long> versions) {
         if (versions == null) {

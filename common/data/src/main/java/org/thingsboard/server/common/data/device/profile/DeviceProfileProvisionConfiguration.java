@@ -49,9 +49,19 @@ import java.io.Serializable;
  * device profile provision configuration contract.
  */
 public interface DeviceProfileProvisionConfiguration extends Serializable {
+    /**
+     * Returns provision device secret.
+     *
+     * @return {@link String}
+     */
 
     @Schema(description = "Provision device secret", example = "secret123")
     String getProvisionDeviceSecret();
+    /**
+     * Returns type.
+     *
+     * @return {@link DeviceProfileProvisionType}
+     */
 
     @JsonIgnore
     DeviceProfileProvisionType getType();

@@ -22,6 +22,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * Simple alarm condition.
  */
 public class SimpleAlarmCondition extends AlarmCondition {
+    /**
+     * Returns type.
+     *
+     * @return {@link AlarmConditionType}
+     */
 
     @Override
     public AlarmConditionType getType() {

@@ -43,8 +43,11 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 /**
- * JPA implementation of notification dao.
+ * JPA/PostgreSQL implementation of notification dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Component
 @SqlDao
@@ -56,12 +59,33 @@ public class JpaNotificationDao extends JpaPartitionedAbstractDao<NotificationEn
 
     @Value("${sql.notifications.partition_size:168}")
     private int partitionSizeInHours;
+    /**
+     * Finds unread by delivery method and recipient id and page link.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deliveryMethod delivery method ({@link NotificationDeliveryMethod})
+     * @param recipientId recipient id ({@link UserId})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<Notification> findUnreadByDeliveryMethodAndRecipientIdAndPageLink(TenantId tenantId, NotificationDeliveryMethod deliveryMethod, UserId recipientId, PageLink pageLink) {
         return DaoUtil.toPageData(notificationRepository.findByDeliveryMethodAndRecipientIdAndStatusNot(deliveryMethod,
                 recipientId.getId(), NotificationStatus.READ, pageLink.getTextSearch(), DaoUtil.toPageable(pageLink)));
     }
+    /**
+     * Finds unread by delivery method and recipient id and notification types and page link.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deliveryMethod delivery method ({@link NotificationDeliveryMethod})
+     * @param recipientId recipient id ({@link UserId})
+     * @param types types ({@link Set})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<Notification> findUnreadByDeliveryMethodAndRecipientIdAndNotificationTypesAndPageLink(TenantId tenantId, NotificationDeliveryMethod deliveryMethod, UserId recipientId, Set<NotificationType> types, PageLink pageLink) {
@@ -71,60 +95,148 @@ public class JpaNotificationDao extends JpaPartitionedAbstractDao<NotificationEn
         return DaoUtil.toPageData(notificationRepository.findByDeliveryMethodAndRecipientIdAndTypeInAndStatusNot(deliveryMethod,
                 recipientId.getId(), types, NotificationStatus.READ, pageLink.getTextSearch(), DaoUtil.toPageable(pageLink)));
     }
+    /**
+     * Finds by delivery method and recipient id and page link.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deliveryMethod delivery method ({@link NotificationDeliveryMethod})
+     * @param recipientId recipient id ({@link UserId})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public PageData<Notification> findByDeliveryMethodAndRecipientIdAndPageLink(TenantId tenantId, NotificationDeliveryMethod deliveryMethod, UserId recipientId, PageLink pageLink) {
         return DaoUtil.toPageData(notificationRepository.findByDeliveryMethodAndRecipientId(deliveryMethod, recipientId.getId(),
                 pageLink.getTextSearch(), DaoUtil.toPageable(pageLink)));
     }
+    /**
+     * Updates status by id and recipient id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param recipientId recipient id ({@link UserId})
+     * @param notificationId notification id ({@link NotificationId})
+     * @param status status ({@link NotificationStatus})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean updateStatusByIdAndRecipientId(TenantId tenantId, UserId recipientId, NotificationId notificationId, NotificationStatus status) {
         return notificationRepository.updateStatusByIdAndRecipientId(notificationId.getId(), recipientId.getId(), status) != 0;
     }
 
+    
     /**
-     * For this hot method, the partial index `idx_notification_recipient_id_unread` was introduced since 3.6.0
-     * */
+     * Counts unread by delivery method and recipient id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deliveryMethod delivery method ({@link NotificationDeliveryMethod})
+     * @param recipientId recipient id ({@link UserId})
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     @Override
     public int countUnreadByDeliveryMethodAndRecipientId(TenantId tenantId, NotificationDeliveryMethod deliveryMethod, UserId recipientId) {
         return notificationRepository.countByDeliveryMethodAndRecipientIdAndStatusNot(deliveryMethod, recipientId.getId(), NotificationStatus.READ);
     }
+    /**
+     * Deletes by id and recipient id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param recipientId recipient id ({@link UserId})
+     * @param notificationId notification id ({@link NotificationId})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean deleteByIdAndRecipientId(TenantId tenantId, UserId recipientId, NotificationId notificationId) {
         return notificationRepository.deleteByIdAndRecipientId(notificationId.getId(), recipientId.getId()) != 0;
     }
+    /**
+     * Updates status by delivery method and recipient id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deliveryMethod delivery method ({@link NotificationDeliveryMethod})
+     * @param recipientId recipient id ({@link UserId})
+     * @param status status ({@link NotificationStatus})
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public int updateStatusByDeliveryMethodAndRecipientId(TenantId tenantId, NotificationDeliveryMethod deliveryMethod, UserId recipientId, NotificationStatus status) {
         return notificationRepository.updateStatusByDeliveryMethodAndRecipientIdAndStatusNot(deliveryMethod, recipientId.getId(), status);
     }
+    /**
+     * Deletes by request id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param requestId request id ({@link NotificationRequestId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteByRequestId(TenantId tenantId, NotificationRequestId requestId) {
         notificationRepository.deleteByRequestId(requestId.getId());
     }
+    /**
+     * Deletes by recipient id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param recipientId recipient id ({@link UserId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteByRecipientId(TenantId tenantId, UserId recipientId) {
         notificationRepository.deleteByRecipientId(recipientId.getId());
     }
+    /**
+     * Creates partition.
+     *
+     * @param entity domain entity to persist or validate
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void createPartition(NotificationEntity entity) {
         partitioningRepository.createPartitionIfNotExists(ModelConstants.NOTIFICATION_TABLE_NAME,
                 entity.getCreatedTime(), TimeUnit.HOURS.toMillis(partitionSizeInHours));
     }
+    /**
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Class<NotificationEntity> getEntityClass() {
         return NotificationEntity.class;
     }
+    /**
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected JpaRepository<NotificationEntity, UUID> getRepository() {
         return notificationRepository;
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

@@ -27,6 +27,11 @@ import org.thingsboard.server.common.data.cf.CalculatedFieldType;
  * Configuration for script calculated fielduration.
  */
 public class ScriptCalculatedFieldConfiguration extends BaseCalculatedFieldConfiguration implements ArgumentsBasedCalculatedFieldConfiguration {
+    /**
+     * Returns type.
+     *
+     * @return {@link CalculatedFieldType}
+     */
 
     @Override
     public CalculatedFieldType getType() {

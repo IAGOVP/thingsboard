@@ -53,8 +53,11 @@ import java.util.function.Function;
 
 import static org.thingsboard.server.dao.model.ModelConstants.NULL_UUID;
 /**
- * JPA implementation of base edge event dao.
+ * JPA/PostgreSQL implementation of base edge event dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Component
 @SqlDao
@@ -93,22 +96,28 @@ public class JpaBaseEdgeEventDao extends JpaPartitionedAbstractDao<EdgeEventEnti
 
     private TbSqlBlockingQueueWrapper<EdgeEventEntity, Void> queue;
 
+    
     /**
-
-     * Get entity class.
-
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected Class<EdgeEventEntity> getEntityClass() {
         return EdgeEventEntity.class;
     }
 
+    
     /**
-
-     * Get repository.
-
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected JpaRepository<EdgeEventEntity, UUID> getRepository() {
@@ -145,11 +154,15 @@ public class JpaBaseEdgeEventDao extends JpaPartitionedAbstractDao<EdgeEventEnti
         }
     }
 
+    
     /**
-
-     * Persists async.
-
+     * Saves or persists async.
+     *
+     * @param edgeEvent edge event ({@link EdgeEvent})
+     * @return future completing with {@link Void}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<Void> saveAsync(EdgeEvent edgeEvent) {
@@ -192,13 +205,19 @@ public class JpaBaseEdgeEventDao extends JpaPartitionedAbstractDao<EdgeEventEnti
     }
 
 
+    
     /**
-
-
-     * Loads edge events.
-
-
+     * Finds edge events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link EdgeId})
+     * @param seqIdStart seq id start ({@link Long})
+     * @param seqIdEnd seq id end ({@link Long})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
 
     @Override
@@ -216,22 +235,30 @@ public class JpaBaseEdgeEventDao extends JpaPartitionedAbstractDao<EdgeEventEnti
                                 DaoUtil.toPageable(pageLink, SORT_ORDERS)));
     }
 
+    
     /**
-
      * Cleanup events.
-
+     *
+     * @param ttl ttl
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void cleanupEvents(long ttl) {
         partitioningRepository.dropPartitionsBefore(TABLE_NAME, ttl, TimeUnit.HOURS.toMillis(partitionSizeInHours));
     }
 
+    
     /**
-
      * Creates partition.
-
+     *
+     * @param entity domain entity to persist or validate
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void createPartition(EdgeEventEntity entity) {

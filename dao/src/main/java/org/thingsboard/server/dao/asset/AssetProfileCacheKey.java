@@ -22,8 +22,14 @@ import org.thingsboard.server.common.data.id.TenantId;
 
 import java.io.Serial;
 /**
- * Asset profile cache key.
+ * Serializable cache key for asset profile entries (asset and asset-profile DAO services and caches).
  */
+
+
+
+
+
+
 
 @Data
 public class AssetProfileCacheKey implements VersionedCacheKey {
@@ -42,14 +48,36 @@ public class AssetProfileCacheKey implements VersionedCacheKey {
         this.assetProfileId = assetProfileId;
         this.defaultProfile = defaultProfile;
     }
+    /**
+     * For name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return {@link AssetProfileCacheKey}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static AssetProfileCacheKey forName(TenantId tenantId, String name) {
         return new AssetProfileCacheKey(tenantId, name, null, false);
     }
+    /**
+     * For id.
+     *
+     * @param id entity UUID primary key
+     * @return {@link AssetProfileCacheKey}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static AssetProfileCacheKey forId(AssetProfileId id) {
         return new AssetProfileCacheKey(null, null, id, false);
     }
+    /**
+     * For default profile.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link AssetProfileCacheKey}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static AssetProfileCacheKey forDefaultProfile(TenantId tenantId) {
         return new AssetProfileCacheKey(tenantId, null, null, true);
@@ -65,6 +93,12 @@ public class AssetProfileCacheKey implements VersionedCacheKey {
             return tenantId + "_" + name;
         }
     }
+    /**
+     * Is versioned.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isVersioned() {

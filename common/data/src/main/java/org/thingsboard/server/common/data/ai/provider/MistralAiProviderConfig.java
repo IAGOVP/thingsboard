@@ -18,10 +18,10 @@ package org.thingsboard.server.common.data.ai.provider;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
-@Schema
 /**
  * Configuration for mistral ai provider.
  */
+@Schema
 public record MistralAiProviderConfig(
         @NotNull String apiKey
 ) implements AiProviderConfig {}

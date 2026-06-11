@@ -23,18 +23,36 @@ import org.thingsboard.common.util.ThingsBoardExecutors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 /**
- * Scheduled log executor component.
+ * Spring component for scheduled log executor component (JPA/PostgreSQL persistence layer (JPA repositories and PostgreSQL DAO implementations)).
  */
+
+
+
+
+
+
 
 @Component
 public class ScheduledLogExecutorComponent {
 
     private ScheduledExecutorService schedulerLogExecutor;
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PostConstruct
     public void init() {
         schedulerLogExecutor = ThingsBoardExecutors.newSingleThreadScheduledExecutor("sql-log");
     }
+    /**
+     * Stop.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PreDestroy
     public void stop() {
@@ -42,6 +60,16 @@ public class ScheduledLogExecutorComponent {
             schedulerLogExecutor.shutdownNow();
         }
     }
+    /**
+     * Schedule at fixed rate.
+     *
+     * @param command command ({@link Runnable})
+     * @param initialDelay initial delay
+     * @param period period
+     * @param unit unit ({@link TimeUnit})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit) {
         schedulerLogExecutor.scheduleAtFixedRate(command, initialDelay, period, unit);

@@ -21,10 +21,27 @@ package org.thingsboard.server.common.data;
 public interface FstStatsService {
 
     void incrementEncode(Class<?> clazz);
+/**
+ * Increment decode.
+ *
+ * @param clazz clazz ({@link Class})
+ */
 
     void incrementDecode(Class<?> clazz);
+/**
+ * Record encode time.
+ *
+ * @param clazz clazz ({@link Class})
+ * @param startTime start time
+ */
 
     void recordEncodeTime(Class<?> clazz, long startTime);
+/**
+ * Record decode time.
+ *
+ * @param clazz clazz ({@link Class})
+ * @param startTime start time
+ */
 
     void recordDecodeTime(Class<?> clazz, long startTime);
 

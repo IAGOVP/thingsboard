@@ -28,9 +28,13 @@ import org.thingsboard.server.edqs.repo.TenantRepo;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+
 /**
  * EDQS query processor for asset search entity filters.
+ *
+ * <p>Evaluates {@link org.thingsboard.server.common.data.query.EntityFilter} against a {@link org.thingsboard.server.edqs.repo.TenantRepo} (EDQS microservice — entity filter query processors).
  */
+
 public class AssetSearchQueryProcessor extends AbstractEntitySearchQueryProcessor<AssetSearchQueryFilter> {
 
     private final Set<UUID> entityProfileIds = new HashSet<>();
@@ -46,11 +50,24 @@ public class AssetSearchQueryProcessor extends AbstractEntitySearchQueryProcesso
             }
         }
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {
         return EntityType.ASSET;
     }
+    /**
+     * Checks the requested data.
+     *
+     * @param relationInfo relation info ({@link RelationInfo})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected boolean check(RelationInfo relationInfo) {

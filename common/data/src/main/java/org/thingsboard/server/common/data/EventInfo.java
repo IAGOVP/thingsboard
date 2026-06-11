@@ -22,9 +22,6 @@ import org.thingsboard.server.common.data.id.EntityId;
 import org.thingsboard.server.common.data.id.EventId;
 import org.thingsboard.server.common.data.id.TenantId;
 
-/**
- * @author Andrew Shvayka
- */
 @Data
 @Schema
 /**
@@ -54,6 +51,11 @@ public class EventInfo extends BaseData<EventId> {
     public EventInfo(EventInfo event) {
         super(event);
     }
+    /**
+     * Returns created time.
+     *
+     * @return the long result
+     */
 
     @Schema(description = "Timestamp of the event creation, in milliseconds", example = "1609459200000", accessMode = Schema.AccessMode.READ_ONLY)
     @Override

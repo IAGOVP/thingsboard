@@ -30,7 +30,13 @@ public enum FirmwareDeliveryMethod {
         this.code = code;
         this.type = type;
     }
-
+    /**
+     * From state fw by type.
+     *
+     * @param type type ({@link String})
+     * @return {@link FirmwareDeliveryMethod}
+     * @throws Exception on processing failure
+     */
     public static FirmwareDeliveryMethod fromStateFwByType(String type) {
         for (FirmwareDeliveryMethod to : FirmwareDeliveryMethod.values()) {
             if (to.type.equals(type)) {
@@ -39,7 +45,13 @@ public enum FirmwareDeliveryMethod {
         }
         throw new IllegalArgumentException(String.format("Unsupported FW delivery type  : %s", type));
     }
-
+    /**
+     * From state fw by code.
+     *
+     * @param code code
+     * @return {@link FirmwareDeliveryMethod}
+     * @throws Exception on processing failure
+     */
     public static FirmwareDeliveryMethod fromStateFwByCode(int code) {
         for (FirmwareDeliveryMethod to : FirmwareDeliveryMethod.values()) {
             if (to.code == code) {

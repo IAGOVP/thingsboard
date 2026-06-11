@@ -16,14 +16,16 @@
 package org.thingsboard.server.transport.mqtt.util.sparkplug;
 
 /**
- * sparkplug descriptor contract.
+ * sparkplug descriptor contract (MQTT transport adaptor and topic handling (ThingsBoard common module)).
  */
 public interface SparkplugDescriptor {
 
+    
     /**
-     * Returns the String representation of this {@link SparkplugDescriptor}
+     * Returns descriptor string.
      *
-     * @return the String representation of this {@link SparkplugDescriptor}
+     * @return {@link String}
+     * @throws Exception on processing failure
      */
     public String getDescriptorString();
 }

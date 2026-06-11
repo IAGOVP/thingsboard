@@ -26,7 +26,10 @@ import java.util.concurrent.TimeUnit;
 /**
  * Things board scheduled thread pool executor.
  */
-final class ThingsBoardScheduledThreadPoolExecutor extends ScheduledThreadPoolExecutor {
+final/**
+ * Class for things board scheduled thread pool executor.
+ */
+class ThingsBoardScheduledThreadPoolExecutor extends ScheduledThreadPoolExecutor {
 
     public ThingsBoardScheduledThreadPoolExecutor(int corePoolSize, ThreadFactory threadFactory) {
         super(corePoolSize, threadFactory);

@@ -34,6 +34,11 @@ public class BackupCodeTwoFaAccountConfig extends TwoFaAccountConfig {
 
     @NotEmpty
     private Set<String> codes;
+    /**
+     * Returns provider type.
+     *
+     * @return {@link TwoFaProviderType}
+     */
 
     @Override
     public TwoFaProviderType getProviderType() {

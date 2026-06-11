@@ -39,11 +39,22 @@ public class LwM2MInMemoryBootstrapConfigStore extends InMemoryBootstrapConfigSt
     private final Lock readLock = readWriteLock.readLock();
     private final Lock writeLock = readWriteLock.writeLock();
     protected final ConfigurationChecker configChecker = new LwM2MConfigurationChecker();
-
-
+    /**
+     * Returns the requested data.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return {@link BootstrapConfig}
+     * @throws Exception on processing failure
+     */
     public BootstrapConfig get(String endpoint) {
         return bootstrapByEndpoint.get(endpoint);
     }
+    /**
+     * Returns all.
+     *
+     * @return {@link Map}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public Map<String, BootstrapConfig> getAll() {
@@ -54,6 +65,14 @@ public class LwM2MInMemoryBootstrapConfigStore extends InMemoryBootstrapConfigSt
             readLock.unlock();
         }
     }
+    /**
+     * Add.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @param config config ({@link BootstrapConfig})
+     * @return nothing
+     * @throws InvalidConfigurationException if invalid configuration exception is thrown during processing
+     */
 
     @Override
     public void add(String endpoint, BootstrapConfig config) throws InvalidConfigurationException {
@@ -64,6 +83,13 @@ public class LwM2MInMemoryBootstrapConfigStore extends InMemoryBootstrapConfigSt
             writeLock.unlock();
         }
     }
+    /**
+     * Removes the requested data.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return {@link BootstrapConfig}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public BootstrapConfig remove(String endpoint) {
@@ -74,7 +100,14 @@ public class LwM2MInMemoryBootstrapConfigStore extends InMemoryBootstrapConfigSt
             writeLock.unlock();
         }
     }
-
+    /**
+     * Add to store.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @param config config ({@link BootstrapConfig})
+     * @return nothing
+     * @throws InvalidConfigurationException if invalid configuration exception is thrown during processing
+     */
     public void addToStore(String endpoint, BootstrapConfig config) throws InvalidConfigurationException {
         configChecker.verify(config);
         // Check PSK identity uniqueness for bootstrap server:

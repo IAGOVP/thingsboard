@@ -41,8 +41,14 @@ import java.util.Optional;
 
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
 /**
- * Default notification request service.
+ * Spring component for default notification request service (notification templates, targets, rules, and delivery requests).
  */
+
+
+
+
+
+
 
 @Service
 @Slf4j
@@ -56,11 +62,16 @@ public class DefaultNotificationRequestService implements NotificationRequestSer
 
     private final NotificationRequestValidator notificationRequestValidator = new NotificationRequestValidator();
 
+    
     /**
-
-     * Persists notification request.
-
+     * Saves or persists notification request.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param notificationRequest notification request ({@link NotificationRequest})
+     * @return {@link NotificationRequest}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public NotificationRequest saveNotificationRequest(TenantId tenantId, NotificationRequest notificationRequest) {
@@ -68,77 +79,117 @@ public class DefaultNotificationRequestService implements NotificationRequestSer
         return notificationRequestDao.save(tenantId, notificationRequest);
     }
 
+    
     /**
-
-     * Loads notification request by id.
-
+     * Finds notification request by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @return {@link NotificationRequest}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public NotificationRequest findNotificationRequestById(TenantId tenantId, NotificationRequestId id) {
         return notificationRequestDao.findById(tenantId, id.getId());
     }
 
+    
     /**
-
-     * Loads notification request info by id.
-
+     * Finds notification request info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @return {@link NotificationRequestInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public NotificationRequestInfo findNotificationRequestInfoById(TenantId tenantId, NotificationRequestId id) {
         return notificationRequestDao.findInfoById(tenantId, id);
     }
 
+    
     /**
-
-     * Loads notification requests by tenant id and originator type.
-
+     * Finds notification requests by tenant id and originator type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param originatorType originator type ({@link EntityType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<NotificationRequest> findNotificationRequestsByTenantIdAndOriginatorType(TenantId tenantId, EntityType originatorType, PageLink pageLink) {
         return notificationRequestDao.findByTenantIdAndOriginatorTypeAndPageLink(tenantId, originatorType, pageLink);
     }
 
+    
     /**
-
-     * Loads notification requests infos by tenant id and originator type.
-
+     * Finds notification requests infos by tenant id and originator type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param originatorType originator type ({@link EntityType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<NotificationRequestInfo> findNotificationRequestsInfosByTenantIdAndOriginatorType(TenantId tenantId, EntityType originatorType, PageLink pageLink) {
         return notificationRequestDao.findInfosByTenantIdAndOriginatorTypeAndPageLink(tenantId, originatorType, pageLink);
     }
 
+    
     /**
-
-     * Loads notification requests ids by status and rule id.
-
+     * Finds notification requests ids by status and rule id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param requestStatus request status ({@link NotificationRequestStatus})
+     * @param ruleId rule id ({@link NotificationRuleId})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<NotificationRequestId> findNotificationRequestsIdsByStatusAndRuleId(TenantId tenantId, NotificationRequestStatus requestStatus, NotificationRuleId ruleId) {
         return notificationRequestDao.findIdsByRuleId(tenantId, requestStatus, ruleId);
     }
 
+    
     /**
-
-     * Loads notification requests by rule id and originator entity id and status.
-
+     * Finds notification requests by rule id and originator entity id and status.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleId rule id ({@link NotificationRuleId})
+     * @param originatorEntityId originator entity id ({@link EntityId})
+     * @param status status ({@link NotificationRequestStatus})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<NotificationRequest> findNotificationRequestsByRuleIdAndOriginatorEntityIdAndStatus(TenantId tenantId, NotificationRuleId ruleId, EntityId originatorEntityId, NotificationRequestStatus status) {
         return notificationRequestDao.findByRuleIdAndOriginatorEntityIdAndStatus(tenantId, ruleId, originatorEntityId, status);
     }
 
+    
     /**
-
-     * Removes notification request.
-
+     * Deletes notification request.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param request request payload with operation parameters
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteNotificationRequest(TenantId tenantId, NotificationRequest request) {
@@ -147,11 +198,17 @@ public class DefaultNotificationRequestService implements NotificationRequestSer
         eventPublisher.publishEvent(DeleteEntityEvent.builder().tenantId(tenantId).entity(request).entityId(request.getId()).build());
     }
 
+    
     /**
-
-     * Removes entity.
-
+     * Deletes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteEntity(TenantId tenantId, EntityId id, boolean force) {
@@ -163,22 +220,33 @@ public class DefaultNotificationRequestService implements NotificationRequestSer
         }
     }
 
+    
     /**
-
-     * Loads scheduled notification requests.
-
+     * Finds scheduled notification requests.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<NotificationRequest> findScheduledNotificationRequests(PageLink pageLink) {
         return notificationRequestDao.findAllByStatus(NotificationRequestStatus.SCHEDULED, pageLink);
     }
 
+    
     /**
-
      * Updates notification request.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param requestId request id ({@link NotificationRequestId})
+     * @param requestStatus request status ({@link NotificationRequestStatus})
+     * @param stats stats ({@link NotificationRequestStats})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void updateNotificationRequest(TenantId tenantId, NotificationRequestId requestId, NotificationRequestStatus requestStatus, NotificationRequestStats stats) {
@@ -186,41 +254,61 @@ public class DefaultNotificationRequestService implements NotificationRequestSer
     }
 
     // notifications themselves are left in the database until removed by ttl
+    
     /**
-     * Removes notification requests by tenant id.
+     * Deletes notification requests by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     @Override
     public void deleteNotificationRequestsByTenantId(TenantId tenantId) {
         notificationRequestDao.removeByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Removes by tenant id.
-
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteByTenantId(TenantId tenantId) {
         deleteNotificationRequestsByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Loads entity.
-
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findNotificationRequestById(tenantId, new NotificationRequestId(entityId.getId())));
     }
 
+    
     /**
-
-     * Loads entity async.
-
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
@@ -228,16 +316,58 @@ public class DefaultNotificationRequestService implements NotificationRequestSer
                 .transform(Optional::ofNullable, directExecutor());
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {
         return EntityType.NOTIFICATION_REQUEST;
     }
+
+    
+
+    
+
+
+    
+
+
+
+    
+
+
+
+
+    
+
+
+
+
+
+    /**
+
+
+
+
+
+     * Spring component for notification request validator (notification templates, targets, rules, and delivery requests).
+
+
+
+
+
+     */
+
+
+
+
+
 
     private static class NotificationRequestValidator extends DataValidator<NotificationRequest> {}
 

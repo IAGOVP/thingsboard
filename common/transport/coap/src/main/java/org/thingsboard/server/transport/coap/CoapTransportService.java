@@ -32,7 +32,7 @@ import org.thingsboard.server.transport.coap.efento.CoapEfentoTransportResource;
 import java.net.UnknownHostException;
 
 /**
- * Coap transport service.
+ * Registers CoAP device API resources with the Californium server.
  */
 @Service("CoapTransportService")
 @TbCoapTransportComponent
@@ -54,6 +54,12 @@ public class CoapTransportService implements TbTransportService {
     private CoapTransportContext coapTransportContext;
 
     private CoapServer coapServer;
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws UnknownHostException if unknown host exception is thrown during processing
+     */
 
     @PostConstruct
     public void init() throws UnknownHostException {
@@ -73,11 +79,23 @@ public class CoapTransportService implements TbTransportService {
         coapServer.add(new OtaPackageTransportResource(coapTransportContext, OtaPackageType.SOFTWARE));
         log.info("CoAP transport started!");
     }
+    /**
+     * Shutdown.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @PreDestroy
     public void shutdown() {
         log.info("CoAP transport stopped!");
     }
+    /**
+     * Returns name.
+     *
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public String getName() {

@@ -61,8 +61,11 @@ import static org.thingsboard.server.dao.model.ModelConstants.ALARM_START_TS_PRO
 import static org.thingsboard.server.dao.model.ModelConstants.ALARM_TENANT_ID_PROPERTY;
 import static org.thingsboard.server.dao.model.ModelConstants.ALARM_TYPE_PROPERTY;
 /**
- * Abstract alarm entity.
+ * JPA/Cassandra row model for abstract alarm.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -193,6 +196,12 @@ public abstract class AbstractAlarmEntity<T extends Alarm> extends BaseSqlEntity
         this.details = alarmEntity.getDetails();
         this.propagateRelationTypes = alarmEntity.getPropagateRelationTypes();
     }
+    /**
+     * To alarm.
+     *
+     * @return {@link Alarm}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected Alarm toAlarm() {
         Alarm alarm = new Alarm(new AlarmId(id));

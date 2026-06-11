@@ -34,6 +34,12 @@ public class TbLwM2MWriteAttributesRequest extends AbstractTbLwM2MTargetedDownli
         super(versionedId, timeout);
         this.attributes = attributes;
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link LwM2MOperationType}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public LwM2MOperationType getType() {

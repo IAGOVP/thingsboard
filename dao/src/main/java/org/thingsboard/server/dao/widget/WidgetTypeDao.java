@@ -34,77 +34,202 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The Interface WidgetTypeDao.
+ * Persistence contract for widget type.
+ *
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (widget types and widget bundles).
  */
+
 public interface WidgetTypeDao extends Dao<WidgetTypeDetails>, ExportableEntityDao<WidgetTypeId, WidgetTypeDetails>, ImageContainerDao<WidgetTypeInfo>, ResourceContainerDao<WidgetTypeInfo> {
 
+    
     /**
-     * Save or update widget type object
+     * Saves or persists the requested data.
      *
-     * @param widgetTypeDetails the widget type details object
-     * @return saved widget type object
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetTypeDetails widget type details ({@link WidgetTypeDetails})
+     * @return {@link WidgetTypeDetails}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     WidgetTypeDetails save(TenantId tenantId, WidgetTypeDetails widgetTypeDetails);
 
+    
     /**
-     * Find widget type by tenantId and widgetTypeId.
+     * Finds widget type by id.
      *
-     * @param tenantId the tenantId
-     * @param widgetTypeId the widget type id
-     * @return the widget type object
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetTypeId widget type id ({@link UUID})
+     * @return {@link WidgetType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     WidgetType findWidgetTypeById(TenantId tenantId, UUID widgetTypeId);
+    /**
+     * Exists by tenant id and id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetTypeId widget type id ({@link UUID})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     boolean existsByTenantIdAndId(TenantId tenantId, UUID widgetTypeId);
+    /**
+     * Finds widget type info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetTypeId widget type id ({@link UUID})
+     * @return {@link WidgetTypeInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     WidgetTypeInfo findWidgetTypeInfoById(TenantId tenantId, UUID widgetTypeId);
+    /**
+     * Finds system widget types.
+     *
+     * @param widgetTypeFilter widget type filter ({@link WidgetTypeFilter})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<WidgetTypeInfo> findSystemWidgetTypes(WidgetTypeFilter widgetTypeFilter, PageLink pageLink);
+    /**
+     * Finds all tenant widget types by tenant id.
+     *
+     * @param widgetTypeFilter widget type filter ({@link WidgetTypeFilter})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<WidgetTypeInfo> findAllTenantWidgetTypesByTenantId(WidgetTypeFilter widgetTypeFilter, PageLink pageLink);
+    /**
+     * Finds tenant widget types by tenant id.
+     *
+     * @param widgetTypeFilter widget type filter ({@link WidgetTypeFilter})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<WidgetTypeInfo> findTenantWidgetTypesByTenantId(WidgetTypeFilter widgetTypeFilter, PageLink pageLink);
 
+    
     /**
-     * Find widget types by widgetsBundleId.
+     * Finds widget types by widgets bundle id.
      *
-     * @param tenantId the tenantId
-     * @param widgetsBundleId the widgets bundle id
-     * @return the list of widget types objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetsBundleId widgets bundle id ({@link UUID})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     List<WidgetType> findWidgetTypesByWidgetsBundleId(UUID tenantId, UUID widgetsBundleId);
 
+    
     /**
-     * Find widget types details by widgetsBundleId.
+     * Finds widget types details by widgets bundle id.
      *
-     * @param tenantId the tenantId
-     * @param widgetsBundleId the widgets bundle id
-     * @return the list of widget types details objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetsBundleId widgets bundle id ({@link UUID})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     List<WidgetTypeDetails> findWidgetTypesDetailsByWidgetsBundleId(UUID tenantId, UUID widgetsBundleId);
+    /**
+     * Finds widget types infos by widgets bundle id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetsBundleId widgets bundle id ({@link UUID})
+     * @param fullSearch full search
+     * @param deprecatedFilter deprecated filter ({@link DeprecatedFilter})
+     * @param widgetTypes widget types ({@link List})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<WidgetTypeInfo> findWidgetTypesInfosByWidgetsBundleId(UUID tenantId, UUID widgetsBundleId, boolean fullSearch, DeprecatedFilter deprecatedFilter, List<String> widgetTypes, PageLink pageLink);
+    /**
+     * Finds widget fqns by widgets bundle id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetsBundleId widgets bundle id ({@link UUID})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<String> findWidgetFqnsByWidgetsBundleId(UUID tenantId, UUID widgetsBundleId);
 
+    
     /**
-     * Find widget type by tenantId and FQN.
+     * Finds by tenant id and fqn.
      *
-     * @param tenantId the tenantId
-     * @param fqn the FQN
-     * @return the widget type object
+     * @param tenantId tenant that owns the entity or operation
+     * @param fqn fqn ({@link String})
+     * @return {@link WidgetType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     WidgetType findByTenantIdAndFqn(UUID tenantId, String fqn);
+    /**
+     * Finds details by tenant id and fqn.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param fqn fqn ({@link String})
+     * @return {@link WidgetTypeDetails}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     WidgetTypeDetails findDetailsByTenantIdAndFqn(UUID tenantId, String fqn);
+    /**
+     * Finds widget type ids by tenant id and fqns.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetFqns widget fqns ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<WidgetTypeId> findWidgetTypeIdsByTenantIdAndFqns(UUID tenantId, List<String> widgetFqns);
+    /**
+     * Finds widgets bundle widgets by widgets bundle id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetsBundleId widgets bundle id ({@link UUID})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<WidgetsBundleWidget> findWidgetsBundleWidgetsByWidgetsBundleId(UUID tenantId, UUID widgetsBundleId);
+    /**
+     * Saves or persists widgets bundle widget.
+     *
+     * @param widgetsBundleWidget widgets bundle widget ({@link WidgetsBundleWidget})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void saveWidgetsBundleWidget(WidgetsBundleWidget widgetsBundleWidget);
+    /**
+     * Removes widget type from widgets bundle.
+     *
+     * @param widgetsBundleId widgets bundle id ({@link UUID})
+     * @param widgetTypeId widget type id ({@link UUID})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void removeWidgetTypeFromWidgetsBundle(UUID widgetsBundleId, UUID widgetTypeId);
+    /**
+     * Finds all widget types ids.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<WidgetTypeId> findAllWidgetTypesIds(PageLink pageLink);
 

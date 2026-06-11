@@ -29,26 +29,70 @@ import org.thingsboard.server.dao.model.sql.ApiUsageStateEntity;
 import java.util.List;
 import java.util.UUID;
 
+
 /**
 
- * api usage state repository contract.
+ * Spring Data JPA repository for api usage state entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
+
 
 public interface ApiUsageStateRepository extends JpaRepository<ApiUsageStateEntity, UUID> {
 
     @Query("SELECT ur FROM ApiUsageStateEntity ur WHERE ur.tenantId = :tenantId " +
             "AND ur.entityId = :tenantId AND ur.entityType = 'TENANT' ")
+    /**
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link ApiUsageStateEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     ApiUsageStateEntity findByTenantId(@Param("tenantId") UUID tenantId);
+    /**
+     * Finds by entity id and entity type.
+     *
+     * @param entityId target entity identifier
+     * @param entityType entity type discriminator
+     * @return {@link ApiUsageStateEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     ApiUsageStateEntity findByEntityIdAndEntityType(UUID entityId, String entityType);
+    /**
+     * Finds all by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     Page<ApiUsageStateEntity> findAllByTenantId(UUID tenantId, Pageable pageable);
+    /**
+     * Deletes api usage state by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Transactional
     @Modifying
     @Query("DELETE FROM ApiUsageStateEntity ur WHERE ur.tenantId = :tenantId")
     void deleteApiUsageStateByTenantId(@Param("tenantId") UUID tenantId);
+    /**
+     * Deletes by entity id and entity type.
+     *
+     * @param entityId target entity identifier
+     * @param entityType entity type discriminator
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Transactional
     @Modifying
@@ -58,6 +102,14 @@ public interface ApiUsageStateRepository extends JpaRepository<ApiUsageStateEnti
     @Query("SELECT new org.thingsboard.server.common.data.edqs.fields.ApiUsageStateFields(a.id, a.createdTime, a.tenantId," +
             "a.entityId, a.entityType, a.transportState, a.dbStorageState, a.reExecState, a.jsExecState, a.tbelExecState, " +
             "a.emailExecState, a.smsExecState, a.alarmExecState, a.version) FROM ApiUsageStateEntity a WHERE a.id > :id ORDER BY a.id")
+    /**
+     * Finds next batch.
+     *
+     * @param id entity UUID primary key
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     List<ApiUsageStateFields> findNextBatch(@Param("id") UUID id, Limit limit);
 
 }

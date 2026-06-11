@@ -49,7 +49,11 @@ import java.util.UUID;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 /**
- * Alarm.
+ * Active or cleared alarm raised against an originator entity (device, asset, etc.).
+ *
+ * <p>Tracks {@link AlarmSeverity}, {@link AlarmStatus} (ack/clear combinations), type, propagation
+ * to related entities, assignee, and optional linked dashboard. Created by rule engine or REST
+ * ({@code /api/alarm}). Persisted and queried via {@code AlarmService}.
  */
 public class Alarm extends BaseData<AlarmId> implements HasName, HasTenantId, HasCustomerId {
 
@@ -130,6 +134,11 @@ public class Alarm extends BaseData<AlarmId> implements HasName, HasTenantId, Ha
         this.propagateToTenant = alarm.isPropagateToTenant();
         this.propagateRelationTypes = alarm.getPropagateRelationTypes();
     }
+    /**
+     * Returns name.
+     *
+     * @return {@link String}
+     */
 
     @Override
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -137,6 +146,11 @@ public class Alarm extends BaseData<AlarmId> implements HasName, HasTenantId, Ha
     public String getName() {
         return type;
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link AlarmId}
+     */
 
     @Schema(description = "JSON object with the alarm Id. " +
             "Specify this field to update the alarm. " +
@@ -146,6 +160,11 @@ public class Alarm extends BaseData<AlarmId> implements HasName, HasTenantId, Ha
     public AlarmId getId() {
         return super.getId();
     }
+    /**
+     * Returns created time.
+     *
+     * @return the long result
+     */
 
 
     @Schema(description = "Timestamp of the alarm creation, in milliseconds", example = "1634058704567", accessMode = Schema.AccessMode.READ_ONLY)
@@ -153,12 +172,24 @@ public class Alarm extends BaseData<AlarmId> implements HasName, HasTenantId, Ha
     public long getCreatedTime() {
         return super.getCreatedTime();
     }
+    /**
+     * Returns status.
+     *
+     * @return {@link AlarmStatus}
+     */
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "status of the Alarm", example = "ACTIVE_UNACK", accessMode = Schema.AccessMode.READ_ONLY)
     public AlarmStatus getStatus() {
         return toStatus(cleared, acknowledged);
     }
+    /**
+     * To status.
+     *
+     * @param cleared cleared
+     * @param acknowledged acknowledged
+     * @return {@link AlarmStatus}
+     */
 
     public static AlarmStatus toStatus(boolean cleared, boolean acknowledged) {
         if (cleared) {
@@ -167,6 +198,11 @@ public class Alarm extends BaseData<AlarmId> implements HasName, HasTenantId, Ha
             return acknowledged ? AlarmStatus.ACTIVE_ACK : AlarmStatus.ACTIVE_UNACK;
         }
     }
+    /**
+     * Returns dashboard id.
+     *
+     * @return {@link DashboardId}
+     */
 
     @JsonIgnore
     public DashboardId getDashboardId() {

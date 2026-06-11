@@ -15,10 +15,16 @@
  */
 package org.thingsboard.server.dao.pat;
 
+
 /**
 
- * Api key evict event.
+ * Cache eviction event published when api key data changes.
+
+ *
+
+ * <p>Consumed by cache listeners to invalidate stale entries cluster-wide.
 
  */
+
 
 public record ApiKeyEvictEvent(String value) {}

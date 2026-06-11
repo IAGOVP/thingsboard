@@ -144,7 +144,12 @@ public class LwM2mClient {
 
     @Getter
     private Map<Integer, Version> supportedClientObjects;
-
+    /**
+     * Clone.
+     *
+     * @return {@link Object}
+     * @throws CloneNotSupportedException if clone not supported exception is thrown during processing
+     */
     public Object clone() throws CloneNotSupportedException {
         return super.clone();
     }
@@ -160,7 +165,14 @@ public class LwM2mClient {
         this.retryAttempts = new AtomicInteger(0);
         this.supportedClientObjects = null;
     }
-
+    /**
+     * Init.
+     *
+     * @param credentials credentials ({@link ValidateDeviceCredentialsResponse})
+     * @param sessionId session id ({@link UUID})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void init(ValidateDeviceCredentialsResponse credentials, UUID sessionId) {
         this.session = createSession(nodeId, sessionId, credentials);
         this.tenantId = TenantId.fromUUID(new UUID(session.getTenantIdMSB(), session.getTenantIdLSB()));
@@ -172,22 +184,45 @@ public class LwM2mClient {
         this.pagingTransmissionWindow = credentials.getDeviceInfo().getPagingTransmissionWindow();
         this.defaultObjectIDVer = getObjectIDVerFromDeviceProfile(credentials.getDeviceProfile());
     }
-
+    /**
+     * Set registration.
+     *
+     * @param registration registration ({@link Registration})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void setRegistration(Registration registration) {
         this.registration = registration;
         this.clientSupportContentFormats = clientSupportContentFormat(registration);
         this.defaultContentFormat = calculateDefaultContentFormat(registration);
         this.setSupportedClientObjects();
     }
-
+    /**
+     * Lock.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void lock() {
         lock.lock();
     }
-
+    /**
+     * Unlock.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void unlock() {
         lock.unlock();
     }
-
+    /**
+     * Handles device update.
+     *
+     * @param device device ({@link Device})
+     * @param deviceProfileOpt device profile opt ({@link Optional})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void onDeviceUpdate(Device device, Optional<DeviceProfile> deviceProfileOpt) {
         SessionInfoProto.Builder builder = SessionInfoProto.newBuilder().mergeFrom(session);
         this.deviceId = device.getUuidId();
@@ -202,7 +237,13 @@ public class LwM2mClient {
         this.psmActivityTimer = transportConfiguration.getPsmActivityTimer();
         this.pagingTransmissionWindow = transportConfiguration.getPagingTransmissionWindow();
     }
-
+    /**
+     * Handles device profile update.
+     *
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void onDeviceProfileUpdate(DeviceProfile deviceProfile) {
         SessionInfoProto.Builder builder = SessionInfoProto.newBuilder().mergeFrom(session);
         updateSession(deviceProfile, builder);
@@ -227,7 +268,13 @@ public class LwM2mClient {
         }
         return new Version(defaultObjectIdVer == null ? LWM2M_OBJECT_VERSION_DEFAULT : defaultObjectIdVer);
     }
-
+    /**
+     * Refresh session id.
+     *
+     * @param nodeId node id ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void refreshSessionId(String nodeId) {
         UUID newId = UUID.randomUUID();
         SessionInfoProto.Builder builder = SessionInfoProto.newBuilder().mergeFrom(session);
@@ -254,7 +301,16 @@ public class LwM2mClient {
                 .setDeviceProfileIdLSB(msg.getDeviceInfo().getDeviceProfileId().getId().getLeastSignificantBits())
                 .build();
     }
-
+    /**
+     * Saves or persists resource value.
+     *
+     * @param pathRezIdVer path rez id ver ({@link String})
+     * @param resource resource ({@link LwM2mResource})
+     * @param modelProvider model provider ({@link LwM2mModelProvider})
+     * @param mode mode ({@link Mode})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     public boolean saveResourceValue(String pathRezIdVer, LwM2mResource resource, LwM2mModelProvider modelProvider, Mode mode) {
         if (this.resources.get(pathRezIdVer) != null && this.resources.get(pathRezIdVer).getResourceModel() != null) {
             this.resources.get(pathRezIdVer).updateLwM2mResource(resource, mode);
@@ -270,7 +326,14 @@ public class LwM2mClient {
             }
         }
     }
-
+    /**
+     * Returns resource model.
+     *
+     * @param pathIdVer path id ver ({@link String})
+     * @param modelProvider model provider ({@link LwM2mModelProvider})
+     * @return {@link ResourceModel}
+     * @throws Exception on processing failure
+     */
     public ResourceModel getResourceModel(String pathIdVer, LwM2mModelProvider modelProvider) {
         LwM2mPath pathIds = getLwM2mPathFromString(pathIdVer);
         String verSupportedObject = String.valueOf(this.getSupportedObjectVersion(pathIds.getObjectId()));
@@ -278,7 +341,14 @@ public class LwM2mClient {
         return verRez != null && verRez.equals(verSupportedObject) ? modelProvider.getObjectModel(registration)
                 .getResourceModel(pathIds.getObjectId(), pathIds.getResourceId()) : null;
     }
-
+    /**
+     * Returns object model.
+     *
+     * @param pathIdVer path id ver ({@link String})
+     * @param modelProvider model provider ({@link LwM2mModelProvider})
+     * @return {@link ObjectModel}
+     * @throws Exception on processing failure
+     */
     public ObjectModel getObjectModel(String pathIdVer, LwM2mModelProvider modelProvider) {
         try {
             LwM2mPath pathIds = getLwM2mPathFromString(pathIdVer);
@@ -299,9 +369,16 @@ public class LwM2mClient {
     }
 
 
+    
     /**
-     * The instance must have all the resources that have the property
-     * <Mandatory>Mandatory</Mandatory>
+     * Returns new resources for instance.
+     *
+     * @param pathRezIdVer path rez id ver ({@link String})
+     * @param params params ({@link Object})
+     * @param modelProvider model provider ({@link LwM2mModelProvider})
+     * @param converter converter ({@link LwM2mValueConverter})
+     * @return {@link Collection}
+     * @throws Exception on processing failure
      */
     public Collection<LwM2mResource> getNewResourcesForInstance(String pathRezIdVer, Object params, LwM2mModelProvider modelProvider,
                                                                 LwM2mValueConverter converter) {
@@ -344,7 +421,13 @@ public class LwM2mClient {
         }
         return resources;
     }
-
+    /**
+     * Is valid object version.
+     *
+     * @param path path ({@link String})
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
     public String isValidObjectVersion(String path) {
         LwM2mPath pathIds = getLwM2mPathFromString(path);
         if (pathIds.isResource() && (pathIds.toString().equals(REGISTRATION_TRIGGER_PARAMS_ID ) ||
@@ -363,9 +446,14 @@ public class LwM2mClient {
         return "";
     }
 
+    
     /**
-     * @param pathIdVer     == "3_1.0"
-     * @param modelProvider -
+     * Deletes resources.
+     *
+     * @param pathIdVer path id ver ({@link String})
+     * @param modelProvider model provider ({@link LwM2mModelProvider})
+     * @return nothing
+     * @throws Exception on processing failure
      */
     public void deleteResources(String pathIdVer, LwM2mModelProvider modelProvider) {
         Set<String> key = getKeysEqualsIdVer(pathIdVer);
@@ -380,9 +468,14 @@ public class LwM2mClient {
         });
     }
 
+    
     /**
-     * @param idVer         -
-     * @param modelProvider -
+     * Updates resource model.
+     *
+     * @param idVer id ver ({@link String})
+     * @param modelProvider model provider ({@link LwM2mModelProvider})
+     * @return nothing
+     * @throws Exception on processing failure
      */
     public void updateResourceModel(String idVer, LwM2mModelProvider modelProvider) {
         Set<String> key = getKeysEqualsIdVer(idVer);
@@ -423,27 +516,54 @@ public class LwM2mClient {
         }
         return contentFormats;
     }
-
+    /**
+     * Updates last uplink time.
+     *
+     * @return the long result
+     * @throws Exception on processing failure
+     */
     public long updateLastUplinkTime() {
         this.lastUplinkTime = System.currentTimeMillis();
         this.firstEdrxDownlink = true;
         return lastUplinkTime;
     }
-
+    /**
+     * Checks first downlink.
+     *
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     public boolean checkFirstDownlink() {
         boolean result = firstEdrxDownlink;
         firstEdrxDownlink = false;
         return result;
     }
-
+    /**
+     * Returns lw m2m path from string.
+     *
+     * @param path path ({@link String})
+     * @return {@link LwM2mPath}
+     * @throws Exception on processing failure
+     */
     public LwM2mPath getLwM2mPathFromString(String path) {
         return new LwM2mPath(fromVersionedIdToObjectId(path));
     }
-
+    /**
+     * Returns default object idver.
+     *
+     * @return the LwM2m.Version value
+     * @throws Exception on processing failure
+     */
     public LwM2m.Version getDefaultObjectIDVer() {
         return this.defaultObjectIDVer == null ? new Version(LWM2M_OBJECT_VERSION_DEFAULT) : this.defaultObjectIDVer;
     }
-
+    /**
+     * Returns supported object version.
+     *
+     * @param objectid objectid ({@link Integer})
+     * @return the LwM2m.Version value
+     * @throws Exception on processing failure
+     */
     public LwM2m.Version getSupportedObjectVersion(Integer objectid) {
         return this.supportedClientObjects != null ? this.supportedClientObjects.get(objectid) : null;
     }

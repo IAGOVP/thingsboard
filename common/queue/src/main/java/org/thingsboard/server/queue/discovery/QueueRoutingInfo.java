@@ -15,6 +15,9 @@
  */
 package org.thingsboard.server.queue.discovery;
 
+import java.util.UUID;
+
+
 import lombok.Data;
 import org.thingsboard.server.common.data.id.QueueId;
 import org.thingsboard.server.common.data.id.TenantId;
@@ -22,13 +25,11 @@ import org.thingsboard.server.common.data.queue.Queue;
 import org.thingsboard.server.gen.transport.TransportProtos.GetQueueRoutingInfoResponseMsg;
 import org.thingsboard.server.gen.transport.TransportProtos.QueueUpdateMsg;
 
-import java.util.UUID;
 
-
-@Data
 /**
- * Queue routing info.
+ * Describes how a queue is partitioned and which services currently own partitions.
  */
+@Data
 public class QueueRoutingInfo {
 
     private final TenantId tenantId;

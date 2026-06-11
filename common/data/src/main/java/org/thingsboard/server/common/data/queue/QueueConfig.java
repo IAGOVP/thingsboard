@@ -23,10 +23,28 @@ import lombok.Data;
 public interface QueueConfig {
 
     boolean isConsumerPerPartition();
+/**
+ * Returns poll interval.
+ *
+ * @return the int result
+ */
 
     int getPollInterval();
+/**
+ * Of.
+ *
+ * @param consumerPerPartition consumer per partition
+ * @param pollInterval poll interval
+ * @return {@link QueueConfig}
+ */
 
     static QueueConfig of(boolean consumerPerPartition, long pollInterval) {
+        /**
+         * Basic queue config.
+         *
+         * @param pollInterval poll interval
+         * @return the return new value
+         */
         return new BasicQueueConfig(consumerPerPartition, (int) pollInterval);
     }
 

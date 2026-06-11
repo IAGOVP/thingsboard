@@ -43,6 +43,15 @@ import java.util.Map;
  */
 public class TbDDFFileParser {
     private static final TbDefaultDDFFileValidator ddfFileValidator = new TbDefaultDDFFileValidator();
+    /**
+     * Parse.
+     *
+     * @param inputStream input stream ({@link InputStream})
+     * @param streamName stream name ({@link String})
+     * @return {@link List}
+     * @throws InvalidDDFFileException if invalid ddffile exception is thrown during processing
+     * @throws IOException if ioexception is thrown during processing
+     */
 
     public List<ObjectModel> parse(InputStream inputStream, String streamName)
             throws InvalidDDFFileException, IOException {

@@ -33,11 +33,24 @@ public class SimpleTransportRateLimit implements TransportRateLimit {
         this.configuration = configuration;
         this.rateLimit = new TbRateLimits(configuration);
     }
+    /**
+     * Try consume.
+     *
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     public boolean tryConsume() {
         return rateLimit.tryConsume();
     }
+    /**
+     * Try consume.
+     *
+     * @param number number
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     public boolean tryConsume(long number) {

@@ -53,8 +53,14 @@ import java.util.Base64;
 import java.util.Map;
 import java.util.regex.Pattern;
 /**
- * Image utils.
+ * Image utils (DAO utilities (KV conversion, rate executors, JSON mapping)).
  */
+
+
+
+
+
+
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Slf4j
@@ -65,11 +71,25 @@ public class ImageUtils {
             "svg+xml", "svg",
             "x-icon", "ico"
     );
+    /**
+     * Media type to file extension.
+     *
+     * @param mimeType mime type ({@link String})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String mediaTypeToFileExtension(String mimeType) {
         String subtype = MimeTypeUtils.parseMimeType(mimeType).getSubtype();
         return mediaTypeMappings.getOrDefault(subtype, subtype);
     }
+    /**
+     * File extension to media type.
+     *
+     * @param extension extension ({@link String})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String fileExtensionToMediaType(String extension) {
         String subtype = mediaTypeMappings.entrySet().stream()
@@ -77,6 +97,15 @@ public class ImageUtils {
                 .map(Map.Entry::getKey).findFirst().orElse(extension);
         return new MimeType("image", subtype).toString();
     }
+    /**
+     * Processes image.
+     *
+     * @param data data
+     * @param mediaType media type ({@link String})
+     * @param thumbnailMaxDimension thumbnail max dimension
+     * @return {@link ProcessedImage}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static ProcessedImage processImage(byte[] data, String mediaType, int thumbnailMaxDimension) throws Exception {
         if (mediaTypeToFileExtension(mediaType).equals("svg")) {
@@ -156,6 +185,15 @@ public class ImageUtils {
         image.setPreview(preview);
         return image;
     }
+    /**
+     * Processes svg image.
+     *
+     * @param data data
+     * @param mediaType media type ({@link String})
+     * @param thumbnailMaxDimension thumbnail max dimension
+     * @return {@link ProcessedImage}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static ProcessedImage processSvgImage(byte[] data, String mediaType, int thumbnailMaxDimension) throws Exception {
         var imageData = removeScadaSymbolMetadata(data);
@@ -211,6 +249,13 @@ public class ImageUtils {
         image.setPreview(preview);
         return image;
     }
+    /**
+     * To compressed png data.
+     *
+     * @param image image ({@link BufferedImage})
+     * @return the byte[] value
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static byte[] toCompressedPngData(BufferedImage image) throws Exception {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -242,10 +287,25 @@ public class ImageUtils {
         image.setHeight(0);
         return withPreviewAsOriginalImage(image);
     }
+    /**
+     * With preview as original image.
+     *
+     * @param originalImage original image ({@link ProcessedImage})
+     * @return {@link ProcessedImage}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static ProcessedImage withPreviewAsOriginalImage(ProcessedImage originalImage) {
         return withPreviewAsOriginalImage(originalImage, null);
     }
+    /**
+     * With preview as original image.
+     *
+     * @param originalImage original image ({@link ProcessedImage})
+     * @param previewData preview data
+     * @return {@link ProcessedImage}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static ProcessedImage withPreviewAsOriginalImage(ProcessedImage originalImage, byte[] previewData) {
         originalImage.setPreview(originalImage.withData(previewData));
@@ -254,6 +314,14 @@ public class ImageUtils {
         }
         return originalImage;
     }
+    /**
+     * Processes scada symbol metadata.
+     *
+     * @param fileName file name ({@link String})
+     * @param data data
+     * @return {@link ScadaSymbolMetadataInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static ScadaSymbolMetadataInfo processScadaSymbolMetadata(String fileName, byte[] data) throws Exception {
         JsonNode metaData = null;
@@ -265,6 +333,13 @@ public class ImageUtils {
         }
         return new ScadaSymbolMetadataInfo(fileName, metaData);
     }
+    /**
+     * Removes scada symbol metadata.
+     *
+     * @param data data
+     * @return the byte[] value
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static byte[] removeScadaSymbolMetadata(byte[] data) {
         String contents = new String(data, StandardCharsets.UTF_8);
@@ -288,6 +363,13 @@ public class ImageUtils {
         }
         return new int[]{thumbnailWidth, thumbnailHeight};
     }
+    /**
+     * Returns embedded base64encoded img.
+     *
+     * @param colorStr color str ({@link String})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String getEmbeddedBase64EncodedImg(String colorStr) {
         try {
@@ -376,6 +458,19 @@ public class ImageUtils {
     private static float clamp(float value) {
         return Math.max(0, Math.min(1, value));
     }
+    
+    
+    
+    
+    
+    /**
+     * Processed image (DAO utilities (KV conversion, rate executors, JSON mapping)).
+     */
+
+
+
+
+
 
     @Data
     @AllArgsConstructor
@@ -389,6 +484,19 @@ public class ImageUtils {
         private long size;
         private ProcessedImage preview;
     }
+    
+    
+    
+    
+    
+    /**
+     * Scada symbol metadata info (DAO utilities (KV conversion, rate executors, JSON mapping)).
+     */
+
+
+
+
+
 
     @Data
     public static class ScadaSymbolMetadataInfo {

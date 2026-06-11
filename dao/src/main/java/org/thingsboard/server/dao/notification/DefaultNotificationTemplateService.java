@@ -40,8 +40,14 @@ import java.util.Optional;
 
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
 /**
- * Default notification template service.
+ * Spring component for default notification template service (notification templates, targets, rules, and delivery requests).
  */
+
+
+
+
+
+
 
 @Service
 @RequiredArgsConstructor
@@ -50,22 +56,32 @@ public class DefaultNotificationTemplateService extends AbstractEntityService im
     private final NotificationTemplateDao notificationTemplateDao;
     private final NotificationRequestDao notificationRequestDao;
 
+    
     /**
-
-     * Loads notification template by id.
-
+     * Finds notification template by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @return {@link NotificationTemplate}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public NotificationTemplate findNotificationTemplateById(TenantId tenantId, NotificationTemplateId id) {
         return notificationTemplateDao.findById(tenantId, id.getId());
     }
 
+    
     /**
-
-     * Persists notification template.
-
+     * Saves or persists notification template.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param notificationTemplate notification template ({@link NotificationTemplate})
+     * @return {@link NotificationTemplate}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public NotificationTemplate saveNotificationTemplate(TenantId tenantId, NotificationTemplate notificationTemplate) {
@@ -96,22 +112,33 @@ public class DefaultNotificationTemplateService extends AbstractEntityService im
         }
     }
 
+    
     /**
-
-     * Loads notification templates by tenant id and notification types.
-
+     * Finds notification templates by tenant id and notification types.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param notificationTypes notification types ({@link List})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<NotificationTemplate> findNotificationTemplatesByTenantIdAndNotificationTypes(TenantId tenantId, List<NotificationType> notificationTypes, PageLink pageLink) {
         return notificationTemplateDao.findByTenantIdAndNotificationTypesAndPageLink(tenantId, notificationTypes, pageLink);
     }
 
+    
     /**
-
-     * Loads tenant or system notification template.
-
+     * Finds tenant or system notification template.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param notificationType notification type ({@link NotificationType})
+     * @return optional {@link NotificationTemplate}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<NotificationTemplate> findTenantOrSystemNotificationTemplate(TenantId tenantId, NotificationType notificationType) {
@@ -119,11 +146,16 @@ public class DefaultNotificationTemplateService extends AbstractEntityService im
                 .or(() -> findNotificationTemplateByTenantIdAndType(TenantId.SYS_TENANT_ID, notificationType));
     }
 
+    
     /**
-
-     * Loads notification template by tenant id and type.
-
+     * Finds notification template by tenant id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param notificationType notification type ({@link NotificationType})
+     * @return optional {@link NotificationTemplate}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<NotificationTemplate> findNotificationTemplateByTenantIdAndType(TenantId tenantId, NotificationType notificationType) {
@@ -131,33 +163,49 @@ public class DefaultNotificationTemplateService extends AbstractEntityService im
                 .stream().findFirst();
     }
 
+    
     /**
-
      * Counts notification templates by tenant id and notification types.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param notificationTypes notification types ({@link Collection})
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public int countNotificationTemplatesByTenantIdAndNotificationTypes(TenantId tenantId, Collection<NotificationType> notificationTypes) {
         return notificationTemplateDao.countByTenantIdAndNotificationTypes(tenantId, notificationTypes);
     }
 
+    
     /**
-
-     * Removes notification template by id.
-
+     * Deletes notification template by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteNotificationTemplateById(TenantId tenantId, NotificationTemplateId id) {
         deleteEntity(tenantId, id, false);
     }
 
+    
     /**
-
-     * Removes entity.
-
+     * Deletes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteEntity(TenantId tenantId, EntityId id, boolean force) {
@@ -183,44 +231,62 @@ public class DefaultNotificationTemplateService extends AbstractEntityService im
         eventPublisher.publishEvent(DeleteEntityEvent.builder().tenantId(tenantId).entityId(id).build());
     }
 
+    
     /**
-
-     * Removes notification templates by tenant id.
-
+     * Deletes notification templates by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteNotificationTemplatesByTenantId(TenantId tenantId) {
         notificationTemplateDao.removeByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Removes by tenant id.
-
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteByTenantId(TenantId tenantId) {
         deleteNotificationTemplatesByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Loads entity.
-
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findNotificationTemplateById(tenantId, new NotificationTemplateId(entityId.getId())));
     }
 
+    
     /**
-
-     * Loads entity async.
-
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
@@ -228,11 +294,14 @@ public class DefaultNotificationTemplateService extends AbstractEntityService im
                 .transform(Optional::ofNullable, directExecutor());
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

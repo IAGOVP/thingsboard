@@ -27,8 +27,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Dedupes out-of-order entity updates using monotonic version numbers from events.
+ * Dedupes out-of-order entity updates using monotonic version numbers from EDQS events.
  */
+
 @Slf4j
 public class VersionsStore {
 
@@ -40,6 +41,14 @@ public class VersionsStore {
         this.expirationMillis = TimeUnit.MINUTES.toMillis(ttlMinutes);
         startCleanupTask();
     }
+    /**
+     * Is new.
+     *
+     * @param key key ({@link EdqsObjectKey})
+     * @param version version ({@link Long})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean isNew(EdqsObjectKey key, Long version) {
         AtomicBoolean isNew = new AtomicBoolean(false);
@@ -69,10 +78,22 @@ public class VersionsStore {
             }
         }, expirationMillis, expirationMillis, TimeUnit.MILLISECONDS);
     }
+    /**
+     * Shutdown.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void shutdown() {
         cleaner.shutdown();
     }
+
+    /**
+
+     * Timed value (EDQS microservice — EDQS utilities (RocksDB, mapping, versions)).
+
+     */
 
     private static class TimedValue {
         private final long lastUpdated;

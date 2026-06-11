@@ -97,7 +97,7 @@ import static org.thingsboard.server.transport.mqtt.util.sparkplug.SparkplugMess
 import static org.thingsboard.server.transport.mqtt.util.sparkplug.SparkplugMessageType.messageName;
 
 /**
- * Handles abstract gateway session.
+ * Shared gateway session logic: child device registration, topic routing, and delegation to {@link MqttTransportAdaptor}.
  */
 @Slf4j
 public abstract class AbstractGatewaySessionHandler<T extends AbstractGatewayDeviceSessionContext> {
@@ -149,7 +149,13 @@ public abstract class AbstractGatewaySessionHandler<T extends AbstractGatewayDev
     ConcurrentReferenceHashMap<String, Lock> createWeakMap() {
         return new ConcurrentReferenceHashMap<>(16, ReferenceType.WEAK);
     }
-
+    /**
+     * Handles device disconnect.
+     *
+     * @param mqttMsg mqtt msg ({@link MqttPublishMessage})
+     * @return nothing
+     * @throws AdaptorException on invalid payload or topic format
+     */
     public void onDeviceDisconnect(MqttPublishMessage mqttMsg) throws AdaptorException {
         if (isJsonPayloadType()) {
             onDeviceDisconnectJson(mqttMsg);
@@ -157,7 +163,13 @@ public abstract class AbstractGatewaySessionHandler<T extends AbstractGatewayDev
             onGatewayDeviceDisconnectProto(mqttMsg);
         }
     }
-
+    /**
+     * Handles device claim.
+     *
+     * @param mqttMsg mqtt msg ({@link MqttPublishMessage})
+     * @return nothing
+     * @throws AdaptorException on invalid payload or topic format
+     */
     public void onDeviceClaim(MqttPublishMessage mqttMsg) throws AdaptorException {
         int msgId = getMsgId(mqttMsg);
         ByteBuf payload = mqttMsg.payload();
@@ -167,7 +179,13 @@ public abstract class AbstractGatewaySessionHandler<T extends AbstractGatewayDev
             onDeviceClaimProto(msgId, payload);
         }
     }
-
+    /**
+     * Handles device attributes.
+     *
+     * @param mqttMsg mqtt msg ({@link MqttPublishMessage})
+     * @return nothing
+     * @throws AdaptorException on invalid payload or topic format
+     */
     public void onDeviceAttributes(MqttPublishMessage mqttMsg) throws AdaptorException {
         int msgId = getMsgId(mqttMsg);
         ByteBuf payload = mqttMsg.payload();
@@ -177,7 +195,13 @@ public abstract class AbstractGatewaySessionHandler<T extends AbstractGatewayDev
             onDeviceAttributesProto(msgId, payload);
         }
     }
-
+    /**
+     * Handles device attributes request.
+     *
+     * @param mqttMsg mqtt msg ({@link MqttPublishMessage})
+     * @return nothing
+     * @throws AdaptorException on invalid payload or topic format
+     */
     public void onDeviceAttributesRequest(MqttPublishMessage mqttMsg) throws AdaptorException {
         if (isJsonPayloadType()) {
             onDeviceAttributesRequestJson(mqttMsg);
@@ -185,7 +209,13 @@ public abstract class AbstractGatewaySessionHandler<T extends AbstractGatewayDev
             onDeviceAttributesRequestProto(mqttMsg);
         }
     }
-
+    /**
+     * Handles device rpc response.
+     *
+     * @param mqttMsg mqtt msg ({@link MqttPublishMessage})
+     * @return nothing
+     * @throws AdaptorException on invalid payload or topic format
+     */
     public void onDeviceRpcResponse(MqttPublishMessage mqttMsg) throws AdaptorException {
         int msgId = getMsgId(mqttMsg);
         ByteBuf payload = mqttMsg.payload();
@@ -195,23 +225,47 @@ public abstract class AbstractGatewaySessionHandler<T extends AbstractGatewayDev
             onDeviceRpcResponseProto(msgId, payload);
         }
     }
-
+    /**
+     * Handles gateway ping.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void onGatewayPing() {
         if (overwriteDevicesActivity) {
             devices.forEach((deviceName, deviceSessionCtx) -> transportService.recordActivity(deviceSessionCtx.getSessionInfo()));
         }
     }
-
+    /**
+     * Handles devices disconnect.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void onDevicesDisconnect() {
         log.debug("[{}] Gateway disconnect [{}]", gateway.getTenantId(), gateway.getDeviceId());
         try {
             deviceFutures.forEach((name, future) -> {
                 Futures.addCallback(future, new FutureCallback<T>() {
+                    /**
+                     * Handles success.
+                     *
+                     * @param result result ({@link T})
+                     * @return nothing
+                     * @throws Exception on processing failure
+                     */
                     @Override
                     public void onSuccess(T result) {
                         log.debug("[{}] Gateway disconnect [{}] device deregister callback [{}]", gateway.getTenantId(), gateway.getDeviceId(), name);
                         deregisterSession(name, result);
                     }
+                    /**
+                     * Handles failure.
+                     *
+                     * @param t t ({@link Throwable})
+                     * @return nothing
+                     * @throws Exception on processing failure
+                     */
 
                     @Override
                     public void onFailure(Throwable t) {
@@ -225,15 +279,31 @@ public abstract class AbstractGatewaySessionHandler<T extends AbstractGatewayDev
             log.error("Gateway disconnect failure", e);
         }
     }
-
+    /**
+     * Handles device deleted.
+     *
+     * @param deviceName device name ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void onDeviceDeleted(String deviceName) {
         deregisterSession(deviceName);
     }
-
+    /**
+     * Returns node id.
+     *
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
     public String getNodeId() {
         return context.getNodeId();
     }
-
+    /**
+     * Returns payload adaptor.
+     *
+     * @return {@link MqttTransportAdaptor}
+     * @throws Exception on processing failure
+     */
     public MqttTransportAdaptor getPayloadAdaptor() {
         return deviceSessionCtx.getPayloadAdaptor();
     }
@@ -246,7 +316,13 @@ public abstract class AbstractGatewaySessionHandler<T extends AbstractGatewayDev
             log.debug("[{}][{}][{}] Device [{}] was already removed from the gateway session", gateway.getTenantId(), gateway.getDeviceId(), sessionId, deviceName);
         }
     }
-
+    /**
+     * Write and flush.
+     *
+     * @param mqttMessage mqtt message ({@link MqttMessage})
+     * @return {@link ChannelFuture}
+     * @throws Exception on processing failure
+     */
     public ChannelFuture writeAndFlush(MqttMessage mqttMessage) {
         return channel.writeAndFlush(mqttMessage);
     }
@@ -254,11 +330,24 @@ public abstract class AbstractGatewaySessionHandler<T extends AbstractGatewayDev
     int nextMsgId() {
         return deviceSessionCtx.nextMsgId();
     }
-
+    /**
+     * Is json payload type.
+     *
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     protected boolean isJsonPayloadType() {
         return deviceSessionCtx.isJsonPayloadType();
     }
-
+    /**
+     * Processes on connect.
+     *
+     * @param msg msg ({@link MqttPublishMessage})
+     * @param deviceName device name ({@link String})
+     * @param deviceType device type ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     protected void processOnConnect(MqttPublishMessage msg, String deviceName, String deviceType) {
         log.trace("[{}][{}][{}] onDeviceConnect: [{}]", gateway.getTenantId(), gateway.getDeviceId(), sessionId, deviceName);
         int msgId = getMsgId(msg);
@@ -270,7 +359,15 @@ public abstract class AbstractGatewaySessionHandler<T extends AbstractGatewayDev
                 },
                 t -> processFailure(msgId, deviceName, CONNECT, ackSent, t));
     }
-
+    /**
+     * Handles device update.
+     *
+     * @param sessionInfo session info
+     * @param device device ({@link Device})
+     * @param deviceProfileOpt device profile opt ({@link Optional})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void onDeviceUpdate(TransportProtos.SessionInfoProto sessionInfo, Device device, Optional<DeviceProfile> deviceProfileOpt) {
         log.trace("[{}][{}] onDeviceUpdate: [{}]", gateway.getTenantId(), gateway.getDeviceId(), device);
         JsonNode deviceAdditionalInfo = device.getAdditionalInfo();
@@ -314,6 +411,13 @@ public abstract class AbstractGatewaySessionHandler<T extends AbstractGatewayDev
                             .setGatewayIdLSB(gateway.getDeviceId().getId().getLeastSignificantBits())
                             .build(),
                     new TransportServiceCallback<>() {
+                        /**
+                         * Handles success.
+                         *
+                         * @param msg msg ({@link GetOrCreateDeviceFromGatewayResponse})
+                         * @return nothing
+                         * @throws Exception on processing failure
+                         */
                         @Override
                         public void onSuccess(GetOrCreateDeviceFromGatewayResponse msg) {
                             T deviceSessionCtx = newDeviceSessionCtx(msg);
@@ -321,8 +425,9 @@ public abstract class AbstractGatewaySessionHandler<T extends AbstractGatewayDev
                                 log.trace("[{}][{}][{}] First got or created device [{}], type [{}] for the gateway session", gateway.getTenantId(), gateway.getDeviceId(), sessionId, deviceName, deviceType);
                                 SessionInfoProto deviceSessionInfo = deviceSessionCtx.getSessionInfo();
                                 transportService.registerAsyncSession(deviceSessionInfo, deviceSessionCtx);
+
                                 /**
-                                 *  3.0.0 Device Session Establishment:
+                                 * 3.0.0 Device Session Establishment:
                                  * dcmd-subscribe
                                  * [tck-id-message-flow-device-dcmd-subscribe] If the Device supports writing to outputs, the
                                  * MQTT client associated with the Device MUST subscribe to a topic of the form
@@ -340,6 +445,13 @@ public abstract class AbstractGatewaySessionHandler<T extends AbstractGatewayDev
                             futureToSet.set(devices.get(deviceName));
                             deviceFutures.remove(deviceName);
                         }
+                        /**
+                         * Handles error.
+                         *
+                         * @param t t ({@link Throwable})
+                         * @return nothing
+                         * @throws Exception on processing failure
+                         */
 
                         @Override
                         public void onError(Throwable t) {
@@ -363,20 +475,44 @@ public abstract class AbstractGatewaySessionHandler<T extends AbstractGatewayDev
             log.warn("[{}][{}][{}] Failed to process device connect command: [{}]", gateway.getTenantId(), gateway.getDeviceId(), sessionId, deviceName, t);
         }
     }
-
+    /**
+     * New device session ctx.
+     *
+     * @param msg msg ({@link GetOrCreateDeviceFromGatewayResponse})
+     * @return {@link T}
+     * @throws Exception on processing failure
+     */
     protected abstract T newDeviceSessionCtx(GetOrCreateDeviceFromGatewayResponse msg);
-
+    /**
+     * Returns msg id.
+     *
+     * @param mqttMsg mqtt msg ({@link MqttPublishMessage})
+     * @return monotonically increasing MQTT packet identifier
+     * @throws Exception on processing failure
+     */
     protected int getMsgId(MqttPublishMessage mqttMsg) {
         return mqttMsg.variableHeader().packetId();
     }
-
+    /**
+     * Handles device connect json.
+     *
+     * @param mqttMsg mqtt msg ({@link MqttPublishMessage})
+     * @return nothing
+     * @throws AdaptorException on invalid payload or topic format
+     */
     protected void onDeviceConnectJson(MqttPublishMessage mqttMsg) throws AdaptorException {
         JsonElement json = getJson(mqttMsg);
         String deviceName = checkDeviceName(getDeviceName(json));
         String deviceType = getDeviceType(json);
         processOnConnect(mqttMsg, deviceName, deviceType);
     }
-
+    /**
+     * Handles device connect proto.
+     *
+     * @param mqttMsg mqtt msg ({@link MqttPublishMessage})
+     * @return nothing
+     * @throws AdaptorException on invalid payload or topic format
+     */
     protected void onDeviceConnectProto(MqttPublishMessage mqttMsg) throws AdaptorException {
         try {
             TransportApiProtos.ConnectMsg connectProto = TransportApiProtos.ConnectMsg.parseFrom(getBytes(mqttMsg.payload()));
@@ -392,7 +528,13 @@ public abstract class AbstractGatewaySessionHandler<T extends AbstractGatewayDev
         String deviceName = checkDeviceName(getDeviceName(getJson(msg)));
         processOnDisconnect(msg, deviceName);
     }
-
+    /**
+     * Handles gateway device disconnect proto.
+     *
+     * @param mqttMsg mqtt msg ({@link MqttPublishMessage})
+     * @return nothing
+     * @throws AdaptorException on invalid payload or topic format
+     */
     protected void onGatewayDeviceDisconnectProto(MqttPublishMessage mqttMsg) throws AdaptorException {
         try {
             TransportApiProtos.DisconnectMsg connectProto = TransportApiProtos.DisconnectMsg.parseFrom(getBytes(mqttMsg.payload()));
@@ -407,7 +549,14 @@ public abstract class AbstractGatewaySessionHandler<T extends AbstractGatewayDev
         deregisterSession(deviceName);
         ack(msg, MqttReasonCodes.PubAck.SUCCESS);
     }
-
+    /**
+     * Handles device telemetry json.
+     *
+     * @param msgId msg id
+     * @param payload payload ({@link ByteBuf})
+     * @return nothing
+     * @throws AdaptorException on invalid payload or topic format
+     */
     protected void onDeviceTelemetryJson(int msgId, ByteBuf payload) throws AdaptorException {
         JsonElement json = JsonMqttAdaptor.validateJsonPayload(sessionId, payload);
         validateJsonObject(json);
@@ -453,7 +602,14 @@ public abstract class AbstractGatewaySessionHandler<T extends AbstractGatewayDev
             ackOrClose(msgId, ackSent);
         }
     }
-
+    /**
+     * Handles device telemetry proto.
+     *
+     * @param msgId msg id
+     * @param payload payload ({@link ByteBuf})
+     * @return nothing
+     * @throws AdaptorException on invalid payload or topic format
+     */
     protected void onDeviceTelemetryProto(int msgId, ByteBuf payload) throws AdaptorException {
         try {
             TransportApiProtos.GatewayTelemetryMsg telemetryMsgProto = TransportApiProtos.GatewayTelemetryMsg.parseFrom(getBytes(payload));
@@ -476,7 +632,18 @@ public abstract class AbstractGatewaySessionHandler<T extends AbstractGatewayDev
             throw new AdaptorException(e);
         }
     }
-
+    /**
+     * Processes post telemetry msg.
+     *
+     * @param deviceCtx device ctx ({@link MqttDeviceAwareSessionContext})
+     * @param msg msg
+     * @param deviceName device name ({@link String})
+     * @param msgId msg id
+     * @param remaining remaining ({@link AtomicInteger})
+     * @param ackSent ack sent ({@link AtomicBoolean})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     protected void processPostTelemetryMsg(MqttDeviceAwareSessionContext deviceCtx, TransportProtos.PostTelemetryMsg msg, String deviceName, int msgId,
                                            AtomicInteger remaining, AtomicBoolean ackSent) {
         try {
@@ -487,7 +654,14 @@ public abstract class AbstractGatewaySessionHandler<T extends AbstractGatewayDev
             ackOrClose(msgId, ackSent);
         }
     }
-
+    /**
+     * Post telemetry msg created.
+     *
+     * @param keyValueProto key value proto
+     * @param ts ts
+     * @return the TransportProtos.PostTelemetryMsg value
+     * @throws Exception on processing failure
+     */
     public TransportProtos.PostTelemetryMsg postTelemetryMsgCreated(TransportProtos.KeyValueProto keyValueProto, long ts) {
         List<TransportProtos.KeyValueProto> result = new ArrayList<>();
         result.add(keyValueProto);
@@ -639,7 +813,18 @@ public abstract class AbstractGatewaySessionHandler<T extends AbstractGatewayDev
             throw new AdaptorException(e);
         }
     }
-
+    /**
+     * Processes post attributes msg.
+     *
+     * @param deviceCtx device ctx ({@link MqttDeviceAwareSessionContext})
+     * @param kvListProto kv list proto
+     * @param deviceName device name ({@link String})
+     * @param msgId msg id
+     * @param remaining remaining ({@link AtomicInteger})
+     * @param ackSent ack sent ({@link AtomicBoolean})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     protected void processPostAttributesMsg(MqttDeviceAwareSessionContext deviceCtx, TransportProtos.PostAttributeMsg kvListProto, String deviceName, int msgId,
                                             AtomicInteger remaining, AtomicBoolean ackSent) {
         try {
@@ -757,7 +942,13 @@ public abstract class AbstractGatewaySessionHandler<T extends AbstractGatewayDev
         }
         return result.build();
     }
-
+    /**
+     * Checks device name.
+     *
+     * @param deviceName device name ({@link String})
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
     protected String checkDeviceName(String deviceName) {
         if (StringUtils.isEmpty(deviceName)) {
             throw new RuntimeException("Device name is empty!");
@@ -778,22 +969,49 @@ public abstract class AbstractGatewaySessionHandler<T extends AbstractGatewayDev
     private JsonElement getJson(MqttPublishMessage mqttMsg) throws AdaptorException {
         return JsonMqttAdaptor.validateJsonPayload(sessionId, mqttMsg.payload());
     }
-
+    /**
+     * Returns bytes.
+     *
+     * @param payload payload ({@link ByteBuf})
+     * @return the byte[] value
+     * @throws Exception on processing failure
+     */
     protected byte[] getBytes(ByteBuf payload) {
         return ProtoMqttAdaptor.toBytes(payload);
     }
-
+    /**
+     * Ack.
+     *
+     * @param msg msg ({@link MqttPublishMessage})
+     * @param returnCode return code
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     protected void ack(MqttPublishMessage msg, MqttReasonCodes.PubAck returnCode) {
         int msgId = getMsgId(msg);
         ack(msgId, returnCode);
     }
-
+    /**
+     * Ack.
+     *
+     * @param msgId msg id
+     * @param returnCode return code
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     protected void ack(int msgId, MqttReasonCodes.PubAck returnCode) {
         if (msgId > 0) {
             writeAndFlush(MqttTransportHandler.createMqttPubAckMsg(deviceSessionCtx, msgId, returnCode.byteValue()));
         }
     }
-
+    /**
+     * Ack or close.
+     *
+     * @param msgId msg id
+     * @param ackSent ack sent ({@link AtomicBoolean})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     protected void ackOrClose(int msgId, AtomicBoolean ackSent) {
         if (MqttVersion.MQTT_5.equals(deviceSessionCtx.getMqttVersion())) {
             if (ackSent.compareAndSet(false, true)) {
@@ -813,7 +1031,16 @@ public abstract class AbstractGatewaySessionHandler<T extends AbstractGatewayDev
         transportService.process(deviceSessionCtx.getSessionInfo(), SESSION_EVENT_MSG_CLOSED, null);
         log.debug("[{}][{}][{}] Removed device [{}] from the gateway session", gateway.getTenantId(), gateway.getDeviceId(), sessionId, deviceName);
     }
-
+    /**
+     * Send sparkplug state on telemetry.
+     *
+     * @param sessionInfo session info
+     * @param deviceName device name ({@link String})
+     * @param connectionState connection state ({@link SparkplugConnectionState})
+     * @param ts ts
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void sendSparkplugStateOnTelemetry(TransportProtos.SessionInfoProto sessionInfo, String deviceName, SparkplugConnectionState connectionState, long ts) {
         TransportProtos.KeyValueProto.Builder keyValueProtoBuilder = TransportProtos.KeyValueProto.newBuilder();
         keyValueProtoBuilder.setKey(messageName(STATE));
@@ -824,7 +1051,18 @@ public abstract class AbstractGatewaySessionHandler<T extends AbstractGatewayDev
                 new AtomicInteger(1), new AtomicBoolean(false));
         transportService.process(sessionInfo, postTelemetryMsg, pubAckCallback);
     }
-
+    /**
+     * Returns aggregate pub ack callback.
+     *
+     * @param ctx MQTT session context
+     * @param msgId msg id
+     * @param deviceName device name ({@link String})
+     * @param msg msg ({@link T})
+     * @param remaining remaining ({@link AtomicInteger})
+     * @param ackSent ack sent ({@link AtomicBoolean})
+     * @return {@link TransportServiceCallback}
+     * @throws Exception on processing failure
+     */
     protected <T> TransportServiceCallback<Void> getAggregatePubAckCallback(
             final ChannelHandlerContext ctx,
             final int msgId,
@@ -834,6 +1072,13 @@ public abstract class AbstractGatewaySessionHandler<T extends AbstractGatewayDev
             final AtomicBoolean ackSent) {
 
         return new TransportServiceCallback<Void>() {
+            /**
+             * Handles success.
+             *
+             * @param dummy dummy ({@link Void})
+             * @return nothing
+             * @throws Exception on processing failure
+             */
             @Override
             public void onSuccess(Void dummy) {
                 log.trace("[{}][{}][{}][{}] Published msg: [{}]", gateway.getTenantId(), gateway.getDeviceId(), sessionId, deviceName, msg);
@@ -851,6 +1096,13 @@ public abstract class AbstractGatewaySessionHandler<T extends AbstractGatewayDev
                     closeDeviceSession(deviceName, MqttReasonCodes.Disconnect.MALFORMED_PACKET);
                 }
             }
+            /**
+             * Handles error.
+             *
+             * @param e e ({@link Throwable})
+             * @return nothing
+             * @throws Exception on processing failure
+             */
 
             @Override
             public void onError(Throwable e) {
@@ -873,11 +1125,28 @@ public abstract class AbstractGatewaySessionHandler<T extends AbstractGatewayDev
             }
         };
     }
-
+    /**
+     * Processes the requested data.
+     *
+     * @param deviceName device name ({@link String})
+     * @param onSuccess on success ({@link Consumer})
+     * @param onFailure on failure ({@link Consumer})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     protected void process(String deviceName, Consumer<T> onSuccess, Consumer<Throwable> onFailure) {
         ListenableFuture<T> deviceCtxFuture = onDeviceConnect(deviceName, DEFAULT_DEVICE_TYPE);
         process(deviceCtxFuture, onSuccess, onFailure);
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param deviceCtxFuture device ctx future ({@link ListenableFuture})
+     * @param onSuccess on success ({@link Consumer})
+     * @param onFailure on failure ({@link Consumer})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @SneakyThrows
     protected <T> void process(ListenableFuture<T> deviceCtxFuture, Consumer<T> onSuccess, Consumer<Throwable> onFailure) {
@@ -887,7 +1156,17 @@ public abstract class AbstractGatewaySessionHandler<T extends AbstractGatewayDev
             DonAsynchron.withCallback(deviceCtxFuture, onSuccess, onFailure, context.getExecutor());
         }
     }
-
+    /**
+     * Processes failure.
+     *
+     * @param msgId msg id
+     * @param deviceName device name ({@link String})
+     * @param msgType msg type ({@link String})
+     * @param ackSent ack sent ({@link AtomicBoolean})
+     * @param t t ({@link Throwable})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     protected void processFailure(int msgId, String deviceName, String msgType, AtomicBoolean ackSent, Throwable t) {
         if (DataConstants.MAXIMUM_NUMBER_OF_DEVICES_REACHED.equals(t.getMessage())) {
             processFailure(msgId, deviceName, msgType, ackSent, MqttReasonCodes.PubAck.QUOTA_EXCEEDED, t);
@@ -895,7 +1174,18 @@ public abstract class AbstractGatewaySessionHandler<T extends AbstractGatewayDev
             processFailure(msgId, deviceName, msgType, ackSent, MqttReasonCodes.PubAck.UNSPECIFIED_ERROR, t);
         }
     }
-
+    /**
+     * Processes failure.
+     *
+     * @param msgId msg id
+     * @param deviceName device name ({@link String})
+     * @param msgType msg type ({@link String})
+     * @param ackSent ack sent ({@link AtomicBoolean})
+     * @param pubAck pub ack
+     * @param t t ({@link Throwable})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     protected void processFailure(int msgId, String deviceName, String msgType, AtomicBoolean ackSent, MqttReasonCodes.PubAck pubAck, Throwable t) {
         log.debug("[{}][{}][{}] Failed to process device {} command: [{}]", gateway.getTenantId(), gateway.getDeviceId(), sessionId, msgType, deviceName, t);
         if (ackSent.compareAndSet(false, true)) {

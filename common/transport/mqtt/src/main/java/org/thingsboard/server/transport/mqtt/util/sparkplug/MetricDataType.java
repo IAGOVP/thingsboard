@@ -23,11 +23,7 @@ import java.math.BigInteger;
 import java.util.Date;
 
 /**
- * Created by nickAS21 on 10.01.23
- */
-
-/**
- * metric data type values.
+ * Sparkplug B metric data types mapped to Java classes for payload conversion.
  */
 @Slf4j
 public enum MetricDataType {

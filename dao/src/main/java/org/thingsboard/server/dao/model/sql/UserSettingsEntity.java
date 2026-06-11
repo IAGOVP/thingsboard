@@ -36,8 +36,11 @@ import org.thingsboard.server.dao.util.mapping.JsonConverter;
 
 import java.util.UUID;
 /**
- * User settings entity.
+ * JPA/Cassandra row model for user settings.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @NoArgsConstructor
@@ -64,6 +67,12 @@ public class UserSettingsEntity implements ToData<UserSettings> {
             this.settings = userSettings.getSettings();
         }
     }
+    /**
+     * To data.
+     *
+     * @return {@link UserSettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UserSettings toData() {

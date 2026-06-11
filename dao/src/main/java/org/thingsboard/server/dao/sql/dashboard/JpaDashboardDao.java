@@ -37,8 +37,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Created by Valerii Sosliuk on 5/6/2017.
+ * JPA/PostgreSQL implementation of dashboard dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 @Component
 @SqlDao
 public class JpaDashboardDao extends JpaAbstractDao<DashboardEntity, Dashboard> implements DashboardDao {
@@ -46,66 +49,90 @@ public class JpaDashboardDao extends JpaAbstractDao<DashboardEntity, Dashboard> 
     @Autowired
     DashboardRepository dashboardRepository;
 
+    
     /**
-
-     * Get entity class.
-
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected Class<DashboardEntity> getEntityClass() {
         return DashboardEntity.class;
     }
 
+    
     /**
-
-     * Get repository.
-
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected JpaRepository<DashboardEntity, UUID> getRepository() {
         return dashboardRepository;
     }
 
+    
     /**
-
      * Counts by tenant id.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link Long}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Long countByTenantId(TenantId tenantId) {
         return dashboardRepository.countByTenantId(tenantId.getId());
     }
 
+    
     /**
-
-     * Loads by tenant id and external id.
-
+     * Finds by tenant id and external id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param externalId external id ({@link UUID})
+     * @return {@link Dashboard}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Dashboard findByTenantIdAndExternalId(UUID tenantId, UUID externalId) {
         return DaoUtil.getData(dashboardRepository.findByTenantIdAndExternalId(tenantId, externalId));
     }
 
+    
     /**
-
-     * Loads by tenant id.
-
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Dashboard> findByTenantId(UUID tenantId, PageLink pageLink) {
         return DaoUtil.toPageData(dashboardRepository.findByTenantId(tenantId, DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Get external id by internal.
-
+     * Returns external id by internal.
+     *
+     * @param internalId internal id ({@link DashboardId})
+     * @return {@link DashboardId}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DashboardId getExternalIdByInternal(DashboardId internalId) {
@@ -113,66 +140,93 @@ public class JpaDashboardDao extends JpaAbstractDao<DashboardEntity, Dashboard> 
                 .map(DashboardId::new).orElse(null);
     }
 
+    
     /**
-
-     * Loads by tenant id and title.
-
+     * Finds by tenant id and title.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param title title ({@link String})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<Dashboard> findByTenantIdAndTitle(UUID tenantId, String title) {
         return DaoUtil.convertDataList(dashboardRepository.findByTenantIdAndTitle(tenantId, title));
     }
 
+    
     /**
-
-     * Loads ids by tenant id.
-
+     * Finds ids by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<DashboardId> findIdsByTenantId(TenantId tenantId, PageLink pageLink) {
         return DaoUtil.pageToPageData(dashboardRepository.findIdsByTenantId(tenantId.getId(), DaoUtil.toPageable(pageLink)).map(DashboardId::new));
     }
 
+    
     /**
-
-     * Loads all ids.
-
+     * Finds all ids.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<DashboardId> findAllIds(PageLink pageLink) {
         return DaoUtil.pageToPageData(dashboardRepository.findAllIds(DaoUtil.toPageable(pageLink)).map(DashboardId::new));
     }
 
+    
     /**
-
-     * Loads all by tenant id.
-
+     * Finds all by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Dashboard> findAllByTenantId(TenantId tenantId, PageLink pageLink) {
         return findByTenantId(tenantId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads next batch.
-
+     * Finds next batch.
+     *
+     * @param id entity UUID primary key
+     * @param batchSize batch size
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<DashboardFields> findNextBatch(UUID id, int batchSize) {
         return dashboardRepository.findNextBatch(id, Limit.of(batchSize));
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

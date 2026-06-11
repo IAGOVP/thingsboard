@@ -16,32 +16,39 @@
 package org.thingsboard.server.common.stats;
 
 /**
- * messages stats contract.
+ * Tracks message counts and throughput for transport and queue components.
  */
 public interface MessagesStats {
     default void incrementTotal() {
         incrementTotal(1);
     }
 
+    /** Increment total. */
     void incrementTotal(int amount);
 
     default void incrementSuccessful() {
         incrementSuccessful(1);
     }
 
+    /** Increment successful. */
     void incrementSuccessful(int amount);
 
     default void incrementFailed() {
         incrementFailed(1);
     }
 
+    /** Increment failed. */
     void incrementFailed(int amount);
 
+    /** Returns the total. */
     int getTotal();
 
+    /** Returns the successful. */
     int getSuccessful();
 
+    /** Returns the failed. */
     int getFailed();
 
+    /** Reset. */
     void reset();
 }

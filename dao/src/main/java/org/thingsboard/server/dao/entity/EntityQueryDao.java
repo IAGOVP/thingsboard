@@ -22,15 +22,39 @@ import org.thingsboard.server.common.data.query.EntityCountQuery;
 import org.thingsboard.server.common.data.query.EntityData;
 import org.thingsboard.server.common.data.query.EntityDataQuery;
 
+
 /**
 
- * Persistence contract for entity query (see JPA/Cassandra implementations).
+ * Persistence contract for entity query.
+
+ *
+
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (generic entity services, counts, and DAO registry).
 
  */
 
+
 public interface EntityQueryDao {
+    /**
+     * Counts entities by query.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param query filter and sort query definition
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     long countEntitiesByQuery(TenantId tenantId, CustomerId customerId, EntityCountQuery query);
+    /**
+     * Finds entity data by query.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param query filter and sort query definition
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<EntityData> findEntityDataByQuery(TenantId tenantId, CustomerId customerId, EntityDataQuery query);
 

@@ -26,14 +26,26 @@ import org.thingsboard.server.edqs.repo.TenantRepo;
 
 import java.util.UUID;
 import java.util.function.Consumer;
+
 /**
  * EDQS query processor for api usage state entity filters.
+ *
+ * <p>Evaluates {@link org.thingsboard.server.common.data.query.EntityFilter} against a {@link org.thingsboard.server.edqs.repo.TenantRepo} (EDQS microservice — entity filter query processors).
  */
+
 public class ApiUsageStateQueryProcessor extends AbstractSingleEntityTypeQueryProcessor<ApiUsageStateFilter> {
 
     public ApiUsageStateQueryProcessor(TenantRepo repo, QueryContext ctx, EdqsQuery query) {
         super(repo, ctx, query, (ApiUsageStateFilter) query.getEntityFilter());
     }
+    /**
+     * Processes customer query.
+     *
+     * @param customerId customer scope for permission filtering (may be null)
+     * @param processor processor ({@link Consumer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void processCustomerQuery(UUID customerId, Consumer<EntityData<?>> processor) {
@@ -42,17 +54,37 @@ public class ApiUsageStateQueryProcessor extends AbstractSingleEntityTypeQueryPr
             process(customerData.getEntities(EntityType.API_USAGE_STATE), processor);
         }
     }
+    /**
+     * Processes all.
+     *
+     * @param processor processor ({@link Consumer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void processAll(Consumer<EntityData<?>> processor) {
         process(repository.getEntitySet(EntityType.API_USAGE_STATE), processor);
     }
+    /**
+     * Matches.
+     *
+     * @param ed ed ({@link EntityData})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected boolean matches(EntityData<?> ed) {
         ApiUsageStateFields entityFields = (ApiUsageStateFields) ed.getFields();
         return super.matches(ed) && (filter.getCustomerId() == null || filter.getCustomerId().equals(entityFields.getEntityId()));
     }
+    /**
+     * Returns probable result size.
+     *
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected int getProbableResultSize() {

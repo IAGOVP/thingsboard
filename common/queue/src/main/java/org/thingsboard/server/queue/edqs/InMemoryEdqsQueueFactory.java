@@ -31,12 +31,14 @@ import org.thingsboard.server.queue.memory.InMemoryStorage;
 import org.thingsboard.server.queue.memory.InMemoryTbQueueConsumer;
 import org.thingsboard.server.queue.memory.InMemoryTbQueueProducer;
 
+
+/**
+ * Spring component for EDQS in memory edqs queue factory (EDQS queue).
+ */
+
 @Component
 @InMemoryEdqsComponent
 @RequiredArgsConstructor
-/**
- * Factory for in memory edqs queue.
- */
 public class InMemoryEdqsQueueFactory implements EdqsQueueFactory {
 
     private final InMemoryStorage storage;
@@ -44,26 +46,57 @@ public class InMemoryEdqsQueueFactory implements EdqsQueueFactory {
     private final EdqsExecutors edqsExecutors;
     private final StatsFactory statsFactory;
     private final TbQueueAdmin queueAdmin;
+    /**
+     * Creates edqs events consumer.
+     *
+     * @return {@link TbQueueConsumer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbQueueConsumer<TbProtoQueueMsg<ToEdqsMsg>> createEdqsEventsConsumer() {
         return new InMemoryTbQueueConsumer<>(storage, edqsConfig.getEventsTopic());
     }
+    /**
+     * Creates edqs events to backup consumer.
+     *
+     * @return {@link TbQueueConsumer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbQueueConsumer<TbProtoQueueMsg<ToEdqsMsg>> createEdqsEventsToBackupConsumer() {
         throw new UnsupportedOperationException();
     }
+    /**
+     * Creates edqs state consumer.
+     *
+     * @return {@link TbQueueConsumer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbQueueConsumer<TbProtoQueueMsg<ToEdqsMsg>> createEdqsStateConsumer() {
         throw new UnsupportedOperationException();
     }
+    /**
+     * Creates edqs state producer.
+     *
+     * @return {@link TbQueueProducer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbQueueProducer<TbProtoQueueMsg<ToEdqsMsg>> createEdqsStateProducer() {
         throw new UnsupportedOperationException();
     }
+    /**
+     * Creates edqs response template.
+     *
+     * @param handler handler ({@link TbQueueHandler})
+     * @return {@link PartitionedQueueResponseTemplate}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PartitionedQueueResponseTemplate<TbProtoQueueMsg<ToEdqsMsg>, TbProtoQueueMsg<FromEdqsMsg>> createEdqsResponseTemplate(TbQueueHandler<TbProtoQueueMsg<ToEdqsMsg>, TbProtoQueueMsg<FromEdqsMsg>> handler) {
@@ -83,6 +116,12 @@ public class InMemoryEdqsQueueFactory implements EdqsQueueFactory {
                 .stats(statsFactory.createMessagesStats(StatsType.EDQS.getName()))
                 .build();
     }
+    /**
+     * Returns edqs queue admin.
+     *
+     * @return {@link TbQueueAdmin}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbQueueAdmin getEdqsQueueAdmin() {

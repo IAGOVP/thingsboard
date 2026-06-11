@@ -51,8 +51,11 @@ import java.util.Optional;
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
 import static org.thingsboard.server.dao.service.Validator.validateIds;
 /**
- * Spring service implementing widget type API.
+ * Spring {@code @Service} implementing the widget type DAO API.
+ *
+ * <p>Delegates to {@code *Dao} implementations and manages cache eviction (widget types and widget bundles).
  */
+
 
 @Service("WidgetTypeDaoService")
 @Slf4j
@@ -75,6 +78,14 @@ public class WidgetTypeServiceImpl implements WidgetTypeService {
 
     @Autowired
     private ResourceService resourceService;
+    /**
+     * Finds widget type by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetTypeId widget type id ({@link WidgetTypeId})
+     * @return {@link WidgetType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public WidgetType findWidgetTypeById(TenantId tenantId, WidgetTypeId widgetTypeId) {
@@ -82,6 +93,14 @@ public class WidgetTypeServiceImpl implements WidgetTypeService {
         Validator.validateId(widgetTypeId, id -> "Incorrect widgetTypeId " + id);
         return widgetTypeDao.findWidgetTypeById(tenantId, widgetTypeId.getId());
     }
+    /**
+     * Finds widget type details by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetTypeId widget type id ({@link WidgetTypeId})
+     * @return {@link WidgetTypeDetails}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public WidgetTypeDetails findWidgetTypeDetailsById(TenantId tenantId, WidgetTypeId widgetTypeId) {
@@ -89,6 +108,14 @@ public class WidgetTypeServiceImpl implements WidgetTypeService {
         Validator.validateId(widgetTypeId, id -> "Incorrect widgetTypeId " + id);
         return widgetTypeDao.findById(tenantId, widgetTypeId.getId());
     }
+    /**
+     * Finds widget type info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetTypeId widget type id ({@link WidgetTypeId})
+     * @return {@link WidgetTypeInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public WidgetTypeInfo findWidgetTypeInfoById(TenantId tenantId, WidgetTypeId widgetTypeId) {
@@ -96,6 +123,14 @@ public class WidgetTypeServiceImpl implements WidgetTypeService {
         Validator.validateId(widgetTypeId, id -> "Incorrect widgetTypeId " + id);
         return widgetTypeDao.findWidgetTypeInfoById(tenantId, widgetTypeId.getId());
     }
+    /**
+     * Widget type exists by tenant id and widget type id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetTypeId widget type id ({@link WidgetTypeId})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean widgetTypeExistsByTenantIdAndWidgetTypeId(TenantId tenantId, WidgetTypeId widgetTypeId) {
@@ -103,6 +138,13 @@ public class WidgetTypeServiceImpl implements WidgetTypeService {
         Validator.validateId(widgetTypeId, id -> "Incorrect widgetTypeId " + id);
         return widgetTypeDao.existsByTenantIdAndId(tenantId, widgetTypeId.getId());
     }
+    /**
+     * Saves or persists widget type.
+     *
+     * @param widgetTypeDetails widget type details ({@link WidgetTypeDetails})
+     * @return {@link WidgetTypeDetails}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public WidgetTypeDetails saveWidgetType(WidgetTypeDetails widgetTypeDetails) {
@@ -127,6 +169,14 @@ public class WidgetTypeServiceImpl implements WidgetTypeService {
             throw t;
         }
     }
+    /**
+     * Deletes widget type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetTypeId widget type id ({@link WidgetTypeId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteWidgetType(TenantId tenantId, WidgetTypeId widgetTypeId) {
@@ -135,11 +185,28 @@ public class WidgetTypeServiceImpl implements WidgetTypeService {
         widgetTypeDao.removeById(tenantId, widgetTypeId.getId());
         eventPublisher.publishEvent(DeleteEntityEvent.builder().tenantId(tenantId).entityId(widgetTypeId).build());
     }
+    /**
+     * Deletes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteEntity(TenantId tenantId, EntityId id, boolean force) {
         deleteWidgetType(tenantId, (WidgetTypeId) id);
     }
+    /**
+     * Finds system widget types by page link.
+     *
+     * @param widgetTypeFilter widget type filter ({@link WidgetTypeFilter})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<WidgetTypeInfo> findSystemWidgetTypesByPageLink(WidgetTypeFilter widgetTypeFilter, PageLink pageLink) {
@@ -147,6 +214,14 @@ public class WidgetTypeServiceImpl implements WidgetTypeService {
         Validator.validatePageLink(pageLink);
         return widgetTypeDao.findSystemWidgetTypes(widgetTypeFilter, pageLink);
     }
+    /**
+     * Finds all tenant widget types by tenant id and page link.
+     *
+     * @param widgetTypeFilter widget type filter ({@link WidgetTypeFilter})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<WidgetTypeInfo> findAllTenantWidgetTypesByTenantIdAndPageLink(WidgetTypeFilter widgetTypeFilter, PageLink pageLink) {
@@ -157,6 +232,14 @@ public class WidgetTypeServiceImpl implements WidgetTypeService {
         Validator.validatePageLink(pageLink);
         return widgetTypeDao.findAllTenantWidgetTypesByTenantId(widgetTypeFilter, pageLink);
     }
+    /**
+     * Finds tenant widget types by tenant id and page link.
+     *
+     * @param widgetTypeFilter widget type filter ({@link WidgetTypeFilter})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<WidgetTypeInfo> findTenantWidgetTypesByTenantIdAndPageLink(WidgetTypeFilter widgetTypeFilter, PageLink pageLink) {
@@ -167,6 +250,14 @@ public class WidgetTypeServiceImpl implements WidgetTypeService {
         Validator.validatePageLink(pageLink);
         return widgetTypeDao.findTenantWidgetTypesByTenantId(widgetTypeFilter, pageLink);
     }
+    /**
+     * Finds widget types by widgets bundle id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetsBundleId widgets bundle id ({@link WidgetsBundleId})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<WidgetType> findWidgetTypesByWidgetsBundleId(TenantId tenantId, WidgetsBundleId widgetsBundleId) {
@@ -175,6 +266,14 @@ public class WidgetTypeServiceImpl implements WidgetTypeService {
         Validator.validateId(widgetsBundleId, id -> INCORRECT_WIDGETS_BUNDLE_ID + id);
         return widgetTypeDao.findWidgetTypesByWidgetsBundleId(tenantId.getId(), widgetsBundleId.getId());
     }
+    /**
+     * Finds widget types details by widgets bundle id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetsBundleId widgets bundle id ({@link WidgetsBundleId})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<WidgetTypeDetails> findWidgetTypesDetailsByWidgetsBundleId(TenantId tenantId, WidgetsBundleId widgetsBundleId) {
@@ -184,6 +283,18 @@ public class WidgetTypeServiceImpl implements WidgetTypeService {
         return widgetTypeDao.findWidgetTypesDetailsByWidgetsBundleId(tenantId.getId(), widgetsBundleId.getId());
 
     }
+    /**
+     * Finds widget types infos by widgets bundle id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetsBundleId widgets bundle id ({@link WidgetsBundleId})
+     * @param fullSearch full search
+     * @param deprecatedFilter deprecated filter ({@link DeprecatedFilter})
+     * @param widgetTypes widget types ({@link List})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<WidgetTypeInfo> findWidgetTypesInfosByWidgetsBundleId(TenantId tenantId, WidgetsBundleId widgetsBundleId, boolean fullSearch,
@@ -195,6 +306,14 @@ public class WidgetTypeServiceImpl implements WidgetTypeService {
         Validator.validatePageLink(pageLink);
         return widgetTypeDao.findWidgetTypesInfosByWidgetsBundleId(tenantId.getId(), widgetsBundleId.getId(), fullSearch, deprecatedFilter, widgetTypes, pageLink);
     }
+    /**
+     * Finds widget fqns by widgets bundle id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetsBundleId widgets bundle id ({@link WidgetsBundleId})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<String> findWidgetFqnsByWidgetsBundleId(TenantId tenantId, WidgetsBundleId widgetsBundleId) {
@@ -203,6 +322,14 @@ public class WidgetTypeServiceImpl implements WidgetTypeService {
         Validator.validateId(widgetsBundleId, id -> INCORRECT_WIDGETS_BUNDLE_ID + id);
         return widgetTypeDao.findWidgetFqnsByWidgetsBundleId(tenantId.getId(), widgetsBundleId.getId());
     }
+    /**
+     * Finds widget type by tenant id and fqn.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param fqn fqn ({@link String})
+     * @return {@link WidgetType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public WidgetType findWidgetTypeByTenantIdAndFqn(TenantId tenantId, String fqn) {
@@ -211,6 +338,14 @@ public class WidgetTypeServiceImpl implements WidgetTypeService {
         Validator.validateString(fqn, f -> "Incorrect fqn " + f);
         return widgetTypeDao.findByTenantIdAndFqn(tenantId.getId(), fqn);
     }
+    /**
+     * Finds widget type details by tenant id and fqn.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param fqn fqn ({@link String})
+     * @return {@link WidgetTypeDetails}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public WidgetTypeDetails findWidgetTypeDetailsByTenantIdAndFqn(TenantId tenantId, String fqn) {
@@ -219,6 +354,15 @@ public class WidgetTypeServiceImpl implements WidgetTypeService {
         Validator.validateString(fqn, f -> "Incorrect fqn " + f);
         return widgetTypeDao.findDetailsByTenantIdAndFqn(tenantId.getId(), fqn);
     }
+    /**
+     * Updates widgets bundle widget types.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetsBundleId widgets bundle id ({@link WidgetsBundleId})
+     * @param widgetTypeIds widget type ids ({@link List})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
 
     @Override
@@ -248,6 +392,15 @@ public class WidgetTypeServiceImpl implements WidgetTypeService {
         eventPublisher.publishEvent(SaveEntityEvent.builder().tenantId(tenantId)
                 .entityId(widgetsBundleId).created(false).build());
     }
+    /**
+     * Updates widgets bundle widget fqns.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetsBundleId widgets bundle id ({@link WidgetsBundleId})
+     * @param widgetFqns widget fqns ({@link List})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void updateWidgetsBundleWidgetFqns(TenantId tenantId, WidgetsBundleId widgetsBundleId, List<String> widgetFqns) {
@@ -255,6 +408,13 @@ public class WidgetTypeServiceImpl implements WidgetTypeService {
         List<WidgetTypeId> widgetTypeIds = widgetTypeDao.findWidgetTypeIdsByTenantIdAndFqns(tenantId.getId(), widgetFqns);
         this.updateWidgetsBundleWidgetTypes(tenantId, widgetsBundleId, widgetTypeIds);
     }
+    /**
+     * Deletes widget types by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteWidgetTypesByTenantId(TenantId tenantId) {
@@ -262,33 +422,77 @@ public class WidgetTypeServiceImpl implements WidgetTypeService {
         Validator.validateId(tenantId, id -> INCORRECT_TENANT_ID + id);
         tenantWidgetTypeRemover.removeEntities(tenantId, tenantId);
     }
+    /**
+     * Deletes widget types by bundle id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param bundleId bundle id ({@link WidgetsBundleId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteWidgetTypesByBundleId(TenantId tenantId, WidgetsBundleId bundleId) {
         log.trace("Executing deleteWidgetTypesByBundleId, tenantId [{}], bundleId [{}]", tenantId, bundleId);
         bundleWidgetTypesRemover.removeEntities(tenantId, bundleId);
     }
+    /**
+     * Finds all widget types ids.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<WidgetTypeId> findAllWidgetTypesIds(PageLink pageLink) {
         return widgetTypeDao.findAllWidgetTypesIds(pageLink);
     }
+    /**
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteByTenantId(TenantId tenantId) {
         deleteWidgetTypesByTenantId(tenantId);
     }
+    /**
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findWidgetTypeById(tenantId, new WidgetTypeId(entityId.getId())));
     }
+    /**
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
         return FluentFuture.from(widgetTypeDao.findByIdAsync(tenantId, entityId.getId()))
                 .transform(Optional::ofNullable, directExecutor());
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

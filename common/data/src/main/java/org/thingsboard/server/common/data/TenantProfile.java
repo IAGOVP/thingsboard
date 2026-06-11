@@ -84,6 +84,11 @@ public class TenantProfile extends BaseData<TenantProfileId> implements HasName 
         this.isolatedTbRuleEngine = tenantProfile.isIsolatedTbRuleEngine();
         this.setProfileData(tenantProfile.getProfileData());
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link TenantProfileId}
+     */
 
     @Schema(description = "JSON object with the tenant profile Id. " +
             "Specify this field to update the tenant profile. " +
@@ -93,17 +98,32 @@ public class TenantProfile extends BaseData<TenantProfileId> implements HasName 
     public TenantProfileId getId() {
         return super.getId();
     }
+    /**
+     * Returns created time.
+     *
+     * @return the long result
+     */
 
     @Schema(description = "Timestamp of the tenant profile creation, in milliseconds", example = "1609459200000", accessMode = Schema.AccessMode.READ_ONLY)
     @Override
     public long getCreatedTime() {
         return super.getCreatedTime();
     }
+    /**
+     * Returns name.
+     *
+     * @return {@link String}
+     */
 
     @Override
     public String getName() {
         return name;
     }
+    /**
+     * Returns profile data.
+     *
+     * @return {@link TenantProfileData}
+     */
 
     public TenantProfileData getProfileData() {
         if (profileData != null) {
@@ -122,6 +142,11 @@ public class TenantProfile extends BaseData<TenantProfileId> implements HasName 
             }
         }
     }
+    /**
+     * Returns profile configuration.
+     *
+     * @return optional {@link DefaultTenantProfileConfiguration}, empty if not found
+     */
 
     @JsonIgnore
     public Optional<DefaultTenantProfileConfiguration> getProfileConfiguration() {
@@ -129,11 +154,21 @@ public class TenantProfile extends BaseData<TenantProfileId> implements HasName 
                 .filter(profileConfiguration -> profileConfiguration instanceof DefaultTenantProfileConfiguration)
                 .map(profileConfiguration -> (DefaultTenantProfileConfiguration) profileConfiguration);
     }
+    /**
+     * Returns default profile configuration.
+     *
+     * @return {@link DefaultTenantProfileConfiguration}
+     */
 
     @JsonIgnore
     public DefaultTenantProfileConfiguration getDefaultProfileConfiguration() {
         return getProfileConfiguration().orElse(null);
     }
+    /**
+     * Creates default tenant profile data.
+     *
+     * @return {@link TenantProfileData}
+     */
 
     public TenantProfileData createDefaultTenantProfileData() {
         TenantProfileData tpd = new TenantProfileData();
@@ -141,6 +176,11 @@ public class TenantProfile extends BaseData<TenantProfileId> implements HasName 
         this.profileData = tpd;
         return tpd;
     }
+    /**
+     * Set profile data.
+     *
+     * @param data data ({@link TenantProfileData})
+     */
 
     public void setProfileData(TenantProfileData data) {
         this.profileData = data;

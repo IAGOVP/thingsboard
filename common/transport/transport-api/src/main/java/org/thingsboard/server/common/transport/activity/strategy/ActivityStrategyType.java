@@ -21,30 +21,59 @@ package org.thingsboard.server.common.transport.activity.strategy;
 public enum ActivityStrategyType {
 
     ALL {
+        /**
+         * To strategy.
+         *
+         * @return {@link ActivityStrategy}
+         * @throws Exception on processing failure
+         */
         @Override
         public ActivityStrategy toStrategy() {
             return AllEventsActivityStrategy.getInstance();
         }
     },
     FIRST {
+        /**
+         * To strategy.
+         *
+         * @return {@link ActivityStrategy}
+         * @throws Exception on processing failure
+         */
         @Override
         public ActivityStrategy toStrategy() {
             return new FirstEventActivityStrategy();
         }
     },
     LAST {
+        /**
+         * To strategy.
+         *
+         * @return {@link ActivityStrategy}
+         * @throws Exception on processing failure
+         */
         @Override
         public ActivityStrategy toStrategy() {
             return LastEventActivityStrategy.getInstance();
         }
     },
     FIRST_AND_LAST {
+        /**
+         * To strategy.
+         *
+         * @return {@link ActivityStrategy}
+         * @throws Exception on processing failure
+         */
         @Override
         public ActivityStrategy toStrategy() {
             return new FirstAndLastEventActivityStrategy();
         }
     };
-
+    /**
+     * To strategy.
+     *
+     * @return {@link ActivityStrategy}
+     * @throws Exception on processing failure
+     */
     public abstract ActivityStrategy toStrategy();
 
 }

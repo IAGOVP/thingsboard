@@ -41,12 +41,12 @@ import java.util.concurrent.TimeUnit;
 
 import static org.eclipse.californium.core.config.CoapConfig.DEFAULT_BLOCKWISE_STATUS_LIFETIME_IN_SECONDS;
 
-@Slf4j
-@Component
-@TbCoapServerComponent
 /**
  * Default coap server service.
  */
+@Slf4j
+@Component
+@TbCoapServerComponent
 public class DefaultCoapServerService implements CoapServerService, SmartInitializingSingleton {
 
     @Autowired
@@ -97,6 +97,7 @@ public class DefaultCoapServerService implements CoapServerService, SmartInitial
         if (server != null) {
             return server;
         } else {
+            /** Create coap server. */
             return createCoapServer();
         }
     }

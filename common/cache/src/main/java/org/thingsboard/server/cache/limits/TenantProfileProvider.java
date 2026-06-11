@@ -19,10 +19,20 @@ import org.thingsboard.server.common.data.TenantProfile;
 import org.thingsboard.server.common.data.id.TenantId;
 
 /**
- * tenant profile provider contract.
+ * Supplies {@link org.thingsboard.server.common.data.TenantProfile} data for rate-limit configuration lookup.
+ *
+ * <p>Implemented in the application module; injected into {@link DefaultRateLimitService}.
+ *
+ * @see RateLimitService
  */
 public interface TenantProfileProvider {
 
+/**
+         * Loads the tenant profile containing API limit configuration.
+         *
+         * @param tenantId tenant identifier
+         * @return tenant profile, or {@code null} when not found
+         */
     TenantProfile get(TenantId tenantId);
 
 }

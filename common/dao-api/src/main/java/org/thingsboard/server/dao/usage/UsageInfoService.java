@@ -23,6 +23,12 @@ import org.thingsboard.server.common.data.id.TenantId;
  */
 public interface UsageInfoService {
 
+    /**
+     * Returns usage info.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link UsageInfo}
+     */
     UsageInfo getUsageInfo(TenantId tenantId);
 
 }

@@ -24,7 +24,7 @@ import java.util.UUID;
 
 @Schema(allOf = EntityId.class)
 /**
- * Typed identifier for tenant profile.
+ * Typed identifier for a tenant profile with rate limits and queue config ({@link org.thingsboard.server.common.data.EntityType#TENANT_PROFILE}).
  */
 public class TenantProfileId extends UUIDBased implements EntityId {
 
@@ -34,10 +34,21 @@ public class TenantProfileId extends UUIDBased implements EntityId {
     public TenantProfileId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * From string.
+     *
+     * @param tenantProfileId tenant profile id ({@link String})
+     * @return {@link TenantProfileId}
+     */
 
     public static TenantProfileId fromString(String tenantProfileId) {
         return new TenantProfileId(UUID.fromString(tenantProfileId));
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY, description = "string", example = "TENANT_PROFILE", allowableValues = "TENANT_PROFILE")
     @Override

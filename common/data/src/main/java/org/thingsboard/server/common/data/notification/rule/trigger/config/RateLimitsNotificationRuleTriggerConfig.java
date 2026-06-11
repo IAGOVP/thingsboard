@@ -38,11 +38,21 @@ public class RateLimitsNotificationRuleTriggerConfig implements NotificationRule
 
     @ArraySchema(schema = @Schema(implementation = LimitedApi.class))
     private Set<LimitedApi> apis;
+    /**
+     * Returns trigger type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     */
 
     @Override
     public NotificationRuleTriggerType getTriggerType() {
         return NotificationRuleTriggerType.RATE_LIMITS;
     }
+    /**
+     * Returns deduplication key.
+     *
+     * @return {@link String}
+     */
 
     @Override
     public String getDeduplicationKey() {

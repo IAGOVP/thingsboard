@@ -57,35 +57,56 @@ public enum Lwm2mServerIdentifier {
         this.isLwm2mServer = isLwm2mServer;
     }
 
+    
     /**
-     * @return the integer value of this Short Server ID.
+     * Returns id.
+     *
+     * @return {@link Integer}
      */
+
     public Integer getId() {
         return id;
     }
 
+    
     /**
-     * @return a human-readable description of this Server ID.
+     * Returns description.
+     *
+     * @return {@link String}
      */
+
     public String getDescription() {
         return description;
     }
 
+    
     /**
-     * @return true if this ID represents a Lwm2m Server.
+     * Is lwm2m server.
+     *
+     * @return the boolean result
      */
+
     public boolean isLwm2mServer() {
         return isLwm2mServer;
     }
 
+    
     /**
-     * Checks whether a given ID represents a valid LwM2M Server (1–65534).
-     * @param id Short Server ID value.
-     * @return true if the ID belongs to a standard LwM2M Server.
+     * Is lwm2m server.
+     *
+     * @param id id ({@link Integer})
+     * @return the boolean result
      */
+
     public static boolean isLwm2mServer(Integer id) {
         return id != null && id >= PRIMARY_LWM2M_SERVER.id && id <= LWM2M_SERVER_MAX.id;
     }
+    /**
+     * Is not lwm2m server.
+     *
+     * @param id id ({@link Integer})
+     * @return the boolean result
+     */
     public static boolean isNotLwm2mServer(Integer id) {
         return id == null || id < PRIMARY_LWM2M_SERVER.id || id > LWM2M_SERVER_MAX.id;
     }

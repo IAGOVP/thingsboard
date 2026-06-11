@@ -44,11 +44,21 @@ public class RuleNodeDebugEventFilter extends DebugEventFilter {
     protected String dataSearch;
     @Schema(description = "The case insensitive 'contains' filter based on metadata (key and value) for the message.", example = "deviceName")
     protected String metadataSearch;
+    /**
+     * Returns event type.
+     *
+     * @return {@link EventType}
+     */
 
     @Override
     public EventType getEventType() {
         return EventType.DEBUG_RULE_NODE;
     }
+    /**
+     * Is not empty.
+     *
+     * @return the boolean result
+     */
 
     @Override
     public boolean isNotEmpty() {

@@ -24,7 +24,7 @@ import java.util.UUID;
 
 @Schema(allOf = EntityId.class)
 /**
- * Typed identifier for queue.
+ * Typed identifier for a message queue configuration ({@link org.thingsboard.server.common.data.EntityType#QUEUE}).
  */
 public class QueueId extends UUIDBased implements EntityId {
 
@@ -34,10 +34,21 @@ public class QueueId extends UUIDBased implements EntityId {
     public QueueId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * From string.
+     *
+     * @param queueId queue id ({@link String})
+     * @return {@link QueueId}
+     */
 
     public static QueueId fromString(String queueId) {
         return new QueueId(UUID.fromString(queueId));
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY, description = "string", example = "QUEUE", allowableValues = "QUEUE")
     @Override

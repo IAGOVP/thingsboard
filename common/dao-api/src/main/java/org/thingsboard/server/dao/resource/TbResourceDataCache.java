@@ -21,11 +21,25 @@ import org.thingsboard.server.common.data.id.TbResourceId;
 import org.thingsboard.server.common.data.id.TenantId;
 
 /**
- * tb resource data cache contract.
+ * tb resource data cache contract for the DAO layer.
  */
+
 public interface TbResourceDataCache {
 
+    /**
+     * Returns resource data info async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceId resource id ({@link TbResourceId})
+     * @return {@link FluentFuture}
+     */
     FluentFuture<TbResourceDataInfo> getResourceDataInfoAsync(TenantId tenantId, TbResourceId resourceId);
 
+    /**
+     * Evict resource data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceId resource id ({@link TbResourceId})
+     */
     void evictResourceData(TenantId tenantId, TbResourceId resourceId);
 }

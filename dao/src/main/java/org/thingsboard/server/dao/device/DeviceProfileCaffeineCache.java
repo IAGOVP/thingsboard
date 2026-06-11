@@ -22,8 +22,11 @@ import org.thingsboard.server.cache.VersionedCaffeineTbCache;
 import org.thingsboard.server.common.data.CacheConstants;
 import org.thingsboard.server.common.data.DeviceProfile;
 /**
- * Device profile caffeine cache.
+ * in-process Caffeine cache for device profile (devices, credentials, profiles, and connectivity).
+ *
+ * <p>Implements {@link org.thingsboard.server.cache.TbTransactionalCache} with DAO-specific key types.
  */
+
 
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "caffeine", matchIfMissing = true)
 @Service("DeviceProfileCache")

@@ -35,14 +35,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
+/**
+ * Cassandra driver options.
+ */
 @Component
 @Configuration
 @Data
 @NoSqlAnyDao
-/**
- * Cassandra driver options.
- */
 public class CassandraDriverOptions {
 
     private static final String COMMA = ",";

@@ -29,11 +29,17 @@ import org.thingsboard.server.exception.DataValidationException;
 
 import java.util.Objects;
 
+
 /**
 
- * Base ota package data validator.
+ * Validates base ota package entities before persistence.
+
+ *
+
+ * <p>Enforces constraints, uniqueness, and referential integrity at the DAO layer.
 
  */
+
 
 public abstract class BaseOtaPackageDataValidator<D extends BaseData<?>> extends DataValidator<D> {
 
@@ -46,11 +52,15 @@ public abstract class BaseOtaPackageDataValidator<D extends BaseData<?>> extends
     @Getter
     private DeviceProfileDao deviceProfileDao;
 
+    
     /**
-
-     * Validate impl.
-
+     * Validates impl.
+     *
+     * @param otaPackageInfo ota package info ({@link OtaPackageInfo})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected void validateImpl(OtaPackageInfo otaPackageInfo) {
         validateString("OtaPackage title", otaPackageInfo.getTitle());
@@ -87,11 +97,16 @@ public abstract class BaseOtaPackageDataValidator<D extends BaseData<?>> extends
         }
     }
 
+    
     /**
-
-     * Validate update.
-
+     * Validates update.
+     *
+     * @param otaPackage ota package ({@link OtaPackageInfo})
+     * @param otaPackageOld ota package old ({@link OtaPackageInfo})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected void validateUpdate(OtaPackageInfo otaPackage, OtaPackageInfo otaPackageOld) {
         if (!otaPackageOld.getType().equals(otaPackage.getType())) {

@@ -33,11 +33,21 @@ public class ApiUsageLimitTrigger implements NotificationRuleTrigger {
     private final TenantId tenantId;
     private final ApiUsageRecordState state;
     private final ApiUsageStateValue status;
+    /**
+     * Returns type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     */
 
     @Override
     public NotificationRuleTriggerType getType() {
         return NotificationRuleTriggerType.API_USAGE_LIMIT;
     }
+    /**
+     * Returns originator entity id.
+     *
+     * @return {@link EntityId}
+     */
 
     @Override
     public EntityId getOriginatorEntityId() {

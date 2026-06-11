@@ -29,8 +29,11 @@ import org.thingsboard.server.common.data.DeviceProfile;
 import org.thingsboard.server.common.util.ProtoUtils;
 import org.thingsboard.server.gen.transport.TransportProtos;
 /**
- * Device profile redis cache.
+ * distributed Redis cache for device profile (devices, credentials, profiles, and connectivity).
+ *
+ * <p>Implements {@link org.thingsboard.server.cache.TbTransactionalCache} with DAO-specific key types.
  */
+
 
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "redis")
 @Service("DeviceProfileCache")

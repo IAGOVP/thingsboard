@@ -55,6 +55,11 @@ public class FilterPredicateValue<T> implements Serializable {
         this.userValue = userValue;
         this.dynamicValue = dynamicValue;
     }
+    /**
+     * Returns value.
+     *
+     * @return {@link T}
+     */
 
     @JsonIgnore
     public T getValue() {
@@ -68,14 +73,32 @@ public class FilterPredicateValue<T> implements Serializable {
             }
         }
     }
+    /**
+     * From double.
+     *
+     * @param value value
+     * @return {@link FilterPredicateValue}
+     */
 
     public static FilterPredicateValue<Double> fromDouble(double value) {
         return new FilterPredicateValue<>(value);
     }
+    /**
+     * From string.
+     *
+     * @param value value ({@link String})
+     * @return {@link FilterPredicateValue}
+     */
 
     public static FilterPredicateValue<String> fromString(String value) {
         return new FilterPredicateValue<>(value);
     }
+    /**
+     * From boolean.
+     *
+     * @param value value
+     * @return {@link FilterPredicateValue}
+     */
 
     public static FilterPredicateValue<Boolean> fromBoolean(boolean value) {
         return new FilterPredicateValue<>(value);

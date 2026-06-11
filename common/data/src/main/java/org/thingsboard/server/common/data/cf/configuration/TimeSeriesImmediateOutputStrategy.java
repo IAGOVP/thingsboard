@@ -33,11 +33,22 @@ public class TimeSeriesImmediateOutputStrategy implements TimeSeriesOutputStrate
     private boolean saveLatest;
     private boolean sendWsUpdate;
     private boolean processCfs;
+    /**
+     * Returns type.
+     *
+     * @return {@link OutputStrategyType}
+     */
 
     @Override
     public OutputStrategyType getType() {
         return OutputStrategyType.IMMEDIATE;
     }
+    /**
+     * Has context only changes.
+     *
+     * @param other other ({@link OutputStrategy})
+     * @return the boolean result
+     */
 
     @Override
     public boolean hasContextOnlyChanges(OutputStrategy other) {
@@ -50,6 +61,12 @@ public class TimeSeriesImmediateOutputStrategy implements TimeSeriesOutputStrate
         boolean processCfsUpdated = processCfs != otherStrategy.isProcessCfs();
         return saveTimeSeriesUpdated || saveLatestUpdated || sendWsUpdateUpdated || processCfsUpdated;
     }
+    /**
+     * Has refresh context only changes.
+     *
+     * @param other other ({@link OutputStrategy})
+     * @return the boolean result
+     */
 
     @Override
     public boolean hasRefreshContextOnlyChanges(OutputStrategy other) {

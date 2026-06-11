@@ -43,8 +43,11 @@ import java.util.stream.Collectors;
 
 import static org.thingsboard.server.dao.DaoUtil.toUUIDs;
 /**
- * JPA implementation of tb resource info dao.
+ * JPA/PostgreSQL implementation of tb resource info dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Slf4j
 @Component
@@ -53,16 +56,36 @@ public class JpaTbResourceInfoDao extends JpaAbstractDao<TbResourceInfoEntity, T
 
     @Autowired
     private TbResourceInfoRepository resourceInfoRepository;
+    /**
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Class<TbResourceInfoEntity> getEntityClass() {
         return TbResourceInfoEntity.class;
     }
+    /**
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected JpaRepository<TbResourceInfoEntity, UUID> getRepository() {
         return resourceInfoRepository;
     }
+    /**
+     * Finds all tenant resources by tenant id.
+     *
+     * @param filter filter ({@link TbResourceInfoFilter})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<TbResourceInfo> findAllTenantResourcesByTenantId(TbResourceInfoFilter filter, PageLink pageLink) {
@@ -80,6 +103,14 @@ public class JpaTbResourceInfoDao extends JpaAbstractDao<TbResourceInfoEntity, T
                         Objects.toString(pageLink.getTextSearch(), ""),
                         DaoUtil.toPageable(pageLink)));
     }
+    /**
+     * Finds tenant resources by tenant id.
+     *
+     * @param filter filter ({@link TbResourceInfoFilter})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<TbResourceInfo> findTenantResourcesByTenantId(TbResourceInfoFilter filter, PageLink pageLink) {
@@ -97,41 +128,110 @@ public class JpaTbResourceInfoDao extends JpaAbstractDao<TbResourceInfoEntity, T
                         pageLink.getTextSearch(),
                         DaoUtil.toPageable(pageLink)));
     }
+    /**
+     * Finds by tenant id and key.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceType resource type ({@link ResourceType})
+     * @param resourceKey resource key ({@link String})
+     * @return {@link TbResourceInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbResourceInfo findByTenantIdAndKey(TenantId tenantId, ResourceType resourceType, String resourceKey) {
         return DaoUtil.getData(resourceInfoRepository.findByTenantIdAndResourceTypeAndResourceKey(tenantId.getId(), resourceType.name(), resourceKey));
     }
+    /**
+     * Exists by tenant id and resource type and resource key.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceType resource type ({@link ResourceType})
+     * @param resourceKey resource key ({@link String})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean existsByTenantIdAndResourceTypeAndResourceKey(TenantId tenantId, ResourceType resourceType, String resourceKey) {
         return resourceInfoRepository.existsByTenantIdAndResourceTypeAndResourceKey(tenantId.getId(), resourceType.name(), resourceKey);
     }
+    /**
+     * Finds keys by tenant id and resource type and resource key prefix.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceType resource type ({@link ResourceType})
+     * @param prefix prefix ({@link String})
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Set<String> findKeysByTenantIdAndResourceTypeAndResourceKeyPrefix(TenantId tenantId, ResourceType resourceType, String prefix) {
         return resourceInfoRepository.findKeysByTenantIdAndResourceTypeAndResourceKeyStartingWith(tenantId.getId(), resourceType.name(), prefix);
     }
+    /**
+     * Finds by tenant id and etag and key starting with.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param etag etag ({@link String})
+     * @param query filter and sort query definition
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<TbResourceInfo> findByTenantIdAndEtagAndKeyStartingWith(TenantId tenantId, String etag, String query) {
         return DaoUtil.convertDataList(resourceInfoRepository.findByTenantIdAndEtagAndResourceKeyStartingWith(tenantId.getId(), etag, query));
     }
+    /**
+     * Finds system or tenant resource by etag.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceType resource type ({@link ResourceType})
+     * @param etag etag ({@link String})
+     * @return {@link TbResourceInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbResourceInfo findSystemOrTenantResourceByEtag(TenantId tenantId, ResourceType resourceType, String etag) {
         return DaoUtil.getData(resourceInfoRepository.findSystemOrTenantResourceByEtag(tenantId.getId(), resourceType.name(), etag));
     }
+    /**
+     * Exists by public resource key.
+     *
+     * @param resourceType resource type ({@link ResourceType})
+     * @param publicResourceKey public resource key ({@link String})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean existsByPublicResourceKey(ResourceType resourceType, String publicResourceKey) {
         return resourceInfoRepository.existsByResourceTypeAndPublicResourceKey(resourceType.name(), publicResourceKey);
     }
+    /**
+     * Finds public resource by key.
+     *
+     * @param resourceType resource type ({@link ResourceType})
+     * @param publicResourceKey public resource key ({@link String})
+     * @return {@link TbResourceInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbResourceInfo findPublicResourceByKey(ResourceType resourceType, String publicResourceKey) {
         return DaoUtil.getData(resourceInfoRepository.findByResourceTypeAndPublicResourceKeyAndIsPublicTrue(resourceType.name(), publicResourceKey));
     }
+    /**
+     * Finds system or tenant resources by ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceIds resource ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<TbResourceInfo> findSystemOrTenantResourcesByIds(TenantId tenantId, List<TbResourceId> resourceIds) {

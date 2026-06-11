@@ -24,8 +24,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 /**
- * Created by ashvayka on 24.10.18.
+ * Tb result set future.
  */
+
 public class TbResultSetFuture implements ListenableFuture<TbResultSet> {
 
     private final SettableFuture<TbResultSet> mainFuture;
@@ -38,6 +39,14 @@ public class TbResultSetFuture implements ListenableFuture<TbResultSet> {
         return getSafe();
     }
 
+    /**
+     * Returns uninterruptibly.
+     *
+     * @param timeout timeout
+     * @param unit unit ({@link TimeUnit})
+     * @return {@link TbResultSet}
+     * @throws TimeoutException if timeout exception is thrown
+     */
     public TbResultSet getUninterruptibly(long timeout, TimeUnit unit) throws TimeoutException {
         return getSafe(timeout, unit);
     }

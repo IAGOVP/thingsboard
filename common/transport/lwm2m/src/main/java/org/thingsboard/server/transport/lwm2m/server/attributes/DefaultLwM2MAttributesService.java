@@ -92,6 +92,14 @@ public class DefaultLwM2MAttributesService implements LwM2MAttributesService {
     private final LwM2MTelemetryLogService logService;
     private final LwM2MOtaUpdateService otaUpdateService;
     private final LwM2mModelProvider modelProvider;
+    /**
+     * Returns shared attributes.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param keys keys ({@link Collection})
+     * @return future completing with {@link List}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public ListenableFuture<List<TransportProtos.TsKvProto>> getSharedAttributes(LwM2mClient client, Collection<String> keys) {
@@ -100,10 +108,24 @@ public class DefaultLwM2MAttributesService implements LwM2MAttributesService {
         futures.put(requestId, future);
         transportService.process(client.getSession(), TransportProtos.GetAttributeRequestMsg.newBuilder().setRequestId(requestId).
                 addAllSharedAttributeNames(keys).build(), new TransportServiceCallback<Void>() {
+            /**
+             * Handles success.
+             *
+             * @param msg msg ({@link Void})
+             * @return nothing
+             * @throws Exception on processing failure
+             */
             @Override
             public void onSuccess(Void msg) {
 
             }
+            /**
+             * Handles error.
+             *
+             * @param e e ({@link Throwable})
+             * @return nothing
+             * @throws Exception on processing failure
+             */
 
             @Override
             public void onError(Throwable e) {
@@ -115,6 +137,14 @@ public class DefaultLwM2MAttributesService implements LwM2MAttributesService {
         });
         return future;
     }
+    /**
+     * Handles get attributes response.
+     *
+     * @param getAttributesResponse get attributes response ({@link GetAttributeResponseMsg})
+     * @param sessionInfo session info
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onGetAttributesResponse(GetAttributeResponseMsg getAttributesResponse, TransportProtos.SessionInfoProto sessionInfo) {
@@ -124,17 +154,16 @@ public class DefaultLwM2MAttributesService implements LwM2MAttributesService {
         }
     }
 
+    
     /**
-     * Update - send request in change value resources in Client
-     * 1. FirmwareUpdate:
-     * - If msg.getSharedUpdatedList().forEach(tsKvProto -> {tsKvProto.getKv().getKey().indexOf(FIRMWARE_UPDATE_PREFIX, 0) == 0
-     * 2. Shared Other AttributeUpdate
-     * -- Path to resources from profile equal keyName or from ModelObject equal name
-     * -- Only for resources:  isWritable && isPresent as attribute in profile -> LwM2MClientProfile (format: CamelCase)
-     * 3. Delete - nothing
+     * Handles attributes update.
      *
-     * @param msg -
+     * @param msg msg
+     * @param sessionInfo session info
+     * @return nothing
+     * @throws Exception on processing failure
      */
+
     @Override
     public void onAttributesUpdate(TransportProtos.AttributeUpdateNotificationMsg msg, TransportProtos.SessionInfoProto sessionInfo) {
         LwM2mClient lwM2MClient = clientContext.getClientBySessionInfo(sessionInfo);
@@ -186,13 +215,17 @@ public class DefaultLwM2MAttributesService implements LwM2MAttributesService {
         }
     }
 
+    
     /**
-     * #1.1 If two names have equal path => last time attribute
-     * #2.1 if there is a difference in values between the current resource values and the shared attribute values
-     * => send to client Request Update of value (new value from shared attribute)
-     * and LwM2MClient.delayedRequests.add(path)
-     * #2.1 if there is not a difference in values between the current resource values and the shared attribute values
+     * Handles attributes update.
+     *
+     * @param lwM2MClient lw m2mclient ({@link LwM2mClient})
+     * @param tsKvProtos ts kv protos ({@link List})
+     * @param logFailedUpdateOfNonChangedValue log failed update of non changed value
+     * @return nothing
+     * @throws Exception on processing failure
      */
+
     @Override
     public void onAttributesUpdate(LwM2mClient lwM2MClient, List<TransportProtos.TsKvProto> tsKvProtos, boolean logFailedUpdateOfNonChangedValue) {
         log.trace("[{}] onAttributesUpdate [{}]", lwM2MClient.getEndpoint(), tsKvProtos);
@@ -249,6 +282,14 @@ public class DefaultLwM2MAttributesService implements LwM2MAttributesService {
         } else if ((oldValue == null) || !valueEquals(newValue, oldValue)) {
             TbLwM2MWriteReplaceRequest request = TbLwM2MWriteReplaceRequest.builder().versionedId(versionedId).value(newValue).timeout(clientContext.getRequestTimeout(lwM2MClient)).build();
             downlinkHandler.sendWriteReplaceRequest(lwM2MClient, request, new TbLwM2MWriteResponseCallback(uplinkHandler, logService, lwM2MClient, versionedId) {
+                /**
+                 * Handles success.
+                 *
+                 * @param request request payload with operation parameters
+                 * @param response response ({@link WriteResponse})
+                 * @return nothing
+                 * @throws Exception on processing failure
+                 */
                 @Override
                 public void onSuccess(WriteRequest request, WriteResponse response) {
                     client.getSharedAttributes().put(versionedId, tsKvProto);
@@ -280,6 +321,14 @@ public class DefaultLwM2MAttributesService implements LwM2MAttributesService {
         if (newValues.size() > 0) {
             TbLwM2MWriteReplaceRequest request = TbLwM2MWriteReplaceRequest.builder().versionedId(versionedId).value(newValues).timeout(this.config.getTimeout()).build();
             downlinkHandler.sendWriteReplaceRequest(client, request, new TbLwM2MWriteResponseCallback(uplinkHandler, logService, client, versionedId) {
+                /**
+                 * Handles success.
+                 *
+                 * @param request request payload with operation parameters
+                 * @param response response ({@link WriteResponse})
+                 * @return nothing
+                 * @throws Exception on processing failure
+                 */
                 @Override
                 public void onSuccess(WriteRequest request, WriteResponse response) {
                     client.getSharedAttributes().put(versionedId, tsKvProto);

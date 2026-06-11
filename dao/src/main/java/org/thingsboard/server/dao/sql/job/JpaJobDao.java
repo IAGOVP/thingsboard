@@ -40,8 +40,11 @@ import org.thingsboard.server.dao.util.SqlDao;
 import java.util.Arrays;
 import java.util.UUID;
 /**
- * JPA implementation of job dao.
+ * JPA/PostgreSQL implementation of job dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Component
 @SqlDao
@@ -49,6 +52,15 @@ import java.util.UUID;
 public class JpaJobDao extends JpaAbstractDao<JobEntity, Job> implements JobDao {
 
     private final JobRepository jobRepository;
+    /**
+     * Finds by tenant id and filter.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param filter filter ({@link JobFilter})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<Job> findByTenantIdAndFilter(TenantId tenantId, JobFilter filter, PageLink pageLink) {
@@ -60,56 +72,141 @@ public class JpaJobDao extends JpaAbstractDao<JobEntity, Job> implements JobDao 
                 filter.getEndTime() != null ? filter.getEndTime() : 0,
                 Strings.emptyToNull(pageLink.getTextSearch()), DaoUtil.toPageable(pageLink)));
     }
+    /**
+     * Finds by id for update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param jobId job id ({@link JobId})
+     * @return {@link Job}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Job findByIdForUpdate(TenantId tenantId, JobId jobId) {
         return DaoUtil.getData(jobRepository.findByIdForUpdate(jobId.getId()));
     }
+    /**
+     * Finds latest by tenant id and key.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key attribute or cache key
+     * @return {@link Job}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Job findLatestByTenantIdAndKey(TenantId tenantId, String key) {
         return DaoUtil.getData(jobRepository.findLatestByTenantIdAndKey(tenantId.getId(), key, Limit.of(1)));
     }
+    /**
+     * Exists by tenant and key and status one of.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key attribute or cache key
+     * @param statuses statuses
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean existsByTenantAndKeyAndStatusOneOf(TenantId tenantId, String key, JobStatus... statuses) {
         return jobRepository.existsByTenantIdAndKeyAndStatusIn(tenantId.getId(), key, Arrays.stream(statuses).toList());
     }
+    /**
+     * Exists by tenant id and type and status one of.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link JobType})
+     * @param statuses statuses
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean existsByTenantIdAndTypeAndStatusOneOf(TenantId tenantId, JobType type, JobStatus... statuses) {
         return jobRepository.existsByTenantIdAndTypeAndStatusIn(tenantId.getId(), type, Arrays.stream(statuses).toList());
     }
+    /**
+     * Exists by tenant id and entity id and status one of.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param statuses statuses
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean existsByTenantIdAndEntityIdAndStatusOneOf(TenantId tenantId, EntityId entityId, JobStatus... statuses) {
         return jobRepository.existsByTenantIdAndEntityIdAndStatusIn(tenantId.getId(), entityId.getId(), Arrays.stream(statuses).toList());
     }
+    /**
+     * Finds oldest by tenant id and type and status for update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link JobType})
+     * @param status status ({@link JobStatus})
+     * @return {@link Job}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Job findOldestByTenantIdAndTypeAndStatusForUpdate(TenantId tenantId, JobType type, JobStatus status) {
         return DaoUtil.getData(jobRepository.findOldestByTenantIdAndTypeAndStatusForUpdate(tenantId.getId(), type.name(), status.name()));
     }
+    /**
+     * Removes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void removeByTenantId(TenantId tenantId) {
         jobRepository.deleteByTenantId(tenantId.getId());
     }
+    /**
+     * Removes by entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public int removeByEntityId(TenantId tenantId, EntityId entityId) {
         return jobRepository.deleteByEntityId(entityId.getId());
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {
         return EntityType.JOB;
     }
+    /**
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Class<JobEntity> getEntityClass() {
         return JobEntity.class;
     }
+    /**
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected JpaRepository<JobEntity, UUID> getRepository() {

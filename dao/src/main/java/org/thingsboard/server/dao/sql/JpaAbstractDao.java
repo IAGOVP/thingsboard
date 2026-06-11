@@ -41,8 +41,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 /**
- * JPA implementation of abstract dao.
+ * JPA/PostgreSQL implementation of abstract dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Slf4j
 @SqlDao
@@ -55,6 +58,14 @@ public abstract class JpaAbstractDao<E extends BaseEntity<D>, D>
 
     @PersistenceContext
     private EntityManager entityManager;
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param domain domain ({@link D})
+     * @return {@link D}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     @Transactional
@@ -90,6 +101,15 @@ public abstract class JpaAbstractDao<E extends BaseEntity<D>, D>
         }
         return DaoUtil.getData(entity);
     }
+    /**
+     * Do save.
+     *
+     * @param entity domain entity to persist or validate
+     * @param isNew is new
+     * @param flush flush
+     * @return {@link E}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected E doSave(E entity, boolean isNew, boolean flush) {
         boolean flushed = false;
@@ -160,12 +180,28 @@ public abstract class JpaAbstractDao<E extends BaseEntity<D>, D>
         }
         return entity;
     }
+    /**
+     * Saves or persists and flush.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param domain domain ({@link D})
+     * @return {@link D}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     @Transactional
     public D saveAndFlush(TenantId tenantId, D domain) {
         return save(tenantId, domain, true);
     }
+    /**
+     * Finds by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key attribute or cache key
+     * @return {@link D}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public D findById(TenantId tenantId, UUID key) {
@@ -173,24 +209,56 @@ public abstract class JpaAbstractDao<E extends BaseEntity<D>, D>
         Optional<E> entity = getRepository().findById(key);
         return DaoUtil.getData(entity);
     }
+    /**
+     * Finds by id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key attribute or cache key
+     * @return future completing with {@link D}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<D> findByIdAsync(TenantId tenantId, UUID key) {
         log.debug("Get entity by key async {}", key);
         return service.submit(() -> DaoUtil.getData(getRepository().findById(key)));
     }
+    /**
+     * Exists by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key attribute or cache key
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean existsById(TenantId tenantId, UUID key) {
         log.debug("Exists by key {}", key);
         return getRepository().existsById(key);
     }
+    /**
+     * Exists by id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key attribute or cache key
+     * @return future completing with {@link Boolean}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<Boolean> existsByIdAsync(TenantId tenantId, UUID key) {
         log.debug("Exists by key async {}", key);
         return service.submit(() -> getRepository().existsById(key));
     }
+    /**
+     * Removes by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     @Transactional
@@ -200,6 +268,13 @@ public abstract class JpaAbstractDao<E extends BaseEntity<D>, D>
         repository.flush();
         log.debug("Remove request: {}", id);
     }
+    /**
+     * Removes all by ids.
+     *
+     * @param ids ids ({@link Collection})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     @Transactional
@@ -208,12 +283,28 @@ public abstract class JpaAbstractDao<E extends BaseEntity<D>, D>
         ids.forEach(repository::deleteById);
         repository.flush();
     }
+    /**
+     * Finds the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<D> find(TenantId tenantId) {
         List<E> entities = Lists.newArrayList(getRepository().findAll());
         return DaoUtil.convertDataList(entities);
     }
+    /**
+     * Finds ids by tenant id and id offset.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param idOffset cursor for batch id scan (exclusive lower bound)
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<UUID> findIdsByTenantIdAndIdOffset(TenantId tenantId, UUID idOffset, int limit) {
@@ -229,20 +320,50 @@ public abstract class JpaAbstractDao<E extends BaseEntity<D>, D>
 
         return getJdbcTemplate().queryForList(query, UUID.class, params);
     }
+    /**
+     * Returns tenant id column.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected String getTenantIdColumn() {
         return ModelConstants.TENANT_ID_COLUMN;
     }
+    /**
+     * Returns entity manager.
+     *
+     * @return {@link EntityManager}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected EntityManager getEntityManager() {
         return entityManager;
     }
+    /**
+     * Returns jdbc template.
+     *
+     * @return {@link JdbcTemplate}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected JdbcTemplate getJdbcTemplate() {
         return jdbcTemplate;
     }
+    /**
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract Class<E> getEntityClass();
+    /**
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract JpaRepository<E, UUID> getRepository();
 

@@ -17,7 +17,6 @@ package org.thingsboard.server.queue.provider;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
-import org.thingsboard.server.gen.transport.TransportProtos;
 import org.thingsboard.server.gen.transport.TransportProtos.ToCalculatedFieldMsg;
 import org.thingsboard.server.gen.transport.TransportProtos.ToCalculatedFieldNotificationMsg;
 import org.thingsboard.server.gen.transport.TransportProtos.ToCoreMsg;
@@ -31,15 +30,17 @@ import org.thingsboard.server.gen.transport.TransportProtos.ToRuleEngineNotifica
 import org.thingsboard.server.gen.transport.TransportProtos.ToTransportMsg;
 import org.thingsboard.server.gen.transport.TransportProtos.ToUsageStatsServiceMsg;
 import org.thingsboard.server.gen.transport.TransportProtos.ToVersionControlServiceMsg;
+import org.thingsboard.server.gen.transport.TransportProtos;
 import org.thingsboard.server.queue.TbQueueProducer;
 import org.thingsboard.server.queue.common.TbProtoQueueMsg;
 import org.thingsboard.server.queue.util.TbCoreComponent;
 
+
+/**
+ * Provides core-service Kafka producers (notifications, device state, etc.).
+ */
 @Service
 @TbCoreComponent
-/**
- * Tb core queue producer provider.
- */
 public class TbCoreQueueProducerProvider implements TbQueueProducerProvider {
 
     private final TbCoreQueueFactory tbQueueProvider;

@@ -15,6 +15,9 @@
  */
 package org.thingsboard.server.queue.edqs;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
+
 import org.springframework.stereotype.Component;
 import org.thingsboard.server.common.stats.StatsFactory;
 import org.thingsboard.server.common.stats.StatsType;
@@ -33,13 +36,13 @@ import org.thingsboard.server.queue.kafka.TbKafkaProducerTemplate;
 import org.thingsboard.server.queue.kafka.TbKafkaSettings;
 import org.thingsboard.server.queue.kafka.TbKafkaTopicConfigs;
 
-import java.util.concurrent.atomic.AtomicInteger;
+
+/**
+ * Spring component for EDQS kafka edqs queue factory (EDQS queue).
+ */
 
 @Component
 @KafkaEdqsComponent
-/**
- * Factory for kafka edqs queue.
- */
 public class KafkaEdqsQueueFactory implements EdqsQueueFactory {
 
     private final TbKafkaSettings kafkaSettings;
@@ -70,6 +73,12 @@ public class KafkaEdqsQueueFactory implements EdqsQueueFactory {
         this.topicService = topicService;
         this.statsFactory = statsFactory;
     }
+    /**
+     * Creates edqs events consumer.
+     *
+     * @return {@link TbKafkaConsumerTemplate}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbKafkaConsumerTemplate<TbProtoQueueMsg<ToEdqsMsg>> createEdqsEventsConsumer() {
@@ -78,6 +87,12 @@ public class KafkaEdqsQueueFactory implements EdqsQueueFactory {
                 null, // not using consumer group management, offsets from the edqs-events-to-backup-consumer-group are used (see KafkaEdqsStateService)
                 false, edqsEventsAdmin);
     }
+    /**
+     * Creates edqs events to backup consumer.
+     *
+     * @return {@link TbKafkaConsumerTemplate}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbKafkaConsumerTemplate<TbProtoQueueMsg<ToEdqsMsg>> createEdqsEventsToBackupConsumer() {
@@ -86,6 +101,12 @@ public class KafkaEdqsQueueFactory implements EdqsQueueFactory {
                 "edqs-events-to-backup-consumer-group",
                 false, edqsEventsAdmin);
     }
+    /**
+     * Creates edqs state consumer.
+     *
+     * @return {@link TbKafkaConsumerTemplate}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbKafkaConsumerTemplate<TbProtoQueueMsg<ToEdqsMsg>> createEdqsStateConsumer() {
@@ -94,6 +115,17 @@ public class KafkaEdqsQueueFactory implements EdqsQueueFactory {
                 null, // not using consumer group management
                 true, edqsStateAdmin);
     }
+    /**
+     * Creates edqs msg consumer.
+     *
+     * @param topic topic ({@link String})
+     * @param clientId client id ({@link String})
+     * @param group group ({@link String})
+     * @param readFullAndStop read full and stop
+     * @param admin admin ({@link TbKafkaAdmin})
+     * @return {@link TbKafkaConsumerTemplate}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public TbKafkaConsumerTemplate<TbProtoQueueMsg<ToEdqsMsg>> createEdqsMsgConsumer(String topic, String clientId, String group, boolean readFullAndStop, TbKafkaAdmin admin) {
         return TbKafkaConsumerTemplate.<TbProtoQueueMsg<ToEdqsMsg>>builder()
@@ -108,6 +140,12 @@ public class KafkaEdqsQueueFactory implements EdqsQueueFactory {
                 .statsService(consumerStatsService)
                 .build();
     }
+    /**
+     * Creates edqs state producer.
+     *
+     * @return {@link TbQueueProducer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbQueueProducer<TbProtoQueueMsg<ToEdqsMsg>> createEdqsStateProducer() {
@@ -118,6 +156,13 @@ public class KafkaEdqsQueueFactory implements EdqsQueueFactory {
                 .admin(edqsStateAdmin)
                 .build();
     }
+    /**
+     * Creates edqs response template.
+     *
+     * @param handler handler ({@link TbQueueHandler})
+     * @return {@link PartitionedQueueResponseTemplate}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PartitionedQueueResponseTemplate<TbProtoQueueMsg<ToEdqsMsg>, TbProtoQueueMsg<FromEdqsMsg>> createEdqsResponseTemplate(TbQueueHandler<TbProtoQueueMsg<ToEdqsMsg>, TbProtoQueueMsg<FromEdqsMsg>> handler) {
@@ -145,6 +190,12 @@ public class KafkaEdqsQueueFactory implements EdqsQueueFactory {
                 .stats(statsFactory.createMessagesStats(StatsType.EDQS.getName()))
                 .build();
     }
+    /**
+     * Returns edqs queue admin.
+     *
+     * @return {@link TbKafkaAdmin}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbKafkaAdmin getEdqsQueueAdmin() {

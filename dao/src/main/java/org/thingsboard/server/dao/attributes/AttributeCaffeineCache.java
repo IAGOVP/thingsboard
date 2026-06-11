@@ -22,8 +22,11 @@ import org.thingsboard.server.cache.VersionedCaffeineTbCache;
 import org.thingsboard.server.common.data.CacheConstants;
 import org.thingsboard.server.common.data.kv.AttributeKvEntry;
 /**
- * Attribute caffeine cache.
+ * in-process Caffeine cache for attribute (server-side attribute key-value storage and caching).
+ *
+ * <p>Implements {@link org.thingsboard.server.cache.TbTransactionalCache} with DAO-specific key types.
  */
+
 
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "caffeine", matchIfMissing = true)
 @Service("AttributeCache")

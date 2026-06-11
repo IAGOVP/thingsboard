@@ -30,11 +30,21 @@ public class UserCredentialsInvalidationEvent extends UserAuthDataChangedEvent {
         this.userId = userId;
         this.ts = System.currentTimeMillis();
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link String}
+     */
 
     @Override
     public String getId() {
         return userId.toString();
     }
+    /**
+     * Returns ts.
+     *
+     * @return the long result
+     */
 
     @Override
     public long getTs() {

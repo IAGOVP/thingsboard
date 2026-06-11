@@ -33,7 +33,6 @@ public class RuleNodeScriptFactory {
     private static final String JS_WRAPPER_SUFFIX = "\n}" +
             "\n}";
 
-
     public static String generateRuleNodeScript(String functionName, String scriptBody, String... argNames) {
         String msgArg;
         String metadataArg;

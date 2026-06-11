@@ -19,14 +19,30 @@ import org.eclipse.leshan.server.security.NonUniqueSecurityInfoException;
 import org.thingsboard.server.transport.lwm2m.secure.TbLwM2MSecurityInfo;
 
 /**
- * tb main security store contract.
+ * tb main security store contract (LwM2M transport and object model (ThingsBoard common module)).
  */
 public interface TbMainSecurityStore extends TbSecurityStore {
 
     void putX509(TbLwM2MSecurityInfo tbSecurityInfo) throws NonUniqueSecurityInfoException;
 
+    /**
+     * Register x509.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @param registrationId registration id ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void registerX509(String endpoint, String registrationId);
 
+    /**
+     * Removes the requested data.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @param registrationId registration id ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void remove(String endpoint, String registrationId);
 
 }

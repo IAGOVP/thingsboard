@@ -25,13 +25,27 @@ import org.thingsboard.server.cache.TbJsonRedisSerializer;
 import org.thingsboard.server.common.data.CacheConstants;
 import org.thingsboard.server.common.data.User;
 
+/**
+ * Redis {@link RedisTbTransactionalCache} for {@link org.thingsboard.server.common.data.User} entities.
+ *
+ * <p>Spring bean {@code "UserCache"} activated when
+ * {@code cache.type=redis}. Shares cluster-wide state via {@link TBRedisCacheConfiguration}.
+ * Cache name: {@link org.thingsboard.server.common.data.CacheConstants#USER_CACHE}.
+ *
+ * @see UserCacheKey
+ * @see RedisTbTransactionalCache
+ */
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "redis")
 @Service("UserCache")
-/**
- * User redis cache.
- */
 public class UserRedisCache extends RedisTbTransactionalCache<UserCacheKey, User> {
 
+    /**
+     * Constructs the Redis cache with JSON serialization and TTL from {@link CacheSpecsMap}.
+     *
+     * @param configuration     Redis connection and evict TTL settings
+     * @param cacheSpecsMap     per-cache size and TTL configuration
+     * @param connectionFactory Redis connection from {@link TBRedisCacheConfiguration}
+     */
     public UserRedisCache(TBRedisCacheConfiguration configuration, CacheSpecsMap cacheSpecsMap, RedisConnectionFactory connectionFactory) {
         super(CacheConstants.USER_CACHE, cacheSpecsMap, connectionFactory, configuration, new TbJsonRedisSerializer<>(User.class));
     }

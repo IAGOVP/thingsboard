@@ -18,7 +18,7 @@ package org.thingsboard.server.common.transport.auth;
 import org.thingsboard.server.common.data.security.DeviceCredentialsFilter;
 
 /**
- * Service API for device auth persistence and domain operations.
+ * Validates device credentials (token, MQTT basic, X.509) via {@link TransportService}.
  */
 public interface DeviceAuthService {
 

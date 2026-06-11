@@ -34,8 +34,11 @@ import org.thingsboard.server.dao.util.SqlDao;
 import java.util.List;
 import java.util.UUID;
 /**
- * JPA implementation of api usage state dao.
+ * JPA/PostgreSQL implementation of api usage state dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Component
 @SqlDao
@@ -46,46 +49,108 @@ public class JpaApiUsageStateDao extends JpaAbstractDao<ApiUsageStateEntity, Api
     public JpaApiUsageStateDao(ApiUsageStateRepository apiUsageStateRepository) {
         this.apiUsageStateRepository = apiUsageStateRepository;
     }
+    /**
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Class<ApiUsageStateEntity> getEntityClass() {
         return ApiUsageStateEntity.class;
     }
+    /**
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected JpaRepository<ApiUsageStateEntity, UUID> getRepository() {
         return apiUsageStateRepository;
     }
+    /**
+     * Finds tenant api usage state.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link ApiUsageState}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ApiUsageState findTenantApiUsageState(UUID tenantId) {
         return DaoUtil.getData(apiUsageStateRepository.findByTenantId(tenantId));
     }
+    /**
+     * Finds api usage state by entity id.
+     *
+     * @param entityId target entity identifier
+     * @return {@link ApiUsageState}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ApiUsageState findApiUsageStateByEntityId(EntityId entityId) {
         return DaoUtil.getData(apiUsageStateRepository.findByEntityIdAndEntityType(entityId.getId(), entityId.getEntityType().name()));
     }
+    /**
+     * Deletes api usage state by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteApiUsageStateByTenantId(TenantId tenantId) {
         apiUsageStateRepository.deleteApiUsageStateByTenantId(tenantId.getId());
     }
+    /**
+     * Deletes api usage state by entity id.
+     *
+     * @param entityId target entity identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteApiUsageStateByEntityId(EntityId entityId) {
         apiUsageStateRepository.deleteByEntityIdAndEntityType(entityId.getId(), entityId.getEntityType().name());
     }
+    /**
+     * Finds all by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<ApiUsageState> findAllByTenantId(TenantId tenantId, PageLink pageLink) {
         return DaoUtil.toPageData(apiUsageStateRepository.findAllByTenantId(tenantId.getId(), DaoUtil.toPageable(pageLink)));
     }
+    /**
+     * Finds next batch.
+     *
+     * @param id entity UUID primary key
+     * @param batchSize batch size
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<ApiUsageStateFields> findNextBatch(UUID id, int batchSize) {
         return apiUsageStateRepository.findNextBatch(id, Limit.of(batchSize));
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

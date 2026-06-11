@@ -43,6 +43,11 @@ import java.io.Serializable;
  * device configuration contract.
  */
 public interface DeviceConfiguration extends Serializable {
+    /**
+     * Returns type.
+     *
+     * @return {@link DeviceProfileType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Device profile type")
     DeviceProfileType getType();

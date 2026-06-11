@@ -23,8 +23,11 @@ import org.thingsboard.server.common.data.mobile.bundle.MobileAppBundle;
 
 import static org.thingsboard.server.dao.model.ModelConstants.MOBILE_APP_BUNDLE_TABLE_NAME;
 /**
- * Mobile app bundle entity.
+ * JPA/Cassandra row model for mobile app bundle.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -39,6 +42,12 @@ public final class MobileAppBundleEntity extends AbstractMobileAppBundleEntity<M
     public MobileAppBundleEntity(MobileAppBundle mobileAppBundle) {
         super(mobileAppBundle);
     }
+    /**
+     * To data.
+     *
+     * @return {@link MobileAppBundle}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public MobileAppBundle toData() {

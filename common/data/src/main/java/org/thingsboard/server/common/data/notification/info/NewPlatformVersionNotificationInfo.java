@@ -39,6 +39,11 @@ public class NewPlatformVersionNotificationInfo implements RuleOriginatedNotific
 
     private String currentVersion;
     private String currentVersionReleaseNotesUrl;
+    /**
+     * Returns template data.
+     *
+     * @return {@link Map}
+     */
 
     @Override
     public Map<String, String> getTemplateData() {

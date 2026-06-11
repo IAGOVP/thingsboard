@@ -16,8 +16,9 @@
 package org.thingsboard.server.dao.device.provision;
 
 /**
- * Exception: provision failed exception.
+ * Raised when provision failed exception occurs during DAO operations.
  */
+
 public class ProvisionFailedException extends RuntimeException {
 
     private static final long serialVersionUID = 1673991117668477401L;

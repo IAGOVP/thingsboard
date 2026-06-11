@@ -15,19 +15,6 @@
  */
 package org.thingsboard.server.queue.common.consumer;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
-import org.thingsboard.server.common.data.queue.QueueConfig;
-import org.thingsboard.server.common.msg.queue.TopicPartitionInfo;
-import org.thingsboard.server.queue.TbQueueConsumer;
-import org.thingsboard.server.queue.TbQueueMsg;
-import org.thingsboard.server.queue.common.consumer.TbQueueConsumerManagerTask.UpdateConfigTask;
-import org.thingsboard.server.queue.common.consumer.TbQueueConsumerManagerTask.UpdatePartitionsTask;
-import org.thingsboard.server.queue.common.consumer.TbQueueConsumerTask.ConsumerKey;
-import org.thingsboard.server.queue.kafka.TbKafkaConsumerTemplate;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -46,10 +33,24 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-@Slf4j
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.thingsboard.common.util.ThingsBoardThreadFactory;
+import org.thingsboard.server.common.data.queue.QueueConfig;
+import org.thingsboard.server.common.msg.queue.TopicPartitionInfo;
+import org.thingsboard.server.queue.TbQueueConsumer;
+import org.thingsboard.server.queue.TbQueueMsg;
+import org.thingsboard.server.queue.common.consumer.TbQueueConsumerManagerTask.UpdateConfigTask;
+import org.thingsboard.server.queue.common.consumer.TbQueueConsumerManagerTask.UpdatePartitionsTask;
+import org.thingsboard.server.queue.common.consumer.TbQueueConsumerTask.ConsumerKey;
+import org.thingsboard.server.queue.kafka.TbKafkaConsumerTemplate;
+
 /**
- * Main queue consumer manager.
+ * Orchestrates lifecycle of primary queue consumers: start, stop, and partition updates.
  */
+@Slf4j
 public class MainQueueConsumerManager<M extends TbQueueMsg, C extends QueueConfig> {
 
     @Getter

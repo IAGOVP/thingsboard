@@ -110,10 +110,10 @@ import java.util.stream.Collectors;
 
 import static org.thingsboard.server.common.data.DataConstants.GATEWAY_PARAMETER;
 
-@Slf4j
 /**
  * Proto utils.
  */
+@Slf4j
 public class ProtoUtils {
 
     public static TransportProtos.ComponentLifecycleMsgProto toProto(ComponentLifecycleMsg msg) {

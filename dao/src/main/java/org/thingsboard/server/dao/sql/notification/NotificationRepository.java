@@ -31,8 +31,11 @@ import org.thingsboard.server.dao.model.sql.NotificationEntity;
 import java.util.Set;
 import java.util.UUID;
 /**
- * notification repository contract.
+ * Spring Data JPA repository for notification entities.
+ *
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
  */
+
 
 @Repository
 public interface NotificationRepository extends JpaRepository<NotificationEntity, UUID> {
@@ -41,6 +44,17 @@ public interface NotificationRepository extends JpaRepository<NotificationEntity
             "AND n.recipientId = :recipientId AND n.status <> :status " +
             "AND (:searchText is NULL OR ilike(n.subject, concat('%', :searchText, '%')) = true " +
             "OR ilike(n.text, concat('%', :searchText, '%')) = true)")
+    /**
+     * Finds by delivery method and recipient id and status not.
+     *
+     * @param deliveryMethod delivery method ({@link NotificationDeliveryMethod})
+     * @param recipientId recipient id ({@link UUID})
+     * @param status status ({@link NotificationStatus})
+     * @param searchText search text ({@link String})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<NotificationEntity> findByDeliveryMethodAndRecipientIdAndStatusNot(@Param("deliveryMethod") NotificationDeliveryMethod deliveryMethod,
                                                                             @Param("recipientId") UUID recipientId,
                                                                             @Param("status") NotificationStatus status,
@@ -52,6 +66,18 @@ public interface NotificationRepository extends JpaRepository<NotificationEntity
             "AND (n.type IN :types) " +
             "AND (:searchText is NULL OR ilike(n.subject, concat('%', :searchText, '%')) = true " +
             "OR ilike(n.text, concat('%', :searchText, '%')) = true)")
+    /**
+     * Finds by delivery method and recipient id and type in and status not.
+     *
+     * @param deliveryMethod delivery method ({@link NotificationDeliveryMethod})
+     * @param recipientId recipient id ({@link UUID})
+     * @param types types ({@link Set})
+     * @param status status ({@link NotificationStatus})
+     * @param searchText search text ({@link String})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<NotificationEntity> findByDeliveryMethodAndRecipientIdAndTypeInAndStatusNot(@Param("deliveryMethod") NotificationDeliveryMethod deliveryMethod,
                                                                                      @Param("recipientId") UUID recipientId,
                                                                                      @Param("types") Set<NotificationType> types,
@@ -63,6 +89,16 @@ public interface NotificationRepository extends JpaRepository<NotificationEntity
             "AND n.recipientId = :recipientId " +
             "AND (:searchText is NULL OR ilike(n.subject, concat('%', :searchText, '%')) = true " +
             "OR ilike(n.text, concat('%', :searchText, '%')) = true)")
+    /**
+     * Finds by delivery method and recipient id.
+     *
+     * @param deliveryMethod delivery method ({@link NotificationDeliveryMethod})
+     * @param recipientId recipient id ({@link UUID})
+     * @param searchText search text ({@link String})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<NotificationEntity> findByDeliveryMethodAndRecipientId(@Param("deliveryMethod") NotificationDeliveryMethod deliveryMethod,
                                                                 @Param("recipientId") UUID recipientId,
                                                                 @Param("searchText") String searchText,
@@ -72,21 +108,61 @@ public interface NotificationRepository extends JpaRepository<NotificationEntity
     @Transactional
     @Query("UPDATE NotificationEntity n SET n.status = :status " +
             "WHERE n.id = :id AND n.recipientId = :recipientId AND n.status <> :status")
+    /**
+     * Updates status by id and recipient id.
+     *
+     * @param id entity UUID primary key
+     * @param recipientId recipient id ({@link UUID})
+     * @param status status ({@link NotificationStatus})
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
     int updateStatusByIdAndRecipientId(@Param("id") UUID id,
+    /**
+     * Counts by delivery method and recipient id and status not.
+     *
+     * @param deliveryMethod delivery method ({@link NotificationDeliveryMethod})
+     * @param recipientId recipient id ({@link UUID})
+     * @param status status ({@link NotificationStatus})
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
                                        @Param("recipientId") UUID recipientId,
                                        @Param("status") NotificationStatus status);
 
     int countByDeliveryMethodAndRecipientIdAndStatusNot(NotificationDeliveryMethod deliveryMethod, UUID recipientId, NotificationStatus status);
+    /**
+     * Deletes by id and recipient id.
+     *
+     * @param id entity UUID primary key
+     * @param recipientId recipient id ({@link UUID})
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Transactional
     @Modifying
     @Query("DELETE FROM NotificationEntity n WHERE n.id = :id AND n.recipientId = :recipientId")
     int deleteByIdAndRecipientId(@Param("id") UUID id, @Param("recipientId") UUID recipientId);
+    /**
+     * Deletes by request id.
+     *
+     * @param requestId request id ({@link UUID})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Transactional
     @Modifying
     @Query("DELETE FROM NotificationEntity n WHERE n.requestId = :requestId")
     void deleteByRequestId(@Param("requestId") UUID requestId);
+    /**
+     * Deletes by recipient id.
+     *
+     * @param recipientId recipient id ({@link UUID})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Transactional
     @Modifying
@@ -97,6 +173,15 @@ public interface NotificationRepository extends JpaRepository<NotificationEntity
     @Transactional
     @Query("UPDATE NotificationEntity n SET n.status = :status " +
             "WHERE n.deliveryMethod = :deliveryMethod AND n.recipientId = :recipientId AND n.status <> :status")
+    /**
+     * Updates status by delivery method and recipient id and status not.
+     *
+     * @param deliveryMethod delivery method ({@link NotificationDeliveryMethod})
+     * @param recipientId recipient id ({@link UUID})
+     * @param status status ({@link NotificationStatus})
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
     int updateStatusByDeliveryMethodAndRecipientIdAndStatusNot(@Param("deliveryMethod") NotificationDeliveryMethod deliveryMethod,
                                                                @Param("recipientId") UUID recipientId,
                                                                @Param("status") NotificationStatus status);

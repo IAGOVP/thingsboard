@@ -42,7 +42,14 @@ public class ResourceValue {
         this.resourceModel = resourceModel;
         updateLwM2mResource(lwM2mResource, Mode.UPDATE);
     }
-
+    /**
+     * Updates lw m2m resource.
+     *
+     * @param lwM2mResource lw m2m resource ({@link LwM2mResource})
+     * @param mode mode ({@link Mode})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void updateLwM2mResource(LwM2mResource lwM2mResource, Mode mode) {
         if (lwM2mResource instanceof LwM2mSingleResource) {
             this.lwM2mResource = LwM2mSingleResource.newResource(lwM2mResource.getId(), lwM2mResource.getValue(), lwM2mResource.getType());

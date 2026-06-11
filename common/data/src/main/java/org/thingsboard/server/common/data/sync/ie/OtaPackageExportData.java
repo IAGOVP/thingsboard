@@ -27,6 +27,11 @@ import org.thingsboard.server.common.data.OtaPackage;
  * Ota package export data.
  */
 public class OtaPackageExportData extends EntityExportData<OtaPackage> {
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Override
     public EntityType getEntityType() { return EntityType.OTA_PACKAGE; }
@@ -35,11 +40,21 @@ public class OtaPackageExportData extends EntityExportData<OtaPackage> {
      * OtaPackage is not a versioned entity; its 'version' field is part of the domain model (not used for optimistic locking)
      * We override both methods to ensure 'version' is not ignored during (de)serialization.
      */
+    /**
+     * Returns entity.
+     *
+     * @return {@link OtaPackage}
+     */
     @JsonIgnoreProperties(value = {"tenantId", "createdTime"}, ignoreUnknown = true)
     @Override
     public OtaPackage getEntity() {
         return super.getEntity();
     }
+    /**
+     * Set entity.
+     *
+     * @param entity entity ({@link OtaPackage})
+     */
 
     @JsonIgnoreProperties(value = {"tenantId", "createdTime"}, ignoreUnknown = true)
     @Override

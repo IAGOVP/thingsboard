@@ -24,6 +24,14 @@ import java.lang.annotation.Annotation;
 public class ReflectionUtils {
 
     private ReflectionUtils() {}
+    /**
+     * Returns annotation property.
+     *
+     * @param targetType target type ({@link String})
+     * @param annotationType annotation type ({@link String})
+     * @param property property ({@link String})
+     * @return {@link T}
+     */
 
     public static <T> T getAnnotationProperty(String targetType, String annotationType, String property) throws Exception {
         Class<Annotation> annotationClass = (Class<Annotation>) Class.forName(annotationType);

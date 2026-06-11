@@ -49,6 +49,11 @@ public class SlackConversation implements NotificationRecipient {
 
     private String wholeName;
     private String email;
+    /**
+     * Returns title.
+     *
+     * @return {@link String}
+     */
 
     @Override
     public String getTitle() {
@@ -58,6 +63,11 @@ public class SlackConversation implements NotificationRecipient {
             return name;
         }
     }
+    /**
+     * Returns first name.
+     *
+     * @return {@link String}
+     */
 
     @JsonIgnore
     @Override
@@ -68,12 +78,22 @@ public class SlackConversation implements NotificationRecipient {
         }
         return firstName;
     }
+    /**
+     * Returns last name.
+     *
+     * @return {@link String}
+     */
 
     @JsonIgnore
     @Override
     public String getLastName() {
         return StringUtils.contains(wholeName, " ") ? wholeName.split(" ")[1] : null;
     }
+    /**
+     * Returns pointer.
+     *
+     * @return {@link String}
+     */
 
     @JsonIgnore
     public String getPointer() {

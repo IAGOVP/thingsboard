@@ -25,35 +25,49 @@ import org.thingsboard.server.dao.Dao;
 import java.util.UUID;
 
 /**
- * The Interface EdgeEventDao.
+ * Persistence contract for edge event.
+ *
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (edge instances, events, sessions, and synchronization).
  */
+
 public interface EdgeEventDao extends Dao<EdgeEvent> {
 
+    
     /**
-     * Save or update edge event object
+     * Saves or persists async.
      *
-     * @param edgeEvent the event object
-     * @return saved edge event object future
+     * @param edgeEvent edge event ({@link EdgeEvent})
+     * @return future completing with {@link Void}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     ListenableFuture<Void> saveAsync(EdgeEvent edgeEvent);
 
 
+    
     /**
-     * Find edge events by tenantId, edgeId and pageLink.
+     * Finds edge events.
      *
-     * @param tenantId the tenantId
-     * @param edgeId   the edgeId
-     * @param seqIdStart  the seq id start
-     * @param seqIdEnd  the seq id end
-     * @param pageLink the pageLink
-     * @return the event list
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link EdgeId})
+     * @param seqIdStart seq id start ({@link Long})
+     * @param seqIdEnd seq id end ({@link Long})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<EdgeEvent> findEdgeEvents(UUID tenantId, EdgeId edgeId, Long seqIdStart, Long seqIdEnd, TimePageLink pageLink);
 
+    
     /**
-     * Executes stored procedure to cleanup old edge events.
-     * @param ttl the ttl for edge events in seconds
+     * Cleanup events.
+     *
+     * @param ttl ttl
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     void cleanupEvents(long ttl);
 
 }

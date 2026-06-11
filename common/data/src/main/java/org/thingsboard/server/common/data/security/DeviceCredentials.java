@@ -60,6 +60,11 @@ public class DeviceCredentials extends BaseData<DeviceCredentialsId> implements 
         this.credentialsValue = deviceCredentials.getCredentialsValue();
         this.version = deviceCredentials.getVersion();
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link DeviceCredentialsId}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY, description = "The Id is automatically generated during device creation. " +
             "Use 'getDeviceCredentialsByDeviceId' to obtain the id based on device id. " +
@@ -68,31 +73,61 @@ public class DeviceCredentials extends BaseData<DeviceCredentialsId> implements 
     public DeviceCredentialsId getId() {
         return super.getId();
     }
+    /**
+     * Returns created time.
+     *
+     * @return the long result
+     */
 
     @Schema(description = "Timestamp of the device credentials creation, in milliseconds", example = "1609459200000")
     @Override
     public long getCreatedTime() {
         return super.getCreatedTime();
     }
+    /**
+     * Returns device id.
+     *
+     * @return {@link DeviceId}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "JSON object with the device Id.")
     public DeviceId getDeviceId() {
         return deviceId;
     }
+    /**
+     * Set device id.
+     *
+     * @param deviceId target device identifier
+     */
 
     public void setDeviceId(DeviceId deviceId) {
         this.deviceId = deviceId;
     }
+    /**
+     * Returns credentials type.
+     *
+     * @return {@link DeviceCredentialsType}
+     */
 
     @Schema(description = "Type of the credentials", allowableValues = {"ACCESS_TOKEN", "X509_CERTIFICATE", "MQTT_BASIC", "LWM2M_CREDENTIALS"})
     @Override
     public DeviceCredentialsType getCredentialsType() {
         return credentialsType;
     }
+    /**
+     * Set credentials type.
+     *
+     * @param credentialsType credentials type ({@link DeviceCredentialsType})
+     */
 
     public void setCredentialsType(DeviceCredentialsType credentialsType) {
         this.credentialsType = credentialsType;
     }
+    /**
+     * Returns credentials id.
+     *
+     * @return {@link String}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Unique Credentials Id per platform instance. " +
             "Used to lookup credentials from the database. " +
@@ -103,10 +138,20 @@ public class DeviceCredentials extends BaseData<DeviceCredentialsId> implements 
     public String getCredentialsId() {
         return credentialsId;
     }
+    /**
+     * Set credentials id.
+     *
+     * @param credentialsId credentials id ({@link String})
+     */
 
     public void setCredentialsId(String credentialsId) {
         this.credentialsId = credentialsId;
     }
+    /**
+     * Returns credentials value.
+     *
+     * @return {@link String}
+     */
 
     @Schema(description = "Value of the credentials. " +
             "Null in case of ACCESS_TOKEN credentials type. Base64 value in case of X509_CERTIFICATE. " +
@@ -114,6 +159,11 @@ public class DeviceCredentials extends BaseData<DeviceCredentialsId> implements 
     public String getCredentialsValue() {
         return credentialsValue;
     }
+    /**
+     * Set credentials value.
+     *
+     * @param credentialsValue credentials value ({@link String})
+     */
 
     public void setCredentialsValue(String credentialsValue) {
         this.credentialsValue = credentialsValue;

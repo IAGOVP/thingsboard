@@ -29,19 +29,45 @@ public abstract class AbstractLwM2mTransportResource extends LwM2mCoapResource {
     public AbstractLwM2mTransportResource(String name) {
         super(name, new IdentityHandlerProvider());
     }
+    /**
+     * Handles get.
+     *
+     * @param exchange exchange ({@link CoapExchange})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void handleGET(CoapExchange exchange) {
         processHandleGet(exchange);
     }
+    /**
+     * Handles post.
+     *
+     * @param exchange exchange ({@link CoapExchange})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void handlePOST(CoapExchange exchange) {
         processHandlePost(exchange);
     }
-
+    /**
+     * Processes handle get.
+     *
+     * @param exchange exchange ({@link CoapExchange})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     protected abstract void processHandleGet(CoapExchange exchange);
-
+    /**
+     * Processes handle post.
+     *
+     * @param exchange exchange ({@link CoapExchange})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     protected abstract void processHandlePost(CoapExchange exchange);
 
 }

@@ -20,11 +20,13 @@ import org.thingsboard.server.common.data.id.DeviceId;
 import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.msg.MsgType;
 import org.thingsboard.server.common.msg.ToDeviceActorNotificationMsg;
+/**
+ * Internal actor or queue message: device delete msg.
+ *
+ * <p>Serialized between tb-core, rule-engine, transport, and edge services.
+ */
 
 @Data
-/**
- * Message: device delete msg.
- */
 public class DeviceDeleteMsg implements ToDeviceActorNotificationMsg {
 
     private static final long serialVersionUID = 4679029228395462172L;

@@ -29,64 +29,101 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The Interface WidgetsBundleDao.
+ * Persistence contract for widgets bundle.
+ *
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (widget types and widget bundles).
  */
+
 public interface WidgetsBundleDao extends Dao<WidgetsBundle>, ExportableEntityDao<WidgetsBundleId, WidgetsBundle>, ImageContainerDao<WidgetsBundle> {
 
+    
     /**
-     * Save or update widgets bundle object
+     * Saves or persists the requested data.
      *
-     * @param tenantId the tenantId
-     * @param widgetsBundle the widgets bundle object
-     * @return saved widgets bundle object
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetsBundle widgets bundle ({@link WidgetsBundle})
+     * @return {@link WidgetsBundle}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     WidgetsBundle save(TenantId tenantId, WidgetsBundle widgetsBundle);
 
+    
     /**
-     * Find widgets bundle by tenantId and alias.
+     * Finds widgets bundle by tenant id and alias.
      *
-     * @param tenantId the tenantId
-     * @param alias the alias
-     * @return the widgets bundle object
+     * @param tenantId tenant that owns the entity or operation
+     * @param alias alias ({@link String})
+     * @return {@link WidgetsBundle}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     WidgetsBundle findWidgetsBundleByTenantIdAndAlias(UUID tenantId, String alias);
 
+    
     /**
-     * Find system widgets bundles by page link.
+     * Finds system widgets bundles.
      *
-     * @param pageLink the page link
-     * @return the list of widgets bundles objects
+     * @param widgetsBundleFilter widgets bundle filter ({@link WidgetsBundleFilter})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<WidgetsBundle> findSystemWidgetsBundles(WidgetsBundleFilter widgetsBundleFilter, PageLink pageLink);
 
+    
     /**
-     * Find tenant widgets bundles by tenantId and page link.
+     * Finds tenant widgets bundles by tenant id.
      *
-     * @param tenantId the tenantId
-     * @param pageLink the page link
-     * @return the list of widgets bundles objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<WidgetsBundle> findTenantWidgetsBundlesByTenantId(UUID tenantId, PageLink pageLink);
 
+    
     /**
-     * Find all tenant widgets bundles (including system) by tenantId and page link.
+     * Finds all tenant widgets bundles by tenant id.
      *
-     * @param tenantId the tenantId
-     * @param pageLink the page link
-     * @return the list of widgets bundles objects
+     * @param widgetsBundleFilter widgets bundle filter ({@link WidgetsBundleFilter})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<WidgetsBundle> findAllTenantWidgetsBundlesByTenantId(WidgetsBundleFilter widgetsBundleFilter, PageLink pageLink);
 
+    
     /**
-     * Find all tenant widgets bundles (does not include system) by tenantId and page link.
+     * Finds tenant widgets bundles by tenant id.
      *
-     * @param tenantId the tenantId
-     * @param pageLink the page link
-     * @return the list of widgets bundles objects
+     * @param widgetsBundleFilter widgets bundle filter ({@link WidgetsBundleFilter})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<WidgetsBundle> findTenantWidgetsBundlesByTenantId(WidgetsBundleFilter widgetsBundleFilter, PageLink pageLink);
+    /**
+     * Finds all widgets bundles.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<WidgetsBundle> findAllWidgetsBundles(PageLink pageLink);
+    /**
+     * Finds system or tenant widget bundles by ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetsBundleIds widgets bundle ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<WidgetsBundle> findSystemOrTenantWidgetBundlesByIds(UUID tenantId, List<UUID> widgetsBundleIds);
 

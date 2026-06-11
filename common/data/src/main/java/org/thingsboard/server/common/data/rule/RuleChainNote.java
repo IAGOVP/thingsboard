@@ -27,9 +27,6 @@ import lombok.ToString;
 @Schema
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-/**
- * Rule chain note.
- */
 public class RuleChainNote {
 
     @Schema(description = "Unique identifier of the note on the canvas")

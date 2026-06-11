@@ -17,10 +17,10 @@ package org.thingsboard.common.util.geo;
 
 import lombok.Data;
 
-@Data
 /**
  * Polygon perimeter definition.
  */
+@Data
 public class PolygonPerimeterDefinition implements PerimeterDefinition {
 
     private final String polygonDefinition;

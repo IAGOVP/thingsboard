@@ -31,8 +31,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @SuperBuilder
 /**
- * Dashboard fields.
+ * Lightweight dashboard field selection for EDQS queries and events (EDQS data — lightweight entity field DTOs for EDQS).
  */
+
 public class DashboardFields extends AbstractEntityFields {
 
     private static ObjectMapper objectMapper = new ObjectMapper();

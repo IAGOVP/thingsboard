@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.UUID;
 
 /**
- * Typed identifier for user auth settings.
+ * Typed identifier for user authentication settings (2FA, etc.).
  */
 public class UserAuthSettingsId extends UUIDBased {
 

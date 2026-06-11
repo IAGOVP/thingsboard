@@ -39,7 +39,13 @@ public class SparkplugTopicService {
     public static final String TOPIC_ROOT_CERT_SP = "$sparkplug/certificates/";
     public static final String TOPIC_SPLIT_REGEXP = "/";
     public static final String TOPIC_STATE_REGEXP = TOPIC_ROOT_SPB_V_1_0 + TOPIC_SPLIT_REGEXP + STATE.name() + TOPIC_SPLIT_REGEXP;
-
+    /**
+     * Returns split topic.
+     *
+     * @param topic topic ({@link String})
+     * @return {@link SparkplugTopic}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
     public static SparkplugTopic getSplitTopic(String topic) throws ThingsboardException {
         SparkplugTopic sparkplugTopic = SPLIT_TOPIC_CACHE.get(topic);
         if (sparkplugTopic == null) {

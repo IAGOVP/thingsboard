@@ -36,8 +36,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Created by Valerii Sosliuk on 5/6/2017.
+ * JPA/PostgreSQL implementation of base component descriptor dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 @Component
 public class JpaBaseComponentDescriptorDao extends JpaAbstractDao<ComponentDescriptorEntity, ComponentDescriptor>
         implements ComponentDescriptorDao {
@@ -48,33 +51,44 @@ public class JpaBaseComponentDescriptorDao extends JpaAbstractDao<ComponentDescr
     @Autowired
     private ComponentDescriptorInsertRepository componentDescriptorInsertRepository;
 
+    
     /**
-
-     * Get entity class.
-
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected Class<ComponentDescriptorEntity> getEntityClass() {
         return ComponentDescriptorEntity.class;
     }
 
+    
     /**
-
-     * Get repository.
-
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected JpaRepository<ComponentDescriptorEntity, UUID> getRepository() {
         return componentDescriptorRepository;
     }
 
+    
     /**
-
-     * Persists if not exist.
-
+     * Saves or persists if not exist.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param component component ({@link ComponentDescriptor})
+     * @return optional {@link ComponentDescriptor}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<ComponentDescriptor> saveIfNotExist(TenantId tenantId, ComponentDescriptor component) {
@@ -91,33 +105,49 @@ public class JpaBaseComponentDescriptorDao extends JpaAbstractDao<ComponentDescr
         return Optional.empty();
     }
 
+    
     /**
-
-     * Loads by id.
-
+     * Finds by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param componentId component id ({@link ComponentDescriptorId})
+     * @return {@link ComponentDescriptor}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ComponentDescriptor findById(TenantId tenantId, ComponentDescriptorId componentId) {
         return findById(tenantId, componentId.getId());
     }
 
+    
     /**
-
-     * Loads by clazz.
-
+     * Finds by clazz.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param clazz clazz ({@link String})
+     * @return {@link ComponentDescriptor}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ComponentDescriptor findByClazz(TenantId tenantId, String clazz) {
         return DaoUtil.getData(componentDescriptorRepository.findByClazz(clazz));
     }
 
+    
     /**
-
-     * Loads by type and page link.
-
+     * Finds by type and page link.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link ComponentType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<ComponentDescriptor> findByTypeAndPageLink(TenantId tenantId, ComponentType type, PageLink pageLink) {
@@ -128,11 +158,18 @@ public class JpaBaseComponentDescriptorDao extends JpaAbstractDao<ComponentDescr
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads by scope and type and page link.
-
+     * Finds by scope and type and page link.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param scope attribute scope (SERVER_SCOPE, SHARED_SCOPE, etc.)
+     * @param type type ({@link ComponentType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<ComponentDescriptor> findByScopeAndTypeAndPageLink(TenantId tenantId, ComponentScope scope, ComponentType type, PageLink pageLink) {
@@ -144,11 +181,16 @@ public class JpaBaseComponentDescriptorDao extends JpaAbstractDao<ComponentDescr
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Removes by id.
-
+     * Deletes by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param componentId component id ({@link ComponentDescriptorId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -156,11 +198,16 @@ public class JpaBaseComponentDescriptorDao extends JpaAbstractDao<ComponentDescr
         removeById(tenantId, componentId.getId());
     }
 
+    
     /**
-
-     * Removes by clazz.
-
+     * Deletes by clazz.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param clazz clazz ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional

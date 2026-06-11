@@ -25,8 +25,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 /**
- * To core edqs request.
+ * To core edqs request (EDQS data).
  */
+
 public class ToCoreEdqsRequest {
 
     private EdqsSyncRequest syncRequest;

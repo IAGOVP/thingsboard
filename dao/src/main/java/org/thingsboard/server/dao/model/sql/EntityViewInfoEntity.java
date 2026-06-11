@@ -23,8 +23,11 @@ import org.thingsboard.server.common.data.EntityViewInfo;
 import java.util.HashMap;
 import java.util.Map;
 /**
- * Entity view info entity.
+ * JPA/Cassandra row model for view info.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -53,6 +56,12 @@ public class EntityViewInfoEntity extends AbstractEntityViewEntity<EntityViewInf
             this.customerIsPublic = false;
         }
     }
+    /**
+     * To data.
+     *
+     * @return {@link EntityViewInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityViewInfo toData() {

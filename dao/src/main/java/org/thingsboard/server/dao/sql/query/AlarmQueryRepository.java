@@ -25,16 +25,41 @@ import org.thingsboard.server.common.data.query.AlarmDataQuery;
 
 import java.util.Collection;
 
+
 /**
 
- * alarm query repository contract.
+ * Spring Data JPA repository for alarm query entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
 
+
 public interface AlarmQueryRepository {
+    /**
+     * Finds alarm data by query for entities.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param query filter and sort query definition
+     * @param orderedEntityIds ordered entity ids ({@link Collection})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<AlarmData> findAlarmDataByQueryForEntities(TenantId tenantId,
                                                         AlarmDataQuery query, Collection<EntityId> orderedEntityIds);
+    /**
+     * Counts alarms by query.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param query filter and sort query definition
+     * @param orderedEntityIds ordered entity ids ({@link Collection})
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     long countAlarmsByQuery(TenantId tenantId, CustomerId customerId, AlarmCountQuery query, Collection<EntityId> orderedEntityIds);
 

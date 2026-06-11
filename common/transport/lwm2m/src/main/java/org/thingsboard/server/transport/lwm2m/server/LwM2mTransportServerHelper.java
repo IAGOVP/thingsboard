@@ -55,18 +55,42 @@ import static org.thingsboard.server.gen.transport.TransportProtos.KeyValueType.
 public class LwM2mTransportServerHelper {
 
     private final LwM2mTransportContext context;
-
+    /**
+     * Send parameters on thingsboard attribute.
+     *
+     * @param result result ({@link List})
+     * @param sessionInfo session info ({@link SessionInfoProto})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void sendParametersOnThingsboardAttribute(List<TransportProtos.KeyValueProto> result, SessionInfoProto sessionInfo) {
         PostAttributeMsg.Builder request = PostAttributeMsg.newBuilder();
         request.addAllKv(result);
         PostAttributeMsg postAttributeMsg = request.build();
         context.getTransportService().process(sessionInfo, postAttributeMsg, TransportServiceCallback.EMPTY);
     }
-
+    /**
+     * Send parameters on thingsboard telemetry.
+     *
+     * @param kvList kv list ({@link List})
+     * @param sessionInfo session info ({@link SessionInfoProto})
+     * @param keyTsLatestMaps key ts latest maps ({@link Map})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void sendParametersOnThingsboardTelemetry(List<TransportProtos.KeyValueProto> kvList, SessionInfoProto sessionInfo, @Nullable Map<String, AtomicLong> keyTsLatestMaps){
         sendParametersOnThingsboardTelemetry(kvList, sessionInfo, keyTsLatestMaps, null);
     }
-
+    /**
+     * Send parameters on thingsboard telemetry.
+     *
+     * @param kvList kv list ({@link List})
+     * @param sessionInfo session info ({@link SessionInfoProto})
+     * @param keyTsLatestMap key ts latest map ({@link Map})
+     * @param ts ts ({@link Instant})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void sendParametersOnThingsboardTelemetry(List<TransportProtos.KeyValueProto> kvList, SessionInfoProto sessionInfo, @Nullable Map<String, AtomicLong> keyTsLatestMap, @Nullable Instant ts) {
         TransportProtos.TsKvListProto tsKvList = toTsKvList(kvList, keyTsLatestMap, ts);
 
@@ -106,7 +130,7 @@ public class LwM2mTransportServerHelper {
      * Once time have shifted *backward*, the latest ts never came back.
      * Ts latest will be incremented until current time overtake the latest ts.
      * In normal environment without race conditions method will return current ts (wall-clock)
-     * */
+     */
     long compareAndSwapOrIncrementTsAtomically(AtomicLong tsLatestAtomic, final long tsNow) {
         long tsLatest;
         while ((tsLatest = tsLatestAtomic.get()) < tsNow) {
@@ -119,13 +143,20 @@ public class LwM2mTransportServerHelper {
 
     /**
      * For the test ability to mock system timer
-     * */
+     */
     long getCurrentTimeMillis() {
         return System.currentTimeMillis();
     }
 
+    
     /**
-     * @return - sessionInfo after access connect client
+     * Returns validate session info.
+     *
+     * @param msg msg ({@link ValidateDeviceCredentialsResponse})
+     * @param mostSignificantBits most significant bits
+     * @param leastSignificantBits least significant bits
+     * @return {@link SessionInfoProto}
+     * @throws Exception on processing failure
      */
     public SessionInfoProto getValidateSessionInfo(ValidateDeviceCredentialsResponse msg, long mostSignificantBits, long leastSignificantBits) {
         return SessionInfoProto.newBuilder()
@@ -144,7 +175,14 @@ public class LwM2mTransportServerHelper {
                 .setDeviceProfileIdLSB(msg.getDeviceInfo().getDeviceProfileId().getId().getLeastSignificantBits())
                 .build();
     }
-
+    /**
+     * Parse from xml to object model.
+     *
+     * @param xmlByte xml byte
+     * @param streamName stream name ({@link String})
+     * @return {@link ObjectModel}
+     * @throws Exception on processing failure
+     */
     public ObjectModel parseFromXmlToObjectModel(byte[] xmlByte, String streamName) {
         try {
             TbDDFFileParser ddfFileParser = new TbDDFFileParser();
@@ -155,9 +193,14 @@ public class LwM2mTransportServerHelper {
         }
     }
 
+    
     /**
-     * @param value - info about Logs
-     * @return- KeyValueProto for telemetry (Logs)
+     * Returns kv stringto thingsboard.
+     *
+     * @param key key ({@link String})
+     * @param value value ({@link String})
+     * @return {@link List}
+     * @throws Exception on processing failure
      */
     public List<TransportProtos.KeyValueProto> getKvStringtoThingsboard(String key, String value) {
         List<TransportProtos.KeyValueProto> result = new ArrayList<>();
@@ -169,11 +212,17 @@ public class LwM2mTransportServerHelper {
         return result;
     }
 
+    
     /**
-     * @return - KeyValueProto for attribute/telemetry (change value)
-     * @throws CodecException -
+     * Returns kv attr telemetry to thingsboard.
+     *
+     * @param resourceType resource type
+     * @param resourceName resource name ({@link String})
+     * @param value value ({@link Object})
+     * @param isMultiInstances is multi instances
+     * @return the TransportProtos.KeyValueProto value
+     * @throws Exception on processing failure
      */
-
     public TransportProtos.KeyValueProto getKvAttrTelemetryToThingsboard(ResourceModel.Type resourceType, String resourceName, Object value, boolean isMultiInstances) {
         TransportProtos.KeyValueProto.Builder kvProto = TransportProtos.KeyValueProto.newBuilder().setKey(resourceName);
         if (isMultiInstances) {
@@ -208,10 +257,14 @@ public class LwM2mTransportServerHelper {
         return kvProto.build();
     }
 
+    
     /**
-     * @param currentType  -
-     * @param resourcePath -
-     * @return
+     * Returns resource model type equals kv proto value type.
+     *
+     * @param currentType current type
+     * @param resourcePath resource path ({@link String})
+     * @return the ResourceModel.Type value
+     * @throws Exception on processing failure
      */
     public static ResourceModel.Type getResourceModelTypeEqualsKvProtoValueType(ResourceModel.Type currentType, String resourcePath) {
         switch (currentType) {
@@ -230,7 +283,13 @@ public class LwM2mTransportServerHelper {
         }
         throw new CodecException("Invalid ResourceModel_Type for resource %s, got %s", resourcePath, currentType);
     }
-
+    /**
+     * Returns value from kv proto.
+     *
+     * @param kv kv
+     * @return {@link Object}
+     * @throws Exception on processing failure
+     */
     public static Object getValueFromKvProto(TransportProtos.KeyValueProto kv) {
         switch (kv.getType()) {
             case BOOLEAN_V:

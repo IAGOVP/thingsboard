@@ -34,6 +34,14 @@ public class TbLwM2MObserveCompositeCallback extends TbLwM2MUplinkTargetedCallba
     public TbLwM2MObserveCompositeCallback(LwM2mUplinkMsgHandler handler, LwM2MTelemetryLogService logService, LwM2mClient client, String[] versionedIds) {
         super(handler, logService, client, versionedIds);
     }
+    /**
+     * Handles success.
+     *
+     * @param request request payload with operation parameters
+     * @param response response ({@link ObserveCompositeResponse})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onSuccess(ObserveCompositeRequest request, ObserveCompositeResponse response) {

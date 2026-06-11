@@ -32,8 +32,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 /**
- * Attribute kv.
+ * Attribute kv (EDQS data).
  */
+
 public class AttributeKv implements EdqsObject {
 
     private EntityId entityId;
@@ -61,21 +62,59 @@ public class AttributeKv implements EdqsObject {
         this.key = key;
         this.version = version;
     }
+    
+        /**
+         * String key.
+         *
+         * @return {@link String}
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
 
     @Override
     public String stringKey() {
         return "a_" + entityId + "_" + scope + "_" + key;
     }
+    
+    /**
+     * Version.
+     *
+     * @return {@link Long}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public Long version() {
         return version;
     }
+    
+        /**
+         * Type.
+         *
+         * @return {@link ObjectType}
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
 
     @Override
     public ObjectType type() {
         return ObjectType.ATTRIBUTE_KV;
     }
+    
+
+    
+    /**
+     * Key.
+     *
+     * @param entityId target entity identifier
+     * @param scope scope ({@link AttributeScope})
+     * @param key key
+     * @return the record value
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
+
 
     public record Key(UUID entityId, AttributeScope scope, int key) implements EdqsObjectKey {}
 

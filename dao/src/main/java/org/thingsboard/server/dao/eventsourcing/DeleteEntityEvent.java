@@ -20,8 +20,14 @@ import lombok.Data;
 import org.thingsboard.server.common.data.id.EntityId;
 import org.thingsboard.server.common.data.id.TenantId;
 /**
- * Delete entity event.
+ * Delete entity event (entity lifecycle action cause tracking).
  */
+
+
+
+
+
+
 
 @Builder
 @Data

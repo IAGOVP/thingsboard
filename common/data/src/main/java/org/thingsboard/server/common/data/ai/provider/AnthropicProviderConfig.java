@@ -18,10 +18,10 @@ package org.thingsboard.server.common.data.ai.provider;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
-@Schema
 /**
  * Configuration for anthropic provider.
  */
+@Schema
 public record AnthropicProviderConfig(
         @NotNull String apiKey
 ) implements AiProviderConfig {}

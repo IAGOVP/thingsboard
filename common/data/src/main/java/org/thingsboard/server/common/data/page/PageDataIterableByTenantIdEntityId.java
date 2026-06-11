@@ -19,7 +19,7 @@ import org.thingsboard.server.common.data.id.EntityId;
 import org.thingsboard.server.common.data.id.TenantId;
 
 /**
- * Typed identifier for page data iterable by tenant id entity.
+ * Iterable paging through entities filtered by tenant and parent entity.
  */
 public class PageDataIterableByTenantIdEntityId<T> extends BasePageDataIterable<T> {
 

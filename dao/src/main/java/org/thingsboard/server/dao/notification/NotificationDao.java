@@ -29,29 +29,120 @@ import org.thingsboard.server.dao.Dao;
 
 import java.util.Set;
 
+
 /**
 
- * Persistence contract for notification (see JPA/Cassandra implementations).
+ * Persistence contract for notification.
+
+ *
+
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (notification templates, targets, rules, and delivery requests).
 
  */
 
+
 public interface NotificationDao extends Dao<Notification> {
+    /**
+     * Finds unread by delivery method and recipient id and page link.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deliveryMethod delivery method ({@link NotificationDeliveryMethod})
+     * @param recipientId recipient id ({@link UserId})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<Notification> findUnreadByDeliveryMethodAndRecipientIdAndPageLink(TenantId tenantId, NotificationDeliveryMethod deliveryMethod, UserId recipientId, PageLink pageLink);
+    /**
+     * Finds unread by delivery method and recipient id and notification types and page link.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deliveryMethod delivery method ({@link NotificationDeliveryMethod})
+     * @param recipientId recipient id ({@link UserId})
+     * @param types types ({@link Set})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<Notification> findUnreadByDeliveryMethodAndRecipientIdAndNotificationTypesAndPageLink(TenantId tenantId, NotificationDeliveryMethod deliveryMethod, UserId recipientId, Set<NotificationType> types, PageLink pageLink);
+    /**
+     * Finds by delivery method and recipient id and page link.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deliveryMethod delivery method ({@link NotificationDeliveryMethod})
+     * @param recipientId recipient id ({@link UserId})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<Notification> findByDeliveryMethodAndRecipientIdAndPageLink(TenantId tenantId, NotificationDeliveryMethod deliveryMethod, UserId recipientId, PageLink pageLink);
+    /**
+     * Updates status by id and recipient id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param recipientId recipient id ({@link UserId})
+     * @param notificationId notification id ({@link NotificationId})
+     * @param status status ({@link NotificationStatus})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     boolean updateStatusByIdAndRecipientId(TenantId tenantId, UserId recipientId, NotificationId notificationId, NotificationStatus status);
+    /**
+     * Counts unread by delivery method and recipient id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deliveryMethod delivery method ({@link NotificationDeliveryMethod})
+     * @param recipientId recipient id ({@link UserId})
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     int countUnreadByDeliveryMethodAndRecipientId(TenantId tenantId, NotificationDeliveryMethod deliveryMethod, UserId recipientId);
+    /**
+     * Deletes by id and recipient id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param recipientId recipient id ({@link UserId})
+     * @param notificationId notification id ({@link NotificationId})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     boolean deleteByIdAndRecipientId(TenantId tenantId, UserId recipientId, NotificationId notificationId);
+    /**
+     * Updates status by delivery method and recipient id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deliveryMethod delivery method ({@link NotificationDeliveryMethod})
+     * @param recipientId recipient id ({@link UserId})
+     * @param status status ({@link NotificationStatus})
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     int updateStatusByDeliveryMethodAndRecipientId(TenantId tenantId, NotificationDeliveryMethod deliveryMethod, UserId recipientId, NotificationStatus status);
+    /**
+     * Deletes by request id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param requestId request id ({@link NotificationRequestId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void deleteByRequestId(TenantId tenantId, NotificationRequestId requestId);
+    /**
+     * Deletes by recipient id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param recipientId recipient id ({@link UserId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void deleteByRecipientId(TenantId tenantId, UserId recipientId);
 

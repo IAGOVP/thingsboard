@@ -45,9 +45,15 @@ public class TbInMemorySecurityStore implements TbEditableSecurityStore {
     public TbInMemorySecurityStore() {
     }
 
+    
     /**
-     * {@inheritDoc}
+     * Returns by endpoint.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return {@link SecurityInfo}
+     * @throws Exception on processing failure
      */
+
     @Override
     public SecurityInfo getByEndpoint(String endpoint) {
         readLock.lock();
@@ -69,9 +75,15 @@ public class TbInMemorySecurityStore implements TbEditableSecurityStore {
         }
     }
 
+    
     /**
-     * {@inheritDoc}
+     * Returns by identity.
+     *
+     * @param identity identity ({@link String})
+     * @return {@link SecurityInfo}
+     * @throws Exception on processing failure
      */
+
     @Override
     public SecurityInfo getByIdentity(String identity) {
         readLock.lock();
@@ -86,11 +98,25 @@ public class TbInMemorySecurityStore implements TbEditableSecurityStore {
             readLock.unlock();
         }
     }
+    /**
+     * Returns by oscore identity.
+     *
+     * @param oscoreIdentity oscore identity ({@link OscoreIdentity})
+     * @return {@link SecurityInfo}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public SecurityInfo getByOscoreIdentity(OscoreIdentity oscoreIdentity) {
         return null;
     }
+    /**
+     * Put.
+     *
+     * @param tbSecurityInfo tb security info ({@link TbLwM2MSecurityInfo})
+     * @return nothing
+     * @throws NonUniqueSecurityInfoException if non unique security info exception is thrown during processing
+     */
 
     @Override
     public void put(TbLwM2MSecurityInfo tbSecurityInfo) throws NonUniqueSecurityInfoException {
@@ -119,6 +145,13 @@ public class TbInMemorySecurityStore implements TbEditableSecurityStore {
             writeLock.unlock();
         }
     }
+    /**
+     * Removes the requested data.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void remove(String endpoint) {
@@ -132,6 +165,13 @@ public class TbInMemorySecurityStore implements TbEditableSecurityStore {
             writeLock.unlock();
         }
     }
+    /**
+     * Returns tb lw m2msecurity info by endpoint.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return {@link TbLwM2MSecurityInfo}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public TbLwM2MSecurityInfo getTbLwM2MSecurityInfoByEndpoint(String endpoint) {

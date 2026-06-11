@@ -39,8 +39,11 @@ import static org.thingsboard.server.dao.model.ModelConstants.ASSET_TENANT_ID_PR
 import static org.thingsboard.server.dao.model.ModelConstants.ASSET_TYPE_PROPERTY;
 import static org.thingsboard.server.dao.model.ModelConstants.EXTERNAL_ID_PROPERTY;
 /**
- * Abstract asset entity.
+ * JPA/Cassandra row model for abstract asset.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -107,6 +110,12 @@ public abstract class AbstractAssetEntity<T extends Asset> extends BaseVersioned
         this.additionalInfo = assetEntity.getAdditionalInfo();
         this.externalId = assetEntity.getExternalId();
     }
+    /**
+     * To asset.
+     *
+     * @return {@link Asset}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected Asset toAsset() {
         Asset asset = new Asset(new AssetId(id));

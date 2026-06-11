@@ -19,21 +19,51 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.data.id.UserId;
 
 /**
- * alarm modification request contract.
+ * Batch alarm modification payload.
  */
 public interface AlarmModificationRequest {
 
     TenantId getTenantId();
+/**
+ * Returns severity.
+ *
+ * @return {@link AlarmSeverity}
+ */
 
     AlarmSeverity getSeverity();
+/**
+ * Returns start ts.
+ *
+ * @return the long result
+ */
 
     long getStartTs();
+/**
+ * Returns end ts.
+ *
+ * @return the long result
+ */
 
     long getEndTs();
+/**
+ * Set start ts.
+ *
+ * @param startTs start ts
+ */
 
     void setStartTs(long startTs);
+/**
+ * Set end ts.
+ *
+ * @param endTs end ts
+ */
 
     void setEndTs(long endTs);
+/**
+ * Returns user id.
+ *
+ * @return {@link UserId}
+ */
 
     UserId getUserId();
 }

@@ -76,10 +76,21 @@ public enum ObjectType {
     static {
         edqsTypes.addAll(List.of(RELATION, ATTRIBUTE_KV, LATEST_TS_KV));
     }
+    /**
+     * To entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     public EntityType toEntityType() {
         return EntityType.valueOf(name());
     }
+    /**
+     * From entity type.
+     *
+     * @param entityType entity type ({@link EntityType})
+     * @return {@link ObjectType}
+     */
 
     public static ObjectType fromEntityType(EntityType entityType) {
         try {

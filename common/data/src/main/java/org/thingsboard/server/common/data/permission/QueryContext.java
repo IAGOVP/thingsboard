@@ -46,6 +46,11 @@ public class QueryContext {
     public QueryContext(TenantId tenantId, CustomerId customerId, EntityType entityType) {
         this(tenantId, customerId, entityType, false);
     }
+    /**
+     * Is tenant user.
+     *
+     * @return the boolean result
+     */
 
     public boolean isTenantUser() {
         return customerId == null || customerId.isNullUid();

@@ -22,10 +22,10 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinWorkerThread;
 import java.util.concurrent.atomic.AtomicLong;
 
-@ToString
 /**
  * Factory for things board fork join worker thread.
  */
+@ToString
 public class ThingsBoardForkJoinWorkerThreadFactory implements ForkJoinPool.ForkJoinWorkerThreadFactory {
     private final String namePrefix;
     private final AtomicLong threadNumber = new AtomicLong(1);

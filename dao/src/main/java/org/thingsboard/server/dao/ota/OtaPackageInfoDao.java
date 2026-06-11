@@ -24,17 +24,50 @@ import org.thingsboard.server.common.data.page.PageData;
 import org.thingsboard.server.common.data.page.PageLink;
 import org.thingsboard.server.dao.Dao;
 
+
 /**
 
- * Persistence contract for ota package info (see JPA/Cassandra implementations).
+ * Persistence contract for ota package info.
+
+ *
+
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (OTA firmware/software package metadata and data cache).
 
  */
 
+
 public interface OtaPackageInfoDao extends Dao<OtaPackageInfo> {
+    /**
+     * Finds ota package info by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<OtaPackageInfo> findOtaPackageInfoByTenantId(TenantId tenantId, PageLink pageLink);
+    /**
+     * Finds ota package info by tenant id and device profile id and type and has data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfileId device profile id ({@link DeviceProfileId})
+     * @param otaPackageType ota package type ({@link OtaPackageType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<OtaPackageInfo> findOtaPackageInfoByTenantIdAndDeviceProfileIdAndTypeAndHasData(TenantId tenantId, DeviceProfileId deviceProfileId, OtaPackageType otaPackageType, PageLink pageLink);
+    /**
+     * Is ota package used.
+     *
+     * @param otaPackageId ota package id ({@link OtaPackageId})
+     * @param otaPackageType ota package type ({@link OtaPackageType})
+     * @param deviceProfileId device profile id ({@link DeviceProfileId})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     boolean isOtaPackageUsed(OtaPackageId otaPackageId, OtaPackageType otaPackageType, DeviceProfileId deviceProfileId);
 

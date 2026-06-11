@@ -42,8 +42,11 @@ import java.util.UUID;
 
 import static org.thingsboard.server.dao.model.ModelConstants.NULL_UUID;
 /**
- * JPA implementation of widgets bundle dao.
+ * JPA/PostgreSQL implementation of widgets bundle dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Component
 @SqlDao
@@ -51,21 +54,49 @@ public class JpaWidgetsBundleDao extends JpaAbstractDao<WidgetsBundleEntity, Wid
 
     @Autowired
     private WidgetsBundleRepository widgetsBundleRepository;
+    /**
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Class<WidgetsBundleEntity> getEntityClass() {
         return WidgetsBundleEntity.class;
     }
+    /**
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected JpaRepository<WidgetsBundleEntity, UUID> getRepository() {
         return widgetsBundleRepository;
     }
+    /**
+     * Finds widgets bundle by tenant id and alias.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alias alias ({@link String})
+     * @return {@link WidgetsBundle}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public WidgetsBundle findWidgetsBundleByTenantIdAndAlias(UUID tenantId, String alias) {
         return DaoUtil.getData(widgetsBundleRepository.findWidgetsBundleByTenantIdAndAlias(tenantId, alias));
     }
+    /**
+     * Finds system widgets bundles.
+     *
+     * @param widgetsBundleFilter widgets bundle filter ({@link WidgetsBundleFilter})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<WidgetsBundle> findSystemWidgetsBundles(WidgetsBundleFilter widgetsBundleFilter, PageLink pageLink) {
@@ -85,6 +116,14 @@ public class JpaWidgetsBundleDao extends JpaAbstractDao<WidgetsBundleEntity, Wid
                                     DaoUtil.toPageable(pageLink)));
         }
     }
+    /**
+     * Finds tenant widgets bundles by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<WidgetsBundle> findTenantWidgetsBundlesByTenantId(UUID tenantId, PageLink pageLink) {
@@ -95,21 +134,52 @@ public class JpaWidgetsBundleDao extends JpaAbstractDao<WidgetsBundleEntity, Wid
                                 pageLink.getTextSearch(),
                                 DaoUtil.toPageable(pageLink)));
     }
+    /**
+     * Finds all tenant widgets bundles by tenant id.
+     *
+     * @param widgetsBundleFilter widgets bundle filter ({@link WidgetsBundleFilter})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<WidgetsBundle> findAllTenantWidgetsBundlesByTenantId(WidgetsBundleFilter widgetsBundleFilter, PageLink pageLink) {
         return findTenantWidgetsBundlesByTenantIds(Arrays.asList(widgetsBundleFilter.getTenantId().getId(), NULL_UUID), widgetsBundleFilter, pageLink);
     }
+    /**
+     * Finds tenant widgets bundles by tenant id.
+     *
+     * @param widgetsBundleFilter widgets bundle filter ({@link WidgetsBundleFilter})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<WidgetsBundle> findTenantWidgetsBundlesByTenantId(WidgetsBundleFilter widgetsBundleFilter, PageLink pageLink) {
         return findTenantWidgetsBundlesByTenantIds(Collections.singletonList(widgetsBundleFilter.getTenantId().getId()), widgetsBundleFilter, pageLink);
     }
+    /**
+     * Finds all widgets bundles.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<WidgetsBundle> findAllWidgetsBundles(PageLink pageLink) {
         return DaoUtil.toPageData(widgetsBundleRepository.findAll(DaoUtil.toPageable(pageLink)));
     }
+    /**
+     * Finds system or tenant widget bundles by ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetsBundleIds widgets bundle ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<WidgetsBundle> findSystemOrTenantWidgetBundlesByIds(UUID tenantId, List<UUID> widgetsBundleIds) {
@@ -134,47 +204,117 @@ public class JpaWidgetsBundleDao extends JpaAbstractDao<WidgetsBundleEntity, Wid
                                     DaoUtil.toPageable(pageLink)));
         }
     }
+    /**
+     * Finds by tenant id and external id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param externalId external id ({@link UUID})
+     * @return {@link WidgetsBundle}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public WidgetsBundle findByTenantIdAndExternalId(UUID tenantId, UUID externalId) {
         return DaoUtil.getData(widgetsBundleRepository.findByTenantIdAndExternalId(tenantId, externalId));
     }
+    /**
+     * Finds by tenant id and name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return {@link WidgetsBundle}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public WidgetsBundle findByTenantIdAndName(UUID tenantId, String name) {
         return DaoUtil.getData(widgetsBundleRepository.findFirstByTenantIdAndTitle(tenantId, name));
     }
+    /**
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<WidgetsBundle> findByTenantId(UUID tenantId, PageLink pageLink) {
         return findTenantWidgetsBundlesByTenantId(tenantId, pageLink);
     }
+    /**
+     * Returns external id by internal.
+     *
+     * @param internalId internal id ({@link WidgetsBundleId})
+     * @return {@link WidgetsBundleId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public WidgetsBundleId getExternalIdByInternal(WidgetsBundleId internalId) {
         return Optional.ofNullable(widgetsBundleRepository.getExternalIdById(internalId.getId()))
                 .map(WidgetsBundleId::new).orElse(null);
     }
+    /**
+     * Finds by tenant and image link.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param imageUrl image url ({@link String})
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<WidgetsBundle> findByTenantAndImageLink(TenantId tenantId, String imageUrl, int limit) {
         return DaoUtil.convertDataList(widgetsBundleRepository.findByTenantAndImageUrl(tenantId.getId(), imageUrl, limit));
     }
+    /**
+     * Finds by image link.
+     *
+     * @param imageUrl image url ({@link String})
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<WidgetsBundle> findByImageLink(String imageUrl, int limit) {
         return DaoUtil.convertDataList(widgetsBundleRepository.findByImageUrl(imageUrl, limit));
     }
+    /**
+     * Finds all by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<WidgetsBundle> findAllByTenantId(TenantId tenantId, PageLink pageLink) {
         return findByTenantId(tenantId.getId(), pageLink);
     }
+    /**
+     * Finds next batch.
+     *
+     * @param id entity UUID primary key
+     * @param batchSize batch size
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<? extends EntityFields> findNextBatch(UUID id, int batchSize) {
         return widgetsBundleRepository.findNextBatch(id, Limit.of(batchSize));
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

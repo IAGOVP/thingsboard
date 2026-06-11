@@ -32,6 +32,11 @@ public class ReadTsKvQueryResult {
     private final List<TsKvEntry> data;
     // Holds the max ts of the records that match aggregation intervals (not the ts of the aggregation window, but the ts of the last record among all the intervals)
     private final long lastEntryTs;
+    /**
+     * To ts values.
+     *
+     * @return the TsValue[] value
+     */
 
     public TsValue[] toTsValues() {
         if (data != null && !data.isEmpty()) {
@@ -44,6 +49,12 @@ public class ReadTsKvQueryResult {
             return new TsValue[0];
         }
     }
+    /**
+     * To ts value.
+     *
+     * @param query query ({@link ReadTsKvQuery})
+     * @return {@link TsValue}
+     */
 
     public TsValue toTsValue(ReadTsKvQuery query) {
         if (data == null || data.isEmpty()) {

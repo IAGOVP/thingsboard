@@ -21,9 +21,11 @@ import org.thingsboard.common.util.TbBytePool;
 import org.thingsboard.server.common.data.kv.DataType;
 
 import java.util.function.Function;
+
 /**
- * Typed attribute/latest-TS value stored in EDQS (compressed string data point).
+ * Typed attribute or latest-TS value stored in the EDQS index (compressed string data point).
  */
+
 public class CompressedStringDataPoint extends AbstractDataPoint {
 
     @Getter
@@ -37,20 +39,39 @@ public class CompressedStringDataPoint extends AbstractDataPoint {
         this.compressedValue = TbBytePool.intern(compressedValue);
         this.uncompressor = uncompressor;
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link DataType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public DataType getType() {
         return DataType.STRING;
     }
+    /**
+     * Returns str.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @SneakyThrows
     @Override
     public String getStr() {
         return uncompressor.apply(compressedValue);
     }
+    /**
+     * Value to string.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String valueToString() {
+        /** Returns the str. */
         return getStr();
     }
 

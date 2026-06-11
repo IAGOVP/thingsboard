@@ -15,11 +15,48 @@
  */
 package org.thingsboard.server.dao.exception;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * Database exception.
+
+
+
+
+
+ * DAO exception for database exception (DAO-layer checked and runtime exceptions).
+
+
+
+
+
 
  */
+
+
+
+
+
+
 
 public class DatabaseException extends RuntimeException {
 

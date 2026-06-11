@@ -17,13 +17,26 @@ package org.thingsboard.server.dao;
 
 import org.thingsboard.server.common.data.id.TenantId;
 
+
 /**
 
- * Persistence contract for tenant entity with data (see JPA/Cassandra implementations).
+ * Persistence contract for tenant entity with data.
+
+ *
+
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (ThingsBoard DAO layer).
 
  */
 
+
 public interface TenantEntityWithDataDao {
+    /**
+     * Sum data size by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link Long}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     Long sumDataSizeByTenantId(TenantId tenantId);
 }

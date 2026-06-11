@@ -16,18 +16,52 @@
 package org.thingsboard.server.cache.ota;
 
 /**
- * ota package data cache contract.
+ * Cache for OTA firmware/package binary blobs to avoid repeated database reads during device updates.
+ *
+ * <p>Implementations: {@link CaffeineOtaPackageCache} (local), {@link RedisOtaPackageDataCache} (cluster).
+ * Keys are OTA package IDs; values are raw {@code byte[]} firmware data.
  */
 public interface OtaPackageDataCache {
 
+/**
+         * Returns full package data for the given key.
+         *
+         * @param key OTA package identifier
+         * @return firmware bytes, or {@code null} on miss
+         */
     byte[] get(String key);
 
+/**
+         * Returns a byte range slice for chunked firmware download.
+         *
+         * @param key       OTA package identifier
+         * @param chunkSize bytes per chunk; values {@code < 1} return full data
+         * @param chunk     zero-based chunk index
+         * @return slice bytes, or empty array when out of range
+         */
     byte[] get(String key, int chunkSize, int chunk);
 
+/**
+         * Stores firmware data (typically put-if-absent semantics in implementations).
+         *
+         * @param key   OTA package identifier
+         * @param value raw firmware bytes
+         */
     void put(String key, byte[] value);
 
+/**
+         * Removes cached firmware data.
+         *
+         * @param key OTA package identifier
+         */
     void evict(String key);
 
+/**
+         * Checks whether any data exists for the package.
+         *
+         * @param otaPackageId package identifier
+         * @return {@code true} when the first byte chunk is non-empty
+         */
     default boolean has(String otaPackageId) {
         byte[] data = get(otaPackageId, 1, 0);
         return data != null && data.length > 0;

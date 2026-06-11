@@ -21,8 +21,11 @@ import org.springframework.stereotype.Service;
 import org.thingsboard.server.cache.VersionedCaffeineTbCache;
 import org.thingsboard.server.common.data.CacheConstants;
 /**
- * Entity view caffeine cache.
+ * in-process Caffeine cache for entity view (ThingsBoard DAO layer).
+ *
+ * <p>Implements {@link org.thingsboard.server.cache.TbTransactionalCache} with DAO-specific key types.
  */
+
 
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "caffeine", matchIfMissing = true)
 @Service("EntityViewCache")

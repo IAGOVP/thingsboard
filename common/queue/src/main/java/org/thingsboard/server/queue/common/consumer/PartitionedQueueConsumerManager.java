@@ -15,6 +15,14 @@
  */
 package org.thingsboard.server.queue.common.consumer;
 
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
+
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -27,17 +35,10 @@ import org.thingsboard.server.queue.common.consumer.TbQueueConsumerManagerTask.A
 import org.thingsboard.server.queue.common.consumer.TbQueueConsumerManagerTask.DeletePartitionsTask;
 import org.thingsboard.server.queue.common.consumer.TbQueueConsumerManagerTask.RemovePartitionsTask;
 
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
-
-@Slf4j
 /**
- * Partitioned queue consumer manager.
+ * Manages consumers assigned to specific topic partitions after cluster rebalancing.
  */
+@Slf4j
 public class PartitionedQueueConsumerManager<M extends TbQueueMsg> extends MainQueueConsumerManager<M, QueueConfig> {
 
     private final ConsumerPerPartitionWrapper consumerWrapper;

@@ -16,7 +16,7 @@
 package org.thingsboard.server.queue;
 
 /**
- * tb queue msg metadata contract.
+ * Contract for tb queue msg metadata.
  */
 public interface TbQueueMsgMetadata {
 }

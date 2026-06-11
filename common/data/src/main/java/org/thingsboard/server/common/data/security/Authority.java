@@ -33,10 +33,21 @@ public enum Authority {
     Authority(int code) {
         this.code = code;
     }
+    /**
+     * Returns code.
+     *
+     * @return the int result
+     */
 
     public int getCode() {
         return code;
     }
+    /**
+     * Parse.
+     *
+     * @param value value ({@link String})
+     * @return {@link Authority}
+     */
 
     public static Authority parse(String value) {
         Authority authority = null;

@@ -36,8 +36,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 /**
- * Tenant profile data validator.
+ * Validates tenant profile entities before persistence.
+ *
+ * <p>Enforces constraints, uniqueness, and referential integrity at the DAO layer.
  */
+
 
 @Component
 public class TenantProfileDataValidator extends DataValidator<TenantProfile> {
@@ -49,11 +52,16 @@ public class TenantProfileDataValidator extends DataValidator<TenantProfile> {
     @Lazy
     private TenantProfileService tenantProfileService;
 
+    
     /**
-
-     * Validate data impl.
-
+     * Validates data impl.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param tenantProfile tenant profile ({@link TenantProfile})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateDataImpl(TenantId tenantId, TenantProfile tenantProfile) {
@@ -104,11 +112,16 @@ public class TenantProfileDataValidator extends DataValidator<TenantProfile> {
         }
     }
 
+    
     /**
-
-     * Validate update.
-
+     * Validates update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param tenantProfile tenant profile ({@link TenantProfile})
+     * @return {@link TenantProfile}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected TenantProfile validateUpdate(TenantId tenantId, TenantProfile tenantProfile) {

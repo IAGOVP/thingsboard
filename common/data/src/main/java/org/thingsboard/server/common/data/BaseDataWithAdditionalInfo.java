@@ -37,9 +37,6 @@ import java.util.function.Supplier;
  */
 @Slf4j
 @Schema
-/**
- * Base data with additional info.
- */
 public abstract class BaseDataWithAdditionalInfo<I extends UUIDBased> extends BaseData<I> implements HasAdditionalInfo {
 
     @NoXss
@@ -60,15 +57,31 @@ public abstract class BaseDataWithAdditionalInfo<I extends UUIDBased> extends Ba
         super(baseData);
         setAdditionalInfo(baseData.getAdditionalInfo());
     }
+    /**
+     * Returns additional info.
+     *
+     * @return {@link JsonNode}
+     */
 
     @Override
     public JsonNode getAdditionalInfo() {
         return getJson(() -> additionalInfo, () -> additionalInfoBytes);
     }
+    /**
+     * Set additional info.
+     *
+     * @param addInfo add info ({@link JsonNode})
+     */
 
     public void setAdditionalInfo(JsonNode addInfo) {
         setJson(addInfo, json -> this.additionalInfo = json, bytes -> this.additionalInfoBytes = bytes);
     }
+    /**
+     * Set additional info field.
+     *
+     * @param field field ({@link String})
+     * @param value value ({@link JsonNode})
+     */
 
     public void setAdditionalInfoField(String field, JsonNode value) {
         JsonNode additionalInfo = getAdditionalInfo();
@@ -78,6 +91,14 @@ public abstract class BaseDataWithAdditionalInfo<I extends UUIDBased> extends Ba
         ((ObjectNode) additionalInfo).set(field, value);
         setAdditionalInfo(additionalInfo);
     }
+    /**
+     * Returns additional info field.
+     *
+     * @param field field ({@link String})
+     * @param mapper mapper ({@link Function})
+     * @param defaultValue default value ({@link T})
+     * @return {@link T}
+     */
 
     public <T> T getAdditionalInfoField(String field, Function<JsonNode, T> mapper, T defaultValue) {
         JsonNode additionalInfo = getAdditionalInfo();
@@ -100,6 +121,13 @@ public abstract class BaseDataWithAdditionalInfo<I extends UUIDBased> extends Ba
     public int hashCode() {
         return Objects.hash(super.hashCode(), additionalInfoBytes);
     }
+    /**
+     * Returns json.
+     *
+     * @param jsonData json data ({@link Supplier})
+     * @param binaryData binary data ({@link Supplier})
+     * @return {@link JsonNode}
+     */
 
     public static JsonNode getJson(Supplier<JsonNode> jsonData, Supplier<byte[]> binaryData) {
         JsonNode json = jsonData.get();
@@ -119,6 +147,13 @@ public abstract class BaseDataWithAdditionalInfo<I extends UUIDBased> extends Ba
             }
         }
     }
+    /**
+     * Set json.
+     *
+     * @param json json ({@link JsonNode})
+     * @param jsonConsumer json consumer ({@link Consumer})
+     * @param bytesConsumer bytes consumer ({@link Consumer})
+     */
 
     public static void setJson(JsonNode json, Consumer<JsonNode> jsonConsumer, Consumer<byte[]> bytesConsumer) {
         jsonConsumer.accept(json);

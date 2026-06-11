@@ -17,10 +17,10 @@ package org.thingsboard.common.util.geo;
 
 import lombok.Data;
 
-@Data
 /**
  * Circle perimeter definition.
  */
+@Data
 public class CirclePerimeterDefinition implements PerimeterDefinition {
 
     private final Double latitude;

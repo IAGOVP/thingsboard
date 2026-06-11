@@ -39,10 +39,20 @@ public class EntityImportResult<E extends ExportableEntity<? extends EntityId>> 
     private boolean created;
     private boolean updated;
     private boolean updatedRelatedEntities;
+    /**
+     * Add save references callback.
+     *
+     * @param callback queue callback invoked when processing completes
+     */
 
     public void addSaveReferencesCallback(ThrowingRunnable callback) {
         this.saveReferencesCallback = this.saveReferencesCallback.andThen(callback);
     }
+    /**
+     * Add send events callback.
+     *
+     * @param callback queue callback invoked when processing completes
+     */
 
     public void addSendEventsCallback(ThrowingRunnable callback) {
         this.sendEventsCallback = this.sendEventsCallback.andThen(callback);

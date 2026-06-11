@@ -37,6 +37,11 @@ import java.io.Serializable;
  * lw m2mbootstrap server credential contract.
  */
 public interface LwM2MBootstrapServerCredential extends Serializable {
+    /**
+     * Returns security mode.
+     *
+     * @return {@link LwM2MSecurityMode}
+     */
     @JsonIgnore
     LwM2MSecurityMode getSecurityMode();
 }

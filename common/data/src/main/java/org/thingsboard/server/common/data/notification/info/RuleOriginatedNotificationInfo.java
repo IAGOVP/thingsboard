@@ -27,10 +27,20 @@ public interface RuleOriginatedNotificationInfo extends NotificationInfo {
     default CustomerId getAffectedCustomerId() {
         return null;
     }
+/**
+ * Returns affected user id.
+ *
+ * @return {@link UserId}
+ */
 
     default UserId getAffectedUserId() {
         return null;
     }
+/**
+ * Returns affected tenant id.
+ *
+ * @return {@link TenantId}
+ */
 
     default TenantId getAffectedTenantId() {
         return null;

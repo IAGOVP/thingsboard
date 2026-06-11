@@ -52,9 +52,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 @Data
 @Slf4j
-/**
- * Message: tb msg.
- */
 public final class TbMsg implements Serializable {
 
     public static final String EMPTY_JSON_OBJECT = "{}";
@@ -92,6 +89,11 @@ public final class TbMsg implements Serializable {
         return new TbMsgBuilder();
     }
 
+    /**
+     * Transform.
+     *
+     * @return {@link TbMsgBuilder}
+     */
     public TbMsgBuilder transform() {
         return new TbMsgTransformer(this);
     }
@@ -100,6 +102,12 @@ public final class TbMsg implements Serializable {
         return new TbMsgBuilder(this);
     }
 
+    /**
+     * Transform.
+     *
+     * @param queueName queue name ({@link String})
+     * @return {@link TbMsg}
+     */
     public TbMsg transform(String queueName) {
         return transform()
                 .queueName(queueName)
@@ -279,6 +287,11 @@ public final class TbMsg implements Serializable {
         return getCallback().isMsgValid();
     }
 
+    /**
+     * Returns meta data ts.
+     *
+     * @return the long result
+     */
     public long getMetaDataTs() {
         String tsStr = metaData.getValue("ts");
         if (!StringUtils.isEmpty(tsStr)) {

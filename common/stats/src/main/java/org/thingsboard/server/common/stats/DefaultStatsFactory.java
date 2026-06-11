@@ -29,10 +29,10 @@ import org.thingsboard.server.common.data.StringUtils;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.ToDoubleFunction;
 
-@Service
 /**
  * Factory for default stats.
  */
+@Service
 public class DefaultStatsFactory implements StatsFactory {
     private static final String TOTAL_MSGS = "totalMsgs";
     private static final String SUCCESSFUL_MSGS = "successfulMsgs";
@@ -63,7 +63,6 @@ public class DefaultStatsFactory implements StatsFactory {
             }
         }
     }
-
 
     @Override
     public StatsCounter createStatsCounter(String key, String statsName, String... otherTags) {

@@ -38,11 +38,20 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Proto coap adaptor.
+ * Protobuf CoAP adaptor for device profiles configured with PROTOBUF transport.
  */
 @Component
 @Slf4j
 public class ProtoCoapAdaptor implements CoapTransportAdaptor {
+    /**
+     * Convert to post telemetry.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param inbound inbound ({@link Request})
+     * @param telemetryMsgDescriptor telemetry msg descriptor
+     * @return the TransportProtos.PostTelemetryMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public TransportProtos.PostTelemetryMsg convertToPostTelemetry(UUID sessionId, Request inbound, Descriptors.Descriptor telemetryMsgDescriptor) throws AdaptorException {
@@ -53,6 +62,15 @@ public class ProtoCoapAdaptor implements CoapTransportAdaptor {
             throw new AdaptorException(e);
         }
     }
+    /**
+     * Convert to post attributes.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param inbound inbound ({@link Request})
+     * @param attributesMsgDescriptor attributes msg descriptor
+     * @return the TransportProtos.PostAttributeMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public TransportProtos.PostAttributeMsg convertToPostAttributes(UUID sessionId, Request inbound, Descriptors.Descriptor attributesMsgDescriptor) throws AdaptorException {
@@ -63,11 +81,28 @@ public class ProtoCoapAdaptor implements CoapTransportAdaptor {
             throw new AdaptorException(e);
         }
     }
+    /**
+     * Convert to get attributes.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param inbound inbound ({@link Request})
+     * @return the TransportProtos.GetAttributeRequestMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public TransportProtos.GetAttributeRequestMsg convertToGetAttributes(UUID sessionId, Request inbound) throws AdaptorException {
         return CoapAdaptorUtils.toGetAttributeRequestMsg(inbound);
     }
+    /**
+     * Convert to device rpc response.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param inbound inbound ({@link Request})
+     * @param rpcResponseMsgDescriptor rpc response msg descriptor
+     * @return the TransportProtos.ToDeviceRpcResponseMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public TransportProtos.ToDeviceRpcResponseMsg convertToDeviceRpcResponse(UUID sessionId, Request inbound, Descriptors.Descriptor rpcResponseMsgDescriptor) throws AdaptorException {
@@ -85,6 +120,14 @@ public class ProtoCoapAdaptor implements CoapTransportAdaptor {
             }
         }
     }
+    /**
+     * Convert to server rpc request.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param inbound inbound ({@link Request})
+     * @return the TransportProtos.ToServerRpcRequestMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public TransportProtos.ToServerRpcRequestMsg convertToServerRpcRequest(UUID sessionId, Request inbound) throws AdaptorException {
@@ -94,6 +137,15 @@ public class ProtoCoapAdaptor implements CoapTransportAdaptor {
             throw new AdaptorException(ex);
         }
     }
+    /**
+     * Convert to claim device.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param inbound inbound ({@link Request})
+     * @param sessionInfo session info
+     * @return the TransportProtos.ClaimDeviceMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public TransportProtos.ClaimDeviceMsg convertToClaimDevice(UUID sessionId, Request inbound, TransportProtos.SessionInfoProto sessionInfo) throws AdaptorException {
@@ -104,6 +156,14 @@ public class ProtoCoapAdaptor implements CoapTransportAdaptor {
             throw new AdaptorException(ex);
         }
     }
+    /**
+     * Convert to provision request msg.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param inbound inbound ({@link Request})
+     * @return the TransportProtos.ProvisionDeviceRequestMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public TransportProtos.ProvisionDeviceRequestMsg convertToProvisionRequestMsg(UUID sessionId, Request inbound) throws AdaptorException {
@@ -113,16 +173,38 @@ public class ProtoCoapAdaptor implements CoapTransportAdaptor {
             throw new AdaptorException(ex);
         }
     }
+    /**
+     * Convert to publish.
+     *
+     * @param msg msg
+     * @return {@link Response}
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public Response convertToPublish(TransportProtos.AttributeUpdateNotificationMsg msg) throws AdaptorException {
         return getObserveNotification(msg.toByteArray());
     }
+    /**
+     * Convert to publish.
+     *
+     * @param rpcRequest rpc request
+     * @param rpcRequestDynamicMessageBuilder rpc request dynamic message builder
+     * @return {@link Response}
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public Response convertToPublish(TransportProtos.ToDeviceRpcRequestMsg rpcRequest, DynamicMessage.Builder rpcRequestDynamicMessageBuilder) throws AdaptorException {
         return getObserveNotification(ProtoConverter.convertToRpcRequest(rpcRequest, rpcRequestDynamicMessageBuilder));
     }
+    /**
+     * Convert to publish.
+     *
+     * @param msg msg
+     * @return {@link Response}
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public Response convertToPublish(TransportProtos.ToServerRpcResponseMsg msg) throws AdaptorException {
@@ -130,6 +212,13 @@ public class ProtoCoapAdaptor implements CoapTransportAdaptor {
         response.setPayload(msg.toByteArray());
         return response;
     }
+    /**
+     * Convert to publish.
+     *
+     * @param msg msg
+     * @return {@link Response}
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public Response convertToPublish(TransportProtos.GetAttributeResponseMsg msg) throws AdaptorException {
@@ -158,6 +247,12 @@ public class ProtoCoapAdaptor implements CoapTransportAdaptor {
         response.setPayload(notification);
         return response;
     }
+    /**
+     * Returns content format.
+     *
+     * @return monotonically increasing MQTT packet identifier
+     * @throws Exception on processing failure
+     */
 
     @Override
     public int getContentFormat() {

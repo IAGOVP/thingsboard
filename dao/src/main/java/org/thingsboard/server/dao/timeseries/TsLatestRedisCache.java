@@ -30,8 +30,11 @@ import org.thingsboard.server.common.data.kv.TsKvEntry;
 import org.thingsboard.server.common.util.KvProtoUtil;
 import org.thingsboard.server.gen.transport.TransportProtos;
 /**
- * Ts latest redis cache.
+ * distributed Redis cache for ts latest (Cassandra telemetry and latest-value DAO (Cassandra time-series DAO and latest-value caches)).
+ *
+ * <p>Implements {@link org.thingsboard.server.cache.TbTransactionalCache} with DAO-specific key types.
  */
+
 
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "redis")
 @Service("TsLatestCache")

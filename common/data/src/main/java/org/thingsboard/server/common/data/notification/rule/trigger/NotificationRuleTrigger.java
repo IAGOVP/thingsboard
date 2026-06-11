@@ -27,19 +27,44 @@ import java.io.Serializable;
 public interface NotificationRuleTrigger extends Serializable {
 
     NotificationRuleTriggerType getType();
+/**
+ * Returns tenant id.
+ *
+ * @return {@link TenantId}
+ */
 
     TenantId getTenantId();
+/**
+ * Returns originator entity id.
+ *
+ * @return {@link EntityId}
+ */
 
     EntityId getOriginatorEntityId();
+/**
+ * Returns deduplication strategy.
+ *
+ * @return {@link DeduplicationStrategy}
+ */
 
     default DeduplicationStrategy getDeduplicationStrategy() {
         return DeduplicationStrategy.NONE;
     }
+/**
+ * Returns deduplication key.
+ *
+ * @return {@link String}
+ */
 
     default String getDeduplicationKey() {
         EntityId originatorEntityId = getOriginatorEntityId();
         return String.join(":", getType().toString(), originatorEntityId.getEntityType().toString(), originatorEntityId.getId().toString());
     }
+/**
+ * Returns default deduplication duration.
+ *
+ * @return the long result
+ */
 
     default long getDefaultDeduplicationDuration() {
         return 0;

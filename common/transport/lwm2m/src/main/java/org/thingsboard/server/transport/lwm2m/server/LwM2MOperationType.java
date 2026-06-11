@@ -35,14 +35,14 @@ public enum LwM2MOperationType {
     OBSERVE_CANCEL_ALL(9, "ObserveCancelAll", false),
     EXECUTE(10, "Execute", true),
     /**
-     * Replaces the Object Instance or the Resource(s) with the new value provided in the “Write” operation. (see
+     * Replaces the Object Instance or the Resource(s) with constructed value provided in the “Write” operation. (see
      * section 5.3.3 of the LW M2M spec).
      * if all resources are to be replaced
      */
     WRITE_REPLACE(11, "WriteReplace", true),
 
     /**
-     * Adds or updates Resources provided in the new value and leaves other existing Resources unchanged. (see section
+     * Adds or updates Resources provided in constructed value and leaves other existing Resources unchanged. (see section
      * 5.3.3 of the LW M2M spec).
      * if this is a partial update request
      */
@@ -82,7 +82,13 @@ public enum LwM2MOperationType {
             throw new IllegalArgumentException("Can't set both Composite and hasObjectId for the same operation!");
         }
     }
-
+    /**
+     * From type.
+     *
+     * @param type type ({@link String})
+     * @return {@link LwM2MOperationType}
+     * @throws Exception on processing failure
+     */
     public static LwM2MOperationType fromType(String type) {
         for (LwM2MOperationType to : LwM2MOperationType.values()) {
             if (to.type.equals(type)) {

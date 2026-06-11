@@ -19,8 +19,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.thingsboard.server.dao.model.sql.AbstractTsKvEntity;
 /**
- * Entity container.
+ * Entity container (time-series SQL/Timescale persistence (SQL/Timescale time-series key-value storage)).
  */
+
+
+
+
+
+
 
 @Data
 @AllArgsConstructor

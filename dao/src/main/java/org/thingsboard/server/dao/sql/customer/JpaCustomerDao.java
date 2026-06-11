@@ -38,8 +38,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Created by Valerii Sosliuk on 5/6/2017.
+ * JPA/PostgreSQL implementation of customer dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 @Component
 @SqlDao
 public class JpaCustomerDao extends JpaAbstractDao<CustomerEntity, Customer> implements CustomerDao {
@@ -47,33 +50,44 @@ public class JpaCustomerDao extends JpaAbstractDao<CustomerEntity, Customer> imp
     @Autowired
     private CustomerRepository customerRepository;
 
+    
     /**
-
-     * Get entity class.
-
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected Class<CustomerEntity> getEntityClass() {
         return CustomerEntity.class;
     }
 
+    
     /**
-
-     * Get repository.
-
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected JpaRepository<CustomerEntity, UUID> getRepository() {
         return customerRepository;
     }
 
+    
     /**
-
-     * Loads customers by tenant id.
-
+     * Finds customers by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Customer> findCustomersByTenantId(UUID tenantId, PageLink pageLink) {
@@ -83,77 +97,109 @@ public class JpaCustomerDao extends JpaAbstractDao<CustomerEntity, Customer> imp
                 DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads customer by tenant id and title.
-
+     * Finds customer by tenant id and title.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param title title ({@link String})
+     * @return optional {@link Customer}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<Customer> findCustomerByTenantIdAndTitle(UUID tenantId, String title) {
         return Optional.ofNullable(DaoUtil.getData(customerRepository.findByTenantIdAndTitle(tenantId, title)));
     }
 
+    
     /**
-
-     * Loads public customer by tenant id.
-
+     * Finds public customer by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return optional {@link Customer}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<Customer> findPublicCustomerByTenantId(UUID tenantId) {
         return Optional.ofNullable(DaoUtil.getData(customerRepository.findPublicCustomerByTenantId(tenantId)));
     }
 
+    
     /**
-
      * Counts by tenant id.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link Long}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Long countByTenantId(TenantId tenantId) {
         return customerRepository.countByTenantId(tenantId.getId());
     }
 
+    
     /**
-
-     * Loads by tenant id and external id.
-
+     * Finds by tenant id and external id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param externalId external id ({@link UUID})
+     * @return {@link Customer}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Customer findByTenantIdAndExternalId(UUID tenantId, UUID externalId) {
         return DaoUtil.getData(customerRepository.findByTenantIdAndExternalId(tenantId, externalId));
     }
 
+    
     /**
-
-     * Loads by tenant id and name.
-
+     * Finds by tenant id and name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return {@link Customer}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Customer findByTenantIdAndName(UUID tenantId, String name) {
         return findCustomerByTenantIdAndTitle(tenantId, name).orElse(null);
     }
 
+    
     /**
-
-     * Loads by tenant id.
-
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Customer> findByTenantId(UUID tenantId, PageLink pageLink) {
         return findCustomersByTenantId(tenantId, pageLink);
     }
 
+    
     /**
-
-     * Get external id by internal.
-
+     * Returns external id by internal.
+     *
+     * @param internalId internal id ({@link CustomerId})
+     * @return {@link CustomerId}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public CustomerId getExternalIdByInternal(CustomerId internalId) {
@@ -161,11 +207,15 @@ public class JpaCustomerDao extends JpaAbstractDao<CustomerEntity, Customer> imp
                 .map(CustomerId::new).orElse(null);
     }
 
+    
     /**
-
-     * Loads customers with the same title.
-
+     * Finds customers with the same title.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Customer> findCustomersWithTheSameTitle(PageLink pageLink) {
@@ -174,55 +224,78 @@ public class JpaCustomerDao extends JpaAbstractDao<CustomerEntity, Customer> imp
         );
     }
 
+    
     /**
-
-     * Loads customers by tenant id and ids.
-
+     * Finds customers by tenant id and ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerIds customer ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<Customer> findCustomersByTenantIdAndIds(UUID tenantId, List<UUID> customerIds) {
         return DaoUtil.convertDataList(customerRepository.findCustomersByTenantIdAndIdIn(tenantId, customerIds));
     }
 
+    
     /**
-
-     * Loads all by tenant id.
-
+     * Finds all by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Customer> findAllByTenantId(TenantId tenantId, PageLink pageLink) {
         return findByTenantId(tenantId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads next batch.
-
+     * Finds next batch.
+     *
+     * @param id entity UUID primary key
+     * @param batchSize batch size
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<CustomerFields> findNextBatch(UUID id, int batchSize) {
         return customerRepository.findNextBatch(id, Limit.of(batchSize));
     }
 
+    
     /**
-
-     * Loads entity infos by name prefix.
-
+     * Finds entity infos by name prefix.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<EntityInfo> findEntityInfosByNamePrefix(TenantId tenantId, String name) {
         return customerRepository.findEntityInfosByNamePrefix(tenantId.getId(), name);
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

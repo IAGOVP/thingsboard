@@ -24,6 +24,11 @@ import lombok.Data;
  * Originator entity owner users filter.
  */
 public class OriginatorEntityOwnerUsersFilter implements UsersFilter {
+    /**
+     * Returns type.
+     *
+     * @return {@link UsersFilterType}
+     */
 
     @Override
     public UsersFilterType getType() {

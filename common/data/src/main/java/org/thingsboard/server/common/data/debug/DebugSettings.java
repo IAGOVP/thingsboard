@@ -41,20 +41,53 @@ public class DebugSettings {
     private boolean allEnabled;
     @Schema(description = "Timestamp of the end time for the processing debug events.")
     private long allEnabledUntil;
+    /**
+     * Off.
+     *
+     * @return {@link DebugSettings}
+     */
 
     public static DebugSettings off() {return DebugSettings.DEBUG_OFF;}
+    /**
+     * Failures.
+     *
+     * @return {@link DebugSettings}
+     */
 
     public static DebugSettings failures() {return DebugSettings.DEBUG_FAILURES;}
+    /**
+     * Until.
+     *
+     * @param ts ts
+     * @return {@link DebugSettings}
+     */
 
     public static DebugSettings until(long ts) {return new DebugSettings(false, ts);}
+    /**
+     * Failures or until.
+     *
+     * @param ts ts
+     * @return {@link DebugSettings}
+     */
 
     public static DebugSettings failuresOrUntil(long ts) {return new DebugSettings(true, ts);}
+    /**
+     * All.
+     *
+     * @return {@link DebugSettings}
+     */
 
     public static DebugSettings all() {
         var ds = new DebugSettings();
         ds.setAllEnabled(true);
         return ds;
     }
+    /**
+     * Copy.
+     *
+     * @param maxDebugAllUntil max debug all until
+     * @return {@link DebugSettings}
+     */
 
     public DebugSettings copy(long maxDebugAllUntil) {
         return new DebugSettings(failuresEnabled, allEnabled ? maxDebugAllUntil : Math.min(allEnabledUntil, maxDebugAllUntil));

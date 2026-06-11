@@ -15,13 +15,15 @@
  */
 package org.thingsboard.server.queue.discovery.event;
 
+import java.util.Set;
+
+
 import lombok.Getter;
 import org.thingsboard.server.queue.discovery.QueueKey;
 
-import java.util.Set;
 
 /**
- * Cluster topology change event.
+ * Published when the set of active cluster services changes.
  */
 public class ClusterTopologyChangeEvent extends TbApplicationEvent {
 

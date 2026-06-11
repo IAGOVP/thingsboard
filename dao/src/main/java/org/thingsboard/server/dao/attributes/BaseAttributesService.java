@@ -46,7 +46,10 @@ import java.util.Optional;
 import static org.thingsboard.server.dao.attributes.AttributeUtils.validate;
 /**
  * Default DAO-layer service implementation for attributes.
+ *
+ * <p>Coordinates validation, caching, cluster events, and {@code *Dao} persistence (server-side attribute key-value storage and caching).
  */
+
 
 @Service
 @ConditionalOnProperty(prefix = "cache.attributes", value = "enabled", havingValue = "false", matchIfMissing = true)
@@ -61,11 +64,18 @@ public class BaseAttributesService implements AttributesService {
     @Value("${sql.attributes.value_no_xss_validation:false}")
     private boolean valueNoXssValidation;
 
+    
     /**
-
-     * Loads .
-
+     * Finds the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param scope attribute scope (SERVER_SCOPE, SHARED_SCOPE, etc.)
+     * @param attributeKey attribute key ({@link String})
+     * @return future completing with optional {@link AttributeKvEntry}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<Optional<AttributeKvEntry>> find(TenantId tenantId, EntityId entityId, AttributeScope scope, String attributeKey) {
@@ -74,11 +84,18 @@ public class BaseAttributesService implements AttributesService {
         return Futures.immediateFuture(attributesDao.find(tenantId, entityId, scope, attributeKey));
     }
 
+    
     /**
-
-     * Loads .
-
+     * Finds the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param scope attribute scope (SERVER_SCOPE, SHARED_SCOPE, etc.)
+     * @param attributeKeys attribute keys ({@link Collection})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<AttributeKvEntry>> find(TenantId tenantId, EntityId entityId, AttributeScope scope, Collection<String> attributeKeys) {
@@ -87,11 +104,17 @@ public class BaseAttributesService implements AttributesService {
         return Futures.immediateFuture(attributesDao.find(tenantId, entityId, scope, attributeKeys));
     }
 
+    
     /**
-
-     * Loads all.
-
+     * Finds all.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param scope attribute scope (SERVER_SCOPE, SHARED_SCOPE, etc.)
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<AttributeKvEntry>> findAll(TenantId tenantId, EntityId entityId, AttributeScope scope) {
@@ -99,33 +122,49 @@ public class BaseAttributesService implements AttributesService {
         return Futures.immediateFuture(attributesDao.findAll(tenantId, entityId, scope));
     }
 
+    
     /**
-
-     * Loads all keys by device profile id.
-
+     * Finds all keys by device profile id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfileId device profile id ({@link DeviceProfileId})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<String> findAllKeysByDeviceProfileId(TenantId tenantId, DeviceProfileId deviceProfileId) {
         return attributesDao.findAllKeysByDeviceProfileId(tenantId, deviceProfileId);
     }
 
+    
     /**
-
-     * Loads all keys by entity ids.
-
+     * Finds all keys by entity ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityIds entity ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<String> findAllKeysByEntityIds(TenantId tenantId, List<EntityId> entityIds) {
         return attributesDao.findAllKeysByEntityIds(tenantId, entityIds);
     }
 
+    
     /**
-
-     * Loads all keys by entity ids and scope.
-
+     * Finds all keys by entity ids and scope.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityIds entity ids ({@link List})
+     * @param scope attribute scope (SERVER_SCOPE, SHARED_SCOPE, etc.)
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<String> findAllKeysByEntityIdsAndScope(TenantId tenantId, List<EntityId> entityIds, AttributeScope scope) {
@@ -136,44 +175,69 @@ public class BaseAttributesService implements AttributesService {
         }
     }
 
+    
     /**
-
-     * Loads all keys by entity ids and scope async.
-
+     * Finds all keys by entity ids and scope async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityIds entity ids ({@link List})
+     * @param scope attribute scope (SERVER_SCOPE, SHARED_SCOPE, etc.)
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<String>> findAllKeysByEntityIdsAndScopeAsync(TenantId tenantId, List<EntityId> entityIds, AttributeScope scope) {
         return attributesDao.findAllKeysByEntityIdsAndScopeAsync(tenantId, entityIds, scope);
     }
 
+    
     /**
-
-     * Loads latest by entity ids and scope.
-
+     * Finds latest by entity ids and scope.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityIds entity ids ({@link List})
+     * @param scope attribute scope (SERVER_SCOPE, SHARED_SCOPE, etc.)
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<AttributeKvEntry> findLatestByEntityIdsAndScope(TenantId tenantId, List<EntityId> entityIds, AttributeScope scope) {
         return attributesDao.findLatestByEntityIdsAndScope(tenantId, entityIds, scope);
     }
 
+    
     /**
-
-     * Loads latest by entity ids and scope async.
-
+     * Finds latest by entity ids and scope async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityIds entity ids ({@link List})
+     * @param scope attribute scope (SERVER_SCOPE, SHARED_SCOPE, etc.)
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<AttributeKvEntry>> findLatestByEntityIdsAndScopeAsync(TenantId tenantId, List<EntityId> entityIds, AttributeScope scope) {
         return attributesDao.findLatestByEntityIdsAndScopeAsync(tenantId, entityIds, scope);
     }
 
+    
     /**
-
-     * Persists .
-
+     * Saves or persists the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param scope attribute scope (SERVER_SCOPE, SHARED_SCOPE, etc.)
+     * @param attribute attribute ({@link AttributeKvEntry})
+     * @return future completing with {@link AttributesSaveResult}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<AttributesSaveResult> save(TenantId tenantId, EntityId entityId, AttributeScope scope, AttributeKvEntry attribute) {
@@ -182,11 +246,18 @@ public class BaseAttributesService implements AttributesService {
         return doSave(tenantId, entityId, scope, List.of(attribute));
     }
 
+    
     /**
-
-     * Persists .
-
+     * Saves or persists the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param scope attribute scope (SERVER_SCOPE, SHARED_SCOPE, etc.)
+     * @param attributes attributes ({@link List})
+     * @return future completing with {@link AttributesSaveResult}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<AttributesSaveResult> save(TenantId tenantId, EntityId entityId, AttributeScope scope, List<AttributeKvEntry> attributes) {
@@ -208,11 +279,18 @@ public class BaseAttributesService implements AttributesService {
         return Futures.transform(Futures.allAsList(futures), AttributesSaveResult::of, MoreExecutors.directExecutor());
     }
 
+    
     /**
-
      * Removes all.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param scope attribute scope (SERVER_SCOPE, SHARED_SCOPE, etc.)
+     * @param attributeKeys attribute keys ({@link List})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<String>> removeAll(TenantId tenantId, EntityId entityId, AttributeScope scope, List<String> attributeKeys) {
@@ -233,11 +311,16 @@ public class BaseAttributesService implements AttributesService {
         }, MoreExecutors.directExecutor());
     }
 
+    
     /**
-
      * Removes all by entity id.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public int removeAllByEntityId(TenantId tenantId, EntityId entityId) {

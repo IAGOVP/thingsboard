@@ -33,8 +33,11 @@ import org.thingsboard.server.dao.model.BaseSqlEntity;
 import org.thingsboard.server.dao.model.ModelConstants;
 import org.thingsboard.server.dao.util.mapping.JsonConverter;
 /**
- * Component descriptor entity.
+ * JPA/Cassandra row model for component descriptor.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -91,6 +94,12 @@ public class ComponentDescriptorEntity extends BaseSqlEntity<ComponentDescriptor
         this.configurationVersion = component.getConfigurationVersion();
         this.hasQueueName = component.isHasQueueName();
     }
+    /**
+     * To data.
+     *
+     * @return {@link ComponentDescriptor}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ComponentDescriptor toData() {

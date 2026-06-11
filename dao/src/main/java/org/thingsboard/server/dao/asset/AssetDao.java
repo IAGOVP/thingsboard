@@ -34,211 +34,305 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * The Interface AssetDao.
+ * Persistence contract for asset.
  *
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (asset and asset-profile DAO services and caches).
  */
+
 public interface AssetDao extends Dao<Asset>, TenantEntityDao<Asset>, ExportableEntityDao<AssetId, Asset> {
 
+    
     /**
-     * Find asset info by id.
+     * Finds asset info by id.
      *
-     * @param tenantId the tenant id
-     * @param assetId the asset id
-     * @return the asset info object
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetId asset id ({@link UUID})
+     * @return {@link AssetInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     AssetInfo findAssetInfoById(TenantId tenantId, UUID assetId);
 
+    
     /**
-     * Save or update asset object
+     * Saves or persists the requested data.
      *
-     * @param asset the asset object
-     * @return saved asset object
+     * @param tenantId tenant that owns the entity or operation
+     * @param asset asset ({@link Asset})
+     * @return {@link Asset}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     Asset save(TenantId tenantId, Asset asset);
 
+    
     /**
-     * Find assets by tenantId and page link.
+     * Finds assets by tenant id.
      *
-     * @param tenantId the tenantId
-     * @param pageLink the page link
-     * @return the list of asset objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<Asset> findAssetsByTenantId(UUID tenantId, PageLink pageLink);
 
+    
     /**
-     * Find asset infos by tenantId and page link.
+     * Finds asset infos by tenant id.
      *
-     * @param tenantId the tenantId
-     * @param pageLink the page link
-     * @return the list of asset info objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<AssetInfo> findAssetInfosByTenantId(UUID tenantId, PageLink pageLink);
 
+    
     /**
-     * Find assets by tenantId, type and page link.
+     * Finds assets by tenant id and type.
      *
-     * @param tenantId the tenantId
-     * @param type the type
-     * @param pageLink the page link
-     * @return the list of asset objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<Asset> findAssetsByTenantIdAndType(UUID tenantId, String type, PageLink pageLink);
 
+    
     /**
-     * Find asset infos by tenantId, type and page link.
+     * Finds asset infos by tenant id and type.
      *
-     * @param tenantId the tenantId
-     * @param type the type
-     * @param pageLink the page link
-     * @return the list of asset info objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<AssetInfo> findAssetInfosByTenantIdAndType(UUID tenantId, String type, PageLink pageLink);
 
+    
     /**
-     * Find asset infos by tenantId, assetProfileId and page link.
+     * Finds asset infos by tenant id and asset profile id.
      *
-     * @param tenantId the tenantId
-     * @param assetProfileId the assetProfileId
-     * @param pageLink the page link
-     * @return the list of asset info objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetProfileId asset profile id ({@link UUID})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<AssetInfo> findAssetInfosByTenantIdAndAssetProfileId(UUID tenantId, UUID assetProfileId, PageLink pageLink);
 
+    
     /**
-     * Find asset ids by tenantId, assetProfileId and page link.
+     * Finds asset ids by tenant id and asset profile id.
      *
-     * @param tenantId the tenantId
-     * @param assetProfileId the assetProfileId
-     * @param pageLink the page link
-     * @return the list of asset objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetProfileId asset profile id ({@link UUID})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<AssetId> findAssetIdsByTenantIdAndAssetProfileId(UUID tenantId, UUID assetProfileId, PageLink pageLink);
 
+    
     /**
-     * Find assets by tenantId and assets Ids.
+     * Finds assets by tenant id and ids async.
      *
-     * @param tenantId the tenantId
-     * @param assetIds the asset Ids
-     * @return the list of asset objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetIds asset ids ({@link List})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     ListenableFuture<List<Asset>> findAssetsByTenantIdAndIdsAsync(UUID tenantId, List<UUID> assetIds);
 
+    
     /**
-     * Find assets by tenantId, customerId and page link.
+     * Finds assets by tenant id and customer id.
      *
-     * @param tenantId the tenantId
-     * @param customerId the customerId
-     * @param pageLink the page link
-     * @return the list of asset objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<Asset> findAssetsByTenantIdAndCustomerId(UUID tenantId, UUID customerId, PageLink pageLink);
 
+    
     /**
-     * Find asset infos by tenantId, customerId and page link.
+     * Finds asset infos by tenant id and customer id.
      *
-     * @param tenantId the tenantId
-     * @param customerId the customerId
-     * @param pageLink the page link
-     * @return the list of asset info objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<AssetInfo> findAssetInfosByTenantIdAndCustomerId(UUID tenantId, UUID customerId, PageLink pageLink);
 
+    
     /**
-     * Find assets by tenantId, customerId, type and page link.
+     * Finds assets by tenant id and customer id and type.
      *
-     * @param tenantId the tenantId
-     * @param customerId the customerId
-     * @param type the type
-     * @param pageLink the page link
-     * @return the list of asset objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<Asset> findAssetsByTenantIdAndCustomerIdAndType(UUID tenantId, UUID customerId, String type, PageLink pageLink);
 
+    
     /**
-     * Find asset infos by tenantId, customerId, type and page link.
+     * Finds asset infos by tenant id and customer id and type.
      *
-     * @param tenantId the tenantId
-     * @param customerId the customerId
-     * @param type the type
-     * @param pageLink the page link
-     * @return the list of asset info objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<AssetInfo> findAssetInfosByTenantIdAndCustomerIdAndType(UUID tenantId, UUID customerId, String type, PageLink pageLink);
 
+    
     /**
-     * Find asset infos by tenantId, customerId, assetProfileId and page link.
+     * Finds asset infos by tenant id and customer id and asset profile id.
      *
-     * @param tenantId the tenantId
-     * @param customerId the customerId
-     * @param assetProfileId the assetProfileId
-     * @param pageLink the page link
-     * @return the list of asset info objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param assetProfileId asset profile id ({@link UUID})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<AssetInfo> findAssetInfosByTenantIdAndCustomerIdAndAssetProfileId(UUID tenantId, UUID customerId, UUID assetProfileId, PageLink pageLink);
 
+    
     /**
-     * Find assets by tenantId, customerId and assets Ids.
+     * Finds assets by tenant id and customer id and ids async.
      *
-     * @param tenantId the tenantId
-     * @param customerId the customerId
-     * @param assetIds the asset Ids
-     * @return the list of asset objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param assetIds asset ids ({@link List})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     ListenableFuture<List<Asset>> findAssetsByTenantIdAndCustomerIdAndIdsAsync(UUID tenantId, UUID customerId, List<UUID> assetIds);
 
+    
     /**
-     * Find assets by tenantId and asset name.
+     * Finds assets by tenant id and name.
      *
-     * @param tenantId the tenantId
-     * @param name the asset name
-     * @return the optional asset object
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return optional {@link Asset}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     Optional<Asset> findAssetsByTenantIdAndName(UUID tenantId, String name);
 
+    
     /**
-     * Find tenants asset types.
+     * Finds tenant asset types async.
      *
-     * @return the list of tenant asset type objects
+     * @param tenantId tenant that owns the entity or operation
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     @Deprecated(since = "3.6.2", forRemoval = true)
     ListenableFuture<List<EntitySubtype>> findTenantAssetTypesAsync(UUID tenantId);
+    /**
+     * Counts assets by asset profile id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetProfileId asset profile id ({@link UUID})
+     * @return {@link Long}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     Long countAssetsByAssetProfileId(TenantId tenantId, UUID assetProfileId);
 
+    
     /**
-     * Find assets by tenantId, profileId and page link.
+     * Finds assets by tenant id and profile id.
      *
-     * @param tenantId the tenantId
-     * @param profileId the profileId
-     * @param pageLink the page link
-     * @return the list of device objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param profileId profile id ({@link UUID})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<Asset> findAssetsByTenantIdAndProfileId(UUID tenantId, UUID profileId, PageLink pageLink);
 
+    
     /**
-     * Find assets by tenantId, edgeId and page link.
+     * Finds assets by tenant id and edge id.
      *
-     * @param tenantId the tenantId
-     * @param edgeId the edgeId
-     * @param pageLink the page link
-     * @return the list of asset objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link UUID})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<Asset> findAssetsByTenantIdAndEdgeId(UUID tenantId, UUID edgeId, PageLink pageLink);
 
+    
     /**
-     * Find assets by tenantId, edgeId, type and page link.
+     * Finds assets by tenant id and edge id and type.
      *
-     * @param tenantId the tenantId
-     * @param edgeId the edgeId
-     * @param type the type
-     * @param pageLink the page link
-     * @return the list of asset objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link UUID})
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<Asset> findAssetsByTenantIdAndEdgeIdAndType(UUID tenantId, UUID edgeId, String type, PageLink pageLink);
+    /**
+     * Returns all asset types.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<TbPair<UUID, String>> getAllAssetTypes(PageLink pageLink);
+    /**
+     * Finds profile entity id infos.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<ProfileEntityIdInfo> findProfileEntityIdInfos(PageLink pageLink);
+    /**
+     * Finds profile entity id infos by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<ProfileEntityIdInfo> findProfileEntityIdInfosByTenantId(UUID tenantId, PageLink pageLink);
 

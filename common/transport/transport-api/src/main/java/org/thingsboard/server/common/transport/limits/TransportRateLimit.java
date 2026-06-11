@@ -22,8 +22,21 @@ public interface TransportRateLimit {
 
     String getConfiguration();
 
+    /**
+     * Try consume.
+     *
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     boolean tryConsume();
 
+    /**
+     * Try consume.
+     *
+     * @param number number
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     boolean tryConsume(long number);
 
 }

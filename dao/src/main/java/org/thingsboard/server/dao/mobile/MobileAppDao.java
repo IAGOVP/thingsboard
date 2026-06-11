@@ -23,19 +23,59 @@ import org.thingsboard.server.common.data.page.PageData;
 import org.thingsboard.server.common.data.page.PageLink;
 import org.thingsboard.server.dao.Dao;
 
+
 /**
 
- * Persistence contract for mobile app (see JPA/Cassandra implementations).
+ * Persistence contract for mobile app.
+
+ *
+
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (mobile apps, bundles, and QR code settings).
 
  */
 
+
 public interface MobileAppDao extends Dao<MobileApp> {
+    /**
+     * Finds by bundle id and platform type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param mobileAppBundleId mobile app bundle id ({@link MobileAppBundleId})
+     * @param platformType platform type ({@link PlatformType})
+     * @return {@link MobileApp}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     MobileApp findByBundleIdAndPlatformType(TenantId tenantId, MobileAppBundleId mobileAppBundleId, PlatformType platformType);
+    /**
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param platformType platform type ({@link PlatformType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<MobileApp> findByTenantId(TenantId tenantId, PlatformType platformType, PageLink pageLink);
+    /**
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void deleteByTenantId(TenantId tenantId);
+    /**
+     * Finds by pkg name and platform type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pkgName pkg name ({@link String})
+     * @param platform platform ({@link PlatformType})
+     * @return {@link MobileApp}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     MobileApp findByPkgNameAndPlatformType(TenantId tenantId, String pkgName, PlatformType platform);
 }

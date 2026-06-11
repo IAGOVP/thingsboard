@@ -24,9 +24,13 @@ import org.thingsboard.server.edqs.repo.TenantRepo;
 
 import java.util.UUID;
 import java.util.function.Consumer;
+
 /**
  * EDQS query processor for single entity entity filters.
+ *
+ * <p>Evaluates {@link org.thingsboard.server.common.data.query.EntityFilter} against a {@link org.thingsboard.server.edqs.repo.TenantRepo} (EDQS microservice — entity filter query processors).
  */
+
 public class SingleEntityQueryProcessor extends AbstractSingleEntityTypeQueryProcessor<SingleEntityFilter> {
 
     private final EntityType entityType;
@@ -37,6 +41,14 @@ public class SingleEntityQueryProcessor extends AbstractSingleEntityTypeQueryPro
         this.entityType = filter.getSingleEntity().getEntityType();
         this.entityId = filter.getSingleEntity().getId();
     }
+    /**
+     * Processes customer query.
+     *
+     * @param customerId customer scope for permission filtering (may be null)
+     * @param processor processor ({@link Consumer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void processCustomerQuery(UUID customerId, Consumer<EntityData<?>> processor) {
@@ -46,6 +58,13 @@ public class SingleEntityQueryProcessor extends AbstractSingleEntityTypeQueryPro
             }
         });
     }
+    /**
+     * Processes all.
+     *
+     * @param processor processor ({@link Consumer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void processAll(Consumer<EntityData<?>> processor) {
@@ -54,6 +73,12 @@ public class SingleEntityQueryProcessor extends AbstractSingleEntityTypeQueryPro
             processor.accept(ed);
         }
     }
+    /**
+     * Returns probable result size.
+     *
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected int getProbableResultSize() {

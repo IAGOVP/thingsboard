@@ -46,8 +46,11 @@ import java.util.stream.Collectors;
 
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
 /**
- * Spring service implementing domain API.
+ * Spring {@code @Service} implementing the domain DAO API.
+ *
+ * <p>Delegates to {@code *Dao} implementations and manages cache eviction (tenant domain and OAuth2 client bindings).
  */
+
 
 @Slf4j
 @Service
@@ -60,11 +63,16 @@ public class DomainServiceImpl extends AbstractEntityService implements DomainSe
     @Autowired
     private DomainDataValidator domainDataValidator;
 
+    
     /**
-
-     * Persists domain.
-
+     * Saves or persists domain.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param domain domain ({@link Domain})
+     * @return {@link Domain}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Domain saveDomain(TenantId tenantId, Domain domain) {
@@ -80,11 +88,17 @@ public class DomainServiceImpl extends AbstractEntityService implements DomainSe
         }
     }
 
+    
     /**
-
      * Updates oauth2clients.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param domainId domain id ({@link DomainId})
+     * @param oAuth2ClientIds o auth2client ids ({@link List})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void updateOauth2Clients(TenantId tenantId, DomainId domainId, List<OAuth2ClientId> oAuth2ClientIds) {
@@ -107,11 +121,16 @@ public class DomainServiceImpl extends AbstractEntityService implements DomainSe
         }
     }
 
+    
     /**
-
-     * Removes domain by id.
-
+     * Deletes domain by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param domainId domain id ({@link DomainId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteDomainById(TenantId tenantId, DomainId domainId) {
@@ -120,11 +139,16 @@ public class DomainServiceImpl extends AbstractEntityService implements DomainSe
         eventPublisher.publishEvent(DeleteEntityEvent.builder().tenantId(tenantId).entityId(domainId).build());
     }
 
+    
     /**
-
-     * Loads domain by id.
-
+     * Finds domain by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param domainId domain id ({@link DomainId})
+     * @return {@link Domain}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Domain findDomainById(TenantId tenantId, DomainId domainId) {
@@ -132,11 +156,16 @@ public class DomainServiceImpl extends AbstractEntityService implements DomainSe
         return domainDao.findById(tenantId, domainId.getId());
     }
 
+    
     /**
-
-     * Loads domain infos by tenant id.
-
+     * Finds domain infos by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<DomainInfo> findDomainInfosByTenantId(TenantId tenantId, PageLink pageLink) {
@@ -145,11 +174,16 @@ public class DomainServiceImpl extends AbstractEntityService implements DomainSe
         return domains.mapData(this::getDomainInfo);
     }
 
+    
     /**
-
-     * Loads domain info by id.
-
+     * Finds domain info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param domainId domain id ({@link DomainId})
+     * @return {@link DomainInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DomainInfo findDomainInfoById(TenantId tenantId, DomainId domainId) {
@@ -158,11 +192,15 @@ public class DomainServiceImpl extends AbstractEntityService implements DomainSe
         return getDomainInfo(domain);
     }
 
+    
     /**
-
      * Is oauth2enabled.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public boolean isOauth2Enabled(TenantId tenantId) {
@@ -170,11 +208,15 @@ public class DomainServiceImpl extends AbstractEntityService implements DomainSe
         return domainDao.countDomainByTenantIdAndOauth2Enabled(tenantId, true) > 0;
     }
 
+    
     /**
-
-     * Removes domains by tenant id.
-
+     * Deletes domains by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteDomainsByTenantId(TenantId tenantId) {
@@ -182,33 +224,47 @@ public class DomainServiceImpl extends AbstractEntityService implements DomainSe
         domainDao.deleteByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Removes by tenant id.
-
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteByTenantId(TenantId tenantId) {
         deleteDomainsByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Loads entity.
-
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findDomainById(tenantId, new DomainId(entityId.getId())));
     }
 
+    
     /**
-
-     * Loads entity async.
-
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
@@ -216,11 +272,17 @@ public class DomainServiceImpl extends AbstractEntityService implements DomainSe
                 .transform(Optional::ofNullable, directExecutor());
     }
 
+    
     /**
-
-     * Removes entity.
-
+     * Deletes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -239,11 +301,14 @@ public class DomainServiceImpl extends AbstractEntityService implements DomainSe
         return new DomainInfo(domain, clients);
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

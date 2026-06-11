@@ -19,9 +19,11 @@ import org.thingsboard.server.common.data.EntityType;
 import org.thingsboard.server.common.data.relation.RelationTypeGroup;
 
 import java.util.UUID;
+
 /**
- * EDQS component: relation data.
+ * Relation data (EDQS microservice — in-memory entity projections).
  */
+
 public record RelationData(UUID fromId, EntityType fromType, UUID toId, EntityType toType, String type,
                            RelationTypeGroup typeGroup) {
 

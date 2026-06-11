@@ -26,37 +26,65 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * In-process transaction that stages puts before atomic commit to a {@link CaffeineTbTransactionalCache}.
+ *
+ * <p>Pending entries accumulate in {@link #pendingPuts}. On {@link #commit()}, the parent cache
+ * applies puts only if this transaction was not marked failed by a concurrent mutation on
+ * a watched key. {@link #rollback()} drops the transaction without writing.
+ *
+ * @param <K> cache key type
+ * @param <V> cache value type
+ * @see CaffeineTbTransactionalCache#commit
+ */
 @Slf4j
 @RequiredArgsConstructor
-/**
- * Caffeine tb cache transaction.
- */
+
 public class CaffeineTbCacheTransaction<K extends Serializable, V extends Serializable> implements TbCacheTransaction<K, V> {
     @Getter
+    /** Unique transaction identifier for registry tracking. */
     private final UUID id = UUID.randomUUID();
+    /** Parent cache coordinating commit/rollback. */
     private final CaffeineTbTransactionalCache<K, V> cache;
     @Getter
+    /** Keys watched by this transaction for conflict detection. */
     private final List<K> keys;
     @Getter
     @Setter
+    /** When {@code true}, {@link #commit()} becomes a no-op. */
     private boolean failed;
+
+    /** Staged key-value pairs applied on successful commit. */
 
     private final Map<K, V> pendingPuts = new LinkedHashMap<>();
 
+/**
+         * Stages a put operation applied only on successful {@link #commit()}.
+         *
+         * @param key   cache key
+         * @param value value to store when committed
+         */
     @Override
     public void put(K key, V value) {
         pendingPuts.put(key, value);
     }
 
+/**
+         * Commits staged puts via {@link CaffeineTbTransactionalCache#commit}.
+         *
+         * @return {@code true} if the transaction was not invalidated before commit
+         */
     @Override
     public boolean commit() {
         return cache.commit(id, pendingPuts);
     }
 
+/**
+         * Aborts the transaction and releases its registry entry without writing to cache.
+         */
     @Override
     public void rollback() {
         cache.rollback(id);
     }
-
 
 }

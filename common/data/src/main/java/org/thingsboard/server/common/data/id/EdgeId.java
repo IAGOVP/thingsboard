@@ -28,7 +28,7 @@ import java.util.UUID;
 
 @Schema(allOf = EntityId.class)
 /**
- * Typed identifier for edge.
+ * Typed identifier for an Edge instance ({@link org.thingsboard.server.common.data.EntityType#EDGE}).
  */
 public class EdgeId extends UUIDBased implements EntityId {
 
@@ -42,16 +42,33 @@ public class EdgeId extends UUIDBased implements EntityId {
     public EdgeId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * From string.
+     *
+     * @param edgeId edge id ({@link String})
+     * @return {@link EdgeId}
+     */
 
     public static EdgeId fromString(String edgeId) {
         return new EdgeId(UUID.fromString(edgeId));
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY, description = "string", example = "EDGE", allowableValues = "EDGE")
     @Override
     public EntityType getEntityType() {
         return EntityType.EDGE;
     }
+    /**
+     * From uuid.
+     *
+     * @param id id ({@link UUID})
+     * @return {@link EdgeId}
+     */
 
     @JsonCreator
     public static EdgeId fromUUID(@JsonProperty("id") UUID id) {

@@ -16,13 +16,16 @@
 package org.thingsboard.server.queue.notification;
 
 import com.google.protobuf.ByteString;
+import java.util.UUID;
+
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Service;
 import org.thingsboard.server.common.data.JavaSerDesUtil;
-import org.thingsboard.server.common.data.notification.rule.trigger.NotificationRuleTrigger;
 import org.thingsboard.server.common.data.notification.rule.trigger.NotificationRuleTrigger.DeduplicationStrategy;
+import org.thingsboard.server.common.data.notification.rule.trigger.NotificationRuleTrigger;
 import org.thingsboard.server.common.msg.notification.NotificationRuleProcessor;
 import org.thingsboard.server.common.msg.queue.ServiceType;
 import org.thingsboard.server.common.msg.queue.TopicPartitionInfo;
@@ -32,15 +35,14 @@ import org.thingsboard.server.queue.discovery.PartitionService;
 import org.thingsboard.server.queue.discovery.TopicService;
 import org.thingsboard.server.queue.provider.TbQueueProducerProvider;
 
-import java.util.UUID;
 
+/**
+ * Processes notification rules remotely by publishing to the notification queue.
+ */
 @Service
 @ConditionalOnMissingBean(value = NotificationRuleProcessor.class, ignored = RemoteNotificationRuleProcessor.class)
 @RequiredArgsConstructor
 @Slf4j
-/**
- * Processes remote notification rule.
- */
 public class RemoteNotificationRuleProcessor implements NotificationRuleProcessor {
 
     private final NotificationDeduplicationService deduplicationService;

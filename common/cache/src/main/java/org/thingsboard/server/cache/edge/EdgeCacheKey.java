@@ -24,13 +24,16 @@ import org.thingsboard.server.common.data.id.TenantId;
 import java.io.Serial;
 import java.io.Serializable;
 
+/**
+ * Cache key for {@link org.thingsboard.server.common.data.edge.Edge} by tenant and edge name.
+ *
+ * @see EdgeCaffeineCache
+ * @see EdgeRedisCache
+ */
 @Getter
 @EqualsAndHashCode
 @RequiredArgsConstructor
 @Builder
-/**
- * Edge cache key.
- */
 public class EdgeCacheKey implements Serializable {
 
     @Serial

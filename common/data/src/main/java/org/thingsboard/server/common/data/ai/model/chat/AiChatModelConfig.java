@@ -30,20 +30,52 @@ public sealed interface AiChatModelConfig<C extends AiChatModelConfig<C>> extend
         AmazonBedrockChatModelConfig, GitHubModelsChatModelConfig, OllamaChatModelConfig {
 
     ChatModel configure(Langchain4jChatModelConfigurer configurer);
+    /**
+     * Model type.
+     *
+     * @return {@link AiModelType}
+     */
 
     @Override
     @JsonProperty(value = "modelType", access = JsonProperty.Access.READ_ONLY)
     default AiModelType modelType() {
         return AiModelType.CHAT;
     }
+/**
+ * Timeout seconds.
+ *
+ * @return {@link Integer}
+ */
 
     Integer timeoutSeconds();
+/**
+ * Max retries.
+ *
+ * @return {@link Integer}
+ */
 
     Integer maxRetries();
+/**
+ * With timeout seconds.
+ *
+ * @param timeoutSeconds timeout seconds ({@link Integer})
+ * @return {@link C}
+ */
 
     C withTimeoutSeconds(Integer timeoutSeconds);
+/**
+ * With max retries.
+ *
+ * @param maxRetries max retries ({@link Integer})
+ * @return {@link C}
+ */
 
     C withMaxRetries(Integer maxRetries);
+/**
+ * Supports json mode.
+ *
+ * @return the boolean result
+ */
 
     boolean supportsJsonMode();
 

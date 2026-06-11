@@ -33,6 +33,11 @@ public class TimeSeriesOutput implements Output {
     public TimeSeriesOutput() {
         this.strategy = new TimeSeriesRuleChainOutputStrategy();
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link OutputType}
+     */
 
     @Override
     public OutputType getType() {

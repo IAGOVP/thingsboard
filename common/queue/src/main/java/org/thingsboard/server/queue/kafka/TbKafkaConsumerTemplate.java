@@ -15,6 +15,20 @@
  */
 package org.thingsboard.server.queue.kafka;
 
+import java.io.IOException;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,27 +45,13 @@ import org.thingsboard.server.queue.TbQueueAdmin;
 import org.thingsboard.server.queue.TbQueueMsg;
 import org.thingsboard.server.queue.common.AbstractTbQueueConsumerTemplate;
 
-import java.io.IOException;
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
 /**
- * Created by ashvayka on 24.09.18.
+ * Kafka implementation of {@link TbQueueConsumer}.
+ *
+ * <p>Polls records from assigned partitions, decodes them via {@link TbKafkaDecoder},
+ * and manages subscription changes through a subscribe queue.
  */
 @Slf4j
-/**
- * Tb kafka consumer template.
- */
 public class TbKafkaConsumerTemplate<T extends TbQueueMsg> extends AbstractTbQueueConsumerTemplate<ConsumerRecord<String, byte[]>, T> {
 
     private final TbKafkaAdmin admin;

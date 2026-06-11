@@ -17,12 +17,12 @@ package org.thingsboard.server.common.msg.queue;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+/**
+ * Enumerates service type values for message routing or payloads.
+ */
 
 @RequiredArgsConstructor
 @Getter
-/**
- * service type values.
- */
 public enum ServiceType {
 
     TB_CORE("TB Core"),

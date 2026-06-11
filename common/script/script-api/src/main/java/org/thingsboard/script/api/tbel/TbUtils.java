@@ -56,10 +56,10 @@ import java.util.regex.Matcher;
 import static java.lang.Character.MAX_RADIX;
 import static java.lang.Character.MIN_RADIX;
 
-@Slf4j
 /**
  * Tb utils.
  */
+@Slf4j
 public class TbUtils {
 
     private static final byte[] HEX_ARRAY = "0123456789ABCDEF".getBytes(StandardCharsets.US_ASCII);
@@ -428,6 +428,7 @@ public class TbUtils {
     public static List<Byte> stringToBytes(ExecutionContext ctx, Object str) throws IllegalAccessException {
         if (str instanceof String) {
             byte[] bytes = str.toString().getBytes();
+            /** Bytes to list. */
             return bytesToList(ctx, bytes);
         } else {
             throw new IllegalAccessException("Invalid type parameter [" + str.getClass().getSimpleName() + "]. Expected 'String'");
@@ -437,6 +438,7 @@ public class TbUtils {
     public static List<Byte> stringToBytes(ExecutionContext ctx, Object str, String charsetName) throws UnsupportedEncodingException, IllegalAccessException {
         if (str instanceof String) {
             byte[] bytes = str.toString().getBytes(charsetName);
+            /** Bytes to list. */
             return bytesToList(ctx, bytes);
         } else {
             throw new IllegalAccessException("Invalid type parameter [" + str.getClass().getSimpleName() + "]. Expected 'String'");
@@ -470,10 +472,12 @@ public class TbUtils {
     }
 
     public static Integer parseInt(String value) {
+        /** Parse int. */
         return parseInt(value, ZERO_RADIX);
     }
 
     public static Integer parseInt(String value, int radix) {
+        /** Parse int. */
         return parseInt(value, radix, true);
     }
 
@@ -494,10 +498,12 @@ public class TbUtils {
     }
 
     public static Long parseLong(String value) {
+        /** Parse long. */
         return parseLong(value, ZERO_RADIX);
     }
 
     public static Long parseLong(String value, int radix) {
+        /** Parse long. */
         return parseLong(value, radix, true);
     }
 
@@ -569,12 +575,14 @@ public class TbUtils {
     }
 
     public static Float parseFloat(String value) {
+        /** Parse float. */
         return parseFloat(value, ZERO_RADIX);
     }
 
     public static Float parseFloat(String value, int radix) {
         String valueP = prepareNumberString(value, true);
         if (valueP != null) {
+            /** Parse float from string. */
             return parseFloatFromString(value, valueP, radix);
         }
         return null;
@@ -605,13 +613,14 @@ public class TbUtils {
         return null;
     }
 
-
     public static Double parseDouble(String value) {
         int radix = getRadix10_16(value);
+        /** Parse double. */
         return parseDouble(value, radix);
     }
 
     public static Double parseDouble(String value, int radix) {
+        /** Parse double. */
         return parseDouble(value, radix, true);
     }
 
@@ -630,81 +639,99 @@ public class TbUtils {
     }
 
     public static int parseLittleEndianHexToInt(String hex) {
+        /** Parse hex to int. */
         return parseHexToInt(hex, false);
     }
 
     public static int parseBigEndianHexToInt(String hex) {
+        /** Parse hex to int. */
         return parseHexToInt(hex, true);
     }
 
     public static int parseHexToInt(String hex) {
+        /** Parse hex to int. */
         return parseHexToInt(hex, true);
     }
 
     public static Integer parseHexToInt(String value, boolean bigEndian) {
+        /** Parse int. */
         return parseInt(value, HEX_RADIX, bigEndian);
     }
 
     public static long parseLittleEndianHexToLong(String hex) {
+        /** Parse hex to long. */
         return parseHexToLong(hex, false);
     }
 
     public static long parseBigEndianHexToLong(String hex) {
+        /** Parse hex to long. */
         return parseHexToLong(hex, true);
     }
 
     public static long parseHexToLong(String hex) {
+        /** Parse hex to long. */
         return parseHexToLong(hex, true);
     }
 
     public static Long parseHexToLong(String value, boolean bigEndian) {
+        /** Parse long. */
         return parseLong(value, HEX_RADIX, bigEndian);
     }
 
     public static float parseLittleEndianHexToFloat(String hex) {
+        /** Parse hex to float. */
         return parseHexToFloat(hex, false);
     }
 
     public static float parseBigEndianHexToFloat(String hex) {
+        /** Parse hex to float. */
         return parseHexToFloat(hex, true);
     }
 
     public static float parseHexToFloat(String hex) {
+        /** Parse hex to float. */
         return parseHexToFloat(hex, true);
     }
 
     public static Float parseHexToFloat(String value, boolean bigEndian) {
         String valueP = prepareNumberString(value, bigEndian);
         if (valueP != null) {
+            /** Parse float from string. */
             return parseFloatFromString(value, valueP, HEX_RADIX);
         }
         return null;
     }
 
     public static double parseLittleEndianHexToDouble(String hex) {
+        /** Parse hex to double. */
         return parseHexToDouble(hex, false);
     }
 
     public static double parseBigEndianHexToDouble(String hex) {
+        /** Parse hex to double. */
         return parseHexToDouble(hex, true);
     }
 
     public static double parseHexToDouble(String hex) {
+        /** Parse hex to double. */
         return parseHexToDouble(hex, true);
     }
 
     public static double parseHexToDouble(String value, boolean bigEndian) {
+        /** Parse double. */
         return parseDouble(value, HEX_RADIX, bigEndian);
     }
 
     public static ExecutionArrayList<Byte> hexToBytes(ExecutionContext ctx, String value) {
         String hex = validateAndPrepareHex(value);
         byte[] data = hexToBytes(hex);
+        /** Bytes to execution array list. */
         return bytesToExecutionArrayList(ctx, data);
     }
 
     public static byte[] hexToBytesArray(String value) {
         String hex = validateAndPrepareHex(value);
+        /** Hex to bytes. */
         return hexToBytes(hex);
     }
 
@@ -735,30 +762,37 @@ public class TbUtils {
     }
 
     public static String longToHex(Long l) {
+        /** Prepare number hex string. */
         return prepareNumberHexString(l, true, false, HEX_LEN_MIN, HEX_LEN_LONG_MAX);
     }
 
     public static String longToHex(Long l, boolean bigEndian) {
+        /** Prepare number hex string. */
         return prepareNumberHexString(l, bigEndian, false, HEX_LEN_MIN, HEX_LEN_LONG_MAX);
     }
 
     public static String longToHex(Long l, boolean bigEndian, boolean pref) {
+        /** Prepare number hex string. */
         return prepareNumberHexString(l, bigEndian, pref, HEX_LEN_MIN, HEX_LEN_LONG_MAX);
     }
 
     public static String longToHex(Long l, boolean bigEndian, boolean pref, int len) {
+        /** Prepare number hex string. */
         return prepareNumberHexString(l, bigEndian, pref, len, HEX_LEN_LONG_MAX);
     }
 
     public static String intLongToRadixString(Long number) {
+        /** Int long to radix string. */
         return intLongToRadixString(number, DEC_RADIX);
     }
 
     public static String intLongToRadixString(Long number, int radix) {
+        /** Int long to radix string. */
         return intLongToRadixString(number, radix, true);
     }
 
     public static String intLongToRadixString(Long number, int radix, boolean bigEndian) {
+        /** Int long to radix string. */
         return intLongToRadixString(number, radix, bigEndian, false);
     }
 
@@ -826,6 +860,7 @@ public class TbUtils {
     }
 
     public static String floatToHex(Float f) {
+        /** Float to hex. */
         return floatToHex(f, true);
     }
 
@@ -839,6 +874,7 @@ public class TbUtils {
     }
 
     public static String doubleToHex(Double d) {
+        /** Double to hex. */
         return doubleToHex(d, true);
     }
 
@@ -868,10 +904,12 @@ public class TbUtils {
 
     public static ExecutionArrayList<Byte> base64ToBytesList(ExecutionContext ctx, String input) {
         byte[] bytes = Base64.getDecoder().decode(input);
+        /** Bytes to execution array list. */
         return bytesToExecutionArrayList(ctx, bytes);
     }
 
     public static int parseBytesToInt(List<Byte> data) {
+        /** Parse bytes to int. */
         return parseBytesToInt(data, 0);
     }
 
@@ -880,6 +918,7 @@ public class TbUtils {
     }
 
     public static int parseBytesToInt(List<Byte> data, int offset, int length) {
+        /** Parse bytes to int. */
         return parseBytesToInt(data, offset, length, true);
     }
 
@@ -888,6 +927,7 @@ public class TbUtils {
     }
 
     public static int parseBytesToInt(byte[] data) {
+        /** Parse bytes to int. */
         return parseBytesToInt(data, 0);
     }
 
@@ -896,6 +936,7 @@ public class TbUtils {
     }
 
     public static int parseBytesToInt(byte[] data, int offset, int length) {
+        /** Parse bytes to int. */
         return parseBytesToInt(data, offset, length, true);
     }
 
@@ -912,6 +953,7 @@ public class TbUtils {
     }
 
     public static long parseBytesToUnsignedInt(byte[] data) {
+        /** Parse bytes to unsigned int. */
         return parseBytesToUnsignedInt(data, 0);
     }
 
@@ -920,6 +962,7 @@ public class TbUtils {
     }
 
     public static long parseBytesToUnsignedInt(byte[] data, int offset, int length) {
+        /** Parse bytes to unsigned int. */
         return parseBytesToUnsignedInt(data, offset, length, true);
     }
 
@@ -938,6 +981,7 @@ public class TbUtils {
     }
 
     public static long parseBytesToUnsignedInt(List<Byte> data) {
+        /** Parse bytes to unsigned int. */
         return parseBytesToUnsignedInt(data, 0);
     }
 
@@ -946,6 +990,7 @@ public class TbUtils {
     }
 
     public static long parseBytesToUnsignedInt(List<Byte> data, int offset, int length) {
+        /** Parse bytes to unsigned int. */
         return parseBytesToUnsignedInt(data, offset, length, true);
     }
 
@@ -954,6 +999,7 @@ public class TbUtils {
     }
 
     public static long parseBytesToLong(List<Byte> data) {
+        /** Parse bytes to long. */
         return parseBytesToLong(data, 0);
     }
 
@@ -962,6 +1008,7 @@ public class TbUtils {
     }
 
     public static long parseBytesToLong(List<Byte> data, int offset, int length) {
+        /** Parse bytes to long. */
         return parseBytesToLong(data, offset, length, true);
     }
 
@@ -970,6 +1017,7 @@ public class TbUtils {
     }
 
     public static long parseBytesToLong(byte[] data) {
+        /** Parse bytes to long. */
         return parseBytesToLong(data, 0);
     }
 
@@ -978,6 +1026,7 @@ public class TbUtils {
     }
 
     public static long parseBytesToLong(byte[] data, int offset, int length) {
+        /** Parse bytes to long. */
         return parseBytesToLong(data, offset, length, true);
     }
 
@@ -994,6 +1043,7 @@ public class TbUtils {
     }
 
     public static float parseBytesToFloat(List data) {
+        /** Parse bytes to float. */
         return parseBytesToFloat(data, 0);
     }
 
@@ -1002,6 +1052,7 @@ public class TbUtils {
     }
 
     public static float parseBytesToFloat(List data, int offset, int length) {
+        /** Parse bytes to float. */
         return parseBytesToFloat(data, offset, length, true);
     }
 
@@ -1010,6 +1061,7 @@ public class TbUtils {
     }
 
     public static float parseBytesToFloat(byte[] data) {
+        /** Parse bytes to float. */
         return parseBytesToFloat(data, 0);
     }
 
@@ -1018,6 +1070,7 @@ public class TbUtils {
     }
 
     public static float parseBytesToFloat(byte[] data, int offset, int length) {
+        /** Parse bytes to float. */
         return parseBytesToFloat(data, offset, length, true);
     }
 
@@ -1037,6 +1090,7 @@ public class TbUtils {
     }
 
     public static float parseBytesIntToFloat(List data) {
+        /** Parse bytes int to float. */
         return parseBytesIntToFloat(data, 0);
     }
 
@@ -1045,6 +1099,7 @@ public class TbUtils {
     }
 
     public static float parseBytesIntToFloat(List data, int offset, int length) {
+        /** Parse bytes int to float. */
         return parseBytesIntToFloat(data, offset, length, true);
     }
 
@@ -1053,6 +1108,7 @@ public class TbUtils {
     }
 
     public static float parseBytesIntToFloat(byte[] data) {
+        /** Parse bytes int to float. */
         return parseBytesIntToFloat(data, 0);
     }
 
@@ -1061,6 +1117,7 @@ public class TbUtils {
     }
 
     public static float parseBytesIntToFloat(byte[] data, int offset, int length) {
+        /** Parse bytes int to float. */
         return parseBytesIntToFloat(data, offset, length, true);
     }
 
@@ -1072,6 +1129,7 @@ public class TbUtils {
     }
 
     public static double parseBytesToDouble(List data) {
+        /** Parse bytes to double. */
         return parseBytesToDouble(data, 0);
     }
 
@@ -1080,6 +1138,7 @@ public class TbUtils {
     }
 
     public static double parseBytesToDouble(List data, int offset, int length) {
+        /** Parse bytes to double. */
         return parseBytesToDouble(data, offset, length, true);
     }
 
@@ -1088,6 +1147,7 @@ public class TbUtils {
     }
 
     public static double parseBytesToDouble(byte[] data) {
+        /** Parse bytes to double. */
         return parseBytesToDouble(data, 0);
     }
 
@@ -1096,6 +1156,7 @@ public class TbUtils {
     }
 
     public static double parseBytesToDouble(byte[] data, int offset, int length) {
+        /** Parse bytes to double. */
         return parseBytesToDouble(data, offset, length, true);
     }
 
@@ -1115,6 +1176,7 @@ public class TbUtils {
     }
 
     public static double parseBytesLongToDouble(List data) {
+        /** Parse bytes long to double. */
         return parseBytesLongToDouble(data, 0);
     }
 
@@ -1123,6 +1185,7 @@ public class TbUtils {
     }
 
     public static double parseBytesLongToDouble(List data, int offset, int length) {
+        /** Parse bytes long to double. */
         return parseBytesLongToDouble(data, offset, length, true);
     }
 
@@ -1131,6 +1194,7 @@ public class TbUtils {
     }
 
     public static double parseBytesLongToDouble(byte[] data) {
+        /** Parse bytes long to double. */
         return parseBytesLongToDouble(data, 0);
     }
 
@@ -1139,6 +1203,7 @@ public class TbUtils {
     }
 
     public static double parseBytesLongToDouble(byte[] data, int offset, int length) {
+        /** Parse bytes long to double. */
         return parseBytesLongToDouble(data, offset, length, true);
     }
 
@@ -1164,6 +1229,7 @@ public class TbUtils {
         for (int i = 0; i < bytesList.size(); i++) {
             bytes[i] = Byte.parseByte(bytesList.get(i).toString());
         }
+        /** Bytes to hex. */
         return bytesToHex(bytes);
     }
 
@@ -1186,6 +1252,7 @@ public class TbUtils {
     }
 
     public static ExecutionHashMap<String, Object> toFlatMap(ExecutionContext ctx, Map<String, Object> json, List<String> excludeList) {
+        /** To flat map. */
         return toFlatMap(ctx, json, excludeList, true);
     }
 
@@ -1354,10 +1421,12 @@ public class TbUtils {
     }
 
     public static byte[] parseByteToBinaryArray(byte byteValue) {
+        /** Parse byte to binary array. */
         return parseByteToBinaryArray(byteValue, BIN_LEN_MAX);
     }
 
     public static byte[] parseByteToBinaryArray(byte byteValue, int binLength) {
+        /** Parse byte to binary array. */
         return parseByteToBinaryArray(byteValue, binLength, true);
     }
 
@@ -1395,6 +1464,7 @@ public class TbUtils {
     }
 
     public static byte[] parseLongToBinaryArray(long longValue) {
+        /** Parse long to binary array. */
         return parseLongToBinaryArray(longValue, BYTES_LEN_LONG_MAX * BIN_LEN_MAX);
     }
 
@@ -1412,6 +1482,7 @@ public class TbUtils {
     }
 
     public static int parseBinaryArrayToInt(List listValue) {
+        /** Parse binary array to int. */
         return parseBinaryArrayToInt(listValue, 0);
     }
 
@@ -1424,10 +1495,12 @@ public class TbUtils {
     }
 
     public static int parseBinaryArrayToInt(byte[] bytesValue) {
+        /** Parse binary array to int. */
         return parseBinaryArrayToInt(bytesValue, 0);
     }
 
     public static int parseBinaryArrayToInt(byte[] bytesValue, int offset) {
+        /** Parse binary array to int. */
         return parseBinaryArrayToInt(bytesValue, offset, bytesValue.length);
     }
 

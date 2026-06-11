@@ -22,8 +22,14 @@ import org.thingsboard.server.common.data.id.EdgeId;
 import org.thingsboard.server.common.data.id.EntityId;
 import org.thingsboard.server.common.data.id.TenantId;
 /**
- * Action entity event.
+ * Action entity event (entity lifecycle action cause tracking).
  */
+
+
+
+
+
+
 
 @Data
 @Builder

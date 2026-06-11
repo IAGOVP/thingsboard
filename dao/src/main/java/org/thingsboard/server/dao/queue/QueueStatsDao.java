@@ -23,17 +23,47 @@ import org.thingsboard.server.dao.TenantEntityDao;
 
 import java.util.List;
 
+
 /**
 
- * Persistence contract for queue stats (see JPA/Cassandra implementations).
+ * Persistence contract for queue stats.
+
+ *
+
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (ThingsBoard DAO layer).
 
  */
 
+
 public interface QueueStatsDao extends Dao<QueueStats>, TenantEntityDao<QueueStats> {
+    /**
+     * Finds by tenant id queue name and service id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param queueName queue name ({@link String})
+     * @param serviceId service id ({@link String})
+     * @return {@link QueueStats}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     QueueStats findByTenantIdQueueNameAndServiceId(TenantId tenantId, String queueName, String serviceId);
+    /**
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void deleteByTenantId(TenantId tenantId);
+    /**
+     * Finds by ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param queueStatsIds queue stats ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<QueueStats> findByIds(TenantId tenantId, List<QueueStatsId> queueStatsIds);
 

@@ -27,6 +27,11 @@ public class NumericFilterPredicate implements SimpleKeyFilterPredicate<Double> 
 
     private NumericOperation operation;
     private FilterPredicateValue<Double> value;
+    /**
+     * Returns type.
+     *
+     * @return {@link FilterPredicateType}
+     */
 
     @Override
     public FilterPredicateType getType() {

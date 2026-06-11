@@ -21,6 +21,11 @@ package org.thingsboard.server.common.data.kv;
 public interface DeleteTsKvQuery extends TsKvQuery {
 
     Boolean getRewriteLatestIfDeleted();
+/**
+ * Returns delete latest.
+ *
+ * @return {@link Boolean}
+ */
 
     Boolean getDeleteLatest();
 

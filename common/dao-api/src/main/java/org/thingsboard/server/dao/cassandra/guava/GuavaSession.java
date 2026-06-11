@@ -31,8 +31,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.concurrent.ExecutionException;
 
 /**
- * guava session contract.
+ * guava session contract for the DAO layer.
  */
+
 public interface GuavaSession extends Session, SyncCqlSession {
 
     GenericType<ListenableFuture<AsyncResultSet>> ASYNC =
@@ -42,35 +43,86 @@ public interface GuavaSession extends Session, SyncCqlSession {
             new GenericType<ListenableFuture<PreparedStatement>>() {};
 
     @NonNull
+    /**
+     * Executes the requested data.
+     *
+     * @param statement statement ({@link Statement})
+     * @return {@link ResultSet}
+     */
     default ResultSet execute(@NonNull Statement<?> statement) {
         AsyncResultSet firstPage = getSafe(this.executeAsync(statement));
         if (firstPage.hasMorePages()) {
+            /**
+             * Guava multi page result set.
+             *
+             * @return the return new value
+             */
             return new GuavaMultiPageResultSet(this, statement, firstPage);
         } else {
+            /**
+             * Single page result set.
+             *
+             * @return the return new value
+             */
             return new SinglePageResultSet(firstPage);
         }
     }
 
+    /**
+     * Executes async.
+     *
+     * @param statement statement ({@link Statement})
+     * @return future completing with {@link AsyncResultSet}
+     */
     default ListenableFuture<AsyncResultSet> executeAsync(Statement<?> statement) {
         return this.execute(statement, ASYNC);
     }
 
+    /**
+     * Executes async.
+     *
+     * @param statement statement ({@link String})
+     * @return future completing with {@link AsyncResultSet}
+     */
     default ListenableFuture<AsyncResultSet> executeAsync(String statement) {
         return this.executeAsync(SimpleStatement.newInstance(statement));
     }
 
+    /**
+     * Prepare async.
+     *
+     * @param statement statement ({@link SimpleStatement})
+     * @return future completing with {@link PreparedStatement}
+     */
     default ListenableFuture<PreparedStatement> prepareAsync(SimpleStatement statement) {
         return this.execute(new DefaultPrepareRequest(statement), ASYNC_PREPARED);
     }
 
+    /**
+     * Prepare async.
+     *
+     * @param statement statement ({@link String})
+     * @return future completing with {@link PreparedStatement}
+     */
     default ListenableFuture<PreparedStatement> prepareAsync(String statement) {
         return this.prepareAsync(SimpleStatement.newInstance(statement));
     }
 
+    /**
+     * Returns safe.
+     *
+     * @param future future ({@link ListenableFuture})
+     * @return {@link AsyncResultSet}
+     */
     static AsyncResultSet getSafe(ListenableFuture<AsyncResultSet> future) {
         try {
             return future.get();
         } catch (InterruptedException | ExecutionException e) {
+            /**
+             * Illegal state exception.
+             *
+             * @return the throw new value
+             */
             throw new IllegalStateException(e);
         }
     }

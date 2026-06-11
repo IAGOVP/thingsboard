@@ -24,10 +24,13 @@ import org.thingsboard.server.gen.edge.v1.UplinkResponseMsg;
 import java.util.function.Consumer;
 
 /**
- * edge rpc client contract.
+ * Bidirectional gRPC client for Edge-to-cloud synchronization.
+ *
+ * <p>Connects with edge credentials, receives downlink messages from the cloud, and sends uplink messages from the edge.
  */
 public interface EdgeRpcClient {
 
+    /** Opens the bidirectional RPC stream and sends a connect request with edge credentials. */
     void connect(String integrationKey,
                  String integrationSecret,
                  Consumer<UplinkResponseMsg> onUplinkResponse,
@@ -35,14 +38,19 @@ public interface EdgeRpcClient {
                  Consumer<DownlinkMsg> onDownlink,
                  Consumer<Exception> onError);
 
+    /** Completes the stream and shuts down the gRPC channel. */
     void disconnect(boolean onError) throws InterruptedException;
 
+    /** Requests a full or incremental sync from the cloud. */
     void sendSyncRequestMsg(boolean fullSyncRequired);
 
+    /** Sends an edge-originated uplink message to the cloud. */
     void sendUplinkMsg(UplinkMsg uplinkMsg);
 
+    /** Acknowledges processing of a cloud downlink message. */
     void sendDownlinkResponseMsg(DownlinkResponseMsg downlinkResponseMsg);
 
+    /** Maximum inbound message size negotiated with the server. */
     int getServerMaxInboundMessageSize();
 
 }

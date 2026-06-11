@@ -43,6 +43,11 @@ public abstract class VersionCreateRequest {
 
     private String versionName;
     private String branch;
+    /**
+     * Returns type.
+     *
+     * @return {@link VersionCreateRequestType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Type of the version to create")
     public abstract VersionCreateRequestType getType();

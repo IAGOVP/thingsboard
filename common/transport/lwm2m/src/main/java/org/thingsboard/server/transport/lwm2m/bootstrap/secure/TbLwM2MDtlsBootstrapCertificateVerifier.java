@@ -69,17 +69,29 @@ public class TbLwM2MDtlsBootstrapCertificateVerifier implements NewAdvancedCerti
 
     @Value("${transport.lwm2m.server.security.skip_validity_check_for_client_cert:false}")
     private boolean skipValidityCheckForClientCert;
+    /**
+     * Returns supported certificate types.
+     *
+     * @return {@link List}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public List<CertificateType> getSupportedCertificateTypes() {
         return Arrays.asList(CertificateType.X_509, CertificateType.RAW_PUBLIC_KEY);
     }
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @SuppressWarnings("deprecation")
     @PostConstruct
     public void init() {
         try {
-            /* by default trust all */
+              */
             if (config.getTrustSslCredentials() != null) {
                 X509Certificate[] trustedCertificates = config.getTrustSslCredentials().getTrustedCertificates();
                 staticCertificateVerifier = new StaticNewAdvancedCertificateVerifier(trustedCertificates, new RawPublicKeyIdentity[0], null);
@@ -88,6 +100,19 @@ public class TbLwM2MDtlsBootstrapCertificateVerifier implements NewAdvancedCerti
             log.warn("Failed to initialize the LwM2M certificate verifier", e);
         }
     }
+    /**
+     * Verify certificate.
+     *
+     * @param cid cid ({@link ConnectionId})
+     * @param serverName server name ({@link ServerNames})
+     * @param remotePeer remote peer ({@link InetSocketAddress})
+     * @param clientUsage client usage
+     * @param verifySubject verify subject
+     * @param truncateCertificatePath truncate certificate path
+     * @param message message ({@link CertificateMessage})
+     * @return {@link CertificateVerificationResult}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public CertificateVerificationResult verifyCertificate(ConnectionId cid, ServerNames serverName, InetSocketAddress remotePeer,
@@ -152,11 +177,24 @@ public class TbLwM2MDtlsBootstrapCertificateVerifier implements NewAdvancedCerti
             }
         }
     }
+    /**
+     * Returns accepted issuers.
+     *
+     * @return {@link List}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public List<X500Principal> getAcceptedIssuers() {
         return CertPathUtil.toSubjects(null);
     }
+    /**
+     * Set result handler.
+     *
+     * @param resultHandler result handler ({@link HandshakeResultHandler})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void setResultHandler(HandshakeResultHandler resultHandler) {

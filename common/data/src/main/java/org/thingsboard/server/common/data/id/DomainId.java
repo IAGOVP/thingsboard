@@ -24,7 +24,7 @@ import java.util.UUID;
 
 @Schema(allOf = EntityId.class)
 /**
- * Typed identifier for domain.
+ * Typed identifier for a custom domain / white-label configuration.
  */
 public class DomainId extends UUIDBased implements EntityId {
 
@@ -32,10 +32,21 @@ public class DomainId extends UUIDBased implements EntityId {
     public DomainId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * From string.
+     *
+     * @param oauth2DomainId oauth2domain id ({@link String})
+     * @return {@link DomainId}
+     */
 
     public static DomainId fromString(String oauth2DomainId) {
         return new DomainId(UUID.fromString(oauth2DomainId));
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY, description = "string", example = "DOMAIN", allowableValues = "DOMAIN")
     @Override

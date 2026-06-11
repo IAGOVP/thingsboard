@@ -24,8 +24,14 @@ import org.thingsboard.server.common.data.id.TenantId;
 
 import java.util.concurrent.ConcurrentHashMap;
 /**
- * Edge stats counter service.
+ * Spring component for edge stats counter service (edge message counters and statistics (edge instances, events, sessions, and synchronization)).
  */
+
+
+
+
+
+
 
 @ConditionalOnProperty(prefix = "edges.stats", name = "enabled", havingValue = "true")
 @Service
@@ -35,11 +41,18 @@ public class EdgeStatsCounterService {
 
     private final ConcurrentHashMap<EdgeId, MsgCounters> msgCountersByEdge = new ConcurrentHashMap<>();
 
+    
     /**
-
      * Record event.
-
+     *
+     * @param type type ({@link EdgeStatsKey})
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link EdgeId})
+     * @param value value
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     public void recordEvent(EdgeStatsKey type, TenantId tenantId, EdgeId edgeId, long value) {
         MsgCounters counters = getOrCreateCounters(tenantId, edgeId);
@@ -52,21 +65,30 @@ public class EdgeStatsCounterService {
         }
     }
 
+    
     /**
-
-     * Get or create counters.
-
+     * Returns or create counters.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link EdgeId})
+     * @return {@link MsgCounters}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     public MsgCounters getOrCreateCounters(TenantId tenantId, EdgeId edgeId) {
         return msgCountersByEdge.computeIfAbsent(edgeId, id -> new MsgCounters(tenantId));
     }
 
+    
     /**
-
      * Clear.
-
+     *
+     * @param edgeId edge id ({@link EdgeId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     public void clear(EdgeId edgeId) {
         msgCountersByEdge.remove(edgeId);

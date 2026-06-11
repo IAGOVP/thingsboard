@@ -24,8 +24,11 @@ import org.thingsboard.server.common.data.asset.AssetInfo;
 import java.util.HashMap;
 import java.util.Map;
 /**
- * Asset info entity.
+ * JPA/Cassandra row model for asset info.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -58,6 +61,12 @@ public class AssetInfoEntity extends AbstractAssetEntity<AssetInfo> {
         }
         this.assetProfileName = assetProfileName;
     }
+    /**
+     * To data.
+     *
+     * @return {@link AssetInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AssetInfo toData() {

@@ -45,15 +45,44 @@ public class DefaultEntityLimitsCache implements EntityLimitsCache {
         long randomPart = (TimeUnit.MINUTES.toNanos(ttl) / 100) * DEVIATION;
         cache = Caffeine.newBuilder()
                 .expireAfter(new Expiry<EntityLimitKey, Boolean>() {
+                    /**
+                     * Expire after create.
+                     *
+                     * @param key key ({@link EntityLimitKey})
+                     * @param value value ({@link Boolean})
+                     * @param currentTime current time
+                     * @return the long result
+                     * @throws Exception on processing failure
+                     */
                     @Override
                     public long expireAfterCreate(@NotNull EntityLimitKey key, @NotNull Boolean value, long currentTime) {
                         return mainPart + (long) (randomPart * ThreadLocalRandom.current().nextDouble());
                     }
+                    /**
+                     * Expire after update.
+                     *
+                     * @param key key ({@link EntityLimitKey})
+                     * @param value value ({@link Boolean})
+                     * @param currentTime current time
+                     * @param currentDuration current duration
+                     * @return the long result
+                     * @throws Exception on processing failure
+                     */
 
                     @Override
                     public long expireAfterUpdate(@NotNull EntityLimitKey key, @NotNull Boolean value, long currentTime, long currentDuration) {
                         return currentDuration;
                     }
+                    /**
+                     * Expire after read.
+                     *
+                     * @param key key ({@link EntityLimitKey})
+                     * @param value value ({@link Boolean})
+                     * @param currentTime current time
+                     * @param currentDuration current duration
+                     * @return the long result
+                     * @throws Exception on processing failure
+                     */
 
                     @Override
                     public long expireAfterRead(@NotNull EntityLimitKey key, @NotNull Boolean value, long currentTime, long currentDuration) {
@@ -63,12 +92,27 @@ public class DefaultEntityLimitsCache implements EntityLimitsCache {
                 .maximumSize(maxSize)
                 .build();
     }
+    /**
+     * Returns the requested data.
+     *
+     * @param key key ({@link EntityLimitKey})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     public boolean get(EntityLimitKey key) {
         var result = cache.getIfPresent(key);
         return result != null ? result : false;
     }
+    /**
+     * Put.
+     *
+     * @param key key ({@link EntityLimitKey})
+     * @param value value
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void put(EntityLimitKey key, boolean value) {

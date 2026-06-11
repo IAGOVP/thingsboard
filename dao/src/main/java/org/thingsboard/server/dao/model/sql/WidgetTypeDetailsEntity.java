@@ -32,8 +32,11 @@ import org.thingsboard.server.dao.util.mapping.JsonConverter;
 
 import java.util.UUID;
 /**
- * Widget type details entity.
+ * JPA/Cassandra row model for widget type details.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -72,6 +75,12 @@ public class WidgetTypeDetailsEntity extends AbstractWidgetTypeEntity<WidgetType
             this.externalId = widgetTypeDetails.getExternalId().getId();
         }
     }
+    /**
+     * To data.
+     *
+     * @return {@link WidgetTypeDetails}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public WidgetTypeDetails toData() {

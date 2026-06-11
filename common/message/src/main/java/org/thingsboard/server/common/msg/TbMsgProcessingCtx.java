@@ -24,8 +24,9 @@ import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Created by ashvayka on 13.01.18.
+ * Tb msg processing ctx.
  */
+
 public final class TbMsgProcessingCtx implements Serializable {
 
     private final AtomicInteger ruleNodeExecCounter;

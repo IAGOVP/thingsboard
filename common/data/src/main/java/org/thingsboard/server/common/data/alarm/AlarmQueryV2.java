@@ -28,7 +28,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 /**
- * Alarm query v2.
+ * Extended alarm query with assignee and propagation filters.
  */
 public class AlarmQueryV2 {
 

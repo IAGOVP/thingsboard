@@ -16,6 +16,7 @@
 package org.thingsboard.server.common.data.edqs;
 
 /**
- * edqs object key contract.
+ * edqs object key contract (EDQS data).
  */
+
 public interface EdqsObjectKey {}

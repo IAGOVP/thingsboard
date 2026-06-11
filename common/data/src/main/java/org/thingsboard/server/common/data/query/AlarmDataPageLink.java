@@ -64,6 +64,11 @@ public class AlarmDataPageLink extends EntityDataPageLink {
         this.severityList = severityList;
         this.assigneeId = assigneeId;
     }
+    /**
+     * Next page link.
+     *
+     * @return {@link AlarmDataPageLink}
+     */
 
     @JsonIgnore
     public AlarmDataPageLink nextPageLink() {

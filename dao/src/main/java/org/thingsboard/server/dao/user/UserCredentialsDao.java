@@ -23,47 +23,100 @@ import org.thingsboard.server.dao.Dao;
 import java.util.UUID;
 
 /**
- * The Interface UserCredentialsDao.
+ * Persistence contract for user credentials.
+ *
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (users, credentials, and user settings).
  */
+
 public interface UserCredentialsDao extends Dao<UserCredentials> {
 
+    
     /**
-     * Save or update user credentials object
+     * Saves or persists the requested data.
      *
-     * @param userCredentials the user credentials object
-     * @return saved user credentials object
+     * @param tenantId tenant that owns the entity or operation
+     * @param userCredentials user credentials ({@link UserCredentials})
+     * @return {@link UserCredentials}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     UserCredentials save(TenantId tenantId, UserCredentials userCredentials);
 
+    
     /**
-     * Find user credentials by user id.
+     * Finds by user id.
      *
-     * @param userId the user id
-     * @return the user credentials object
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @return {@link UserCredentials}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     UserCredentials findByUserId(TenantId tenantId, UUID userId);
 
+    
     /**
-     * Find user credentials by activate token.
+     * Finds by activate token.
      *
-     * @param activateToken the activate token
-     * @return the user credentials object
+     * @param tenantId tenant that owns the entity or operation
+     * @param activateToken activate token ({@link String})
+     * @return {@link UserCredentials}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     UserCredentials findByActivateToken(TenantId tenantId, String activateToken);
 
+    
     /**
-     * Find user credentials by reset token.
+     * Finds by reset token.
      *
-     * @param resetToken the reset token
-     * @return the user credentials object
+     * @param tenantId tenant that owns the entity or operation
+     * @param resetToken reset token ({@link String})
+     * @return {@link UserCredentials}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     UserCredentials findByResetToken(TenantId tenantId, String resetToken);
+    /**
+     * Removes by user id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void removeByUserId(TenantId tenantId, UserId userId);
+    /**
+     * Set last login ts.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @param lastLoginTs last login ts
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void setLastLoginTs(TenantId tenantId, UserId userId, long lastLoginTs);
+    /**
+     * Increment failed login attempts.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     int incrementFailedLoginAttempts(TenantId tenantId, UserId userId);
+    /**
+     * Set failed login attempts.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @param failedLoginAttempts failed login attempts
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void setFailedLoginAttempts(TenantId tenantId, UserId userId, int failedLoginAttempts);
 

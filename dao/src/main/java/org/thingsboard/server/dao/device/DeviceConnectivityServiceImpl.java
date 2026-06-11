@@ -64,8 +64,11 @@ import static org.thingsboard.server.dao.util.DeviceConnectivityUtil.MQTTS;
 import static org.thingsboard.server.dao.util.DeviceConnectivityUtil.getHost;
 import static org.thingsboard.server.dao.util.DeviceConnectivityUtil.getPort;
 /**
- * Spring service implementing device connectivity API.
+ * Spring {@code @Service} implementing the device connectivity DAO API.
+ *
+ * <p>Delegates to {@code *Dao} implementations and manages cache eviction (devices, credentials, profiles, and connectivity).
  */
+
 
 @Service("DeviceConnectivityDaoService")
 @Slf4j
@@ -91,11 +94,16 @@ public class DeviceConnectivityServiceImpl implements DeviceConnectivityService 
     @Value("${device.connectivity.gateway.image_version:3.8-stable}")
     private String gatewayImageVersion;
 
+    
     /**
-
-     * Loads device publish telemetry commands.
-
+     * Finds device publish telemetry commands.
+     *
+     * @param baseUrl base url ({@link String})
+     * @param device device ({@link Device})
+     * @return {@link JsonNode}
+     * @throws URISyntaxException if urisyntax exception is thrown during processing
      */
+
 
     @Override
     public JsonNode findDevicePublishTelemetryCommands(String baseUrl, Device device) throws URISyntaxException {
@@ -142,11 +150,15 @@ public class DeviceConnectivityServiceImpl implements DeviceConnectivityService 
         return commands;
     }
 
+    
     /**
-
-     * Get pem cert file.
-
+     * Returns pem cert file.
+     *
+     * @param protocol protocol ({@link String})
+     * @return {@link Resource}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Resource getPemCertFile(String protocol) {
@@ -168,11 +180,16 @@ public class DeviceConnectivityServiceImpl implements DeviceConnectivityService 
         });
     }
 
+    
     /**
-
      * Creates gateway docker compose file.
-
+     *
+     * @param baseUrl base url ({@link String})
+     * @param device device ({@link Device})
+     * @return {@link Resource}
+     * @throws URISyntaxException if urisyntax exception is thrown during processing
      */
+
 
     @Override
     public Resource createGatewayDockerComposeFile(String baseUrl, Device device) throws URISyntaxException {
@@ -192,11 +209,15 @@ public class DeviceConnectivityServiceImpl implements DeviceConnectivityService 
         return null;
     }
 
+    
     /**
-
      * Is enabled.
-
+     *
+     * @param protocol protocol ({@link String})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     public boolean isEnabled(String protocol) {
         var info = getConnectivity(protocol);

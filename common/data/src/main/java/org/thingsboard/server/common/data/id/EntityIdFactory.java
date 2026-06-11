@@ -21,33 +21,82 @@ import org.thingsboard.server.common.data.edge.EdgeEventType;
 import java.util.UUID;
 
 /**
- * Factory for entity id.
+ * Factory for creating and parsing {@link EntityId} instances from UUID and {@link org.thingsboard.server.common.data.EntityType}.
  */
 public class EntityIdFactory {
+    /**
+     * Returns by type and uuid.
+     *
+     * @param type type
+     * @param uuid uuid ({@link String})
+     * @return {@link EntityId}
+     */
 
     public static EntityId getByTypeAndUuid(int type, String uuid) {
         return getByTypeAndUuid(EntityType.values()[type], UUID.fromString(uuid));
     }
+    /**
+     * Returns by type and uuid.
+     *
+     * @param type type
+     * @param uuid uuid ({@link UUID})
+     * @return {@link EntityId}
+     */
 
     public static EntityId getByTypeAndUuid(int type, UUID uuid) {
         return getByTypeAndUuid(EntityType.values()[type], uuid);
     }
+    /**
+     * Returns by type and uuid.
+     *
+     * @param type type ({@link String})
+     * @param uuid uuid ({@link String})
+     * @return {@link EntityId}
+     */
 
     public static EntityId getByTypeAndUuid(String type, String uuid) {
         return getByTypeAndUuid(EntityType.valueOf(type), UUID.fromString(uuid));
     }
+    /**
+     * Returns by type and id.
+     *
+     * @param type type ({@link String})
+     * @param uuid uuid ({@link String})
+     * @return {@link EntityId}
+     */
 
     public static EntityId getByTypeAndId(String type, String uuid) {
         return getByTypeAndUuid(EntityType.valueOf(type), UUID.fromString(uuid));
     }
+    /**
+     * Returns by type and uuid.
+     *
+     * @param type type ({@link String})
+     * @param uuid uuid ({@link UUID})
+     * @return {@link EntityId}
+     */
 
     public static EntityId getByTypeAndUuid(String type, UUID uuid) {
         return getByTypeAndUuid(EntityType.valueOf(type), uuid);
     }
+    /**
+     * Returns by type and uuid.
+     *
+     * @param type type ({@link EntityType})
+     * @param uuid uuid ({@link String})
+     * @return {@link EntityId}
+     */
 
     public static EntityId getByTypeAndUuid(EntityType type, String uuid) {
         return getByTypeAndUuid(type, UUID.fromString(uuid));
     }
+    /**
+     * Returns by type and uuid.
+     *
+     * @param type type ({@link EntityType})
+     * @param uuid uuid ({@link UUID})
+     * @return {@link EntityId}
+     */
 
     public static EntityId getByTypeAndUuid(EntityType type, UUID uuid) {
         return switch (type) {
@@ -89,6 +138,13 @@ public class EntityIdFactory {
             case API_KEY -> new ApiKeyId(uuid);
         };
     }
+    /**
+     * Returns by edge event type and uuid.
+     *
+     * @param edgeEventType edge event type ({@link EdgeEventType})
+     * @param uuid uuid ({@link UUID})
+     * @return {@link EntityId}
+     */
 
     public static EntityId getByEdgeEventTypeAndUuid(EdgeEventType edgeEventType, UUID uuid) {
         return switch (edgeEventType) {

@@ -33,8 +33,14 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 /**
- * Tb sql blocking queue.
+ * Tb sql blocking queue (JPA/PostgreSQL persistence layer (JPA repositories and PostgreSQL DAO implementations)).
  */
+
+
+
+
+
+
 
 @Slf4j
 public class TbSqlBlockingQueue<E, R> implements TbSqlQueue<E, R> {
@@ -49,6 +55,17 @@ public class TbSqlBlockingQueue<E, R> implements TbSqlQueue<E, R> {
         this.params = params;
         this.stats = stats;
     }
+    /**
+     * Init.
+     *
+     * @param logExecutor log executor ({@link ScheduledLogExecutorComponent})
+     * @param saveFunction save function ({@link Function})
+     * @param batchUpdateComparator batch update comparator ({@link Comparator})
+     * @param filter filter ({@link Function})
+     * @param index index
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void init(ScheduledLogExecutorComponent logExecutor, Function<List<E>, List<R>> saveFunction, Comparator<E> batchUpdateComparator, Function<List<TbSqlQueueElement<E, R>>, List<TbSqlQueueElement<E, R>>> filter, int index) {
@@ -129,6 +146,12 @@ public class TbSqlBlockingQueue<E, R> implements TbSqlQueue<E, R> {
             }
         }, params.getStatsPrintIntervalMs(), params.getStatsPrintIntervalMs(), TimeUnit.MILLISECONDS);
     }
+    /**
+     * Destroy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void destroy() {
@@ -136,6 +159,13 @@ public class TbSqlBlockingQueue<E, R> implements TbSqlQueue<E, R> {
             executor.shutdownNow();
         }
     }
+    /**
+     * Add.
+     *
+     * @param element element ({@link E})
+     * @return future completing with {@link R}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<R> add(E element) {

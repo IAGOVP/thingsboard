@@ -22,8 +22,14 @@ import org.thingsboard.server.common.data.id.EntityId;
 import org.thingsboard.server.common.data.relation.EntityRelation;
 import org.thingsboard.server.common.data.relation.RelationTypeGroup;
 /**
- * Entity relation event.
+ * Entity relation event (entity-to-entity relation graph persistence).
  */
+
+
+
+
+
+
 
 @RequiredArgsConstructor
 @ToString
@@ -36,6 +42,13 @@ public class EntityRelationEvent {
     private final String type;
     @Getter
     private final RelationTypeGroup typeGroup;
+    /**
+     * From.
+     *
+     * @param relation relation ({@link EntityRelation})
+     * @return {@link EntityRelationEvent}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static EntityRelationEvent from(EntityRelation relation) {
         return new EntityRelationEvent(relation.getFrom(), relation.getTo(), relation.getType(), relation.getTypeGroup());

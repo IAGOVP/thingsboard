@@ -19,9 +19,6 @@ import lombok.Data;
 
 import java.io.Serializable;
 
-/**
- * @author Andrew Shvayka
- */
 @Data
 /**
  * Attribute key.

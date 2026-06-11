@@ -20,14 +20,13 @@ import org.thingsboard.server.common.data.id.DeviceId;
 import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.msg.MsgType;
 import org.thingsboard.server.common.msg.ToDeviceActorNotificationMsg;
+/**
+ * Internal actor or queue message: to device rpc request actor msg.
+ *
+ * <p>Serialized between tb-core, rule-engine, transport, and edge services.
+ */
 
-/**
- * Created by ashvayka on 16.04.18.
- */
 @Data
-/**
- * Message: to device rpc request actor msg.
- */
 public class ToDeviceRpcRequestActorMsg implements ToDeviceActorNotificationMsg {
 
     private static final long serialVersionUID = -8592877558138716589L;

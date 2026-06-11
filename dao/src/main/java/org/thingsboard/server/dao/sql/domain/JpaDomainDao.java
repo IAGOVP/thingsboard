@@ -37,8 +37,11 @@ import org.thingsboard.server.dao.util.SqlDao;
 import java.util.List;
 import java.util.UUID;
 /**
- * JPA implementation of domain dao.
+ * JPA/PostgreSQL implementation of domain dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Component
 @RequiredArgsConstructor
@@ -48,77 +51,106 @@ public class JpaDomainDao extends JpaAbstractDao<DomainEntity, Domain> implement
     private final DomainRepository domainRepository;
     private final DomainOauth2ClientRepository domainOauth2ClientRepository;
 
+    
     /**
-
-     * Get entity class.
-
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected Class<DomainEntity> getEntityClass() {
         return DomainEntity.class;
     }
 
+    
     /**
-
-     * Get repository.
-
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected JpaRepository<DomainEntity, UUID> getRepository() {
         return domainRepository;
     }
 
+    
     /**
-
-     * Loads by tenant id.
-
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Domain> findByTenantId(TenantId tenantId, PageLink pageLink) {
         return DaoUtil.toPageData(domainRepository.findByTenantId(tenantId.getId(), pageLink.getTextSearch(), DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
      * Counts domain by tenant id and oauth2enabled.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param enabled enabled
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public int countDomainByTenantIdAndOauth2Enabled(TenantId tenantId, boolean enabled) {
         return domainRepository.countByTenantIdAndOauth2Enabled(tenantId.getId(), enabled);
     }
 
+    
     /**
-
-     * Loads oauth2clients by domain id.
-
+     * Finds oauth2clients by domain id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param domainId domain id ({@link DomainId})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<DomainOauth2Client> findOauth2ClientsByDomainId(TenantId tenantId, DomainId domainId) {
         return DaoUtil.convertDataList(domainOauth2ClientRepository.findAllByDomainId(domainId.getId()));
     }
 
+    
     /**
-
      * Add oauth2client.
-
+     *
+     * @param domainOauth2Client domain oauth2client ({@link DomainOauth2Client})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void addOauth2Client(DomainOauth2Client domainOauth2Client) {
         domainOauth2ClientRepository.save(new DomainOauth2ClientEntity(domainOauth2Client));
     }
 
+    
     /**
-
      * Removes oauth2client.
-
+     *
+     * @param domainOauth2Client domain oauth2client ({@link DomainOauth2Client})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void removeOauth2Client(DomainOauth2Client domainOauth2Client) {
@@ -126,22 +158,29 @@ public class JpaDomainDao extends JpaAbstractDao<DomainEntity, Domain> implement
                 domainOauth2Client.getOAuth2ClientId().getId()));
     }
 
+    
     /**
-
-     * Removes by tenant id.
-
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteByTenantId(TenantId tenantId) {
         domainRepository.deleteByTenantId(tenantId.getId());
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

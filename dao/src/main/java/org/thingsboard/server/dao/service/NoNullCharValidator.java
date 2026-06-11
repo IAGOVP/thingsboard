@@ -19,19 +19,61 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.thingsboard.server.common.data.validation.NoNullChar;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * No null char validator.
+
+
+
+
+
+ * No null char validator (shared DAO validators, removers, and constraints).
+
+
+
+
+
 
  */
 
+
+
+
+
+
+
 public final class NoNullCharValidator implements ConstraintValidator<NoNullChar, String> {
 
+    
     /**
-
      * Is valid.
-
+     *
+     * @param value value ({@link String})
+     * @param context context ({@link ConstraintValidatorContext})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {

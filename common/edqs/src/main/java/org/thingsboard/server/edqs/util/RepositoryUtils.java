@@ -65,8 +65,9 @@ import static org.thingsboard.server.common.data.query.ComplexOperation.AND;
 import static org.thingsboard.server.common.data.query.ComplexOperation.OR;
 
 /**
- * Sorting, filtering, and entity-type helpers for {@link org.thingsboard.server.edqs.repo.TenantRepo} queries.
+ * Sorting, filtering, and entity-type helpers used by {@link org.thingsboard.server.edqs.repo.TenantRepo} queries.
  */
+
 @Slf4j
 public class RepositoryUtils {
 
@@ -75,6 +76,13 @@ public class RepositoryUtils {
 
     public static final Comparator<SortableEntityData> SORT_DESC =  Comparator.comparing(SortableEntityData::getSortValue, Comparator.nullsFirst(Comparator.naturalOrder()))
             .thenComparing(sp -> sp.getId().toString()).reversed();
+    /**
+     * Resolve entity type.
+     *
+     * @param entityFilter entity filter ({@link EntityFilter})
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static EntityType resolveEntityType(EntityFilter entityFilter) {
         return switch (entityFilter.getType()) {
@@ -93,6 +101,14 @@ public class RepositoryUtils {
             case API_USAGE_STATE -> EntityType.API_USAGE_STATE;
         };
     }
+    /**
+     * Customer user is trying to access tenant entity.
+     *
+     * @param ctx query permission context (user, customer, authority)
+     * @param entityFilter entity filter ({@link EntityFilter})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static boolean customerUserIsTryingToAccessTenantEntity(QueryContext ctx, EntityFilter entityFilter) {
         if (ctx.isTenantUser()) {
@@ -127,6 +143,13 @@ public class RepositoryUtils {
             default -> false;
         };
     }
+    /**
+     * To new query.
+     *
+     * @param oldQuery old query ({@link EntityDataQuery})
+     * @return {@link EdqsDataQuery}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static EdqsDataQuery toNewQuery(EntityDataQuery oldQuery) {
         var query = EdqsDataQuery.builder();
@@ -148,6 +171,13 @@ public class RepositoryUtils {
         query.latestValues(toNewKeys(oldQuery.getLatestValues()));
         return query.build();
     }
+    /**
+     * To new query.
+     *
+     * @param oldQuery old query ({@link EntityCountQuery})
+     * @return {@link EdqsCountQuery}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static EdqsCountQuery toNewQuery(EntityCountQuery oldQuery) {
         return EdqsCountQuery.builder()
@@ -200,10 +230,28 @@ public class RepositoryUtils {
             return result;
         }
     }
+    /**
+     * Checks key filters.
+     *
+     * @param entity entity ({@link EntityData})
+     * @param keyFilters key filters ({@link List})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static boolean checkKeyFilters(EntityData entity, List<EdqsFilter> keyFilters) {
+        /** Check key filters. */
         return checkKeyFilters(entity, keyFilters, ComplexOperation.AND);
     }
+    /**
+     * Checks key filters.
+     *
+     * @param entity entity ({@link EntityData})
+     * @param keyFilters key filters ({@link List})
+     * @param operation operation ({@link ComplexOperation})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static boolean checkKeyFilters(EntityData entity, List<EdqsFilter> keyFilters, ComplexOperation operation) {
         ComplexOperation op = operation != null ? operation : ComplexOperation.AND;
@@ -254,6 +302,14 @@ public class RepositoryUtils {
             }
         };
     }
+    /**
+     * Checks key filter.
+     *
+     * @param value value ({@link String})
+     * @param keyFilterPredicate key filter predicate ({@link KeyFilterPredicate})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static boolean checkKeyFilter(String value, KeyFilterPredicate keyFilterPredicate) {
         if (keyFilterPredicate.getType() == FilterPredicateType.COMPLEX) {
@@ -282,6 +338,14 @@ public class RepositoryUtils {
             case NOT_IN -> !equalsAny(value, splitByCommaWithoutQuotes(predicateValue));
         };
     }
+    /**
+     * Checks key filter.
+     *
+     * @param value value ({@link Double})
+     * @param keyFilterPredicate key filter predicate ({@link KeyFilterPredicate})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static boolean checkKeyFilter(Double value, KeyFilterPredicate keyFilterPredicate) {
         if (keyFilterPredicate.getType() == FilterPredicateType.COMPLEX) {
@@ -301,6 +365,14 @@ public class RepositoryUtils {
             case LESS_OR_EQUAL -> value.compareTo(predicateValue) <= 0;
         };
     }
+    /**
+     * Checks key filter.
+     *
+     * @param value value ({@link Boolean})
+     * @param keyFilterPredicate key filter predicate ({@link KeyFilterPredicate})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static boolean checkKeyFilter(Boolean value, KeyFilterPredicate keyFilterPredicate) {
         if (keyFilterPredicate.getType() == FilterPredicateType.COMPLEX) {
@@ -316,6 +388,15 @@ public class RepositoryUtils {
             case NOT_EQUAL -> !value.equals(predicateValue);
         };
     }
+    /**
+     * Checks complex key filter.
+     *
+     * @param value value ({@link T})
+     * @param filterPredicates filter predicates ({@link ComplexFilterPredicate})
+     * @param simpleKeyFilter simple key filter ({@link SimpleKeyFilter})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static <T> boolean checkComplexKeyFilter(T value, ComplexFilterPredicate filterPredicates,
                                                     SimpleKeyFilter<T> simpleKeyFilter) {
@@ -346,15 +427,24 @@ public class RepositoryUtils {
             return false;
         }
     }
+    /**
+     * To entity name sql like pattern.
+     *
+     * @param filter entity filter definition (type, relations, search text, etc.)
+     * @return {@link Pattern}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Pattern toEntityNameSqlLikePattern(String filter) {
         if (StringUtils.isNotBlank(filter)) {
+            /** To sql like pattern. */
             return toSqlLikePattern(filter, "", ".*", true);
         }
         return null;
     }
 
     private static Pattern toSqlLikePattern(String value, String prefix, String suffix) {
+        /** To sql like pattern. */
         return toSqlLikePattern(value, prefix, suffix, false);
     }
 
@@ -374,13 +464,25 @@ public class RepositoryUtils {
         }
         return ignoreCase ? Pattern.compile(regexValue, Pattern.CASE_INSENSITIVE) : Pattern.compile(regexValue);
     }
+    /**
+     * simple key filter contract (EDQS microservice — EDQS utilities (RocksDB, mapping, versions)).
+     */
 
     @FunctionalInterface
     public interface SimpleKeyFilter<T> {
 
+        /** Check. */
         boolean check(T value, KeyFilterPredicate predicate);
 
     }
+    /**
+     * To ts value.
+     *
+     * @param ts ts
+     * @param dp dp ({@link DataPoint})
+     * @return {@link TsValue}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static TsValue toTsValue(long ts, DataPoint dp) {
         if (dp != null) {
@@ -389,6 +491,15 @@ public class RepositoryUtils {
             return TsValue.EMPTY;
         }
     }
+    /**
+     * Returns sort value.
+     *
+     * @param entity entity ({@link EntityData})
+     * @param sortKey sort key ({@link DataKey})
+     * @param queryContext query context ({@link QueryContext})
+     * @return {@link DataPoint}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static DataPoint getSortValue(EntityData entity, DataKey sortKey, QueryContext queryContext) {
         if (sortKey == null) {
@@ -396,6 +507,14 @@ public class RepositoryUtils {
         }
        return entity.getDataPoint(sortKey, queryContext);
     }
+    /**
+     * Checks filters.
+     *
+     * @param query entity count or data query with filter, sort, and key selections
+     * @param entity entity ({@link EntityData})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static boolean checkFilters(EdqsQuery query, EntityData entity) {
         if (entity == null || entity.getFields() == null) {

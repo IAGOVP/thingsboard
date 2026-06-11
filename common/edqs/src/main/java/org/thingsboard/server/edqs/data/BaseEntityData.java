@@ -40,8 +40,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @ToString
 /**
- * In-memory EDQS projection of base entity entity fields and metadata.
+ * In-memory EDQS projection of base entity entity fields.
+ *
+ * <p>Updated from {@link org.thingsboard.server.common.data.edqs.EdqsEvent} and used during query execution.
  */
+
 public abstract class BaseEntityData<T extends EntityFields> implements EntityData<T> {
 
     @Getter
@@ -67,6 +70,14 @@ public abstract class BaseEntityData<T extends EntityFields> implements EntityDa
         this.serverAttrMap = new ConcurrentHashMap<>();
         this.tMap = new ConcurrentHashMap<>();
     }
+    /**
+     * Returns attr.
+     *
+     * @param keyId key id ({@link Integer})
+     * @param entityKeyType entity key type ({@link EntityKeyType})
+     * @return {@link DataPoint}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public DataPoint getAttr(Integer keyId, EntityKeyType entityKeyType) {
@@ -75,41 +86,100 @@ public abstract class BaseEntityData<T extends EntityFields> implements EntityDa
             default -> null;
         };
     }
+    /**
+     * Put attr.
+     *
+     * @param keyId key id ({@link Integer})
+     * @param scope scope ({@link AttributeScope})
+     * @param value value ({@link DataPoint})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean putAttr(Integer keyId, AttributeScope scope, DataPoint value) {
         return serverAttrMap.put(keyId, value) == null;
     }
+    /**
+     * Removes attr.
+     *
+     * @param keyId key id ({@link Integer})
+     * @param scope scope ({@link AttributeScope})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean removeAttr(Integer keyId, AttributeScope scope) {
         return serverAttrMap.remove(keyId) != null;
     }
+    /**
+     * Returns ts.
+     *
+     * @param keyId key id ({@link Integer})
+     * @return {@link DataPoint}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public DataPoint getTs(Integer keyId) {
         return tMap.get(keyId);
     }
+    /**
+     * Put ts.
+     *
+     * @param keyId key id ({@link Integer})
+     * @param value value ({@link DataPoint})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean putTs(Integer keyId, DataPoint value) {
         return tMap.put(keyId, value) == null;
     }
+    /**
+     * Removes ts.
+     *
+     * @param keyId key id ({@link Integer})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean removeTs(Integer keyId) {
         return tMap.remove(keyId) != null;
     }
+    /**
+     * Returns owner name.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String getOwnerName() {
         return repo.getOwnerEntityName(isTenantEntity() ? repo.getTenantId() : new CustomerId(getCustomerId()));
     }
+    /**
+     * Returns owner type.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String getOwnerType() {
         return isTenantEntity() ? EntityType.TENANT.name() :  EntityType.CUSTOMER.name();
     }
+    /**
+     * Returns data point.
+     *
+     * @param key key ({@link DataKey})
+     * @param ctx query permission context (user, customer, authority)
+     * @return {@link DataPoint}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public DataPoint getDataPoint(DataKey key, QueryContext ctx) {
@@ -133,6 +203,13 @@ public abstract class BaseEntityData<T extends EntityFields> implements EntityDa
             default -> new StringDataPoint(System.currentTimeMillis(), getField(key), false);
         };
     }
+    /**
+     * Returns field.
+     *
+     * @param name name ({@link String})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String getField(String name) {
@@ -148,6 +225,12 @@ public abstract class BaseEntityData<T extends EntityFields> implements EntityDa
             default -> fields.getAsString(name);
         };
     }
+    /**
+     * Returns display name.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getDisplayName(){
         return switch (getEntityType()) {
@@ -168,6 +251,12 @@ public abstract class BaseEntityData<T extends EntityFields> implements EntityDa
             default -> fields.getName();
         };
     }
+    /**
+     * Returns entity name.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getEntityName() {
         return getFields().getName();
@@ -182,11 +271,23 @@ public abstract class BaseEntityData<T extends EntityFields> implements EntityDa
                 .map(UUID::toString)
                 .orElse("");
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {
         return null;
     }
+    /**
+     * Is empty.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isEmpty() {

@@ -51,6 +51,15 @@ public class DefaultTransportResourceCache implements TransportResourceCache {
     private final Set<ResourceCompositeKey> keys = ConcurrentHashMap.newKeySet();
     @Lazy
     private final TransportService transportService;
+    /**
+     * Returns the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceType resource type ({@link ResourceType})
+     * @param resourceKey resource key ({@link String})
+     * @return optional {@link TbResource}, empty if not found
+     * @throws Exception on processing failure
+     */
 
     @Override
     public Optional<TbResource> get(TenantId tenantId, ResourceType resourceType, String resourceKey) {
@@ -100,6 +109,15 @@ public class DefaultTransportResourceCache implements TransportResourceCache {
 
         return null;
     }
+    /**
+     * Updates the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceType resource type ({@link ResourceType})
+     * @param resourceKey resource key ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void update(TenantId tenantId, ResourceType resourceType, String resourceKey) {
@@ -108,6 +126,15 @@ public class DefaultTransportResourceCache implements TransportResourceCache {
             fetchResource(compositeKey);
         }
     }
+    /**
+     * Evict.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceType resource type ({@link ResourceType})
+     * @param resourceKey resource key ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void evict(TenantId tenantId, ResourceType resourceType, String resourceKey) {
@@ -122,6 +149,12 @@ public class DefaultTransportResourceCache implements TransportResourceCache {
         private final ResourceType resourceType;
         private final String resourceKey;
 
+    /**
+     * Returns system key.
+     *
+     * @return {@link ResourceCompositeKey}
+     * @throws Exception on processing failure
+     */
         public ResourceCompositeKey getSystemKey() {
             return new ResourceCompositeKey(TenantId.SYS_TENANT_ID, resourceType, resourceKey);
         }

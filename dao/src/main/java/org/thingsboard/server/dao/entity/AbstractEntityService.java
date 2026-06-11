@@ -64,11 +64,14 @@ import java.util.stream.Collectors;
 import static org.thingsboard.server.common.data.UniquifyStrategy.RANDOM;
 
 /**
- * Base class for DAO-layer {@code Base*Service} implementations.
- *
- * <p>Provides {@link ApplicationEventPublisher} for entity lifecycle events, name-uniquify helpers,
- * relation/edge hooks, and access to {@link TbTenantProfileCache}.
+ * Abstract entity service (generic entity services, counts, and DAO registry).
  */
+
+
+
+
+
+
 @Slf4j
 public abstract class AbstractEntityService {
 
@@ -114,11 +117,16 @@ public abstract class AbstractEntityService {
     @Value("${debug.settings.default_duration:15}")
     private int defaultDebugDurationMinutes;
 
+    
     /**
-
-     * Persists entity.
-
+     * Saves or persists entity.
+     *
+     * @param entity domain entity to persist or validate
+     * @param saveFunction save function ({@link Supplier})
+     * @return {@link E}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected <E extends HasId & HasTenantId> E saveEntity(E entity, Supplier<E> saveFunction) {
         if (entity.getId() == null) {
@@ -134,33 +142,47 @@ public abstract class AbstractEntityService {
         }
     }
 
+    
     /**
-
      * Creates relation.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param relation relation ({@link EntityRelation})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected void createRelation(TenantId tenantId, EntityRelation relation) {
         log.debug("Creating relation: {}", relation);
         relationService.saveRelation(tenantId, relation);
     }
 
+    
     /**
-
-     * Removes relation.
-
+     * Deletes relation.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param relation relation ({@link EntityRelation})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected void deleteRelation(TenantId tenantId, EntityRelation relation) {
         log.debug("Deleting relation: {}", relation);
         relationService.deleteRelation(tenantId, relation);
     }
 
+    
     /**
-
      * Extract constraint violation exception.
-
+     *
+     * @param t t ({@link Exception})
+     * @return optional {@link ConstraintViolationException}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected static Optional<ConstraintViolationException> extractConstraintViolationException(Exception t) {
         if (t instanceof ConstraintViolationException) {
@@ -172,31 +194,50 @@ public abstract class AbstractEntityService {
         }
     }
 
+    
     /**
-
-     * Check constraint violation.
-
+     * Checks constraint violation.
+     *
+     * @param t t ({@link Exception})
+     * @param constraintName constraint name ({@link String})
+     * @param constraintMessage constraint message ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     public static final void checkConstraintViolation(Exception t, String constraintName, String constraintMessage) {
         checkConstraintViolation(t, Collections.singletonMap(constraintName, constraintMessage));
     }
 
+    
     /**
-
-     * Check constraint violation.
-
+     * Checks constraint violation.
+     *
+     * @param t t ({@link Exception})
+     * @param constraintName1 constraint name1 ({@link String})
+     * @param constraintMessage1 constraint message1 ({@link String})
+     * @param constraintName2 constraint name2 ({@link String})
+     * @param constraintMessage2 constraint message2 ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     public static final void checkConstraintViolation(Exception t, String constraintName1, String constraintMessage1, String constraintName2, String constraintMessage2) {
         checkConstraintViolation(t, Map.of(constraintName1, constraintMessage1, constraintName2, constraintMessage2));
     }
 
+    
     /**
-
-     * Check constraint violation.
-
+     * Checks constraint violation.
+     *
+     * @param t t ({@link Exception})
+     * @param constraints constraints ({@link Map})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     public static final void checkConstraintViolation(Exception t, Map<String, String> constraints) {
         var exOpt = extractConstraintViolationException(t);
@@ -213,11 +254,17 @@ public abstract class AbstractEntityService {
         }
     }
 
+    
     /**
-
-     * Check assigned entity views to edge.
-
+     * Checks assigned entity views to edge.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param edgeId edge id ({@link EdgeId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected void checkAssignedEntityViewsToEdge(TenantId tenantId, EntityId entityId, EdgeId edgeId) {
         List<EntityView> entityViews = entityViewService.findEntityViewsByTenantIdAndEntityId(tenantId, entityId);
@@ -233,11 +280,17 @@ public abstract class AbstractEntityService {
         }
     }
 
+    
     /**
-
      * Updates debug settings.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entity domain entity to persist or validate
+     * @param now now
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected void updateDebugSettings(TenantId tenantId, HasDebugSettings entity, long now) {
         if (entity.getDebugSettings() != null) {

@@ -18,7 +18,11 @@ package org.thingsboard.server.cache.customer;
 import org.thingsboard.server.common.data.id.TenantId;
 
 /**
- * customer cache evict event.
+ * Cluster broadcast event evicting Customer cache entries after create/update/delete.
+ *
+ * <p>Published to all ThingsBoard nodes so {@link CustomerCaffeineCache} and
+ * {@link CustomerRedisCache} stay consistent. Handlers evict old and new key variants
+ * when identifiers change (e.g. rename).
  */
 public record CustomerCacheEvictEvent(TenantId tenantId, String newTitle, String oldTitle) {
 }

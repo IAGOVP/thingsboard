@@ -24,16 +24,32 @@ import org.thingsboard.server.dao.model.sql.ApiKeyInfoEntity;
 
 import java.util.UUID;
 
+
 /**
 
- * api key info repository contract.
+ * Spring Data JPA repository for api key info entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
+
 
 public interface ApiKeyInfoRepository extends JpaRepository<ApiKeyInfoEntity, UUID> {
 
     @Query("SELECT ak FROM ApiKeyInfoEntity ak WHERE ak.tenantId = :tenantId AND ak.userId = :userId AND " +
             "(:searchText is NULL OR ilike(ak.description, concat('%', :searchText, '%')) = true)")
+    /**
+     * Finds by user id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @param searchText search text ({@link String})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<ApiKeyInfoEntity> findByUserId(@Param("tenantId") UUID tenantId,
                                         @Param("userId") UUID userId,
                                         @Param("searchText") String searchText,

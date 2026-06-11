@@ -32,6 +32,11 @@ public class EntityTypeVersionLoadRequest extends VersionLoadRequest {
 
     private Map<EntityType, EntityTypeVersionLoadConfig> entityTypes;
     private boolean rollbackOnError;
+    /**
+     * Returns type.
+     *
+     * @return {@link VersionLoadRequestType}
+     */
 
     @Override
     public VersionLoadRequestType getType() {

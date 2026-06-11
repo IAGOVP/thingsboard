@@ -34,11 +34,23 @@ import java.util.Map;
 public class DefaultTransportMBeanConfiguration {
 
     private final DefaultTransportService transportService;
+    /**
+     * Hash map observer.
+     *
+     * @return {@link HashMapObserver}
+     * @throws Exception on processing failure
+     */
 
     @Bean
     public HashMapObserver hashMapObserver() {
         return new HashMapObserver(transportService.sessions);
     }
+    /**
+     * M bean exporter.
+     *
+     * @return {@link MBeanExporter}
+     * @throws Exception on processing failure
+     */
 
     @Bean
     public MBeanExporter mBeanExporter() {

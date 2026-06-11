@@ -56,6 +56,11 @@ public record TbChatRequest(
         @NotNull @Valid
         AiChatModelConfig<?> chatModelConfig
 ) {
+    /**
+     * To lang chain chat request.
+     *
+     * @return {@link ChatRequest}
+     */
 
     public ChatRequest toLangChainChatRequest() {
         return ChatRequest.builder()

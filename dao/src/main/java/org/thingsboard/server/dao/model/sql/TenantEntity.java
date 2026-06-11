@@ -22,8 +22,11 @@ import lombok.EqualsAndHashCode;
 import org.thingsboard.server.common.data.Tenant;
 import org.thingsboard.server.dao.model.ModelConstants;
 /**
- * Tenant entity.
+ * JPA/Cassandra row model for tenant.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -38,6 +41,12 @@ public final class TenantEntity extends AbstractTenantEntity<Tenant> {
     public TenantEntity(Tenant tenant) {
         super(tenant);
     }
+    /**
+     * To data.
+     *
+     * @return {@link Tenant}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Tenant toData() {

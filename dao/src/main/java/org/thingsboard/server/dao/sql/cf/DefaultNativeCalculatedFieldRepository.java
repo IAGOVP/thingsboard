@@ -39,8 +39,14 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 /**
- * Default native calculated field repository.
+ * Default native calculated field repository (JPA/PostgreSQL persistence layer (JPA repositories and PostgreSQL DAO implementations)).
  */
+
+
+
+
+
+
 
 @RequiredArgsConstructor
 @Repository
@@ -53,11 +59,15 @@ public class DefaultNativeCalculatedFieldRepository implements NativeCalculatedF
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final TransactionTemplate transactionTemplate;
 
+    
     /**
-
-     * Loads calculated fields.
-
+     * Finds calculated fields.
+     *
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<CalculatedField> findCalculatedFields(Pageable pageable) {

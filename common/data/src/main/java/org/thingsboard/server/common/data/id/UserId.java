@@ -24,7 +24,7 @@ import java.util.UUID;
 
 @Schema(allOf = EntityId.class)
 /**
- * Typed identifier for user.
+ * Typed identifier for a {@link User} entity ({@link org.thingsboard.server.common.data.EntityType#USER}).
  */
 public class UserId extends UUIDBased implements EntityId {
 
@@ -32,10 +32,21 @@ public class UserId extends UUIDBased implements EntityId {
     public UserId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * From string.
+     *
+     * @param userId user id ({@link String})
+     * @return {@link UserId}
+     */
 
     public static UserId fromString(String userId) {
         return new UserId(UUID.fromString(userId));
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY, description = "string", example = "USER", allowableValues = "USER")
     @Override

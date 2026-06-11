@@ -19,14 +19,11 @@ import lombok.Data;
 import lombok.Getter;
 import org.thingsboard.server.common.msg.MsgType;
 import org.thingsboard.server.common.msg.TbActorMsg;
+/**
+ * Broadcast when a service Kafka partition assignment changes.
+ */
 
-/**
- * @author Andrew Shvayka
- */
 @Data
-/**
- * Message: partition change msg.
- */
 public final class PartitionChangeMsg implements TbActorMsg {
 
     @Getter

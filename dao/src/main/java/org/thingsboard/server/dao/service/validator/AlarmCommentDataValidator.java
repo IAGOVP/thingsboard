@@ -24,8 +24,11 @@ import org.thingsboard.server.dao.alarm.AlarmCommentDao;
 import org.thingsboard.server.dao.service.DataValidator;
 import org.thingsboard.server.exception.DataValidationException;
 /**
- * Alarm comment data validator.
+ * Validates alarm comment entities before persistence.
+ *
+ * <p>Enforces constraints, uniqueness, and referential integrity at the DAO layer.
  */
+
 
 @Component
 @AllArgsConstructor
@@ -33,11 +36,16 @@ public class AlarmCommentDataValidator extends DataValidator<AlarmComment> {
 
     private final AlarmCommentDao alarmCommentDao;
 
+    
     /**
-
-     * Validate data impl.
-
+     * Validates data impl.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alarmComment alarm comment ({@link AlarmComment})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateDataImpl(TenantId tenantId, AlarmComment alarmComment) {
@@ -49,11 +57,16 @@ public class AlarmCommentDataValidator extends DataValidator<AlarmComment> {
         }
     }
 
+    
     /**
-
-     * Validate update.
-
+     * Validates update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alarmComment alarm comment ({@link AlarmComment})
+     * @return {@link AlarmComment}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected AlarmComment validateUpdate(TenantId tenantId, AlarmComment alarmComment) {

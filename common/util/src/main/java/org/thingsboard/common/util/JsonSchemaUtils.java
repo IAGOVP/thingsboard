@@ -27,7 +27,10 @@ import java.util.Set;
 /**
  * Json schema utils.
  */
-public final class JsonSchemaUtils {
+public final/**
+ * Class for json schema utils.
+ */
+class JsonSchemaUtils {
 
     private JsonSchemaUtils() {}
 

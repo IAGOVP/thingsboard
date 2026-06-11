@@ -30,7 +30,13 @@ public class MqttTopicFilterFactory {
     private static final ConcurrentMap<String, MqttTopicFilter> filters = new ConcurrentHashMap<>();
     private static final MqttTopicFilter DEFAULT_TELEMETRY_TOPIC_FILTER = toFilter(MqttTopics.DEVICE_TELEMETRY_TOPIC);
     private static final MqttTopicFilter DEFAULT_ATTRIBUTES_TOPIC_FILTER = toFilter(MqttTopics.DEVICE_ATTRIBUTES_TOPIC);
-
+    /**
+     * To filter.
+     *
+     * @param topicFilter topic filter ({@link String})
+     * @return {@link MqttTopicFilter}
+     * @throws Exception on processing failure
+     */
     public static MqttTopicFilter toFilter(String topicFilter) {
         if (topicFilter == null || topicFilter.isEmpty()) {
             throw new IllegalArgumentException("Topic filter can't be empty!");
@@ -50,11 +56,21 @@ public class MqttTopicFilterFactory {
             }
         });
     }
-
+    /**
+     * Returns default telemetry filter.
+     *
+     * @return {@link MqttTopicFilter}
+     * @throws Exception on processing failure
+     */
     public static MqttTopicFilter getDefaultTelemetryFilter() {
         return DEFAULT_TELEMETRY_TOPIC_FILTER;
     }
-
+    /**
+     * Returns default attributes filter.
+     *
+     * @return {@link MqttTopicFilter}
+     * @throws Exception on processing failure
+     */
     public static MqttTopicFilter getDefaultAttributesFilter() {
         return DEFAULT_ATTRIBUTES_TOPIC_FILTER;
     }

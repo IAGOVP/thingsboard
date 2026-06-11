@@ -24,7 +24,7 @@ import java.util.UUID;
 
 @Schema(allOf = EntityId.class)
 /**
- * Typed identifier for rule node.
+ * Typed identifier for a {@link RuleNode} in a rule chain ({@link org.thingsboard.server.common.data.EntityType#RULE_NODE}).
  */
 public class RuleNodeId extends UUIDBased implements EntityId {
 
@@ -32,6 +32,11 @@ public class RuleNodeId extends UUIDBased implements EntityId {
     public RuleNodeId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY, description = "string", example = "RULE_NODE", allowableValues = "RULE_NODE")
     @Override

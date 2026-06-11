@@ -22,6 +22,14 @@ public interface EntityLimitsCache {
 
     boolean get(EntityLimitKey key);
 
+    /**
+     * Put.
+     *
+     * @param key key ({@link EntityLimitKey})
+     * @param value value
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void put(EntityLimitKey key, boolean value);
 
 }

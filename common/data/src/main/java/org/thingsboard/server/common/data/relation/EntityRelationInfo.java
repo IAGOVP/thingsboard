@@ -34,20 +34,40 @@ public class EntityRelationInfo extends EntityRelation {
     public EntityRelationInfo(EntityRelation entityRelation) {
         super(entityRelation);
     }
+    /**
+     * Returns from name.
+     *
+     * @return {@link String}
+     */
 
     @Schema(description = "Name of the entity for [from] direction.", accessMode = Schema.AccessMode.READ_ONLY, example = "A4B72CCDFF33")
     public String getFromName() {
         return fromName;
     }
+    /**
+     * Set from name.
+     *
+     * @param fromName from name ({@link String})
+     */
 
     public void setFromName(String fromName) {
         this.fromName = fromName;
     }
+    /**
+     * Returns to name.
+     *
+     * @return {@link String}
+     */
 
     @Schema(description = "Name of the entity for [to] direction.", accessMode = Schema.AccessMode.READ_ONLY, example = "A4B72CCDFF35")
     public String getToName() {
         return toName;
     }
+    /**
+     * Set to name.
+     *
+     * @param toName to name ({@link String})
+     */
 
     public void setToName(String toName) {
         this.toName = toName;

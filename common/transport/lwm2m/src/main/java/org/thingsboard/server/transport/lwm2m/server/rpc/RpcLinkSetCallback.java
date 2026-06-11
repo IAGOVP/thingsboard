@@ -30,6 +30,13 @@ public class RpcLinkSetCallback<R, T> extends RpcDownlinkRequestCallbackProxy<R,
     public RpcLinkSetCallback(TransportService transportService, LwM2mClient client, TransportProtos.ToDeviceRpcRequestMsg requestMsg, DownlinkRequestCallback<R, T> callback) {
         super(transportService, client, requestMsg, callback);
     }
+    /**
+     * Send rpc reply on success.
+     *
+     * @param response response ({@link T})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected void sendRpcReplyOnSuccess(T response) {

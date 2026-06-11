@@ -51,13 +51,13 @@ import static org.eclipse.californium.scandium.config.DtlsConfig.DTLS_RETRANSMIS
 import static org.eclipse.californium.scandium.config.DtlsConfig.DTLS_ROLE;
 import static org.eclipse.californium.scandium.config.DtlsConfig.DtlsRole.SERVER_ONLY;
 
+/**
+ * Tb coap dtls settings.
+ */
 @Getter
 @Slf4j
 @ConditionalOnProperty(prefix = "coap.dtls", value = "enabled", havingValue = "true")
 @Component
-/**
- * Tb coap dtls settings.
- */
 public class TbCoapDtlsSettings {
 
     @Value("${coap.dtls.bind_address}")
@@ -151,7 +151,6 @@ public class TbCoapDtlsSettings {
         InetAddress addr = InetAddress.getByName(host);
         return new InetSocketAddress(addr, port);
     }
-
 
     private static Length fromLength(int length) {
         for (Length l : Length.values()) {

@@ -33,6 +33,13 @@ public class GetAttributesSyncSessionCallback extends AbstractSyncSessionCallbac
     public GetAttributesSyncSessionCallback(TbCoapClientState state, CoapExchange exchange, Request request) {
         super(state, exchange, request);
     }
+    /**
+     * Handles get attributes response.
+     *
+     * @param msg msg
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onGetAttributesResponse(TransportProtos.GetAttributeResponseMsg msg) {

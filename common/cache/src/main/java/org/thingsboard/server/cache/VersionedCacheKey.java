@@ -18,10 +18,23 @@ package org.thingsboard.server.cache;
 import java.io.Serializable;
 
 /**
- * versioned cache key contract.
+ * Marker interface for cache keys participating in versioned optimistic concurrency.
+ *
+ * <p>Implemented by keys such as {@link org.thingsboard.server.cache.device.DeviceCacheKey}.
+ * When {@link #isVersioned()} returns {@code true}, {@link VersionedRedisTbCache} stores
+ * an 8-byte big-endian version prefix before the serialized value and uses Lua compare-and-set.
+ *
+ * @see VersionedTbCache
+ * @see VersionedRedisTbCache
+ * @see VersionedCaffeineTbCache
  */
 public interface VersionedCacheKey extends Serializable {
 
+/**
+         * Indicates whether version-prefix storage applies to this key.
+         *
+         * @return {@code false} by default; override to enable versioned Redis storage
+         */
     default boolean isVersioned() {
         return false;
     }

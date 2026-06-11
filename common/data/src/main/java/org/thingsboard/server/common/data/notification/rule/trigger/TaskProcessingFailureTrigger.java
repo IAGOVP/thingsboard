@@ -37,16 +37,31 @@ public class TaskProcessingFailureTrigger implements NotificationRuleTrigger {
     private final HousekeeperTask task;
     private final int attempt;
     private final Throwable error;
+    /**
+     * Returns type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     */
 
     @Override
     public NotificationRuleTriggerType getType() {
         return NotificationRuleTriggerType.TASK_PROCESSING_FAILURE;
     }
+    /**
+     * Returns tenant id.
+     *
+     * @return {@link TenantId}
+     */
 
     @Override
     public TenantId getTenantId() {
         return task.getTenantId();
     }
+    /**
+     * Returns originator entity id.
+     *
+     * @return {@link EntityId}
+     */
 
     @Override
     public EntityId getOriginatorEntityId() {

@@ -19,6 +19,11 @@ package org.thingsboard.server.common.data.job;
  * Dummy job result.
  */
 public class DummyJobResult extends JobResult {
+    /**
+     * Returns job type.
+     *
+     * @return {@link JobType}
+     */
 
     @Override
     public JobType getJobType() {

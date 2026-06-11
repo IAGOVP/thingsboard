@@ -49,16 +49,32 @@ import java.util.Objects;
 @EnableJpaRepositories(value = {"org.thingsboard.server.dao.sql", "org.thingsboard.server.dao.sqlts.dictionary"},
         excludeFilters = @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {EventRepository.class, AuditLogRepository.class}),
 /**
- * Jpa dao config.
+ * Spring configuration for jpa dao DAO beans.
+ *
+ * <p>Registers entity managers, repositories, and datasource routing.
  */
+
         bootstrapMode = BootstrapMode.LAZY)
 public class JpaDaoConfig {
+    /**
+     * Data source properties.
+     *
+     * @return {@link DataSourceProperties}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Bean
     @ConfigurationProperties("spring.datasource")
     public DataSourceProperties dataSourceProperties() {
         return new DataSourceProperties();
     }
+    /**
+     * Data source.
+     *
+     * @param dataSourceProperties data source properties ({@link DataSourceProperties})
+     * @return {@link DataSource}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Primary
     @ConfigurationProperties(prefix = "spring.datasource.hikari")
@@ -66,6 +82,18 @@ public class JpaDaoConfig {
     public DataSource dataSource(@Qualifier("dataSourceProperties") DataSourceProperties dataSourceProperties) {
         return dataSourceProperties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
     }
+    /**
+     * Entity manager factory.
+     *
+     * @param dataSource data source ({@link DataSource})
+     * @param builder builder ({@link EntityManagerFactoryBuilder})
+     * @param tsLatestDaoConfig ts latest dao config ({@link SqlTsLatestDaoConfig})
+     * @param tsDaoConfig ts dao config ({@link SqlTsDaoConfig})
+     * @param timescaleDaoConfig timescale dao config ({@link TimescaleDaoConfig})
+     * @param timescaleTsLatestDaoConfig timescale ts latest dao config ({@link TimescaleTsLatestDaoConfig})
+     * @return {@link LocalContainerEntityManagerFactoryBean}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Primary
     @Bean
@@ -96,24 +124,52 @@ public class JpaDaoConfig {
                 .persistenceUnit("default")
                 .build();
     }
+    /**
+     * Transaction manager.
+     *
+     * @param entityManagerFactory entity manager factory ({@link LocalContainerEntityManagerFactoryBean})
+     * @return {@link JpaTransactionManager}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Primary
     @Bean
     public JpaTransactionManager transactionManager(@Qualifier("entityManagerFactory") LocalContainerEntityManagerFactoryBean entityManagerFactory) {
         return new JpaTransactionManager(Objects.requireNonNull(entityManagerFactory.getObject()));
     }
+    /**
+     * Transaction template.
+     *
+     * @param transactionManager transaction manager ({@link JpaTransactionManager})
+     * @return {@link TransactionTemplate}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Primary
     @Bean
     public TransactionTemplate transactionTemplate(@Qualifier("transactionManager") JpaTransactionManager transactionManager) {
         return new TransactionTemplate(transactionManager);
     }
+    /**
+     * Jdbc template.
+     *
+     * @param dataSource data source ({@link DataSource})
+     * @return {@link JdbcTemplate}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Primary
     @Bean
     public JdbcTemplate jdbcTemplate(@Qualifier("dataSource") DataSource dataSource) {
         return new JdbcTemplate(dataSource);
     }
+    /**
+     * Named parameter jdbc template.
+     *
+     * @param dataSource data source ({@link DataSource})
+     * @return {@link NamedParameterJdbcTemplate}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Primary
     @Bean

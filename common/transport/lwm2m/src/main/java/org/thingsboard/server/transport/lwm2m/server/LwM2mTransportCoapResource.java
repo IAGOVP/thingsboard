@@ -49,6 +49,14 @@ public class LwM2mTransportCoapResource extends AbstractLwM2mTransportResource {
         this.setObservable(true); // enable observing
         this.addObserver(new CoapResourceObserver());
     }
+    /**
+     * Checks observe relation.
+     *
+     * @param exchange exchange ({@link Exchange})
+     * @param response response ({@link Response})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
 
     @Override
@@ -68,6 +76,13 @@ public class LwM2mTransportCoapResource extends AbstractLwM2mTransportResource {
             response.getOptions().setObserve(notificationCounter.getAndIncrement());
         } // ObserveLayer takes care of the else case
     }
+    /**
+     * Processes handle get.
+     *
+     * @param exchange exchange ({@link CoapExchange})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
 
     @Override
@@ -80,16 +95,28 @@ public class LwM2mTransportCoapResource extends AbstractLwM2mTransportResource {
             this.sendOtaData(exchange);
         }
     }
+    /**
+     * Processes handle post.
+     *
+     * @param exchange exchange ({@link CoapExchange})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected void processHandlePost(CoapExchange exchange) {
         log.debug("processHandlePost [{}]", exchange);
     }
 
+    
     /**
-     * Override the default behavior so that requests to sub resources (typically /{name}/{token}) are handled by
-     * /name resource.
+     * Returns child.
+     *
+     * @param name name ({@link String})
+     * @return {@link Resource}
+     * @throws Exception on processing failure
      */
+
     @Override
     public Resource getChild(String name) {
         return this;
@@ -102,31 +129,73 @@ public class LwM2mTransportCoapResource extends AbstractLwM2mTransportResource {
     }
 
     public class CoapResourceObserver implements ResourceObserver {
+        /**
+         * Changed name.
+         *
+         * @param old old ({@link String})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void changedName(String old) {
 
         }
+        /**
+         * Changed path.
+         *
+         * @param old old ({@link String})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void changedPath(String old) {
 
         }
+        /**
+         * Added child.
+         *
+         * @param child child ({@link Resource})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void addedChild(Resource child) {
 
         }
+        /**
+         * Removes d child.
+         *
+         * @param child child ({@link Resource})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void removedChild(Resource child) {
 
         }
+        /**
+         * Added observe relation.
+         *
+         * @param relation relation ({@link ObserveRelation})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void addedObserveRelation(ObserveRelation relation) {
 
         }
+        /**
+         * Removes d observe relation.
+         *
+         * @param relation relation ({@link ObserveRelation})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void removedObserveRelation(ObserveRelation relation) {

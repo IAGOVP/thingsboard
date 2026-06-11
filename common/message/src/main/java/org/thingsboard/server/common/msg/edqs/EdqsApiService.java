@@ -26,8 +26,21 @@ import org.thingsboard.server.common.data.id.TenantId;
  */
 public interface EdqsApiService {
 
+    /**
+     * Processes request.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId customer to assign or filter by
+     * @param request request payload with operation parameters
+     * @return future completing with {@link EdqsResponse}
+     */
     ListenableFuture<EdqsResponse> processRequest(TenantId tenantId, CustomerId customerId, EdqsRequest request);
 
+    /**
+     * Is supported.
+     *
+     * @return the boolean result
+     */
     boolean isSupported();
 
 }

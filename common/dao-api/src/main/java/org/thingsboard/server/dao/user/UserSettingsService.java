@@ -28,12 +28,43 @@ import java.util.List;
  */
 public interface UserSettingsService {
 
+    /**
+     * Updates user settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId user id ({@link UserId})
+     * @param type type ({@link UserSettingsType})
+     * @param settings settings ({@link JsonNode})
+     */
     void updateUserSettings(TenantId tenantId, UserId userId, UserSettingsType type, JsonNode settings);
 
+    /**
+     * Saves or persists user settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userSettings user settings ({@link UserSettings})
+     * @return {@link UserSettings}
+     */
     UserSettings saveUserSettings(TenantId tenantId, UserSettings userSettings);
 
+    /**
+     * Finds user settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId user id ({@link UserId})
+     * @param type type ({@link UserSettingsType})
+     * @return {@link UserSettings}
+     */
     UserSettings findUserSettings(TenantId tenantId, UserId userId, UserSettingsType type);
 
+    /**
+     * Deletes user settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId user id ({@link UserId})
+     * @param type type ({@link UserSettingsType})
+     * @param jsonPaths json paths ({@link List})
+     */
     void deleteUserSettings(TenantId tenantId, UserId userId, UserSettingsType type, List<String> jsonPaths);
 
 }

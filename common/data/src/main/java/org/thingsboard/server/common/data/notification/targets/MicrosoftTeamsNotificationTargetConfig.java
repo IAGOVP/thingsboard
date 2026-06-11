@@ -34,16 +34,31 @@ public class MicrosoftTeamsNotificationTargetConfig extends NotificationTargetCo
     @NotEmpty
     private String channelName;
     private Boolean useOldApi = Boolean.TRUE;
+    /**
+     * Returns type.
+     *
+     * @return {@link NotificationTargetType}
+     */
 
     @Override
     public NotificationTargetType getType() {
         return NotificationTargetType.MICROSOFT_TEAMS;
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link Object}
+     */
 
     @Override
     public Object getId() {
         return webhookUrl;
     }
+    /**
+     * Returns title.
+     *
+     * @return {@link String}
+     */
 
     @Override
     public String getTitle() {

@@ -28,11 +28,11 @@ import lombok.With;
 import org.thingsboard.server.common.data.ai.provider.AiProvider;
 import org.thingsboard.server.common.data.ai.provider.OllamaProviderConfig;
 
-@Schema
-@Builder
 /**
  * Configuration for ollama chat model.
  */
+@Schema
+@Builder
 public record OllamaChatModelConfig(
         @Schema(ref = "#/components/schemas/OllamaProviderConfig")
         @NotNull @Valid OllamaProviderConfig providerConfig,
@@ -45,16 +45,32 @@ public record OllamaChatModelConfig(
         @With @Positive Integer timeoutSeconds,
         @With @PositiveOrZero Integer maxRetries
 ) implements AiChatModelConfig<OllamaChatModelConfig> {
+    /**
+     * Provider.
+     *
+     * @return {@link AiProvider}
+     */
 
     @Override
     public AiProvider provider() {
         return AiProvider.OLLAMA;
     }
+    /**
+     * Configure.
+     *
+     * @param configurer configurer ({@link Langchain4jChatModelConfigurer})
+     * @return {@link ChatModel}
+     */
 
     @Override
     public ChatModel configure(Langchain4jChatModelConfigurer configurer) {
         return configurer.configureChatModel(this);
     }
+    /**
+     * Supports json mode.
+     *
+     * @return the boolean result
+     */
 
     @Override
     public boolean supportsJsonMode() {

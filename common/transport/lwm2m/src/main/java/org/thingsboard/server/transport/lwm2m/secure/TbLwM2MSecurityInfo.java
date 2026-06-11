@@ -26,7 +26,8 @@ import org.thingsboard.server.transport.lwm2m.bootstrap.secure.LwM2MBootstrapCon
 import java.io.Serializable;
 
 /**
- * Tb lw m2msecurity info.
+ * Resolved LwM2M security context for a connecting client: credentials validation result,
+ * {@link SecurityInfo}, and optional bootstrap configuration.
  */
 @Data
 public class TbLwM2MSecurityInfo implements Serializable {

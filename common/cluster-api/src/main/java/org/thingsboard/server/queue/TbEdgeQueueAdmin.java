@@ -16,10 +16,11 @@
 package org.thingsboard.server.queue;
 
 /**
- * tb edge queue admin contract.
+ * Contract for tb edge queue admin.
  */
 public interface TbEdgeQueueAdmin extends TbQueueAdmin {
 
+    /** Sync edge notifications offsets. */
     void syncEdgeNotificationsOffsets(String fatGroupId, String newGroupId);
 
 }

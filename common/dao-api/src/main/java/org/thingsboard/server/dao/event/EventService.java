@@ -32,22 +32,93 @@ import java.util.List;
  */
 public interface EventService {
 
+    /**
+     * Saves or persists async.
+     *
+     * @param event event ({@link Event})
+     * @return future completing with {@link Void}
+     */
     ListenableFuture<Void> saveAsync(Event event);
 
+    /**
+     * Finds events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId entity id ({@link EntityId})
+     * @param eventType event type ({@link EventType})
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<EventInfo> findEvents(TenantId tenantId, EntityId entityId, EventType eventType, TimePageLink pageLink);
 
+    /**
+     * Finds latest events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId entity id ({@link EntityId})
+     * @param eventType event type ({@link EventType})
+     * @param limit limit
+     * @return {@link List}
+     */
     List<EventInfo> findLatestEvents(TenantId tenantId, EntityId entityId, EventType eventType, int limit);
 
+    /**
+     * Finds latest debug rule node in event.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId entity id ({@link EntityId})
+     * @return {@link EventInfo}
+     */
     EventInfo findLatestDebugRuleNodeInEvent(TenantId tenantId, EntityId entityId);
 
+    /**
+     * Finds events by filter.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId entity id ({@link EntityId})
+     * @param eventFilter event filter ({@link EventFilter})
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<EventInfo> findEventsByFilter(TenantId tenantId, EntityId entityId, EventFilter eventFilter, TimePageLink pageLink);
 
+    /**
+     * Removes events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId entity id ({@link EntityId})
+     */
     void removeEvents(TenantId tenantId, EntityId entityId);
 
+    /**
+     * Removes events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId entity id ({@link EntityId})
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @param types types
+     */
     void removeEvents(TenantId tenantId, EntityId entityId, Long startTime, Long endTime, EventType... types);
 
+    /**
+     * Removes events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId entity id ({@link EntityId})
+     * @param eventFilter event filter ({@link EventFilter})
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     */
     void removeEvents(TenantId tenantId, EntityId entityId, EventFilter eventFilter, Long startTime, Long endTime);
 
+    /**
+     * Cleanup events.
+     *
+     * @param regularEventExpTs regular event exp ts
+     * @param debugEventExpTs debug event exp ts
+     * @param cleanupDb cleanup db
+     */
     void cleanupEvents(long regularEventExpTs, long debugEventExpTs, boolean cleanupDb);
 
 }

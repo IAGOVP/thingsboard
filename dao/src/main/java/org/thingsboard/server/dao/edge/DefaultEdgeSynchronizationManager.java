@@ -20,8 +20,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.thingsboard.server.common.data.id.EdgeId;
 /**
- * Default edge synchronization manager.
+ * Spring component for default edge synchronization manager (edge instances, events, sessions, and synchronization).
  */
+
+
+
+
+
+
 
 @Slf4j
 @Getter

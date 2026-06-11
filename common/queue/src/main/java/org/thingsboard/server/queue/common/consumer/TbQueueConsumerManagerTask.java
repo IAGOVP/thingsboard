@@ -15,15 +15,17 @@
  */
 package org.thingsboard.server.queue.common.consumer;
 
-import org.thingsboard.server.common.data.queue.QueueConfig;
-import org.thingsboard.server.common.msg.queue.TopicPartitionInfo;
-
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+
+import org.thingsboard.server.common.data.queue.QueueConfig;
+import org.thingsboard.server.common.msg.queue.TopicPartitionInfo;
+
+
 /**
- * tb queue consumer manager task contract.
+ * Manager task that supervises a group of {@link TbQueueConsumerTask} instances.
  */
 public interface TbQueueConsumerManagerTask {
 

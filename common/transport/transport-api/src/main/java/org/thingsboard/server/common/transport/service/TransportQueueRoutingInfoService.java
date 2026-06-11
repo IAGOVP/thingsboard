@@ -40,6 +40,12 @@ public class TransportQueueRoutingInfoService implements QueueRoutingInfoService
     public TransportQueueRoutingInfoService(@Lazy TransportService transportService) {
         this.transportService = transportService;
     }
+    /**
+     * Returns all queues routing info.
+     *
+     * @return {@link List}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public List<QueueRoutingInfo> getAllQueuesRoutingInfo() {

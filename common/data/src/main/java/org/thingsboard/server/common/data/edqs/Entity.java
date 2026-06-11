@@ -29,8 +29,9 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 /**
- * Entity.
+ * Entity (EDQS data).
  */
+
 public class Entity implements EdqsObject {
 
     private EntityType type;
@@ -52,21 +53,57 @@ public class Entity implements EdqsObject {
         this.type = entityType;
         this.fields = new EntityIdFields(id, version);
     }
+    
+        /**
+         * String key.
+         *
+         * @return {@link String}
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
 
     @Override
     public String stringKey() {
         return "e_" + fields.getId().toString();
     }
+    
+        /**
+         * Version.
+         *
+         * @return {@link Long}
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
 
     @Override
     public Long version() {
         return fields.getVersion();
     }
+    
+        /**
+         * Type.
+         *
+         * @return {@link ObjectType}
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
 
     @Override
     public ObjectType type() {
         return ObjectType.fromEntityType(type);
     }
+    
+
+    
+    /**
+     * Key.
+     *
+     * @param id id ({@link UUID})
+     * @return the record value
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
+
 
     public record Key(UUID id) implements EdqsObjectKey {}
 

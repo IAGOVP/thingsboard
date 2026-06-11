@@ -35,8 +35,11 @@ import org.thingsboard.server.dao.util.mapping.JsonConverter;
 
 import java.util.UUID;
 /**
- * User auth settings entity.
+ * JPA/Cassandra row model for user auth settings.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -63,6 +66,12 @@ public class UserAuthSettingsEntity extends BaseSqlEntity<UserAuthSettings> impl
             this.twoFaSettings = JacksonUtil.valueToTree(userAuthSettings.getTwoFaSettings());
         }
     }
+    /**
+     * To data.
+     *
+     * @return {@link UserAuthSettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UserAuthSettings toData() {

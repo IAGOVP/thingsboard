@@ -26,11 +26,26 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.IsoFields;
 import java.time.temporal.WeekFields;
 /**
- * Time utils.
+ * Time utils (DAO utilities (KV conversion, rate executors, JSON mapping)).
  */
+
+
+
+
+
+
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TimeUtils {
+    /**
+     * Calculate interval end.
+     *
+     * @param startTs interval start timestamp (epoch ms)
+     * @param intervalType interval type ({@link IntervalType})
+     * @param tzId tz id ({@link ZoneId})
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static long calculateIntervalEnd(long startTs, IntervalType intervalType, ZoneId tzId) {
         var startTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(startTs), tzId);
@@ -47,6 +62,14 @@ public class TimeUtils {
                 throw new RuntimeException("Not supported!");
         }
     }
+    /**
+     * To zoned date time.
+     *
+     * @param ts ts
+     * @param zoneId zone id ({@link ZoneId})
+     * @return {@link ZonedDateTime}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static ZonedDateTime toZonedDateTime(long ts, ZoneId zoneId) {
         return ZonedDateTime.ofInstant(Instant.ofEpochMilli(ts), zoneId);

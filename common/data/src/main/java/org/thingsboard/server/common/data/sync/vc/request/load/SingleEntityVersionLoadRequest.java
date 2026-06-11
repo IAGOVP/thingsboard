@@ -31,6 +31,11 @@ public class SingleEntityVersionLoadRequest extends VersionLoadRequest {
     private EntityId externalEntityId;
 
     private VersionLoadConfig config;
+    /**
+     * Returns type.
+     *
+     * @return {@link VersionLoadRequestType}
+     */
 
     @Override
     public VersionLoadRequestType getType() {

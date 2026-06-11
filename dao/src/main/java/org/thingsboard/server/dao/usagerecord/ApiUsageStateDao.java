@@ -23,38 +23,69 @@ import org.thingsboard.server.dao.TenantEntityDao;
 
 import java.util.UUID;
 
+
 /**
 
- * Persistence contract for api usage state (see JPA/Cassandra implementations).
+ * Persistence contract for api usage state.
+
+ *
+
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (tenant API usage state and metering).
 
  */
 
+
 public interface ApiUsageStateDao extends Dao<ApiUsageState>, TenantEntityDao<ApiUsageState> {
 
+    
     /**
-     * Save or update usage record object
+     * Saves or persists the requested data.
      *
-     * @param apiUsageState the usage record
-     * @return saved usage record entity
+     * @param tenantId tenant that owns the entity or operation
+     * @param apiUsageState api usage state ({@link ApiUsageState})
+     * @return {@link ApiUsageState}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     ApiUsageState save(TenantId tenantId, ApiUsageState apiUsageState);
 
+    
     /**
-     * Find usage record by tenantId.
+     * Finds tenant api usage state.
      *
-     * @param tenantId the tenantId
-     * @return the corresponding usage record
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link ApiUsageState}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     ApiUsageState findTenantApiUsageState(UUID tenantId);
+    /**
+     * Finds api usage state by entity id.
+     *
+     * @param entityId target entity identifier
+     * @return {@link ApiUsageState}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     ApiUsageState findApiUsageStateByEntityId(EntityId entityId);
 
+    
     /**
-     * Delete usage record by tenantId.
+     * Deletes api usage state by tenant id.
      *
-     * @param tenantId the tenantId
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     void deleteApiUsageStateByTenantId(TenantId tenantId);
+    /**
+     * Deletes api usage state by entity id.
+     *
+     * @param entityId target entity identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void deleteApiUsageStateByEntityId(EntityId entityId);
 

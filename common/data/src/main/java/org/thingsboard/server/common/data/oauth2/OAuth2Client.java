@@ -128,6 +128,11 @@ public class OAuth2Client extends BaseDataWithAdditionalInfo<OAuth2ClientId> imp
         this.loginButtonIcon = oAuth2Client.loginButtonIcon;
         this.platforms = oAuth2Client.platforms;
     }
+    /**
+     * Returns name.
+     *
+     * @return {@link String}
+     */
 
     @Override
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

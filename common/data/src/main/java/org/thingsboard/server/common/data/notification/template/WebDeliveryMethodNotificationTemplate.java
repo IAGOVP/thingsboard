@@ -61,12 +61,22 @@ public class WebDeliveryMethodNotificationTemplate extends DeliveryMethodNotific
         this.subject = other.subject;
         this.additionalConfig = other.additionalConfig != null ? other.additionalConfig.deepCopy() : null;
     }
+    /**
+     * Returns body.
+     *
+     * @return {@link String}
+     */
 
     @Length(fieldName = "web notification message", max = 250, message = "cannot be longer than 250 chars")
     @Override
     public String getBody() {
         return super.getBody();
     }
+    /**
+     * Returns button text.
+     *
+     * @return {@link String}
+     */
 
     @NoXss(fieldName = "web notification button text")
     @Length(fieldName = "web notification button text", max = 50, message = "cannot be longer than 50 chars")
@@ -74,6 +84,11 @@ public class WebDeliveryMethodNotificationTemplate extends DeliveryMethodNotific
     public String getButtonText() {
         return getButtonConfigProperty("text");
     }
+    /**
+     * Set button text.
+     *
+     * @param buttonText button text ({@link String})
+     */
 
     @JsonIgnore
     public void setButtonText(String buttonText) {
@@ -81,6 +96,11 @@ public class WebDeliveryMethodNotificationTemplate extends DeliveryMethodNotific
             buttonConfig.set("text", new TextNode(buttonText));
         });
     }
+    /**
+     * Returns button link.
+     *
+     * @return {@link String}
+     */
 
     @NoXss(fieldName = "web notification button link")
     @Length(fieldName = "web notification button link", max = 300, message = "cannot be longer than 300 chars")
@@ -88,6 +108,11 @@ public class WebDeliveryMethodNotificationTemplate extends DeliveryMethodNotific
     public String getButtonLink() {
         return getButtonConfigProperty("link");
     }
+    /**
+     * Set button link.
+     *
+     * @param buttonLink button link ({@link String})
+     */
 
     @JsonIgnore
     public void setButtonLink(String buttonLink) {
@@ -108,11 +133,21 @@ public class WebDeliveryMethodNotificationTemplate extends DeliveryMethodNotific
                 .map(config -> config.get("actionButtonConfig")).filter(JsonNode::isObject)
                 .map(config -> (ObjectNode) config);
     }
+    /**
+     * Returns method.
+     *
+     * @return {@link NotificationDeliveryMethod}
+     */
 
     @Override
     public NotificationDeliveryMethod getMethod() {
         return NotificationDeliveryMethod.WEB;
     }
+    /**
+     * Copy.
+     *
+     * @return {@link WebDeliveryMethodNotificationTemplate}
+     */
 
     @Override
     public WebDeliveryMethodNotificationTemplate copy() {

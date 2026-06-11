@@ -18,12 +18,30 @@ package org.thingsboard.server.edqs.query.processor;
 import org.thingsboard.server.edqs.query.SortableEntityData;
 
 import java.util.List;
+
 /**
- * Executes one entity filter against a {@link TenantRepo} with permission {@link org.thingsboard.server.common.data.permission.QueryContext}.
+ * Executes one entity filter against a {@link org.thingsboard.server.edqs.repo.TenantRepo} with {@link org.thingsboard.server.common.data.permission.QueryContext} permission checks.
  */
+
 public interface EntityQueryProcessor {
 
+    
+    /**
+     * Processes query.
+     *
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     List<SortableEntityData> processQuery();
+
+    
+    /**
+     * Counts the requested data.
+     *
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     long count();
 

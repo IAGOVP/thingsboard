@@ -97,6 +97,14 @@ public class DeviceSessionContext extends DeviceAwareSessionContext implements S
 
         initializeTarget(profileTransportConfiguration, deviceTransportConfiguration);
     }
+    /**
+     * Handles device profile update.
+     *
+     * @param newSessionInfo new session info
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onDeviceProfileUpdate(TransportProtos.SessionInfoProto newSessionInfo, DeviceProfile deviceProfile) {
@@ -105,11 +113,25 @@ public class DeviceSessionContext extends DeviceAwareSessionContext implements S
             snmpTransportContext.onDeviceProfileUpdated(deviceProfile, this);
         }
     }
+    /**
+     * Handles device deleted.
+     *
+     * @param deviceId target device identifier
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onDeviceDeleted(DeviceId deviceId) {
         snmpTransportContext.onDeviceDeleted(this);
     }
+    /**
+     * Handles response.
+     *
+     * @param event event ({@link ResponseEvent})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onResponse(ResponseEvent event) {
@@ -117,29 +139,67 @@ public class DeviceSessionContext extends DeviceAwareSessionContext implements S
             snmpTransportContext.getSnmpTransportService().processResponseEvent(this, event);
         }
     }
-
+    /**
+     * Initialize target.
+     *
+     * @param profileTransportConfig profile transport config ({@link SnmpDeviceProfileTransportConfiguration})
+     * @param deviceTransportConfig device transport config ({@link SnmpDeviceTransportConfiguration})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void initializeTarget(SnmpDeviceProfileTransportConfiguration profileTransportConfig, SnmpDeviceTransportConfiguration deviceTransportConfig) throws Exception {
         log.trace("Initializing target for SNMP session of device {}", device);
         this.target = snmpTransportContext.getSnmpAuthService().setUpSnmpTarget(profileTransportConfig, deviceTransportConfig);
         log.debug("SNMP target initialized: {}", target);
     }
-
+    /**
+     * Close.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void close() {
         isActive = false;
     }
-
+    /**
+     * Returns token.
+     *
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
     public String getToken() {
         return token;
     }
+    /**
+     * Next msg id.
+     *
+     * @return monotonically increasing MQTT packet identifier
+     * @throws Exception on processing failure
+     */
 
     @Override
     public int nextMsgId() {
         return msgIdSeq.incrementAndGet();
     }
+    /**
+     * Handles get attributes response.
+     *
+     * @param getAttributesResponse get attributes response ({@link GetAttributeResponseMsg})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onGetAttributesResponse(GetAttributeResponseMsg getAttributesResponse) {
     }
+    /**
+     * Handles attribute update.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param attributeUpdateNotification attribute update notification ({@link AttributeUpdateNotificationMsg})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onAttributeUpdate(UUID sessionId, AttributeUpdateNotificationMsg attributeUpdateNotification) {
@@ -150,6 +210,14 @@ public class DeviceSessionContext extends DeviceAwareSessionContext implements S
             snmpTransportContext.getTransportService().errorEvent(getTenantId(), getDeviceId(), SnmpCommunicationSpec.SHARED_ATTRIBUTES_SETTING.getLabel(), e);
         }
     }
+    /**
+     * Handles remote session close command.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param sessionCloseNotification session close notification ({@link SessionCloseNotificationProto})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onRemoteSessionCloseCommand(UUID sessionId, SessionCloseNotificationProto sessionCloseNotification) {
@@ -160,6 +228,14 @@ public class DeviceSessionContext extends DeviceAwareSessionContext implements S
             }
         }
     }
+    /**
+     * Handles to device rpc request.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param toDeviceRequest to device request ({@link ToDeviceRpcRequestMsg})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onToDeviceRpcRequest(UUID sessionId, ToDeviceRpcRequestMsg toDeviceRequest) {
@@ -171,6 +247,13 @@ public class DeviceSessionContext extends DeviceAwareSessionContext implements S
             snmpTransportContext.getTransportService().errorEvent(getTenantId(), getDeviceId(), SnmpCommunicationSpec.TO_DEVICE_RPC_REQUEST.getLabel(), e);
         }
     }
+    /**
+     * Handles to server rpc response.
+     *
+     * @param toServerResponse to server response ({@link ToServerRpcResponseMsg})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onToServerRpcResponse(ToServerRpcResponseMsg toServerResponse) {

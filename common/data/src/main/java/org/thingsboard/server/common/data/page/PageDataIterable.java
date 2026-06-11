@@ -16,7 +16,7 @@
 package org.thingsboard.server.common.data.page;
 
 /**
- * Page data iterable.
+ * Lazy iterator over all pages of a {@link PageData} query without loading entire result set.
  */
 public class PageDataIterable<T> extends BasePageDataIterable<T> {
 

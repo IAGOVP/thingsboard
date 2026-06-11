@@ -34,28 +34,114 @@ import java.util.List;
  */
 public interface NotificationTargetService {
 
+    /**
+     * Saves or persists notification target.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param notificationTarget notification target ({@link NotificationTarget})
+     * @return {@link NotificationTarget}
+     */
     NotificationTarget saveNotificationTarget(TenantId tenantId, NotificationTarget notificationTarget);
 
+    /**
+     * Finds notification target by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id id ({@link NotificationTargetId})
+     * @return {@link NotificationTarget}
+     */
     NotificationTarget findNotificationTargetById(TenantId tenantId, NotificationTargetId id);
 
+    /**
+     * Finds notification targets by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<NotificationTarget> findNotificationTargetsByTenantId(TenantId tenantId, PageLink pageLink);
 
+    /**
+     * Finds notification targets by tenant id and supported notification type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param notificationType notification type ({@link NotificationType})
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<NotificationTarget> findNotificationTargetsByTenantIdAndSupportedNotificationType(TenantId tenantId, NotificationType notificationType, PageLink pageLink);
 
+    /**
+     * Finds notification targets by tenant id and ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ids ids ({@link List})
+     * @return {@link List}
+     */
     List<NotificationTarget> findNotificationTargetsByTenantIdAndIds(TenantId tenantId, List<NotificationTargetId> ids);
 
+    /**
+     * Finds notification targets by tenant id and users filter type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param filterType filter type ({@link UsersFilterType})
+     * @return {@link List}
+     */
     List<NotificationTarget> findNotificationTargetsByTenantIdAndUsersFilterType(TenantId tenantId, UsersFilterType filterType);
 
+    /**
+     * Finds recipients for notification target.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId customer to assign or filter by
+     * @param targetId target id ({@link NotificationTargetId})
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<User> findRecipientsForNotificationTarget(TenantId tenantId, CustomerId customerId, NotificationTargetId targetId, PageLink pageLink);
 
+    /**
+     * Finds recipients for notification target config.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param targetConfig target config ({@link PlatformUsersNotificationTargetConfig})
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<User> findRecipientsForNotificationTargetConfig(TenantId tenantId, PlatformUsersNotificationTargetConfig targetConfig, PageLink pageLink);
 
+    /**
+     * Finds recipients for rule notification target config.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param targetConfig target config ({@link PlatformUsersNotificationTargetConfig})
+     * @param info info ({@link RuleOriginatedNotificationInfo})
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<User> findRecipientsForRuleNotificationTargetConfig(TenantId tenantId, PlatformUsersNotificationTargetConfig targetConfig, RuleOriginatedNotificationInfo info, PageLink pageLink);
 
+    /**
+     * Deletes notification target by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id id ({@link NotificationTargetId})
+     */
     void deleteNotificationTargetById(TenantId tenantId, NotificationTargetId id);
 
+    /**
+     * Deletes notification targets by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     */
     void deleteNotificationTargetsByTenantId(TenantId tenantId);
 
+    /**
+     * Counts notification targets by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return the long result
+     */
     long countNotificationTargetsByTenantId(TenantId tenantId);
 
 }

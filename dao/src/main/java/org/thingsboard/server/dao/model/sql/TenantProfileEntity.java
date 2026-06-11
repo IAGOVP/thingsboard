@@ -33,8 +33,11 @@ import org.thingsboard.server.dao.model.BaseSqlEntity;
 import org.thingsboard.server.dao.model.ModelConstants;
 import org.thingsboard.server.dao.util.mapping.JsonConverter;
 /**
- * Tenant profile entity.
+ * JPA/Cassandra row model for tenant profile.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -74,6 +77,12 @@ public final class TenantProfileEntity extends BaseSqlEntity<TenantProfile> {
         this.isolatedTbRuleEngine = tenantProfile.isIsolatedTbRuleEngine();
         this.profileData = JacksonUtil.convertValue(tenantProfile.getProfileData(), ObjectNode.class);
     }
+    /**
+     * To data.
+     *
+     * @return {@link TenantProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TenantProfile toData() {

@@ -29,8 +29,11 @@ import static org.thingsboard.server.dao.model.ModelConstants.ERROR_EVENT_TABLE_
 import static org.thingsboard.server.dao.model.ModelConstants.EVENT_ERROR_COLUMN_NAME;
 import static org.thingsboard.server.dao.model.ModelConstants.EVENT_METHOD_COLUMN_NAME;
 /**
- * Error event entity.
+ * JPA/Cassandra row model for error event.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -49,6 +52,12 @@ public class ErrorEventEntity extends EventEntity<ErrorEvent> implements BaseEnt
         this.method = event.getMethod();
         this.error = event.getError();
     }
+    /**
+     * To data.
+     *
+     * @return {@link ErrorEvent}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ErrorEvent toData() {

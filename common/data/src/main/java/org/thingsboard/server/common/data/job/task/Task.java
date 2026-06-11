@@ -50,13 +50,34 @@ public abstract class Task<R extends TaskResult> {
     }
 
     private int attempt = 0;
+    /**
+     * To failed.
+     *
+     * @param error error ({@link Throwable})
+     * @return {@link R}
+     */
 
     public abstract R toFailed(Throwable error);
+    /**
+     * To discarded.
+     *
+     * @return {@link R}
+     */
 
     public abstract R toDiscarded();
+    /**
+     * Returns entity id.
+     *
+     * @return {@link EntityId}
+     */
 
     @JsonIgnore
     public abstract EntityId getEntityId();
+    /**
+     * Returns job type.
+     *
+     * @return {@link JobType}
+     */
 
     @JsonIgnore
     public abstract JobType getJobType();

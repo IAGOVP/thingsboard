@@ -22,23 +22,13 @@ import org.thingsboard.server.queue.TbQueueProducer;
 import org.thingsboard.server.queue.common.TbProtoQueueMsg;
 
 /**
- * Responsible for initialization of various Producers and Consumers used by TB Version Control Node.
- * Implementation Depends on the queue queue.type from yml or TB_QUEUE_TYPE environment variable
+ * Factory creating queue producers and consumers for TbVersionControl message flows.
  */
 public interface TbVersionControlQueueFactory extends TbUsageStatsClientQueueFactory, HousekeeperClientQueueFactory {
 
-    /**
-     * Used to push notifications to other instances of TB Core Service
-     *
-     * @return
-     */
+    
+        
     TbQueueProducer<TbProtoQueueMsg<ToCoreNotificationMsg>> createTbCoreNotificationsMsgProducer();
-
-    /**
-     * Used to consume messages from TB Core Service
-     *
-     * @return
-     */
     TbQueueConsumer<TbProtoQueueMsg<ToVersionControlServiceMsg>> createToVersionControlMsgConsumer();
 
 }

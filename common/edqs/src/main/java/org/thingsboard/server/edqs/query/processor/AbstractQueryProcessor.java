@@ -32,9 +32,13 @@ import java.util.function.Consumer;
 
 import static org.thingsboard.server.edqs.util.RepositoryUtils.checkFilters;
 import static org.thingsboard.server.edqs.util.RepositoryUtils.getSortValue;
+
 /**
  * EDQS query processor for abstract entity filters.
+ *
+ * <p>Evaluates {@link org.thingsboard.server.common.data.query.EntityFilter} against a {@link org.thingsboard.server.edqs.repo.TenantRepo} (EDQS microservice — entity filter query processors).
  */
+
 public abstract class AbstractQueryProcessor<T extends EntityFilter> implements EntityQueryProcessor {
 
     protected final TenantRepo repository;
@@ -50,12 +54,27 @@ public abstract class AbstractQueryProcessor<T extends EntityFilter> implements 
         this.sortKey = query instanceof EdqsDataQuery dataQuery ? dataQuery.getSortKey() : null;
         this.filter = filter;
     }
+    /**
+     * To sort data.
+     *
+     * @param ed ed ({@link EntityData})
+     * @return {@link SortableEntityData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected SortableEntityData toSortData(EntityData<?> ed) {
         SortableEntityData sortData = new SortableEntityData(ed);
         sortData.setSortValue(getSortValue(ed, sortKey, ctx));
         return sortData;
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param entities entities ({@link Collection})
+     * @param processor processor ({@link Consumer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void process(Collection<EntityData<?>> entities, Consumer<EntityData<?>> processor) {
         for (EntityData<?> ed : entities) {
@@ -64,14 +83,30 @@ public abstract class AbstractQueryProcessor<T extends EntityFilter> implements 
             }
         }
     }
+    /**
+     * Checks customer id.
+     *
+     * @param customerId customer scope for permission filtering (may be null)
+     * @param ed ed ({@link EntityData})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected static boolean checkCustomerId(UUID customerId, EntityData<?> ed) {
         return customerId.equals(ed.getCustomerId())
                 || (ed.getEntityType() == EntityType.DASHBOARD && ed.getFields().getAssignedCustomerIds().contains(customerId))
                 || (ed.getEntityType() == EntityType.CUSTOMER && customerId.equals(ed.getId()));
     }
+    /**
+     * Matches.
+     *
+     * @param ed ed ({@link EntityData})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected boolean matches(EntityData<?> ed) {
+        /** Check filters. */
         return checkFilters(query, ed);
     }
 

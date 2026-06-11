@@ -21,8 +21,14 @@ import org.thingsboard.server.common.data.id.TenantId;
 
 import java.util.Map;
 /**
- * Db call stats snapshot.
+ * Db call stats snapshot (database call statistics and method profiling).
  */
+
+
+
+
+
+
 
 @Data
 @Builder
@@ -33,6 +39,12 @@ public class DbCallStatsSnapshot {
     private final int totalFailure;
     private final long totalTiming;
     private final Map<String, MethodCallStatsSnapshot> methodStats;
+    /**
+     * Returns total calls.
+     *
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public int getTotalCalls() {
         return totalSuccess + totalFailure;

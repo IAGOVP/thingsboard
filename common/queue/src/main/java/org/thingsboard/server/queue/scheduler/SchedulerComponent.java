@@ -19,8 +19,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+
 /**
- * scheduler component contract.
+ * Schedules periodic queue-related tasks (stats reporting, state cleanup, etc.).
  */
 public interface SchedulerComponent {
 

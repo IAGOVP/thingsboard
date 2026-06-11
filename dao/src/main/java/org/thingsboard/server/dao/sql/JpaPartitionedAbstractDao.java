@@ -18,17 +18,36 @@ package org.thingsboard.server.dao.sql;
 import org.thingsboard.server.dao.model.BaseEntity;
 import org.thingsboard.server.dao.util.SqlDao;
 /**
- * JPA implementation of partitioned abstract dao.
+ * JPA/PostgreSQL implementation of partitioned abstract dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @SqlDao
 public abstract class JpaPartitionedAbstractDao<E extends BaseEntity<D>, D> extends JpaAbstractDao<E, D> {
+    /**
+     * Do save.
+     *
+     * @param entity domain entity to persist or validate
+     * @param isNew is new
+     * @param flush flush
+     * @return {@link E}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected E doSave(E entity, boolean isNew, boolean flush) {
         createPartition(entity);
         return super.doSave(entity, isNew, flush);
     }
+    /**
+     * Creates partition.
+     *
+     * @param entity domain entity to persist or validate
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public abstract void createPartition(E entity);
 

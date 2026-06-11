@@ -33,8 +33,11 @@ import org.thingsboard.server.dao.rule.RuleChainService;
 import org.thingsboard.server.dao.service.DataValidator;
 import org.thingsboard.server.dao.tenant.TenantService;
 /**
- * Asset profile data validator.
+ * Validates asset profile entities before persistence.
+ *
+ * <p>Enforces constraints, uniqueness, and referential integrity at the DAO layer.
  */
+
 
 @Component
 public class AssetProfileDataValidator extends DataValidator<AssetProfile> {
@@ -54,11 +57,16 @@ public class AssetProfileDataValidator extends DataValidator<AssetProfile> {
     @Autowired
     private DashboardService dashboardService;
 
+    
     /**
-
-     * Validate data impl.
-
+     * Validates data impl.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetProfile asset profile ({@link AssetProfile})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateDataImpl(TenantId tenantId, AssetProfile assetProfile) {
@@ -104,11 +112,16 @@ public class AssetProfileDataValidator extends DataValidator<AssetProfile> {
         }
     }
 
+    
     /**
-
-     * Validate update.
-
+     * Validates update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetProfile asset profile ({@link AssetProfile})
+     * @return {@link AssetProfile}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected AssetProfile validateUpdate(TenantId tenantId, AssetProfile assetProfile) {

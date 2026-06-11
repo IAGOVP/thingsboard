@@ -20,11 +20,13 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.msg.MsgType;
 import org.thingsboard.server.common.msg.ToCalculatedFieldSystemMsg;
 import org.thingsboard.server.common.msg.plugin.ComponentLifecycleMsg;
+/**
+ * Internal actor or queue message: calculated field entity lifecycle msg.
+ *
+ * <p>Serialized between tb-core, rule-engine, transport, and edge services.
+ */
 
 @Data
-/**
- * Message: calculated field entity lifecycle msg.
- */
 public class CalculatedFieldEntityLifecycleMsg implements ToCalculatedFieldSystemMsg {
 
     private final TenantId tenantId;

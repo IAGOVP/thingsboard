@@ -18,14 +18,29 @@ package org.thingsboard.server.transport.lwm2m.server.rpc;
 import org.thingsboard.server.gen.transport.TransportProtos;
 
 /**
- * lw m2mrpc request handler contract.
+ * Maps ThingsBoard device RPC requests to LwM2M downlink operations on registered clients.
  */
 public interface LwM2MRpcRequestHandler {
 
     void onToDeviceRpcRequest(TransportProtos.ToDeviceRpcRequestMsg toDeviceRequest, TransportProtos.SessionInfoProto sessionInfo);
 
+    /**
+     * Handles to device rpc response.
+     *
+     * @param toDeviceRpcResponse to device rpc response
+     * @param sessionInfo session info
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void onToDeviceRpcResponse(TransportProtos.ToDeviceRpcResponseMsg toDeviceRpcResponse, TransportProtos.SessionInfoProto sessionInfo);
 
+    /**
+     * Handles to server rpc response.
+     *
+     * @param toServerResponse to server response
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void onToServerRpcResponse(TransportProtos.ToServerRpcResponseMsg toServerResponse);
 
 

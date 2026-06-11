@@ -46,10 +46,12 @@ class DateTimeFormatOptions {
     }
 
     FormatStyle getDateStyle() {
+        /** Returns the format style. */
         return getFormatStyle(dateStyle, FormatStyle.SHORT);
     }
 
     FormatStyle getTimeStyle() {
+        /** Returns the format style. */
         return getFormatStyle(timeStyle, FormatStyle.MEDIUM);
     }
 

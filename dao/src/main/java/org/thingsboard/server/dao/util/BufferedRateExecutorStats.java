@@ -28,8 +28,14 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 /**
- * Buffered rate executor stats.
+ * Buffered rate executor stats (DAO utilities (KV conversion, rate executors, JSON mapping)).
  */
+
+
+
+
+
+
 
 @Slf4j
 @Getter
@@ -80,6 +86,13 @@ public class BufferedRateExecutorStats {
         this.statsCounters.add(totalRejected);
         this.statsCounters.add(totalRateLimited);
     }
+    /**
+     * Increment rate limited tenant.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void incrementRateLimitedTenant(TenantId tenantId){
         rateLimitedTenants.computeIfAbsent(tenantId,

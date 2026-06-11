@@ -21,17 +21,78 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * tb sql queue contract.
+
+
+
+
+
+ * tb sql queue contract (JPA/PostgreSQL persistence layer (JPA repositories and PostgreSQL DAO implementations)).
+
+
+
+
+
 
  */
 
+
+
+
+
+
+
 public interface TbSqlQueue<E, R> {
+    /**
+     * Init.
+     *
+     * @param logExecutor log executor ({@link ScheduledLogExecutorComponent})
+     * @param saveFunction save function ({@link Function})
+     * @param batchUpdateComparator batch update comparator ({@link Comparator})
+     * @param filter filter ({@link Function})
+     * @param queueIndex queue index
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void init(ScheduledLogExecutorComponent logExecutor, Function<List<E>, List<R>> saveFunction, Comparator<E> batchUpdateComparator, Function<List<TbSqlQueueElement<E, R>>, List<TbSqlQueueElement<E, R>>> filter, int queueIndex);
+    /**
+     * Destroy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void destroy();
+    /**
+     * Add.
+     *
+     * @param element element ({@link E})
+     * @return future completing with {@link R}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     ListenableFuture<R> add(E element);
 }

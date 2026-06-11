@@ -43,8 +43,11 @@ import java.util.Collections;
 import java.util.UUID;
 import java.util.stream.Collectors;
 /**
- * Oauth2client entity.
+ * JPA/Cassandra row model for oauth2client.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -165,6 +168,12 @@ public class OAuth2ClientEntity extends BaseSqlEntity<OAuth2Client> {
             }
         }
     }
+    /**
+     * To data.
+     *
+     * @return {@link OAuth2Client}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public OAuth2Client toData() {

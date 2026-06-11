@@ -62,90 +62,133 @@ import java.util.UUID;
  */
 public interface TbClusterService extends TbQueueClusterService {
 
+    /** Push msg to core. */
     void pushMsgToCore(TopicPartitionInfo tpi, UUID msgKey, ToCoreMsg msg, TbQueueCallback callback);
 
+    /** Push msg to core. */
     void pushMsgToCore(TenantId tenantId, EntityId entityId, ToCoreMsg msg, TbQueueCallback callback);
 
+    /** Push msg to core. */
     void pushMsgToCore(ToDeviceActorNotificationMsg msg, TbQueueCallback callback);
 
+    /** Broadcast to core. */
     void broadcastToCore(ToCoreNotificationMsg msg);
 
+    /** Broadcast to calculated fields. */
     void broadcastToCalculatedFields(ToCalculatedFieldNotificationMsg build, TbQueueCallback callback);
 
+    /** Push msg to version control. */
     void pushMsgToVersionControl(TenantId tenantId, ToVersionControlServiceMsg msg, TbQueueCallback callback);
 
+    /** Push notification to core. */
     void pushNotificationToCore(String targetServiceId, FromDeviceRpcResponse response, TbQueueCallback callback);
 
+    /** Push notification to core. */
     void pushNotificationToCore(String targetServiceId, RestApiCallResponseMsgProto msg, TbQueueCallback callback);
 
+    /** Push msg to rule engine. */
     void pushMsgToRuleEngine(TopicPartitionInfo tpi, UUID msgId, ToRuleEngineMsg msg, TbQueueCallback callback);
 
+    /** Push msg to rule engine. */
     void pushMsgToRuleEngine(TenantId tenantId, EntityId entityId, TbMsg msg, TbQueueCallback callback);
 
+    /** Push msg to rule engine. */
     void pushMsgToRuleEngine(TenantId tenantId, EntityId entityId, TbMsg msg, boolean useQueueFromTbMsg, TbQueueCallback callback);
 
+    /** Push notification to rule engine. */
     void pushNotificationToRuleEngine(String targetServiceId, FromDeviceRpcResponse response, TbQueueCallback callback);
 
+    /** Push notification to transport. */
     void pushNotificationToTransport(String targetServiceId, ToTransportMsg response, TbQueueCallback callback);
 
+    /** Push msg to calculated fields. */
     void pushMsgToCalculatedFields(TenantId tenantId, EntityId entityId, ToCalculatedFieldMsg msg, TbQueueCallback callback);
 
+    /** Push msg to calculated fields. */
     void pushMsgToCalculatedFields(TopicPartitionInfo tpi, UUID msgId, ToCalculatedFieldMsg msg, TbQueueCallback callback);
 
+    /** Broadcast entity state change event. */
     void broadcastEntityStateChangeEvent(TenantId tenantId, EntityId entityId, ComponentLifecycleEvent state);
 
+    /** Broadcast. */
     void broadcast(ComponentLifecycleMsg componentLifecycleMsg);
 
+    /** On device profile change. */
     void onDeviceProfileChange(DeviceProfile deviceProfile, DeviceProfile oldDeviceProfile, TbQueueCallback callback);
 
+    /** On device profile delete. */
     void onDeviceProfileDelete(DeviceProfile deviceProfile, TbQueueCallback callback);
 
+    /** On tenant profile change. */
     void onTenantProfileChange(TenantProfile tenantProfile, TbQueueCallback callback);
 
+    /** On tenant profile delete. */
     void onTenantProfileDelete(TenantProfile tenantProfile, TbQueueCallback callback);
 
+    /** On tenant change. */
     void onTenantChange(Tenant tenant, TbQueueCallback callback);
 
+    /** On tenant delete. */
     void onTenantDelete(Tenant tenant, TbQueueCallback callback);
 
+    /** On api state change. */
     void onApiStateChange(ApiUsageState apiUsageState, TbQueueCallback callback);
 
+    /** On device updated. */
     void onDeviceUpdated(Device device, Device old);
 
+    /** On device deleted. */
     void onDeviceDeleted(TenantId tenantId, Device device, TbQueueCallback callback);
 
+    /** On device assigned to tenant. */
     void onDeviceAssignedToTenant(TenantId oldTenantId, Device device);
 
+    /** On asset updated. */
     void onAssetUpdated(Asset asset, Asset old);
 
+    /** On asset deleted. */
     void onAssetDeleted(TenantId tenantId, Asset asset, TbQueueCallback callback);
 
+    /** On resource change. */
     void onResourceChange(TbResourceInfo resource, TbQueueCallback callback);
 
+    /** On resource deleted. */
     void onResourceDeleted(TbResourceInfo resource, TbQueueCallback callback);
 
+    /** On edge high priority msg. */
     void onEdgeHighPriorityMsg(EdgeHighPriorityMsg msg);
 
+    /** On edge event update. */
     void onEdgeEventUpdate(EdgeEventUpdateMsg msg);
 
+    /** On edge state change event. */
     void onEdgeStateChangeEvent(ComponentLifecycleMsg msg);
 
+    /** Push edge sync request to edge. */
     void pushEdgeSyncRequestToEdge(ToEdgeSyncRequest request);
 
+    /** Push edge sync response to core. */
     void pushEdgeSyncResponseToCore(FromEdgeSyncResponse response, String requestServiceId);
 
+    /** Push msg to edge. */
     void pushMsgToEdge(TenantId tenantId, EntityId entityId, ToEdgeMsg msg, TbQueueCallback callback);
 
+    /** Send notification msg to edge. */
     void sendNotificationMsgToEdge(TenantId tenantId, EdgeId edgeId, EntityId entityId, String body, EdgeEventType type, EdgeEventActionType action, EdgeId sourceEdgeId);
 
+    /** On customer updated. */
     void onCustomerUpdated(Customer customer, Customer oldCustomer);
 
+    /** On calculated field updated. */
     void onCalculatedFieldUpdated(CalculatedField calculatedField, CalculatedField oldCalculatedField, TbQueueCallback callback);
 
+    /** On calculated field deleted. */
     void onCalculatedFieldDeleted(CalculatedField calculatedField, TbQueueCallback callback);
 
+    /** On relation updated. */
     void onRelationUpdated(TenantId tenantId, EntityRelation entityRelation, TbQueueCallback callback);
 
+    /** On relation deleted. */
     void onRelationDeleted(TenantId tenantId, EntityRelation entityRelation, TbQueueCallback callback);
 
 }

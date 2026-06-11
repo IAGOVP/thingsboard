@@ -53,8 +53,11 @@ import java.util.UUID;
 import static org.thingsboard.server.dao.DaoUtil.convertTenantEntityInfosToDto;
 
 /**
- * Created by Valerii Sosliuk on 5/6/2017.
+ * JPA/PostgreSQL implementation of device dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 @Component
 @SqlDao
 @Slf4j
@@ -69,44 +72,60 @@ public class JpaDeviceDao extends JpaAbstractDao<DeviceEntity, Device> implement
     @Autowired
     private DeviceProfileRepository deviceProfileRepository;
 
+    
     /**
-
-     * Get entity class.
-
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected Class<DeviceEntity> getEntityClass() {
         return DeviceEntity.class;
     }
 
+    
     /**
-
-     * Get repository.
-
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected JpaRepository<DeviceEntity, UUID> getRepository() {
         return deviceRepository;
     }
 
+    
     /**
-
-     * Loads device info by id.
-
+     * Finds device info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @return {@link DeviceInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceInfo findDeviceInfoById(TenantId tenantId, UUID deviceId) {
         return DaoUtil.getData(deviceRepository.findDeviceInfoById(deviceId));
     }
 
+    
     /**
-
-     * Loads devices by tenant id.
-
+     * Finds devices by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Device> findDevicesByTenantId(UUID tenantId, PageLink pageLink) {
@@ -124,11 +143,16 @@ public class JpaDeviceDao extends JpaAbstractDao<DeviceEntity, Device> implement
         }
     }
 
+    
     /**
-
-     * Loads device infos by filter.
-
+     * Finds device infos by filter.
+     *
+     * @param filter filter ({@link DeviceInfoFilter})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<DeviceInfo> findDeviceInfosByFilter(DeviceInfoFilter filter, PageLink pageLink) {
@@ -145,55 +169,79 @@ public class JpaDeviceDao extends JpaAbstractDao<DeviceEntity, Device> implement
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads entity infos by name prefix.
-
+     * Finds entity infos by name prefix.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<EntityInfo> findEntityInfosByNamePrefix(TenantId tenantId, String name) {
         return deviceRepository.findEntityInfosByNamePrefix(tenantId.getId(), name);
     }
 
+    
     /**
-
-     * Loads devices by tenant id and ids async.
-
+     * Finds devices by tenant id and ids async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceIds device ids ({@link List})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<Device>> findDevicesByTenantIdAndIdsAsync(UUID tenantId, List<UUID> deviceIds) {
         return service.submit(() -> DaoUtil.convertDataList(deviceRepository.findDevicesByTenantIdAndIdIn(tenantId, deviceIds)));
     }
 
+    
     /**
-
-     * Loads devices by ids.
-
+     * Finds devices by ids.
+     *
+     * @param deviceIds device ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<Device> findDevicesByIds(List<UUID> deviceIds) {
         return DaoUtil.convertDataList(deviceRepository.findDevicesByIdIn(deviceIds));
     }
 
+    
     /**
-
-     * Loads devices by ids async.
-
+     * Finds devices by ids async.
+     *
+     * @param deviceIds device ids ({@link List})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<Device>> findDevicesByIdsAsync(List<UUID> deviceIds) {
         return service.submit(() -> findDevicesByIds(deviceIds));
     }
 
+    
     /**
-
-     * Loads devices by tenant id and customer id.
-
+     * Finds devices by tenant id and customer id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Device> findDevicesByTenantIdAndCustomerId(UUID tenantId, UUID customerId, PageLink pageLink) {
@@ -205,11 +253,17 @@ public class JpaDeviceDao extends JpaAbstractDao<DeviceEntity, Device> implement
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads devices by tenant id and profile id.
-
+     * Finds devices by tenant id and profile id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param profileId profile id ({@link UUID})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Device> findDevicesByTenantIdAndProfileId(UUID tenantId, UUID profileId, PageLink pageLink) {
@@ -221,22 +275,33 @@ public class JpaDeviceDao extends JpaAbstractDao<DeviceEntity, Device> implement
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads devices ids by device profile transport type.
-
+     * Finds devices ids by device profile transport type.
+     *
+     * @param transportType transport type ({@link DeviceTransportType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<UUID> findDevicesIdsByDeviceProfileTransportType(DeviceTransportType transportType, PageLink pageLink) {
         return DaoUtil.pageToPageData(deviceRepository.findIdsByDeviceProfileTransportType(transportType, DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads devices by tenant id customer id and ids async.
-
+     * Finds devices by tenant id customer id and ids async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param deviceIds device ids ({@link List})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<Device>> findDevicesByTenantIdCustomerIdAndIdsAsync(UUID tenantId, UUID customerId, List<UUID> deviceIds) {
@@ -244,11 +309,16 @@ public class JpaDeviceDao extends JpaAbstractDao<DeviceEntity, Device> implement
                 deviceRepository.findDevicesByTenantIdAndCustomerIdAndIdIn(tenantId, customerId, deviceIds)));
     }
 
+    
     /**
-
-     * Loads device by tenant id and name.
-
+     * Finds device by tenant id and name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return optional {@link Device}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<Device> findDeviceByTenantIdAndName(UUID tenantId, String name) {
@@ -256,11 +326,17 @@ public class JpaDeviceDao extends JpaAbstractDao<DeviceEntity, Device> implement
         return Optional.ofNullable(device);
     }
 
+    
     /**
-
-     * Loads devices by tenant id and type.
-
+     * Finds devices by tenant id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Device> findDevicesByTenantIdAndType(UUID tenantId, String type, PageLink pageLink) {
@@ -272,11 +348,17 @@ public class JpaDeviceDao extends JpaAbstractDao<DeviceEntity, Device> implement
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads device ids by tenant id and device profile id.
-
+     * Finds device ids by tenant id and device profile id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfileId device profile id ({@link UUID})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<DeviceId> findDeviceIdsByTenantIdAndDeviceProfileId(UUID tenantId, UUID deviceProfileId, PageLink pageLink) {
@@ -289,11 +371,18 @@ public class JpaDeviceDao extends JpaAbstractDao<DeviceEntity, Device> implement
                 .mapData(DeviceId::new);
     }
 
+    
     /**
-
-     * Loads devices by tenant id and type and empty ota package.
-
+     * Finds devices by tenant id and type and empty ota package.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfileId device profile id ({@link UUID})
+     * @param type type ({@link OtaPackageType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Device> findDevicesByTenantIdAndTypeAndEmptyOtaPackage(UUID tenantId,
@@ -309,11 +398,17 @@ public class JpaDeviceDao extends JpaAbstractDao<DeviceEntity, Device> implement
         return DaoUtil.toPageData(page);
     }
 
+    
     /**
-
      * Counts devices by tenant id and device profile id and empty ota package.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfileId device profile id ({@link UUID})
+     * @param type type ({@link OtaPackageType})
+     * @return {@link Long}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Long countDevicesByTenantIdAndDeviceProfileIdAndEmptyOtaPackage(UUID tenantId, UUID deviceProfileId, OtaPackageType type) {
@@ -324,11 +419,18 @@ public class JpaDeviceDao extends JpaAbstractDao<DeviceEntity, Device> implement
         );
     }
 
+    
     /**
-
-     * Loads devices by tenant id and customer id and type.
-
+     * Finds devices by tenant id and customer id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Device> findDevicesByTenantIdAndCustomerIdAndType(UUID tenantId, UUID customerId, String type, PageLink pageLink) {
@@ -341,66 +443,95 @@ public class JpaDeviceDao extends JpaAbstractDao<DeviceEntity, Device> implement
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads tenant device types async.
-
+     * Finds tenant device types async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<EntitySubtype>> findTenantDeviceTypesAsync(UUID tenantId) {
         return service.submit(() -> convertTenantEntityInfosToDto(tenantId, EntityType.DEVICE, deviceProfileRepository.findActiveTenantDeviceProfileNames(tenantId)));
     }
 
+    
     /**
-
-     * Loads device by tenant id and id.
-
+     * Finds device by tenant id and id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Device findDeviceByTenantIdAndId(TenantId tenantId, UUID id) {
         return DaoUtil.getData(deviceRepository.findByTenantIdAndId(tenantId.getId(), id));
     }
 
+    
     /**
-
-     * Loads device by tenant id and id async.
-
+     * Finds device by tenant id and id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @return future completing with {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<Device> findDeviceByTenantIdAndIdAsync(TenantId tenantId, UUID id) {
         return service.submit(() -> DaoUtil.getData(deviceRepository.findByTenantIdAndId(tenantId.getId(), id)));
     }
 
+    
     /**
-
      * Counts devices by device profile id.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfileId device profile id ({@link UUID})
+     * @return {@link Long}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Long countDevicesByDeviceProfileId(TenantId tenantId, UUID deviceProfileId) {
         return deviceRepository.countByDeviceProfileId(deviceProfileId);
     }
 
+    
     /**
-
      * Counts by tenant id.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link Long}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Long countByTenantId(TenantId tenantId) {
         return deviceRepository.countByTenantId(tenantId.getId());
     }
 
+    
     /**
-
-     * Loads devices by tenant id and edge id.
-
+     * Finds devices by tenant id and edge id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link UUID})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Device> findDevicesByTenantIdAndEdgeId(UUID tenantId, UUID edgeId, PageLink pageLink) {
@@ -413,11 +544,18 @@ public class JpaDeviceDao extends JpaAbstractDao<DeviceEntity, Device> implement
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads devices by tenant id and edge id and type.
-
+     * Finds devices by tenant id and edge id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link UUID})
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Device> findDevicesByTenantIdAndEdgeIdAndType(UUID tenantId, UUID edgeId, String type, PageLink pageLink) {
@@ -431,11 +569,15 @@ public class JpaDeviceDao extends JpaAbstractDao<DeviceEntity, Device> implement
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads device id infos.
-
+     * Finds device id infos.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<DeviceIdInfo> findDeviceIdInfos(PageLink pageLink) {
@@ -443,11 +585,15 @@ public class JpaDeviceDao extends JpaAbstractDao<DeviceEntity, Device> implement
         return nativeDeviceRepository.findDeviceIdInfos(DaoUtil.toPageable(pageLink));
     }
 
+    
     /**
-
-     * Loads profile entity id infos.
-
+     * Finds profile entity id infos.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<ProfileEntityIdInfo> findProfileEntityIdInfos(PageLink pageLink) {
@@ -455,11 +601,16 @@ public class JpaDeviceDao extends JpaAbstractDao<DeviceEntity, Device> implement
         return nativeDeviceRepository.findProfileEntityIdInfos(DaoUtil.toPageable(pageLink));
     }
 
+    
     /**
-
-     * Loads profile entity id infos by tenant id.
-
+     * Finds profile entity id infos by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<ProfileEntityIdInfo> findProfileEntityIdInfosByTenantId(UUID tenantId, PageLink pageLink) {
@@ -467,44 +618,63 @@ public class JpaDeviceDao extends JpaAbstractDao<DeviceEntity, Device> implement
         return nativeDeviceRepository.findProfileEntityIdInfosByTenantId(tenantId, DaoUtil.toPageable(pageLink));
     }
 
+    
     /**
-
-     * Loads by tenant id and external id.
-
+     * Finds by tenant id and external id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param externalId external id ({@link UUID})
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Device findByTenantIdAndExternalId(UUID tenantId, UUID externalId) {
         return DaoUtil.getData(deviceRepository.findByTenantIdAndExternalId(tenantId, externalId));
     }
 
+    
     /**
-
-     * Loads by tenant id and name.
-
+     * Finds by tenant id and name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Device findByTenantIdAndName(UUID tenantId, String name) {
         return findDeviceByTenantIdAndName(tenantId, name).orElse(null);
     }
 
+    
     /**
-
-     * Loads by tenant id.
-
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Device> findByTenantId(UUID tenantId, PageLink pageLink) {
         return findDevicesByTenantId(tenantId, pageLink);
     }
 
+    
     /**
-
-     * Get external id by internal.
-
+     * Returns external id by internal.
+     *
+     * @param internalId internal id ({@link DeviceId})
+     * @return {@link DeviceId}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceId getExternalIdByInternal(DeviceId internalId) {
@@ -512,33 +682,46 @@ public class JpaDeviceDao extends JpaAbstractDao<DeviceEntity, Device> implement
                 .map(DeviceId::new).orElse(null);
     }
 
+    
     /**
-
-     * Loads all by tenant id.
-
+     * Finds all by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Device> findAllByTenantId(TenantId tenantId, PageLink pageLink) {
         return findByTenantId(tenantId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads next batch.
-
+     * Finds next batch.
+     *
+     * @param id entity UUID primary key
+     * @param batchSize batch size
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<DeviceFields> findNextBatch(UUID id, int batchSize) {
         return deviceRepository.findNextBatch(id, Limit.of(batchSize));
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

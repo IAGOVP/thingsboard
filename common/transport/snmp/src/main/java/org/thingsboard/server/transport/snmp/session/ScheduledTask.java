@@ -33,7 +33,15 @@ import java.util.concurrent.TimeUnit;
 public class ScheduledTask {
     private ListenableFuture<?> scheduledFuture;
     private boolean stopped = false;
-
+    /**
+     * Init.
+     *
+     * @param task task ({@link AsyncCallable})
+     * @param delayMs delay ms
+     * @param scheduler scheduler ({@link ScheduledExecutorService})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void init(AsyncCallable<Void> task, long delayMs, ScheduledExecutorService scheduler) {
         schedule(task, delayMs, scheduler);
     }
@@ -54,7 +62,12 @@ public class ScheduledTask {
             scheduledFuture.addListener(() -> schedule(task, delayMs, scheduler), MoreExecutors.directExecutor());
         }
     }
-
+    /**
+     * Cancel.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void cancel() {
         stopped = true;
         if (scheduledFuture != null) {

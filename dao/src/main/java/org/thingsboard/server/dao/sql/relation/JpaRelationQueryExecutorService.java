@@ -19,14 +19,26 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.thingsboard.common.util.AbstractListeningExecutor;
 /**
- * Jpa relation query executor service.
+ * Spring component for jpa relation query executor service (JPA/PostgreSQL persistence layer (JPA repositories and PostgreSQL DAO implementations)).
  */
+
+
+
+
+
+
 
 @Component
 public class JpaRelationQueryExecutorService extends AbstractListeningExecutor {
 
     @Value("${sql.relations.pool_size:4}")
     private int poolSize;
+    /**
+     * Returns thread poll size.
+     *
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected int getThreadPollSize() {

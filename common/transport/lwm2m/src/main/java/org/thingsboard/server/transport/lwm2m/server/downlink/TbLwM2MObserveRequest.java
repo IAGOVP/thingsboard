@@ -34,11 +34,23 @@ public class TbLwM2MObserveRequest extends AbstractTbLwM2MTargetedDownlinkReques
         super(versionedId, timeout);
         this.requestContentFormat = Optional.ofNullable(requestContentFormat);
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link LwM2MOperationType}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public LwM2MOperationType getType() {
         return LwM2MOperationType.OBSERVE;
     }
+    /**
+     * Returns request content format.
+     *
+     * @return optional {@link ContentFormat}, empty if not found
+     * @throws Exception on processing failure
+     */
 
 
     @Override

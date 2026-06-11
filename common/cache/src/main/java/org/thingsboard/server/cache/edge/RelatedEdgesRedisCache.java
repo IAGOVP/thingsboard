@@ -24,13 +24,21 @@ import org.thingsboard.server.cache.TBRedisCacheConfiguration;
 import org.thingsboard.server.cache.TbJsonRedisSerializer;
 import org.thingsboard.server.common.data.CacheConstants;
 
+/**
+ * Redis cache for edge relationship lists shared across cluster nodes.
+ *
+ * @see RelatedEdgesCaffeineCache
+ * @see RelatedEdgesCacheKey
+ */
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "redis")
 @Service("RelatedEdgeIdsCache")
-/**
- * Related edges redis cache.
- */
 public class RelatedEdgesRedisCache extends RedisTbTransactionalCache<RelatedEdgesCacheKey, RelatedEdgesCacheValue> {
 
+    /**
+     * @param configuration     Redis settings
+     * @param cacheSpecsMap     per-cache TTL/size
+     * @param connectionFactory Redis connection factory
+     */
     public RelatedEdgesRedisCache(TBRedisCacheConfiguration configuration, CacheSpecsMap cacheSpecsMap, RedisConnectionFactory connectionFactory) {
         super(CacheConstants.RELATED_EDGES_CACHE, cacheSpecsMap, connectionFactory, configuration, new TbJsonRedisSerializer<>(RelatedEdgesCacheValue.class));
     }

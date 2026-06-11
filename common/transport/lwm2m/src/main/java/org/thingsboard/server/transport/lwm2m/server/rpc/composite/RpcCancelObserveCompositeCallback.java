@@ -32,6 +32,13 @@ public class RpcCancelObserveCompositeCallback extends RpcDownlinkRequestCallbac
     public RpcCancelObserveCompositeCallback(TransportService transportService, LwM2mClient client, TransportProtos.ToDeviceRpcRequestMsg requestMsg, DownlinkRequestCallback<TbLwM2MCancelObserveCompositeRequest, Integer> callback) {
         super(transportService, client, requestMsg, callback);
     }
+    /**
+     * Send rpc reply on success.
+     *
+     * @param response response ({@link Integer})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected void sendRpcReplyOnSuccess(Integer response) {

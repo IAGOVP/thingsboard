@@ -21,11 +21,17 @@ import org.springframework.stereotype.Service;
 import org.thingsboard.server.cache.CaffeineTbTransactionalCache;
 import org.thingsboard.server.common.data.CacheConstants;
 
+/**
+ * Caffeine cache for {@link RelatedEdgesCacheValue} lists keyed by {@link RelatedEdgesCacheKey}.
+ *
+ * <p>Caches the set of edges related to a tenant entity to avoid repeated graph queries.
+ * Bean name: {@code RelatedEdgesCache}. Cache name from {@link org.thingsboard.server.common.data.CacheConstants}.
+ *
+ * @see RelatedEdgesCacheKey
+ * @see RelatedEdgesCacheValue
+ */
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "caffeine", matchIfMissing = true)
 @Service("RelatedEdgeIdsCache")
-/**
- * Related edges caffeine cache.
- */
 public class RelatedEdgesCaffeineCache extends CaffeineTbTransactionalCache<RelatedEdgesCacheKey, RelatedEdgesCacheValue> {
 
     public RelatedEdgesCaffeineCache(CacheManager cacheManager) {

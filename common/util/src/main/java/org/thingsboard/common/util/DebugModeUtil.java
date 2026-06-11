@@ -23,7 +23,10 @@ import java.util.Set;
 /**
  * Debug mode util.
  */
-public final class DebugModeUtil {
+public final/**
+ * Class for debug mode util.
+ */
+class DebugModeUtil {
 
     public static final int DEBUG_MODE_DEFAULT_DURATION_MINUTES = 15;
 

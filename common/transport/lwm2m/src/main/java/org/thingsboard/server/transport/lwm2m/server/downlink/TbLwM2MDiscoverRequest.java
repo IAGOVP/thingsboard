@@ -28,6 +28,12 @@ public class TbLwM2MDiscoverRequest extends AbstractTbLwM2MTargetedDownlinkReque
     private TbLwM2MDiscoverRequest(String versionedId, long timeout) {
         super(versionedId, timeout);
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link LwM2MOperationType}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public LwM2MOperationType getType() {

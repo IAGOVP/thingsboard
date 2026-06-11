@@ -21,6 +21,7 @@ import org.thingsboard.server.common.data.id.RuleNodeId;
 /**
  * Rule node info.
  */
+
 public class RuleNodeInfo {
     private final String label;
     @Getter

@@ -24,7 +24,7 @@ import java.util.UUID;
 
 @Schema(allOf = EntityId.class)
 /**
- * Typed identifier for notification.
+ * Typed identifier for a user notification delivery record.
  */
 public class NotificationId extends UUIDBased implements EntityId {
 
@@ -32,6 +32,11 @@ public class NotificationId extends UUIDBased implements EntityId {
     public NotificationId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY, description = "string", example = "NOTIFICATION", allowableValues = "NOTIFICATION")
     @Override

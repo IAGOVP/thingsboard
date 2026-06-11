@@ -23,7 +23,10 @@ import org.thingsboard.server.common.data.EntityType;
 import org.thingsboard.server.common.data.id.TenantId;
 /**
  * Default DAO-layer service implementation for entity count.
+ *
+ * <p>Coordinates validation, caching, cluster events, and {@code *Dao} persistence (generic entity services, counts, and DAO registry).
  */
+
 
 @Service
 public class BaseEntityCountService extends AbstractCachedEntityService<EntityCountCacheKey, Long, EntityCountCacheEvictEvent> implements EntityCountService {
@@ -32,11 +35,16 @@ public class BaseEntityCountService extends AbstractCachedEntityService<EntityCo
     @Autowired
     private EntityServiceRegistry entityServiceRegistry;
 
+    
     /**
-
      * Counts by tenant id and entity type.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityType entity type discriminator
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public long countByTenantIdAndEntityType(TenantId tenantId, EntityType entityType) {
@@ -44,22 +52,31 @@ public class BaseEntityCountService extends AbstractCachedEntityService<EntityCo
                 () -> entityServiceRegistry.getServiceByEntityType(entityType).countByTenantId(tenantId), false);
     }
 
+    
     /**
-
      * Publish count entity evict event.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityType entity type discriminator
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void publishCountEntityEvictEvent(TenantId tenantId, EntityType entityType) {
         publishEvictEvent(new EntityCountCacheEvictEvent(tenantId, entityType));
     }
 
+    
     /**
-
-     * Handle evict event.
-
+     * Handles evict event.
+     *
+     * @param event event ({@link EntityCountCacheEvictEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @TransactionalEventListener(classes = EntityCountCacheEvictEvent.class)
     @Override

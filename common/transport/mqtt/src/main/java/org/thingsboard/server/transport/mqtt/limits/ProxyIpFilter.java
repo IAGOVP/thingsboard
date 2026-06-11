@@ -37,6 +37,14 @@ public class ProxyIpFilter extends ChannelInboundHandlerAdapter {
     public ProxyIpFilter(MqttTransportContext context) {
         this.context = context;
     }
+    /**
+     * Channel read.
+     *
+     * @param ctx MQTT session context
+     * @param msg msg ({@link Object})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {

@@ -41,6 +41,11 @@ public class RateLimitsNotificationInfo implements RuleOriginatedNotificationInf
     private LimitedApi api;
     private EntityId limitLevel;
     private String limitLevelEntityName;
+    /**
+     * Returns template data.
+     *
+     * @return {@link Map}
+     */
 
     @Override
     public Map<String, String> getTemplateData() {
@@ -53,6 +58,11 @@ public class RateLimitsNotificationInfo implements RuleOriginatedNotificationInf
                 "tenantId", tenantId.toString()
         );
     }
+    /**
+     * Returns affected tenant id.
+     *
+     * @return {@link TenantId}
+     */
 
     @Override
     public TenantId getAffectedTenantId() {

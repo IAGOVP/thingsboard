@@ -70,6 +70,7 @@ public abstract class AbstractScriptInvokeService implements ScriptInvokeService
     protected ScheduledExecutorService timeoutExecutorService;
 
     protected long getMaxEvalRequestsTimeout() {
+        /** Returns the max invoke requests timeout. */
         return getMaxInvokeRequestsTimeout();
     }
 
@@ -153,6 +154,7 @@ public abstract class AbstractScriptInvokeService implements ScriptInvokeService
     public ListenableFuture<UUID> eval(TenantId tenantId, ScriptType scriptType, String scriptBody, String... argNames) {
         String validationError = validate(tenantId, scriptBody);
         if (validationError != null) {
+            /** Error. */
             return error(validationError);
         }
 
@@ -166,6 +168,7 @@ public abstract class AbstractScriptInvokeService implements ScriptInvokeService
     public ListenableFuture<Object> invokeScript(TenantId tenantId, CustomerId customerId, UUID scriptId, Object... args) {
         if (isExecEnabled(tenantId)) {
             if (!isScriptPresent(scriptId)) {
+                /** Error. */
                 return error("No compiled script found for scriptId: [" + scriptId + "]!");
             }
             if (!isDisabled(scriptId)) {
@@ -195,9 +198,11 @@ public abstract class AbstractScriptInvokeService implements ScriptInvokeService
                 String message = "Script invocation is blocked due to maximum error count "
                         + getMaxErrors() + ", scriptId " + scriptId + "!";
                 log.warn("[{}] " + message, tenantId);
+                /** Error. */
                 return error(message);
             }
         } else {
+            /** Error. */
             return error("Script execution is disabled due to API limits!");
         }
     }

@@ -44,8 +44,11 @@ import static org.thingsboard.server.dao.model.ModelConstants.RPC_STATUS;
 import static org.thingsboard.server.dao.model.ModelConstants.RPC_TABLE_NAME;
 import static org.thingsboard.server.dao.model.ModelConstants.RPC_TENANT_ID_COLUMN;
 /**
- * Rpc entity.
+ * JPA/Cassandra row model for rpc.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -93,6 +96,12 @@ public class RpcEntity extends BaseSqlEntity<Rpc> implements BaseEntity<Rpc> {
         this.status = rpc.getStatus();
         this.additionalInfo = rpc.getAdditionalInfo();
     }
+    /**
+     * To data.
+     *
+     * @return {@link Rpc}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Rpc toData() {

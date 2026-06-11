@@ -17,8 +17,14 @@ package org.thingsboard.server.dao.aspect;
 
 import lombok.Data;
 /**
- * Method call stats snapshot.
+ * Method call stats snapshot (database call statistics and method profiling).
  */
+
+
+
+
+
+
 
 @Data
 public class MethodCallStatsSnapshot {

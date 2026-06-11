@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.UUID;
 
 /**
- * Typed identifier for device credentials.
+ * Typed identifier for device access credentials (token, cert, etc.).
  */
 public class DeviceCredentialsId extends UUIDBased {
 

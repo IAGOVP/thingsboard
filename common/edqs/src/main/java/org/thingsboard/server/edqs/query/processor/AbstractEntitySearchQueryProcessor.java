@@ -26,37 +26,77 @@ import org.thingsboard.server.edqs.repo.TenantRepo;
 
 import java.util.Set;
 import java.util.UUID;
+
 /**
  * EDQS query processor for abstract entity search entity filters.
+ *
+ * <p>Evaluates {@link org.thingsboard.server.common.data.query.EntityFilter} against a {@link org.thingsboard.server.edqs.repo.TenantRepo} (EDQS microservice — entity filter query processors).
  */
-public abstract class AbstractEntitySearchQueryProcessor<T extends EntitySearchQueryFilter> extends AbstractRelationQueryProcessor<T> {
 
+public abstract class AbstractEntitySearchQueryProcessor<T extends EntitySearchQueryFilter> extends AbstractRelationQueryProcessor<T> {
 
     public AbstractEntitySearchQueryProcessor(TenantRepo repo, QueryContext ctx, EdqsQuery query, T filter) {
         super(repo, ctx, query, filter);
     }
+    /**
+     * Returns root entities.
+     *
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Set<UUID> getRootEntities() {
         return Set.of(filter.getRootEntity().getId());
     }
+    /**
+     * Returns direction.
+     *
+     * @return {@link EntitySearchDirection}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntitySearchDirection getDirection() {
         return filter.getDirection();
     }
+    /**
+     * Returns max level.
+     *
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public int getMaxLevel() {
         return filter.getMaxLevel();
     }
+    /**
+     * Is fetch last level only.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isFetchLastLevelOnly() {
         return filter.isFetchLastLevelOnly();
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public abstract EntityType getEntityType();
+    /**
+     * Checks the requested data.
+     *
+     * @param relationInfo relation info ({@link RelationInfo})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected boolean check(RelationInfo relationInfo) {

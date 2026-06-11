@@ -29,31 +29,68 @@ import java.util.stream.Collectors;
  * Collections util.
  */
 public class CollectionsUtil {
+    /**
+     * Is empty.
+     *
+     * @param collection collection ({@link Collection})
+     * @return the boolean result
+     */
     public static boolean isEmpty(Collection<?> collection) {
         return collection == null || collection.isEmpty();
     }
+    /**
+     * Is not empty.
+     *
+     * @param collection collection ({@link Collection})
+     * @return the boolean result
+     */
 
     public static boolean isNotEmpty(Collection<?> collection) {
         return !isEmpty(collection);
     }
 
+    
     /**
-     * Returns new set with elements that are present in set B(new) but absent in set A(old).
+     * Diff sets.
+     *
+     * @param a a ({@link Set})
+     * @param b b ({@link Set})
+     * @return {@link Set}
      */
+
     public static <T> Set<T> diffSets(Set<T> a, Set<T> b) {
         return b.stream().filter(p -> !a.contains(p)).collect(Collectors.toSet());
     }
 
+    
     /**
-     * Returns new list with elements that are present in list B(new) but absent in list A(old).
+     * Diff lists.
+     *
+     * @param a a ({@link List})
+     * @param b b ({@link List})
+     * @return {@link List}
      */
+
     public static <T> List<T> diffLists(List<T> a, List<T> b) {
         return b.stream().filter(p -> !a.contains(p)).collect(Collectors.toList());
     }
+    /**
+     * Contains.
+     *
+     * @param collection collection ({@link Collection})
+     * @param element element ({@link T})
+     * @return the boolean result
+     */
 
     public static <T> boolean contains(Collection<T> collection, T element) {
         return isNotEmpty(collection) && collection.contains(element);
     }
+    /**
+     * Counts non null.
+     *
+     * @param array array
+     * @return the int result
+     */
 
     public static <T> int countNonNull(T[] array) {
         int count = 0;
@@ -62,6 +99,12 @@ public class CollectionsUtil {
         }
         return count;
     }
+    /**
+     * Map of.
+     *
+     * @param kvs kvs
+     * @return {@link Map}
+     */
 
     @SuppressWarnings("unchecked")
     public static <T> Map<T, T> mapOf(T... kvs) {
@@ -76,10 +119,24 @@ public class CollectionsUtil {
         }
         return map;
     }
+    /**
+     * Empty or contains.
+     *
+     * @param collection collection ({@link Collection})
+     * @param element element ({@link V})
+     * @return the boolean result
+     */
 
     public static <V> boolean emptyOrContains(Collection<V> collection, V element) {
         return isEmpty(collection) || collection.contains(element);
     }
+    /**
+     * Concat.
+     *
+     * @param set1 set1 ({@link Set})
+     * @param set2 set2 ({@link Set})
+     * @return {@link HashSet}
+     */
 
     public static <V> HashSet<V> concat(Set<V> set1, Set<V> set2) {
         HashSet<V> result = new HashSet<>();
@@ -87,6 +144,13 @@ public class CollectionsUtil {
         result.addAll(set2);
         return result;
     }
+    /**
+     * Is one of.
+     *
+     * @param value value ({@link V})
+     * @param others others
+     * @return the boolean result
+     */
 
     public static <V> boolean isOneOf(V value, V... others) {
         if (value == null) {
@@ -99,6 +163,14 @@ public class CollectionsUtil {
         }
         return false;
     }
+    /**
+     * Elements equal.
+     *
+     * @param iterable1 iterable1 ({@link Iterable})
+     * @param iterable2 iterable2 ({@link Iterable})
+     * @param equalityCheck equality check ({@link BiPredicate})
+     * @return the boolean result
+     */
 
     public static <T> boolean elementsEqual(Iterable<T> iterable1, Iterable<T> iterable2, BiPredicate<T, T> equalityCheck) {
         if (iterable1 instanceof Collection<?> collection1 && iterable2 instanceof Collection<?> collection2) {
@@ -126,6 +198,13 @@ public class CollectionsUtil {
             return !iterator2.hasNext();
         }
     }
+    /**
+     * Add to set.
+     *
+     * @param existing existing ({@link Set})
+     * @param value value ({@link T})
+     * @return {@link Set}
+     */
 
     public static <T> Set<T> addToSet(Set<T> existing, T value) {
         if (existing == null || existing.isEmpty()) {
@@ -139,10 +218,22 @@ public class CollectionsUtil {
         newSet.add(value);
         return (Set<T>) Set.of(newSet.toArray());
     }
+    /**
+     * Is empty.
+     *
+     * @param map map ({@link Map})
+     * @return the boolean result
+     */
 
     public static boolean isEmpty(Map<?, ?> map) {
         return map == null || map.isEmpty();
     }
+    /**
+     * Is not empty.
+     *
+     * @param map map ({@link Map})
+     * @return the boolean result
+     */
 
     public static boolean isNotEmpty(Map<?, ?> map) {
         return !isEmpty(map);

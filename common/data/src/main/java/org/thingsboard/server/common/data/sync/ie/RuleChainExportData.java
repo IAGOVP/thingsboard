@@ -33,6 +33,11 @@ import org.thingsboard.server.common.data.rule.RuleChainMetaData;
  * Rule chain export data.
  */
 public class RuleChainExportData extends EntityExportData<RuleChain> {
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Override
     public EntityType getEntityType() { return EntityType.RULE_CHAIN; }

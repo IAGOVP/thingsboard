@@ -27,6 +27,12 @@ public class TbLwM2MCancelObserveCompositeRequest extends AbstractTbLwM2MTargete
     private TbLwM2MCancelObserveCompositeRequest(String [] versionedIds, long timeout) {
         super(versionedIds, timeout);
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link LwM2MOperationType}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public LwM2MOperationType getType() {

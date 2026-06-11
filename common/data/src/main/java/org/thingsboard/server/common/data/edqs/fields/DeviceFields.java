@@ -29,20 +29,37 @@ import static org.thingsboard.server.common.data.edqs.fields.FieldsUtil.getText;
 @NoArgsConstructor
 @SuperBuilder
 /**
- * Device fields.
+ * Lightweight device field selection for EDQS queries and events (EDQS data — lightweight entity field DTOs for EDQS).
  */
+
 public class DeviceFields extends AbstractEntityFields implements ProfileAwareFields {
 
     private String label;
     private String type;
     private UUID deviceProfileId;
     private String additionalInfo;
+    
+  /**
+   * Returns profile name.
+   *
+   * @return {@link String}
+   * @throws Exception if an unexpected error occurs during processing
+   */
+
 
     @JsonIgnore
     @Override
     public String getProfileName() {
         return type;
     }
+    
+ /**
+  * Returns profile id.
+  *
+  * @return {@link UUID}
+  * @throws Exception if an unexpected error occurs during processing
+  */
+
 
     @JsonIgnore
     @Override

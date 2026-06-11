@@ -29,8 +29,14 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 /**
- * Abstract native repository.
+ * Abstract native repository (JPA/PostgreSQL persistence layer (JPA repositories and PostgreSQL DAO implementations)).
  */
+
+
+
+
+
+
 
 @RequiredArgsConstructor
 @Repository
@@ -40,11 +46,18 @@ public class AbstractNativeRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final TransactionTemplate transactionTemplate;
 
+    
     /**
-
-     * Loads .
-
+     * Finds the requested data.
+     *
+     * @param countQuery count query ({@link String})
+     * @param findQuery find query ({@link String})
+     * @param pageable pageable ({@link Pageable})
+     * @param mapper mapper ({@link Function})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected <T> PageData<T> find(String countQuery, String findQuery, Pageable pageable, Function<Map<String, Object>, T> mapper) {
         return transactionTemplate.execute(status -> {

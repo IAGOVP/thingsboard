@@ -19,12 +19,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 /**
  * Tb time window.
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class TbTimeWindow implements TbelCfObject {
 
     public static final long OBJ_SIZE = 32L;

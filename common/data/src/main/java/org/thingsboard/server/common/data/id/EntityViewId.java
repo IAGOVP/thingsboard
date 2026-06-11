@@ -23,12 +23,9 @@ import org.thingsboard.server.common.data.EntityType;
 import java.util.UUID;
 
 /**
- * Created by Victor Basanets on 8/27/2017.
+ * Typed identifier for an entity view (telemetry/attribute subset) ({@link org.thingsboard.server.common.data.EntityType#ENTITY_VIEW}).
  */
 @Schema(allOf = EntityId.class)
-/**
- * Typed identifier for entity view.
- */
 public class EntityViewId extends UUIDBased implements EntityId {
 
     private static final long serialVersionUID = 1L;
@@ -37,10 +34,21 @@ public class EntityViewId extends UUIDBased implements EntityId {
     public EntityViewId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * From string.
+     *
+     * @param entityViewID entity view id ({@link String})
+     * @return {@link EntityViewId}
+     */
 
     public static EntityViewId fromString(String entityViewID) {
         return new EntityViewId(UUID.fromString(entityViewID));
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY, description = "string", example = "ENTITY_VIEW", allowableValues = "ENTITY_VIEW")
     @Override

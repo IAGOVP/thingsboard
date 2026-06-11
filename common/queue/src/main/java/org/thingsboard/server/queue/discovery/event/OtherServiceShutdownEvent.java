@@ -15,15 +15,16 @@
  */
 package org.thingsboard.server.queue.discovery.event;
 
-import lombok.Getter;
-import org.thingsboard.server.common.msg.queue.ServiceType;
-
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+
+import lombok.Getter;
+import org.thingsboard.server.common.msg.queue.ServiceType;
+
 /**
- * Other service shutdown event.
+ * Published when a remote cluster service shuts down, triggering partition recovery.
  */
 public class OtherServiceShutdownEvent extends TbApplicationEvent {
 

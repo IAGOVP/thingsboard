@@ -29,33 +29,124 @@ import org.thingsboard.server.dao.ImageContainerDao;
 import java.util.List;
 import java.util.UUID;
 
+
 /**
 
- * Persistence contract for asset profile (see JPA/Cassandra implementations).
+ * Persistence contract for asset profile.
+
+ *
+
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (asset and asset-profile DAO services and caches).
 
  */
 
+
 public interface AssetProfileDao extends Dao<AssetProfile>, ExportableEntityDao<AssetProfileId, AssetProfile>, ImageContainerDao<AssetProfileInfo> {
+    /**
+     * Finds asset profile info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetProfileId asset profile id ({@link UUID})
+     * @return {@link AssetProfileInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     AssetProfileInfo findAssetProfileInfoById(TenantId tenantId, UUID assetProfileId);
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetProfile asset profile ({@link AssetProfile})
+     * @return {@link AssetProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     AssetProfile save(TenantId tenantId, AssetProfile assetProfile);
+    /**
+     * Saves or persists and flush.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetProfile asset profile ({@link AssetProfile})
+     * @return {@link AssetProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     AssetProfile saveAndFlush(TenantId tenantId, AssetProfile assetProfile);
+    /**
+     * Finds asset profiles.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<AssetProfile> findAssetProfiles(TenantId tenantId, PageLink pageLink);
+    /**
+     * Finds asset profile infos.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<AssetProfileInfo> findAssetProfileInfos(TenantId tenantId, PageLink pageLink);
+    /**
+     * Finds default asset profile.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link AssetProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     AssetProfile findDefaultAssetProfile(TenantId tenantId);
+    /**
+     * Finds default asset profile info.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link AssetProfileInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     AssetProfileInfo findDefaultAssetProfileInfo(TenantId tenantId);
+    /**
+     * Finds by name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param profileName profile name ({@link String})
+     * @return {@link AssetProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     AssetProfile findByName(TenantId tenantId, String profileName);
+    /**
+     * Finds all with images.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<AssetProfile> findAllWithImages(PageLink pageLink);
+    /**
+     * Finds tenant asset profile names.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param activeOnly active only
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<EntityInfo> findTenantAssetProfileNames(UUID tenantId, boolean activeOnly);
+    /**
+     * Finds asset profiles by tenant id and ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetProfileIds asset profile ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<AssetProfileInfo> findAssetProfilesByTenantIdAndIds(UUID tenantId, List<UUID> assetProfileIds);
 

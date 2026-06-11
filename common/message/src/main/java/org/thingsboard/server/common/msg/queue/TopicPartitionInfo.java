@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 /**
  * Topic partition info.
  */
+
 public class TopicPartitionInfo {
 
     private final String topic;
@@ -64,6 +65,11 @@ public class TopicPartitionInfo {
         return topic;
     }
 
+    /**
+     * Returns tenant id.
+     *
+     * @return optional {@link TenantId}, empty if not found
+     */
     public Optional<TenantId> getTenantId() {
         return Optional.ofNullable(tenantId);
     }

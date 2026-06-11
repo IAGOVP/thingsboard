@@ -26,7 +26,7 @@ import java.util.List;
 @Builder
 @Data
 /**
- * Alarm propagation info.
+ * Describes how an alarm propagates to related entities.
  */
 public class AlarmPropagationInfo {
 

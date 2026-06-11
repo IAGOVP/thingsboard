@@ -49,8 +49,11 @@ import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
 import static org.thingsboard.common.util.DebugModeUtil.DEBUG_MODE_DEFAULT_DURATION_MINUTES;
 import static org.thingsboard.server.dao.service.Validator.validateId;
 /**
- * Spring service implementing tenant profile API.
+ * Spring {@code @Service} implementing the tenant profile DAO API.
+ *
+ * <p>Delegates to {@code *Dao} implementations and manages cache eviction (tenants, tenant profiles, and profile caching).
  */
+
 
 @Service("TenantProfileDaoService")
 @Slf4j
@@ -64,6 +67,13 @@ public class TenantProfileServiceImpl extends AbstractCachedEntityService<Tenant
 
     @Autowired
     private DataValidator<TenantProfile> tenantProfileValidator;
+    /**
+     * Handles evict event.
+     *
+     * @param event event ({@link TenantProfileEvictEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @TransactionalEventListener(classes = TenantProfileEvictEvent.class)
     @Override
@@ -77,6 +87,14 @@ public class TenantProfileServiceImpl extends AbstractCachedEntityService<Tenant
         }
         cache.evict(keys);
     }
+    /**
+     * Finds tenant profile by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param tenantProfileId tenant profile id ({@link TenantProfileId})
+     * @return {@link TenantProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TenantProfile findTenantProfileById(TenantId tenantId, TenantProfileId tenantProfileId) {
@@ -85,6 +103,14 @@ public class TenantProfileServiceImpl extends AbstractCachedEntityService<Tenant
         return cache.getAndPutInTransaction(TenantProfileCacheKey.fromId(tenantProfileId),
                 () -> tenantProfileDao.findById(tenantId, tenantProfileId.getId()), true);
     }
+    /**
+     * Finds tenant profile info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param tenantProfileId tenant profile id ({@link TenantProfileId})
+     * @return {@link EntityInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityInfo findTenantProfileInfoById(TenantId tenantId, TenantProfileId tenantProfileId) {
@@ -92,6 +118,14 @@ public class TenantProfileServiceImpl extends AbstractCachedEntityService<Tenant
         TenantProfile profile = findTenantProfileById(tenantId, tenantProfileId);
         return profile == null ? null : new EntityInfo(profile.getId(), profile.getName());
     }
+    /**
+     * Saves or persists tenant profile.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param tenantProfile tenant profile ({@link TenantProfile})
+     * @return {@link TenantProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TenantProfile saveTenantProfile(TenantId tenantId, TenantProfile tenantProfile) {
@@ -114,6 +148,14 @@ public class TenantProfileServiceImpl extends AbstractCachedEntityService<Tenant
         }
         return savedTenantProfile;
     }
+    /**
+     * Deletes tenant profile.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param tenantProfileId tenant profile id ({@link TenantProfileId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteTenantProfile(TenantId tenantId, TenantProfileId tenantProfileId) {
@@ -142,6 +184,14 @@ public class TenantProfileServiceImpl extends AbstractCachedEntityService<Tenant
         publishEvictEvent(new TenantProfileEvictEvent(tenantProfileId, isDefault));
         eventPublisher.publishEvent(DeleteEntityEvent.builder().tenantId(tenantId).entity(tenantProfile).entityId(tenantProfileId).build());
     }
+    /**
+     * Finds tenant profiles.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<TenantProfile> findTenantProfiles(TenantId tenantId, PageLink pageLink) {
@@ -149,6 +199,14 @@ public class TenantProfileServiceImpl extends AbstractCachedEntityService<Tenant
         Validator.validatePageLink(pageLink);
         return tenantProfileDao.findTenantProfiles(tenantId, pageLink);
     }
+    /**
+     * Finds tenant profile infos.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<EntityInfo> findTenantProfileInfos(TenantId tenantId, PageLink pageLink) {
@@ -156,6 +214,13 @@ public class TenantProfileServiceImpl extends AbstractCachedEntityService<Tenant
         Validator.validatePageLink(pageLink);
         return tenantProfileDao.findTenantProfileInfos(tenantId, pageLink);
     }
+    /**
+     * Finds or create default tenant profile.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link TenantProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TenantProfile findOrCreateDefaultTenantProfile(TenantId tenantId) {
@@ -176,6 +241,13 @@ public class TenantProfileServiceImpl extends AbstractCachedEntityService<Tenant
         }
         return defaultTenantProfile;
     }
+    /**
+     * Finds default tenant profile.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link TenantProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TenantProfile findDefaultTenantProfile(TenantId tenantId) {
@@ -184,6 +256,13 @@ public class TenantProfileServiceImpl extends AbstractCachedEntityService<Tenant
                 () -> tenantProfileDao.findDefaultTenantProfile(tenantId), true);
 
     }
+    /**
+     * Finds default tenant profile info.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link EntityInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityInfo findDefaultTenantProfileInfo(TenantId tenantId) {
@@ -191,6 +270,14 @@ public class TenantProfileServiceImpl extends AbstractCachedEntityService<Tenant
         var tenantProfile = findDefaultTenantProfile(tenantId);
         return tenantProfile == null ? null : new EntityInfo(tenantProfile.getId(), tenantProfile.getName());
     }
+    /**
+     * Set default tenant profile.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param tenantProfileId tenant profile id ({@link TenantProfileId})
+     * @return {@link TenantProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TenantProfile setDefaultTenantProfile(TenantId tenantId, TenantProfileId tenantProfileId) {
@@ -214,28 +301,65 @@ public class TenantProfileServiceImpl extends AbstractCachedEntityService<Tenant
         }
         return tenantProfile;
     }
+    /**
+     * Finds tenant profiles by ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ids ids
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<TenantProfile> findTenantProfilesByIds(TenantId tenantId, UUID[] ids) {
         return tenantProfileDao.findTenantProfilesByIds(tenantId, ids);
     }
+    /**
+     * Deletes tenant profiles.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteTenantProfiles(TenantId tenantId) {
         log.trace("Executing deleteTenantProfiles");
         tenantProfilesRemover.removeEntities(tenantId, null);
     }
+    /**
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findTenantProfileById(tenantId, new TenantProfileId(entityId.getId())));
     }
+    /**
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
         return FluentFuture.from(tenantProfileDao.findByIdAsync(tenantId, entityId.getId()))
                 .transform(Optional::ofNullable, directExecutor());
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

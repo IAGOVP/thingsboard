@@ -31,8 +31,11 @@ import org.thingsboard.server.queue.common.TbProtoQueueMsg;
 import org.thingsboard.server.queue.kafka.TbKafkaProducerTemplate;
 
 /**
- * Publishes EDQS events from core services into the EDQS Kafka topic (tb-node side).
+ * Publishes EDQS sync events from tb-core into the EDQS Kafka topic.
+ *
+ * <p>Used when entities, attributes, relations, or latest telemetry change and the SQL-based entity query path is disabled in favor of EDQS.
  */
+
 @Slf4j
 @Builder
 @RequiredArgsConstructor
@@ -40,6 +43,16 @@ public class EdqsProducer {
 
     private final TbQueueProducer<TbProtoQueueMsg<ToEdqsMsg>> producer;
     private final EdqsPartitionService partitionService;
+    /**
+     * Send.
+     *
+     * @param tenantId tenant that owns the indexed entities
+     * @param type type ({@link ObjectType})
+     * @param key key ({@link String})
+     * @param msg Kafka queue message wrapper
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void send(TenantId tenantId, ObjectType type, String key, ToEdqsMsg msg) {
         TopicPartitionInfo tpi = TopicPartitionInfo.builder()
@@ -69,6 +82,12 @@ public class EdqsProducer {
             producer.send(tpi, new TbProtoQueueMsg<>(null, msg), callback);
         }
     }
+    /**
+     * Shuts down EDQS consumers and flushes pending state.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void stop() {
         producer.stop();

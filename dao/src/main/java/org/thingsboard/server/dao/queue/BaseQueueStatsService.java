@@ -41,7 +41,10 @@ import static org.thingsboard.server.dao.service.Validator.validateId;
 import static org.thingsboard.server.dao.service.Validator.validateIds;
 /**
  * Default DAO-layer service implementation for queue stats.
+ *
+ * <p>Coordinates validation, caching, cluster events, and {@code *Dao} persistence (ThingsBoard DAO layer).
  */
+
 
 @Service("QueueStatsDaoService")
 @Slf4j
@@ -54,11 +57,16 @@ public class BaseQueueStatsService extends AbstractEntityService implements Queu
 
     private final DataValidator<QueueStats> queueStatsValidator;
 
+    
     /**
-
-     * Persists .
-
+     * Saves or persists the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param queueStats queue stats ({@link QueueStats})
+     * @return {@link QueueStats}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public QueueStats save(TenantId tenantId, QueueStats queueStats) {
@@ -70,11 +78,16 @@ public class BaseQueueStatsService extends AbstractEntityService implements Queu
         return savedQueueStats;
     }
 
+    
     /**
-
-     * Loads queue stats by id.
-
+     * Finds queue stats by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param queueStatsId queue stats id ({@link QueueStatsId})
+     * @return {@link QueueStats}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public QueueStats findQueueStatsById(TenantId tenantId, QueueStatsId queueStatsId) {
@@ -83,11 +96,16 @@ public class BaseQueueStatsService extends AbstractEntityService implements Queu
         return queueStatsDao.findById(tenantId, queueStatsId.getId());
     }
 
+    
     /**
-
-     * Loads queue stats by ids.
-
+     * Finds queue stats by ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param queueStatsIds queue stats ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<QueueStats> findQueueStatsByIds(TenantId tenantId, List<QueueStatsId> queueStatsIds) {
@@ -97,11 +115,17 @@ public class BaseQueueStatsService extends AbstractEntityService implements Queu
         return queueStatsDao.findByIds(tenantId, queueStatsIds);
     }
 
+    
     /**
-
-     * Loads by tenant id and name and service id.
-
+     * Finds by tenant id and name and service id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param queueName queue name ({@link String})
+     * @param serviceId service id ({@link String})
+     * @return {@link QueueStats}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public QueueStats findByTenantIdAndNameAndServiceId(TenantId tenantId, String queueName, String serviceId) {
@@ -110,11 +134,16 @@ public class BaseQueueStatsService extends AbstractEntityService implements Queu
         return queueStatsDao.findByTenantIdQueueNameAndServiceId(tenantId, queueName, serviceId);
     }
 
+    
     /**
-
-     * Loads by tenant id.
-
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<QueueStats> findByTenantId(TenantId tenantId, PageLink pageLink) {
@@ -123,11 +152,15 @@ public class BaseQueueStatsService extends AbstractEntityService implements Queu
         return queueStatsDao.findAllByTenantId(tenantId, pageLink);
     }
 
+    
     /**
-
-     * Removes by tenant id.
-
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteByTenantId(TenantId tenantId) {
@@ -136,11 +169,17 @@ public class BaseQueueStatsService extends AbstractEntityService implements Queu
         queueStatsDao.deleteByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Removes entity.
-
+     * Deletes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteEntity(TenantId tenantId, EntityId id, boolean force) {
@@ -148,22 +187,32 @@ public class BaseQueueStatsService extends AbstractEntityService implements Queu
         eventPublisher.publishEvent(DeleteEntityEvent.builder().tenantId(tenantId).entityId(id).build());
     }
 
+    
     /**
-
-     * Loads entity.
-
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findQueueStatsById(tenantId, new QueueStatsId(entityId.getId())));
     }
 
+    
     /**
-
-     * Loads entity async.
-
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
@@ -171,11 +220,14 @@ public class BaseQueueStatsService extends AbstractEntityService implements Queu
                 .transform(Optional::ofNullable, directExecutor());
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

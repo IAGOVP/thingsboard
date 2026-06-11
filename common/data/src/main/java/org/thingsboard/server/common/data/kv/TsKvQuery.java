@@ -21,10 +21,25 @@ package org.thingsboard.server.common.data.kv;
 public interface TsKvQuery {
 
     int getId();
+/**
+ * Returns key.
+ *
+ * @return {@link String}
+ */
 
     String getKey();
+/**
+ * Returns start ts.
+ *
+ * @return the long result
+ */
 
     long getStartTs();
+/**
+ * Returns end ts.
+ *
+ * @return the long result
+ */
 
     long getEndTs();
 

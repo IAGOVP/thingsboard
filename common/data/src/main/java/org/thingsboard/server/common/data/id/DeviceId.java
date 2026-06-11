@@ -24,7 +24,7 @@ import java.util.UUID;
 
 @Schema(allOf = EntityId.class)
 /**
- * Typed identifier for device.
+ * Typed identifier for a {@link org.thingsboard.server.common.data.Device} entity ({@link org.thingsboard.server.common.data.EntityType#DEVICE}).
  */
 public class DeviceId extends UUIDBased implements EntityId {
 
@@ -34,10 +34,21 @@ public class DeviceId extends UUIDBased implements EntityId {
     public DeviceId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * From string.
+     *
+     * @param deviceId target device identifier
+     * @return {@link DeviceId}
+     */
 
     public static DeviceId fromString(String deviceId) {
         return new DeviceId(UUID.fromString(deviceId));
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Override
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY, description = "string", example = "DEVICE", allowableValues = "DEVICE")

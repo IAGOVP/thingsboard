@@ -24,12 +24,14 @@ import org.thingsboard.server.common.data.page.PageData;
 import java.io.Serial;
 import java.io.Serializable;
 
+/**
+ * Cached payload holding edge identifiers related to a {@link RelatedEdgesCacheKey}.
+ *
+ * <p>Serializable value type stored in {@link RelatedEdgesCaffeineCache} / {@link RelatedEdgesRedisCache}.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-/**
- * Related edges cache value.
- */
 public class RelatedEdgesCacheValue implements Serializable {
 
     @Serial

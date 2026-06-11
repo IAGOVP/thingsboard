@@ -31,8 +31,11 @@ import java.util.UUID;
 import static org.thingsboard.server.dao.model.ModelConstants.WIDGETS_BUNDLE_WIDGET_TABLE_NAME;
 import static org.thingsboard.server.dao.model.ModelConstants.WIDGET_TYPE_ORDER_PROPERTY;
 /**
- * Widgets bundle widget entity.
+ * JPA/Cassandra row model for widgets bundle widget.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @Entity
@@ -66,6 +69,12 @@ public final class WidgetsBundleWidgetEntity implements ToData<WidgetsBundleWidg
         this.widgetTypeId = widgetTypeId;
         this.widgetTypeOrder = widgetTypeOrder;
     }
+    /**
+     * To data.
+     *
+     * @return {@link WidgetsBundleWidget}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public WidgetsBundleWidget toData() {

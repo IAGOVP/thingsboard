@@ -34,23 +34,40 @@ public class CoapResponseCallback implements TransportServiceCallback<Void> {
         this.onFailureResponse = onFailureResponse;
     }
 
+    
     /**
-     * @param msg
+     * Handles success.
+     *
+     * @param msg msg ({@link Void})
+     * @return nothing
+     * @throws Exception on processing failure
      */
+
     @Override
     public void onSuccess(Void msg) {
         this.onSuccessResponse.setConfirmable(isConRequest());
         exchange.respond(this.onSuccessResponse);
     }
 
+    
     /**
-     * @param e
+     * Handles error.
+     *
+     * @param e e ({@link Throwable})
+     * @return nothing
+     * @throws Exception on processing failure
      */
+
     @Override
     public void onError(Throwable e) {
         exchange.respond(onFailureResponse);
     }
-
+    /**
+     * Is con request.
+     *
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     protected boolean isConRequest() {
         return exchange.advanced().getRequest().isConfirmable();
     }

@@ -19,12 +19,12 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
+/**
+ * Sparkplug specification version marker for {@link SparkplugDescriptor} types.
+ */
 @Documented
 @Target(ElementType.TYPE)
-public @/**
- * spec version contract.
- */
-interface SpecVersion {
+public @interface SpecVersion {
     String spec() default "";
     String version();
 }

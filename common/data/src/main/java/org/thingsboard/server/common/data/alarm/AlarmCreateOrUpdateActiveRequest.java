@@ -33,7 +33,7 @@ import org.thingsboard.server.common.data.validation.NoXss;
 @Data
 @Builder
 /**
- * Alarm create or update active request.
+ * Request to create or update an active alarm from rule engine or REST.
  */
 public class AlarmCreateOrUpdateActiveRequest implements AlarmModificationRequest {
 
@@ -70,14 +70,35 @@ public class AlarmCreateOrUpdateActiveRequest implements AlarmModificationReques
     private UserId userId;
 
     private AlarmId edgeAlarmId;
+    /**
+     * From alarm.
+     *
+     * @param a a ({@link Alarm})
+     * @return {@link AlarmCreateOrUpdateActiveRequest}
+     */
 
     public static AlarmCreateOrUpdateActiveRequest fromAlarm(Alarm a) {
         return fromAlarm(a, null);
     }
+    /**
+     * From alarm.
+     *
+     * @param a a ({@link Alarm})
+     * @param userId user id ({@link UserId})
+     * @return {@link AlarmCreateOrUpdateActiveRequest}
+     */
 
     public static AlarmCreateOrUpdateActiveRequest fromAlarm(Alarm a, UserId userId) {
         return fromAlarm(a, userId, null);
     }
+    /**
+     * From alarm.
+     *
+     * @param a a ({@link Alarm})
+     * @param userId user id ({@link UserId})
+     * @param edgeAlarmId edge alarm id ({@link AlarmId})
+     * @return {@link AlarmCreateOrUpdateActiveRequest}
+     */
 
     public static AlarmCreateOrUpdateActiveRequest fromAlarm(Alarm a, UserId userId, AlarmId edgeAlarmId) {
         return AlarmCreateOrUpdateActiveRequest.builder()

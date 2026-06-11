@@ -19,12 +19,11 @@ package org.thingsboard.server.dao.device.claim;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.thingsboard.server.common.data.Device;
-
-@AllArgsConstructor
-@Data
 /**
  * Claim result.
  */
+@AllArgsConstructor
+@Data
 public class ClaimResult {
 
     private Device device;

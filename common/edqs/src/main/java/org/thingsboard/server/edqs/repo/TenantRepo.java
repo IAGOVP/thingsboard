@@ -79,9 +79,11 @@ import static org.thingsboard.server.edqs.util.RepositoryUtils.SORT_DESC;
 import static org.thingsboard.server.edqs.util.RepositoryUtils.resolveEntityType;
 
 /**
- * Per-tenant in-memory entity graph: entities by type, relations, attributes/latest TS,
- * and query execution via {@link org.thingsboard.server.edqs.query.processor.EntityQueryProcessorFactory}.
+ * Per-tenant in-memory entity graph and query executor.
+ *
+ * <p>Stores entities by type, relations, attributes, and latest telemetry; delegates filter evaluation to {@link org.thingsboard.server.edqs.query.processor.EntityQueryProcessorFactory}.
  */
+
 @Slf4j
 public class TenantRepo {
 
@@ -103,6 +105,13 @@ public class TenantRepo {
         this.tenantId = tenantId;
         this.edqsStatsService = edqsStatsService;
     }
+    /**
+     * Applies create/update/delete of an entity, relation, attribute, or latest telemetry key in the index.
+     *
+     * @param event EDQS create/update/delete event from Kafka
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void processEvent(EdqsEvent event) {
         EdqsObject edqsObject = event.getObject();
@@ -113,6 +122,13 @@ public class TenantRepo {
             remove(edqsObject);
         }
     }
+    /**
+     * Add or update.
+     *
+     * @param object object ({@link EdqsObject})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void addOrUpdate(EdqsObject object) {
         if (object instanceof EntityRelation relation) {
@@ -125,6 +141,13 @@ public class TenantRepo {
             addOrUpdateEntity(entity);
         }
     }
+    /**
+     * Removes the requested data.
+     *
+     * @param object object ({@link EdqsObject})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void remove(EdqsObject object) {
         if (object instanceof EntityRelation relation) {
@@ -214,6 +237,13 @@ public class TenantRepo {
             entityUpdateLock.unlock();
         }
     }
+    /**
+     * Removes entity.
+     *
+     * @param entity entity ({@link Entity})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void removeEntity(Entity entity) {
         entityUpdateLock.lock();
@@ -239,6 +269,13 @@ public class TenantRepo {
             entityUpdateLock.unlock();
         }
     }
+    /**
+     * Add or update attribute.
+     *
+     * @param attributeKv attribute kv ({@link AttributeKv})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void addOrUpdateAttribute(AttributeKv attributeKv) {
         var entityData = getOrCreate(attributeKv.getEntityId());
@@ -260,6 +297,13 @@ public class TenantRepo {
             }
         }
     }
+    /**
+     * Add or update latest kv.
+     *
+     * @param latestTsKv latest ts kv ({@link LatestTsKv})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void addOrUpdateLatestKv(LatestTsKv latestTsKv) {
         var entityData = getOrCreate(latestTsKv.getEntityId());
@@ -281,6 +325,13 @@ public class TenantRepo {
             }
         }
     }
+    /**
+     * Returns entity map.
+     *
+     * @param entityType entity type ({@link EntityType})
+     * @return {@link ConcurrentMap}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public ConcurrentMap<UUID, EntityData<?>> getEntityMap(EntityType entityType) {
         return entityMapByType.computeIfAbsent(entityType, et -> new ConcurrentHashMap<>());
@@ -329,10 +380,26 @@ public class TenantRepo {
             return !oldOrNull.equals(newOrNull);
         }
     }
+    /**
+     * Returns entity set.
+     *
+     * @param entityType entity type ({@link EntityType})
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Set<EntityData<?>> getEntitySet(EntityType entityType) {
         return entitySetByType.computeIfAbsent(entityType, et -> new ConcurrentSkipListSet<>(CREATED_TIME_AND_ID_DESC_COMPARATOR));
     }
+    /**
+     * Returns a page of entities matching filter, sort, and selected keys.
+     *
+     * @param customerId customer scope for permission filtering (may be null)
+     * @param oldQuery old query ({@link EntityDataQuery})
+     * @param ignorePermissionCheck when true, skips customer/user permission filtering (system use only)
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public PageData<QueryResult> findEntityDataByQuery(CustomerId customerId, EntityDataQuery oldQuery, boolean ignorePermissionCheck) {
         EdqsDataQuery query = RepositoryUtils.toNewQuery(oldQuery);
@@ -340,6 +407,15 @@ public class TenantRepo {
         EntityQueryProcessor queryProcessor = EntityQueryProcessorFactory.create(this, ctx, query);
         return sortAndConvert(query, queryProcessor.processQuery(), ctx);
     }
+    /**
+     * Returns entity count for the filter without loading full entity rows.
+     *
+     * @param customerId customer scope for permission filtering (may be null)
+     * @param oldQuery old query ({@link EntityCountQuery})
+     * @param ignorePermissionCheck when true, skips customer/user permission filtering (system use only)
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public long countEntitiesByQuery(CustomerId customerId, EntityCountQuery oldQuery, boolean ignorePermissionCheck) {
         EdqsQuery query = RepositoryUtils.toNewQuery(oldQuery);
@@ -411,15 +487,34 @@ public class TenantRepo {
     private QueryContext buildContext(CustomerId customerId, EntityFilter filter, boolean ignorePermissionCheck) {
         return new QueryContext(tenantId, customerId, resolveEntityType(filter), ignorePermissionCheck);
     }
+    /**
+     * Returns tenant id.
+     *
+     * @return {@link TenantId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public TenantId getTenantId() {
         return tenantId;
     }
-
+    /**
+     * Returns relations.
+     *
+     * @param relationTypeGroup relation type group ({@link RelationTypeGroup})
+     * @return {@link RelationsRepo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public RelationsRepo getRelations(RelationTypeGroup relationTypeGroup) {
         return relations.computeIfAbsent(relationTypeGroup, type -> new RelationsRepo());
     }
+    /**
+     * Returns owner entity name.
+     *
+     * @param entityId target entity identifier
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getOwnerEntityName(EntityId entityId) {
         EntityType entityType = entityId.getEntityType();

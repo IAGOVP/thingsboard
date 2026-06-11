@@ -40,8 +40,11 @@ import java.util.Optional;
 
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
 /**
- * Spring service implementing mobile app API.
+ * Spring {@code @Service} implementing the mobile app DAO API.
+ *
+ * <p>Delegates to {@code *Dao} implementations and manages cache eviction (mobile apps, bundles, and QR code settings).
  */
+
 
 @Slf4j
 @Service
@@ -54,11 +57,16 @@ public class MobileAppServiceImpl extends AbstractEntityService implements Mobil
     @Autowired
     private DataValidator<MobileApp> mobileAppDataValidator;
 
+    
     /**
-
-     * Persists mobile app.
-
+     * Saves or persists mobile app.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param mobileApp mobile app ({@link MobileApp})
+     * @return {@link MobileApp}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public MobileApp saveMobileApp(TenantId tenantId, MobileApp mobileApp) {
@@ -74,11 +82,16 @@ public class MobileAppServiceImpl extends AbstractEntityService implements Mobil
         }
     }
 
+    
     /**
-
-     * Removes mobile app by id.
-
+     * Deletes mobile app by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param mobileAppId mobile app id ({@link MobileAppId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteMobileAppById(TenantId tenantId, MobileAppId mobileAppId) {
@@ -87,11 +100,16 @@ public class MobileAppServiceImpl extends AbstractEntityService implements Mobil
         eventPublisher.publishEvent(DeleteEntityEvent.builder().tenantId(tenantId).entityId(mobileAppId).build());
     }
 
+    
     /**
-
-     * Loads mobile app by id.
-
+     * Finds mobile app by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param mobileAppId mobile app id ({@link MobileAppId})
+     * @return {@link MobileApp}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public MobileApp findMobileAppById(TenantId tenantId, MobileAppId mobileAppId) {
@@ -99,11 +117,17 @@ public class MobileAppServiceImpl extends AbstractEntityService implements Mobil
         return mobileAppDao.findById(tenantId, mobileAppId.getId());
     }
 
+    
     /**
-
-     * Loads mobile apps by tenant id.
-
+     * Finds mobile apps by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param platformType platform type ({@link PlatformType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<MobileApp> findMobileAppsByTenantId(TenantId tenantId, PlatformType platformType, PageLink pageLink) {
@@ -111,22 +135,32 @@ public class MobileAppServiceImpl extends AbstractEntityService implements Mobil
         return mobileAppDao.findByTenantId(tenantId, platformType, pageLink);
     }
 
+    
     /**
-
-     * Loads entity.
-
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findMobileAppById(tenantId, new MobileAppId(entityId.getId())));
     }
 
+    
     /**
-
-     * Loads entity async.
-
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
@@ -134,11 +168,17 @@ public class MobileAppServiceImpl extends AbstractEntityService implements Mobil
                 .transform(Optional::ofNullable, directExecutor());
     }
 
+    
     /**
-
-     * Removes entity.
-
+     * Deletes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -146,11 +186,17 @@ public class MobileAppServiceImpl extends AbstractEntityService implements Mobil
         deleteMobileAppById(tenantId, (MobileAppId) id);
     }
 
+    
     /**
-
-     * Loads by bundle id and platform type.
-
+     * Finds by bundle id and platform type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param mobileAppBundleId mobile app bundle id ({@link MobileAppBundleId})
+     * @param platformType platform type ({@link PlatformType})
+     * @return {@link MobileApp}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public MobileApp findByBundleIdAndPlatformType(TenantId tenantId, MobileAppBundleId mobileAppBundleId, PlatformType platformType) {
@@ -158,11 +204,16 @@ public class MobileAppServiceImpl extends AbstractEntityService implements Mobil
         return mobileAppDao.findByBundleIdAndPlatformType(tenantId, mobileAppBundleId, platformType);
     }
 
+    
     /**
-
-     * Loads mobile app by pkg name and platform type.
-
+     * Finds mobile app by pkg name and platform type.
+     *
+     * @param pkgName pkg name ({@link String})
+     * @param platformType platform type ({@link PlatformType})
+     * @return {@link MobileApp}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public MobileApp findMobileAppByPkgNameAndPlatformType(String pkgName, PlatformType platformType) {
@@ -171,11 +222,15 @@ public class MobileAppServiceImpl extends AbstractEntityService implements Mobil
         return mobileAppDao.findByPkgNameAndPlatformType(TenantId.SYS_TENANT_ID, pkgName, platformType);
     }
 
+    
     /**
-
-     * Removes by tenant id.
-
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteByTenantId(TenantId tenantId) {
@@ -183,11 +238,14 @@ public class MobileAppServiceImpl extends AbstractEntityService implements Mobil
         mobileAppDao.deleteByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

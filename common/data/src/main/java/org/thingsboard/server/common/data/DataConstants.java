@@ -56,6 +56,11 @@ public class DataConstants {
 
     public static final String TB_IMAGE_PREFIX = "tb-image;";
     public static final String TB_RESOURCE_PREFIX = "tb-resource;";
+    /**
+     * All scopes.
+     *
+     * @return the String[] value
+     */
 
 
     public static String[] allScopes() {

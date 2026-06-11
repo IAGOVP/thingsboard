@@ -18,14 +18,23 @@ package org.thingsboard.server.edqs.repo;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
+
 /**
- * Interns attribute/telemetry key strings to int ids to save memory in the index.
+ * Interns attribute and telemetry key strings to integer ids to reduce memory in the EDQS index.
  */
+
 public class KeyDictionary {
 
     private static final ConcurrentMap<String, Integer> keyToIdDict = new ConcurrentHashMap<>();
     private static final ConcurrentMap<Integer, String> idToKeyDict = new ConcurrentHashMap<>();
     private static final AtomicInteger keySeq = new AtomicInteger();
+    /**
+     * Returns the requested data.
+     *
+     * @param key key ({@link String})
+     * @return {@link Integer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Integer get(String key) {
         return keyToIdDict.computeIfAbsent(key, __ -> {
@@ -34,6 +43,13 @@ public class KeyDictionary {
             return keyId;
         });
     }
+    /**
+     * Returns the requested data.
+     *
+     * @param keyId key id ({@link Integer})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String get(Integer keyId) {
         return idToKeyDict.get(keyId);

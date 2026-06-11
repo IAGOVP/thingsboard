@@ -86,7 +86,15 @@ public class LwM2MTransportUtil {
     public static final String LOG_LWM2M_WARN = "warn";
     public static final String REGISTRATION_TRIGGER_PARAMS_ID = "/1/0/8";
     public static final String BOOTSTRAP_TRIGGER_PARAMS_ID = "/1/0/9";;
-
+    /**
+     * Convert ota update value to string.
+     *
+     * @param pathIdVer path id ver ({@link String})
+     * @param value value ({@link Object})
+     * @param currentType current type
+     * @return {@link LwM2mOtaConvert}
+     * @throws Exception on processing failure
+     */
     public static LwM2mOtaConvert convertOtaUpdateValueToString(String pathIdVer, Object value, ResourceModel.Type currentType) {
         String path = fromVersionedIdToObjectId(pathIdVer);
         LwM2mOtaConvert lwM2mOtaConvert = new LwM2mOtaConvert();
@@ -113,7 +121,13 @@ public class LwM2MTransportUtil {
         lwM2mOtaConvert.setValue(value);
         return lwM2mOtaConvert;
     }
-
+    /**
+     * To lw m2mclient profile.
+     *
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @return {@link Lwm2mDeviceProfileTransportConfiguration}
+     * @throws Exception on processing failure
+     */
     public static Lwm2mDeviceProfileTransportConfiguration toLwM2MClientProfile(DeviceProfile deviceProfile) {
         DeviceProfileTransportConfiguration transportConfiguration = deviceProfile.getProfileData().getTransportConfiguration();
         if (transportConfiguration.getType().equals(DeviceTransportType.LWM2M)) {
@@ -123,7 +137,13 @@ public class LwM2MTransportUtil {
             throw new IllegalArgumentException("Received profile with invalid transport configuration: " + transportConfiguration.getType());
         }
     }
-
+    /**
+     * From versioned id to object id.
+     *
+     * @param pathIdVer path id ver ({@link String})
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
     public static String fromVersionedIdToObjectId(String pathIdVer) {
         try {
             if (pathIdVer == null) {
@@ -142,9 +162,13 @@ public class LwM2MTransportUtil {
         }
     }
 
+    
     /**
-     * @param path - pathId or pathIdVer
-     * @return
+     * Returns ver from path id ver or id.
+     *
+     * @param path path ({@link String})
+     * @return {@link String}
+     * @throws Exception on processing failure
      */
     public static String getVerFromPathIdVerOrId(String path) {
         try {
@@ -158,7 +182,14 @@ public class LwM2MTransportUtil {
         }
         return null;
     }
-
+    /**
+     * Convert object id to versioned id.
+     *
+     * @param path path ({@link String})
+     * @param lwM2MClient lw m2mclient ({@link LwM2mClient})
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
     public static String convertObjectIdToVersionedId(String path, LwM2mClient lwM2MClient) {
         String[] keyArray = path.split(LWM2M_SEPARATOR_PATH);
         if (keyArray.length > 1) {
@@ -176,11 +207,13 @@ public class LwM2MTransportUtil {
         }
     }
 
+    
     /**
-     * "UNSIGNED_INTEGER":  // Number -> Integer Example:
-     * Alarm Timestamp [32-bit unsigned integer]
-     * Short Server ID, Object ID, Object Instance ID, Resource ID, Resource Instance ID
-     * "CORELINK": // String used in Attribute
+     * Equals resource type get simple name.
+     *
+     * @param value value ({@link Object})
+     * @return the ResourceModel.Type value
+     * @throws Exception on processing failure
      */
     public static ResourceModel.Type equalsResourceTypeGetSimpleName(Object value) {
         switch (value.getClass().getSimpleName()) {
@@ -204,7 +237,13 @@ public class LwM2MTransportUtil {
                 return null;
         }
     }
-
+    /**
+     * Returns json primitive value.
+     *
+     * @param value value ({@link JsonPrimitive})
+     * @return {@link Object}
+     * @throws Exception on processing failure
+     */
     public static Object getJsonPrimitiveValue(JsonPrimitive value) {
         if (value.isString()) {
             return value.getAsString();
@@ -228,7 +267,14 @@ public class LwM2MTransportUtil {
             return null;
         }
     }
-
+    /**
+     * Validates versioned id.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public static void validateVersionedId(LwM2mClient client, HasVersionedId request) {
         String msgExceptionStr = "";
         if (request.getObjectId() == null) {
@@ -240,7 +286,15 @@ public class LwM2MTransportUtil {
             throw new IllegalArgumentException(msgExceptionStr);
         }
     }
-
+    /**
+     * Convert multi resource values from rpc body.
+     *
+     * @param value value ({@link Object})
+     * @param type type
+     * @param versionedId versioned id ({@link String})
+     * @return {@link Map}
+     * @throws Exception on processing failure
+     */
     public static Map<Integer, Object> convertMultiResourceValuesFromRpcBody(Object value, ResourceModel.Type type, String versionedId) throws Exception {
         if (value instanceof JsonElement) {
             return convertMultiResourceValuesFromJson((JsonElement) value, type, versionedId);
@@ -251,7 +305,15 @@ public class LwM2MTransportUtil {
             return null;
         }
     }
-
+    /**
+     * Convert multi resource values from json.
+     *
+     * @param newValProto new val proto ({@link JsonElement})
+     * @param type type
+     * @param versionedId versioned id ({@link String})
+     * @return {@link Map}
+     * @throws Exception on processing failure
+     */
     public static Map<Integer, Object> convertMultiResourceValuesFromJson(JsonElement newValProto, ResourceModel.Type type, String versionedId) {
         Map<Integer, Object> newValues = new HashMap<>();
         newValProto.getAsJsonObject().entrySet().forEach((obj) -> {
@@ -260,17 +322,29 @@ public class LwM2MTransportUtil {
         });
         return newValues;
     }
-
+    /**
+     * Convert value by type resource.
+     *
+     * @param value value ({@link Object})
+     * @param type type
+     * @param versionedId versioned id ({@link String})
+     * @return {@link Object}
+     * @throws Exception on processing failure
+     */
     public static Object convertValueByTypeResource(Object value, ResourceModel.Type type, String versionedId) {
         Object valueCurrent = getJsonPrimitiveValue((JsonPrimitive) value);
         return LwM2mValueConverterImpl.getInstance().convertValue(valueCurrent,
                 equalsResourceTypeGetSimpleName(valueCurrent), type, new LwM2mPath(fromVersionedIdToObjectId(versionedId)));
     }
 
+    
     /**
-     * @param lwM2MClient -
-     * @param path        -
-     * @return - return value of Resource by idPath
+     * Returns resource value from lw m2mclient.
+     *
+     * @param lwM2MClient lw m2mclient ({@link LwM2mClient})
+     * @param path path ({@link String})
+     * @return {@link LwM2mResource}
+     * @throws Exception on processing failure
      */
     public static LwM2mResource getResourceValueFromLwM2MClient(LwM2mClient lwM2MClient, String path) {
         LwM2mResource lwm2mResourceValue = null;
@@ -282,6 +356,13 @@ public class LwM2MTransportUtil {
         }
         return lwm2mResourceValue;
     }
+    /**
+     * Content to string.
+     *
+     * @param content content ({@link Object})
+     * @return optional {@link String}, empty if not found
+     * @throws Exception on processing failure
+     */
 
     @SuppressWarnings("unchecked")
     public static Optional<String> contentToString(Object content) {
@@ -359,18 +440,36 @@ public class LwM2MTransportUtil {
         String opaque = Hex.encodeHexString(value);
         return opaque.length() > 1024 ? opaque.substring(0, 1024) : opaque;
     }
-
+    /**
+     * Creates models default.
+     *
+     * @return {@link LwM2mModel}
+     * @throws Exception on processing failure
+     */
     public static LwM2mModel createModelsDefault() {
         return new StaticModel(ObjectLoader.loadDefault());
     }
-
+    /**
+     * Compares att name key ota.
+     *
+     * @param attrName attr name ({@link String})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     public static boolean compareAttNameKeyOta(String attrName) {
         for (OtaPackageKey value : OtaPackageKey.values()) {
             if (attrName.contains(value.getValue())) return true;
         }
         return false;
     }
-
+    /**
+     * Value equals.
+     *
+     * @param newValue new value ({@link Object})
+     * @param oldValue old value ({@link Object})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     public static boolean valueEquals(Object newValue, Object oldValue) {
         String newValueStr;
         String oldValueStr;
@@ -386,7 +485,14 @@ public class LwM2MTransportUtil {
         }
         return newValueStr.equals(oldValueStr);
     }
-
+    /**
+     * Set dtls connector config cid length.
+     *
+     * @param serverCoapConfig server coap config ({@link Configuration})
+     * @param cIdLength c id length ({@link Integer})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public static void setDtlsConnectorConfigCidLength(Configuration serverCoapConfig, Integer cIdLength) {
         serverCoapConfig.setTransient(DTLS_CONNECTION_ID_LENGTH);
         serverCoapConfig.setTransient(DTLS_CONNECTION_ID_NODE_ID);
@@ -397,7 +503,13 @@ public class LwM2MTransportUtil {
             serverCoapConfig.set(DTLS_CONNECTION_ID_NODE_ID, null);
         }
     }
-
+    /**
+     * Group by object id versioned ids.
+     *
+     * @param targetIds target ids ({@link Set})
+     * @return {@link ConcurrentHashMap}
+     * @throws Exception on processing failure
+     */
     public static ConcurrentHashMap<Integer, String[]> groupByObjectIdVersionedIds(Set<String> targetIds) {
         return targetIds.stream()
                 .collect(Collectors.groupingBy(
@@ -409,7 +521,14 @@ public class LwM2MTransportUtil {
                         )
                 ));
     }
-
+    /**
+     * Are arrays string equal.
+     *
+     * @param oldValue old value
+     * @param newValue new value
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     public static boolean areArraysStringEqual(String[] oldValue, String[] newValue) {
         if (oldValue == null || newValue == null) return false;
         if (oldValue.length != newValue.length) return false;
@@ -419,7 +538,13 @@ public class LwM2MTransportUtil {
         Arrays.sort(sorted2);
         return Arrays.equals(sorted1, sorted2);
     }
-
+    /**
+     * Deep copy concurrent map.
+     *
+     * @param original original ({@link Map})
+     * @return {@link ConcurrentHashMap}
+     * @throws Exception on processing failure
+     */
     public static ConcurrentHashMap<Integer, String[]> deepCopyConcurrentMap(Map<Integer, String[]> original) {
         return original.isEmpty() ? new ConcurrentHashMap<>() : original.entrySet().stream()
                 .collect(Collectors.toMap(
@@ -429,7 +554,14 @@ public class LwM2MTransportUtil {
                         ConcurrentHashMap::new
                 ));
     }
-
+    /**
+     * Are maps equal.
+     *
+     * @param m1 m1 ({@link Map})
+     * @param m2 m2 ({@link Map})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     public static boolean areMapsEqual(Map<Integer, String[]> m1, Map<Integer, String[]> m2) {
         if (m1.size() != m2.size()) return false;
         for (Integer key : m1.keySet()) {

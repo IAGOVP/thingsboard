@@ -36,9 +36,6 @@ import java.io.IOException;
  */
 @Data
 @AllArgsConstructor
-/**
- * Entity fields data.
- */
 public class EntityFieldsData {
 
     private static final ObjectMapper mapper = new ObjectMapper();
@@ -55,10 +52,23 @@ public class EntityFieldsData {
     public EntityFieldsData(BaseData data) {
         fieldsData = mapper.valueToTree(data);
     }
+    /**
+     * Returns field value.
+     *
+     * @param field field ({@link String})
+     * @return {@link String}
+     */
 
     public String getFieldValue(String field) {
         return getFieldValue(field, false);
     }
+    /**
+     * Returns field value.
+     *
+     * @param field field ({@link String})
+     * @param ignoreNullStrings ignore null strings
+     * @return {@link String}
+     */
 
     public String getFieldValue(String field, boolean ignoreNullStrings) {
         String[] fieldsTree = field.split("\\.");
@@ -92,6 +102,14 @@ public class EntityFieldsData {
     }
 
     private static class EntityIdFieldSerializer extends JsonSerializer<EntityId> {
+        /**
+         * Serialize.
+         *
+         * @param value value ({@link EntityId})
+         * @param gen gen ({@link JsonGenerator})
+         * @param serializers serializers ({@link SerializerProvider})
+         * @throws IOException if ioexception is thrown during processing
+         */
 
         @Override
         public void serialize(EntityId value, JsonGenerator gen, SerializerProvider serializers) throws IOException {

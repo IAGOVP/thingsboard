@@ -24,8 +24,14 @@ import org.thingsboard.server.common.data.relation.EntityRelation;
 import java.io.Serializable;
 import java.util.List;
 /**
- * Relation cache value.
+ * Relation cache value (entity-to-entity relation graph persistence).
  */
+
+
+
+
+
+
 
 @EqualsAndHashCode
 @Getter

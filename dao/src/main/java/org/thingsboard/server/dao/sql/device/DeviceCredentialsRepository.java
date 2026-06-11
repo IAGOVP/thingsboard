@@ -26,17 +26,49 @@ import org.thingsboard.server.dao.model.sql.DeviceCredentialsEntity;
 import java.util.UUID;
 
 /**
- * Created by Valerii Sosliuk on 5/6/2017.
+ * Spring Data JPA repository for device credentials entities.
+ *
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
  */
+
 public interface DeviceCredentialsRepository extends JpaRepository<DeviceCredentialsEntity, UUID> {
+    /**
+     * Finds by device id.
+     *
+     * @param deviceId target device identifier
+     * @return {@link DeviceCredentialsEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     DeviceCredentialsEntity findByDeviceId(UUID deviceId);
+    /**
+     * Finds by credentials id.
+     *
+     * @param credentialsId credentials id ({@link String})
+     * @return {@link DeviceCredentialsEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     DeviceCredentialsEntity findByCredentialsId(String credentialsId);
+    /**
+     * Deletes by device id.
+     *
+     * @param deviceId target device identifier
+     * @return {@link DeviceCredentialsEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Transactional
     @Query(value = "DELETE FROM device_credentials WHERE device_id = :deviceId RETURNING *", nativeQuery = true)
     DeviceCredentialsEntity deleteByDeviceId(@Param("deviceId") UUID deviceId);
+    /**
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
 
     @Query("SELECT c FROM DeviceCredentialsEntity c WHERE c.deviceId IN (SELECT d.id FROM DeviceEntity d WHERE d.tenantId = :tenantId)")

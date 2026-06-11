@@ -22,6 +22,12 @@ public interface ActivityStrategy {
 
     boolean onActivity();
 
+    /**
+     * Handles reporting period end.
+     *
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     boolean onReportingPeriodEnd();
 
 }

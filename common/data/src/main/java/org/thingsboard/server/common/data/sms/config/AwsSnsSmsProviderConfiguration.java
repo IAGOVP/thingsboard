@@ -31,6 +31,11 @@ public class AwsSnsSmsProviderConfiguration implements SmsProviderConfiguration 
     private String secretAccessKey;
     @Schema(description = "The AWS region.")
     private String region;
+    /**
+     * Returns type.
+     *
+     * @return {@link SmsProviderType}
+     */
 
     @Override
     public SmsProviderType getType() {

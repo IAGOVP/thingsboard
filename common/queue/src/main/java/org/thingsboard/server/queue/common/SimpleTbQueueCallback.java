@@ -15,13 +15,15 @@
  */
 package org.thingsboard.server.queue.common;
 
+import java.util.function.Consumer;
+
+
 import org.thingsboard.server.queue.TbQueueCallback;
 import org.thingsboard.server.queue.TbQueueMsgMetadata;
 
-import java.util.function.Consumer;
 
 /**
- * Simple tb queue callback.
+ * No-op {@link TbQueueCallback} for fire-and-forget message sends.
  */
 public class SimpleTbQueueCallback implements TbQueueCallback {
 

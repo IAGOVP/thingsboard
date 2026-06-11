@@ -16,7 +16,20 @@
 package org.thingsboard.server.cache;
 
 /**
- * tb cache transaction contract.
+ * Unit of work for batched, atomic cache writes in {@link TbTransactionalCache}.
+ *
+ * <p>Implementations:
+ * <ul>
+ *   <li>{@link CaffeineTbCacheTransaction} — in-process staging with commit conflict detection</li>
+ *   <li>{@link RedisTbCacheTransaction} — Redis WATCH/MULTI/EXEC transaction</li>
+ * </ul>
+ *
+ * <p>Typical lifecycle: {@link #put} stages entries, then {@link #commit()} applies them
+ * or {@link #rollback()} discards them.
+ *
+ * @param <K> cache key type
+ * @param <V> cache value type
+ * @see TbTransactionalCache#newTransactionForKey
  */
 public interface TbCacheTransaction<K, V> {
 

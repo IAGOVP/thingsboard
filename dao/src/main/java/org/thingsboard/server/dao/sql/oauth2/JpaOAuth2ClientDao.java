@@ -37,8 +37,11 @@ import java.util.UUID;
 
 import static org.thingsboard.server.dao.DaoUtil.toUUIDs;
 /**
- * JPA implementation of oauth2client dao.
+ * JPA/PostgreSQL implementation of oauth2client dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Component
 @RequiredArgsConstructor
@@ -46,26 +49,61 @@ import static org.thingsboard.server.dao.DaoUtil.toUUIDs;
 public class JpaOAuth2ClientDao extends JpaAbstractDao<OAuth2ClientEntity, OAuth2Client> implements OAuth2ClientDao {
 
     private final OAuth2ClientRepository repository;
+    /**
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Class<OAuth2ClientEntity> getEntityClass() {
         return OAuth2ClientEntity.class;
     }
+    /**
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected JpaRepository<OAuth2ClientEntity, UUID> getRepository() {
         return repository;
     }
+    /**
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<OAuth2Client> findByTenantId(UUID tenantId, PageLink pageLink) {
         return DaoUtil.toPageData(repository.findByTenantId(tenantId, pageLink.getTextSearch(), DaoUtil.toPageable(pageLink)));
     }
+    /**
+     * Finds enabled by domain name.
+     *
+     * @param domainName domain name ({@link String})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<OAuth2Client> findEnabledByDomainName(String domainName) {
         return DaoUtil.convertDataList(repository.findEnabledByDomainNameAndPlatformType(domainName, PlatformType.WEB.name()));
     }
+    /**
+     * Finds enabled by pkg name and platform type.
+     *
+     * @param pkgName pkg name ({@link String})
+     * @param platformType platform type ({@link PlatformType})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<OAuth2Client> findEnabledByPkgNameAndPlatformType(String pkgName, PlatformType platformType) {
@@ -81,36 +119,88 @@ public class JpaOAuth2ClientDao extends JpaAbstractDao<OAuth2ClientEntity, OAuth
         }
         return DaoUtil.convertDataList(clientEntities);
     }
+    /**
+     * Finds by domain id.
+     *
+     * @param oauth2ParamsId oauth2params id ({@link UUID})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<OAuth2Client> findByDomainId(UUID oauth2ParamsId) {
         return DaoUtil.convertDataList(repository.findByDomainId(oauth2ParamsId));
     }
+    /**
+     * Finds by mobile app bundle id.
+     *
+     * @param mobileAppBundleId mobile app bundle id ({@link UUID})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<OAuth2Client> findByMobileAppBundleId(UUID mobileAppBundleId) {
         return DaoUtil.convertDataList(repository.findByMobileAppBundleId(mobileAppBundleId));
     }
+    /**
+     * Finds app secret.
+     *
+     * @param id entity UUID primary key
+     * @param pkgName pkg name ({@link String})
+     * @param platformType platform type ({@link PlatformType})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String findAppSecret(UUID id, String pkgName, PlatformType platformType) {
         return repository.findAppSecret(id, pkgName, platformType);
     }
+    /**
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteByTenantId(UUID tenantId) {
         repository.deleteByTenantId(tenantId);
     }
+    /**
+     * Finds by ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param oAuth2ClientIds o auth2client ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<OAuth2Client> findByIds(UUID tenantId, List<OAuth2ClientId> oAuth2ClientIds) {
         return DaoUtil.convertDataList(repository.findByTenantIdAndIdIn(tenantId, toUUIDs(oAuth2ClientIds)));
     }
+    /**
+     * Is propagate to edge.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param oAuth2ClientId o auth2client id ({@link UUID})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isPropagateToEdge(TenantId tenantId, UUID oAuth2ClientId) {
         return repository.isPropagateToEdge(tenantId.getId(), oAuth2ClientId);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

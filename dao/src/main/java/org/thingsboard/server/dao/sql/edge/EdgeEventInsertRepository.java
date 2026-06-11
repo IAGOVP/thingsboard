@@ -29,8 +29,14 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 /**
- * Edge event insert repository.
+ * Edge event insert repository (JPA/PostgreSQL persistence layer (JPA repositories and PostgreSQL DAO implementations)).
  */
+
+
+
+
+
+
 
 
 @Repository
@@ -48,11 +54,15 @@ public class EdgeEventInsertRepository {
     @Autowired
     private TransactionTemplate transactionTemplate;
 
+    
     /**
-
-     * Persists .
-
+     * Saves or persists the requested data.
+     *
+     * @param entities entities ({@link List})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected void save(List<EdgeEventEntity> entities) {
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {

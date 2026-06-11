@@ -43,6 +43,11 @@ public enum ThingsboardErrorCode {
     ThingsboardErrorCode(int errorCode) {
         this.errorCode = errorCode;
     }
+    /**
+     * Returns error code.
+     *
+     * @return the int result
+     */
 
     @JsonValue
     public int getErrorCode() {

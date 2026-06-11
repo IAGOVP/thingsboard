@@ -43,6 +43,11 @@ public class TenantEntitiesDeletionHousekeeperTask extends HousekeeperTask {
         super(tenantId, tenantId, HousekeeperTaskType.DELETE_TENANT_ENTITIES);
         this.entityType = entityType;
     }
+    /**
+     * Returns description.
+     *
+     * @return {@link String}
+     */
 
     @JsonIgnore
     @Override

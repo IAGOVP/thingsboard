@@ -25,11 +25,23 @@ public class DeviceAuthResult {
     private final boolean success;
     private final DeviceId deviceId;
     private final String errorMsg;
-
+    /**
+     * Of.
+     *
+     * @param deviceId target device identifier
+     * @return {@link DeviceAuthResult}
+     * @throws Exception on processing failure
+     */
     public static DeviceAuthResult of(DeviceId deviceId) {
         return new DeviceAuthResult(true, deviceId, null);
     }
-
+    /**
+     * Of.
+     *
+     * @param errorMsg error msg ({@link String})
+     * @return {@link DeviceAuthResult}
+     * @throws Exception on processing failure
+     */
     public static DeviceAuthResult of(String errorMsg) {
         return new DeviceAuthResult(false, null, errorMsg);
     }
@@ -40,15 +52,30 @@ public class DeviceAuthResult {
         this.deviceId = deviceId;
         this.errorMsg = errorMsg;
     }
-
+    /**
+     * Is success.
+     *
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     public boolean isSuccess() {
         return success;
     }
-
+    /**
+     * Returns device id.
+     *
+     * @return {@link DeviceId}
+     * @throws Exception on processing failure
+     */
     public DeviceId getDeviceId() {
         return deviceId;
     }
-
+    /**
+     * Returns error msg.
+     *
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
     public String getErrorMsg() {
         return errorMsg;
     }

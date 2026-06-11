@@ -39,8 +39,14 @@ import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
 /**
- * Created by ashvayka on 20.02.17.
+ * Aggregate partitions function (Cassandra telemetry and latest-value DAO (Cassandra time-series DAO and latest-value caches)).
  */
+
+
+
+
+
+
 @Slf4j
 public class AggregatePartitionsFunction implements com.google.common.util.concurrent.AsyncFunction<List<TbResultSet>, Optional<TsKvEntryAggWrapper>> {
 
@@ -68,6 +74,13 @@ public class AggregatePartitionsFunction implements com.google.common.util.concu
         this.ts = ts;
         this.executor = executor;
     }
+    /**
+     * Apply.
+     *
+     * @param rsList rs list ({@link List})
+     * @return future completing with optional {@link TsKvEntryAggWrapper}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<Optional<TsKvEntryAggWrapper>> apply(@Nullable List<TbResultSet> rsList) {
@@ -291,6 +304,45 @@ public class AggregatePartitionsFunction implements com.google.common.util.concu
             return Optional.of(new BasicTsKvEntry(ts, new BooleanDataEntry(key, aggResult.bValue)));
         }
     }
+
+    
+
+    
+
+
+    
+
+
+
+    
+
+
+
+
+    
+
+
+
+
+
+    /**
+
+
+
+
+
+     * Aggregation result (Cassandra telemetry and latest-value DAO (Cassandra time-series DAO and latest-value caches)).
+
+
+
+
+
+     */
+
+
+
+
+
 
     private class AggregationResult {
         DataType dataType = null;

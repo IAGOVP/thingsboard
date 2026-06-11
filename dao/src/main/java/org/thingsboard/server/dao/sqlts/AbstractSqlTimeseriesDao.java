@@ -39,8 +39,14 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 /**
- * Abstract sql timeseries dao.
+ * Abstract sql timeseries dao (time-series SQL/Timescale persistence (SQL/Timescale time-series key-value storage)).
  */
+
+
+
+
+
+
 
 @Slf4j
 public abstract class AbstractSqlTimeseriesDao extends BaseAbstractSqlTimeseriesDao implements AggregationTimeseriesDao {
@@ -70,6 +76,13 @@ public abstract class AbstractSqlTimeseriesDao extends BaseAbstractSqlTimeseries
 
     @Value("${sql.ttl.ts.ts_key_value_ttl:0}")
     private long systemTtl;
+    /**
+     * Cleanup.
+     *
+     * @param systemTtl system ttl
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void cleanup(long systemTtl) {
         log.info("Going to cleanup old timeseries data using ttl: {}s", systemTtl);
@@ -89,6 +102,15 @@ public abstract class AbstractSqlTimeseriesDao extends BaseAbstractSqlTimeseries
             log.error("SQLException occurred during timeseries TTL task execution ", e);
         }
     }
+    /**
+     * Processes find all async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param queries queries ({@link List})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected ListenableFuture<List<ReadTsKvQueryResult>> processFindAllAsync(TenantId tenantId, EntityId entityId, List<ReadTsKvQuery> queries) {
         List<ListenableFuture<ReadTsKvQueryResult>> futures = queries
@@ -106,6 +128,13 @@ public abstract class AbstractSqlTimeseriesDao extends BaseAbstractSqlTimeseries
             }
         }, service);
     }
+    /**
+     * Compute ttl.
+     *
+     * @param ttl ttl
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected long computeTtl(long ttl) {
         if (systemTtl > 0) {
@@ -117,6 +146,14 @@ public abstract class AbstractSqlTimeseriesDao extends BaseAbstractSqlTimeseries
         }
         return ttl;
     }
+    /**
+     * Returns data point days.
+     *
+     * @param tsKvEntry ts kv entry ({@link TsKvEntry})
+     * @param ttl ttl
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected int getDataPointDays(TsKvEntry tsKvEntry, long ttl) {
         return tsKvEntry.getDataPoints() * Math.max(1, (int) (ttl / SECONDS_IN_DAY));

@@ -16,10 +16,11 @@
 package org.thingsboard.common.util;
 
 /**
- * recovery aware contract.
+ * Contract for recovery aware.
  */
 public interface RecoveryAware {
 
+    /** Whether unrecoverable. */
     boolean isUnrecoverable();
 
 }

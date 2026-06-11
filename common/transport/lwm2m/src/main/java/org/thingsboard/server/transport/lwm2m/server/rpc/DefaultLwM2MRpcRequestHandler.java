@@ -98,6 +98,14 @@ public class DefaultLwM2MRpcRequestHandler implements LwM2MRpcRequestHandler {
     private final LwM2mDownlinkMsgHandler downlinkHandler;
     private final LwM2MTelemetryLogService logService;
     private final LwM2mModelProvider modelProvider;
+    /**
+     * Handles to device rpc request.
+     *
+     * @param rpcRequest rpc request
+     * @param sessionInfo session info
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onToDeviceRpcRequest(TransportProtos.ToDeviceRpcRequestMsg rpcRequest, TransportProtos.SessionInfoProto sessionInfo) {
@@ -460,13 +468,27 @@ public class DefaultLwM2MRpcRequestHandler implements LwM2MRpcRequestHandler {
         TransportProtos.ToDeviceRpcResponseMsg msg = TransportProtos.ToDeviceRpcResponseMsg.newBuilder().setRequestId(requestId).setError(payload).build();
         transportService.process(sessionInfo, msg, null);
     }
+    /**
+     * Handles to device rpc response.
+     *
+     * @param toDeviceResponse to device response
+     * @param sessionInfo session info
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onToDeviceRpcResponse(TransportProtos.ToDeviceRpcResponseMsg toDeviceResponse, TransportProtos.SessionInfoProto sessionInfo) {
         log.debug("OnToDeviceRpcResponse: [{}], sessionUUID: [{}]", toDeviceResponse, new UUID(sessionInfo.getSessionIdMSB(), sessionInfo.getSessionIdLSB()));
         transportService.process(sessionInfo, toDeviceResponse, null);
     }
-
+    /**
+     * Handles to server rpc response.
+     *
+     * @param toServerResponse to server response
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void onToServerRpcResponse(TransportProtos.ToServerRpcResponseMsg toServerResponse) {
         log.info("[{}] toServerRpcResponse", toServerResponse);
     }

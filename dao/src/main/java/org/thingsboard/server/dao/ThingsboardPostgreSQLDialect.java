@@ -22,11 +22,24 @@ import org.hibernate.query.sqm.function.SqmFunctionRegistry;
 import org.hibernate.type.BasicTypeRegistry;
 import org.hibernate.type.StandardBasicTypes;
 /**
- * Thingsboard postgre sqldialect.
+ * Thingsboard postgre sqldialect (ThingsBoard DAO layer).
  */
+
+
+
+
+
+
 
 @Slf4j
 public class ThingsboardPostgreSQLDialect extends PostgreSQLDialect {
+    /**
+     * Initialize function registry.
+     *
+     * @param functionContributions function contributions ({@link FunctionContributions})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void initializeFunctionRegistry(FunctionContributions functionContributions) {

@@ -47,42 +47,186 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * lw m2m downlink msg handler contract.
+ * Processes server-initiated LwM2M downlink: read, write, execute, observe, and composite requests.
  */
 public interface LwM2mDownlinkMsgHandler {
 
     void sendReadRequest(LwM2mClient client, TbLwM2MReadRequest request, DownlinkRequestCallback<ReadRequest, ReadResponse> callback);
 
+    /**
+     * Send read composite request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void sendReadCompositeRequest(LwM2mClient client, TbLwM2MReadCompositeRequest request, DownlinkRequestCallback<ReadCompositeRequest, ReadCompositeResponse> callback);
 
+    /**
+     * Send observe request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void sendObserveRequest(LwM2mClient client, TbLwM2MObserveRequest request, DownlinkRequestCallback<ObserveRequest, ObserveResponse> callback);
 
+    /**
+     * Send observe all request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void sendObserveAllRequest(LwM2mClient client, TbLwM2MObserveAllRequest request, DownlinkRequestCallback<TbLwM2MObserveAllRequest, Set<String>> callback);
 
+    /**
+     * Send execute request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void sendExecuteRequest(LwM2mClient client, TbLwM2MExecuteRequest request, DownlinkRequestCallback<ExecuteRequest, ExecuteResponse> callback);
 
+    /**
+     * Send delete request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void sendDeleteRequest(LwM2mClient client, TbLwM2MDeleteRequest request, DownlinkRequestCallback<DeleteRequest, DeleteResponse> callback);
 
+    /**
+     * Send cancel observe request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void sendCancelObserveRequest(LwM2mClient client, TbLwM2MCancelObserveRequest request, DownlinkRequestCallback<TbLwM2MCancelObserveRequest, Integer> callback);
 
+    /**
+     * Send cancel observe all request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void sendCancelObserveAllRequest(LwM2mClient client, TbLwM2MCancelAllRequest request, DownlinkRequestCallback<TbLwM2MCancelAllRequest, Integer> callback);
 
+    /**
+     * Send observe composite request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void sendObserveCompositeRequest(LwM2mClient client, TbLwM2MObserveCompositeRequest request, DownlinkRequestCallback<ObserveCompositeRequest, ObserveCompositeResponse> callback);
 
+    /**
+     * Send cancel observe composite request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void sendCancelObserveCompositeRequest(LwM2mClient client, TbLwM2MCancelObserveCompositeRequest request, DownlinkRequestCallback<TbLwM2MCancelObserveCompositeRequest, Integer> callback);
 
+    /**
+     * Send discover request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void sendDiscoverRequest(LwM2mClient client, TbLwM2MDiscoverRequest request, DownlinkRequestCallback<DiscoverRequest, DiscoverResponse> callback);
 
+    /**
+     * Send discover all request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void sendDiscoverAllRequest(LwM2mClient client, TbLwM2MDiscoverAllRequest request, DownlinkRequestCallback<TbLwM2MDiscoverAllRequest, List<String>> callback);
 
+    /**
+     * Send write attributes request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void sendWriteAttributesRequest(LwM2mClient client, TbLwM2MWriteAttributesRequest request, DownlinkRequestCallback<WriteAttributesRequest, WriteAttributesResponse> callback);
 
+    /**
+     * Send write replace request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void sendWriteReplaceRequest(LwM2mClient client, TbLwM2MWriteReplaceRequest request, DownlinkRequestCallback<WriteRequest, WriteResponse> callback);
 
+    /**
+     * Send write composite request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param nodes nodes ({@link RpcWriteCompositeRequest})
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void sendWriteCompositeRequest(LwM2mClient client, RpcWriteCompositeRequest nodes, DownlinkRequestCallback<WriteCompositeRequest, WriteCompositeResponse> callback);
 
+    /**
+     * Send write update request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void sendWriteUpdateRequest(LwM2mClient client, TbLwM2MWriteUpdateRequest request, DownlinkRequestCallback<WriteRequest, WriteResponse> callback);
 
+    /**
+     * Send create request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void sendCreateRequest(LwM2mClient client, TbLwM2MCreateRequest request, DownlinkRequestCallback<CreateRequest, CreateResponse> callback);
 
 }

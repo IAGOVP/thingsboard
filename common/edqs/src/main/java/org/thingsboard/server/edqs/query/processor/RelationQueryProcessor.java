@@ -25,9 +25,13 @@ import org.thingsboard.server.edqs.repo.TenantRepo;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
 /**
  * EDQS query processor for relation entity filters.
+ *
+ * <p>Evaluates {@link org.thingsboard.server.common.data.query.EntityFilter} against a {@link org.thingsboard.server.edqs.repo.TenantRepo} (EDQS microservice — entity filter query processors).
  */
+
 public class RelationQueryProcessor extends AbstractRelationQueryProcessor<RelationsQueryFilter> {
 
     private final boolean hasFilters;
@@ -36,6 +40,12 @@ public class RelationQueryProcessor extends AbstractRelationQueryProcessor<Relat
         super(repo, ctx, query, (RelationsQueryFilter) query.getEntityFilter());
         this.hasFilters = filter.getFilters() != null && !filter.getFilters().isEmpty();
     }
+    /**
+     * Returns root entities.
+     *
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Set<UUID> getRootEntities() {
@@ -45,26 +55,57 @@ public class RelationQueryProcessor extends AbstractRelationQueryProcessor<Relat
             return Set.of(filter.getRootEntity().getId());
         }
     }
+    /**
+     * Returns direction.
+     *
+     * @return {@link EntitySearchDirection}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntitySearchDirection getDirection() {
         return filter.getDirection();
     }
+    /**
+     * Returns max level.
+     *
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public int getMaxLevel() {
         return filter.getMaxLevel();
     }
+    /**
+     * Is multi root.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isMultiRoot() {
         return filter.isMultiRoot();
     }
+    /**
+     * Is fetch last level only.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isFetchLastLevelOnly() {
         return filter.isFetchLastLevelOnly();
     }
+    /**
+     * Checks the requested data.
+     *
+     * @param relationInfo relation info ({@link RelationInfo})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected boolean check(RelationInfo relationInfo) {

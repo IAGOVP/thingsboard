@@ -23,17 +23,53 @@ import org.thingsboard.server.dao.model.sql.EventEntity;
 import java.util.List;
 import java.util.UUID;
 
+
 /**
 
- * event repository contract.
+ * Spring Data JPA repository for event entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
 
+
 public interface EventRepository<T extends EventEntity<V>, V extends Event> {
+    /**
+     * Finds latest events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<T> findLatestEvents(UUID tenantId, UUID entityId, int limit);
+    /**
+     * Finds events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     Page<T> findEvents(UUID tenantId, UUID entityId, Long startTime, Long endTime, Pageable pageable);
+    /**
+     * Removes events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void removeEvents(UUID tenantId, UUID entityId, Long startTime, Long endTime);
 

@@ -86,6 +86,12 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
     private final Map<String, LwM2mClient> lwM2mClientsByEndpoint = new ConcurrentHashMap<>();
     private final Map<String, LwM2mClient> lwM2mClientsByRegistrationId = new ConcurrentHashMap<>();
     private final Map<UUID, Lwm2mDeviceProfileTransportConfiguration> profiles = new ConcurrentHashMap<>();
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @AfterStartUp(order = AfterStartUp.BEFORE_TRANSPORT_SERVICE)
     public void init() {
@@ -102,6 +108,13 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
             }
         });
     }
+    /**
+     * Returns client by endpoint.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return {@link LwM2mClient}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public LwM2mClient getClientByEndpoint(String endpoint) {
@@ -133,6 +146,14 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
             clientStore.put(client);
         }
     }
+    /**
+     * Register.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param registration registration ({@link Registration})
+     * @return optional the TransportProtos.SessionInfoProto value, empty if not found
+     * @throws LwM2MClientStateException if lw m2mclient state exception is thrown during processing
+     */
 
     @Override
     public Optional<TransportProtos.SessionInfoProto> register(LwM2mClient client, Registration registration) throws LwM2MClientStateException {
@@ -175,6 +196,13 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
         }
         return Optional.ofNullable(oldSession);
     }
+    /**
+     * Asleep.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     public boolean asleep(LwM2mClient client) {
@@ -185,6 +213,13 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
         }
         return changed;
     }
+    /**
+     * Awake.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     public boolean awake(LwM2mClient client) {
@@ -223,6 +258,14 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
             client.unlock();
         }
     }
+    /**
+     * Updates registration.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param registration registration ({@link Registration})
+     * @return nothing
+     * @throws LwM2MClientStateException if lw m2mclient state exception is thrown during processing
+     */
 
     @Override
     public void updateRegistration(LwM2mClient client, Registration registration) throws LwM2MClientStateException {
@@ -239,6 +282,14 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
             client.unlock();
         }
     }
+    /**
+     * Unregister.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param registration registration ({@link Registration})
+     * @return nothing
+     * @throws LwM2MClientStateException if lw m2mclient state exception is thrown during processing
+     */
 
     @Override
     public void unregister(LwM2mClient client, Registration registration) throws LwM2MClientStateException {
@@ -270,6 +321,13 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
             client.unlock();
         }
     }
+    /**
+     * Returns client by session info.
+     *
+     * @param sessionInfo session info
+     * @return {@link LwM2mClient}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public LwM2mClient getClientBySessionInfo(TransportProtos.SessionInfoProto sessionInfo) {
@@ -288,6 +346,14 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
         }
         return lwM2mClient;
     }
+    /**
+     * Returns object id by key name from profile.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param keyName key name ({@link String})
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public String getObjectIdByKeyNameFromProfile(LwM2mClient client, String keyName) {
@@ -302,10 +368,24 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
         }
         throw new IllegalArgumentException(keyName + " is not configured in the device profile!");
     }
-
+    /**
+     * Returns registration.
+     *
+     * @param registrationId registration id ({@link String})
+     * @return {@link Registration}
+     * @throws Exception on processing failure
+     */
     public Registration getRegistration(String registrationId) {
         return this.lwM2mClientsByRegistrationId.get(registrationId).getRegistration();
     }
+    /**
+     * Register client.
+     *
+     * @param registration registration ({@link Registration})
+     * @param credentials credentials ({@link ValidateDeviceCredentialsResponse})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void registerClient(Registration registration, ValidateDeviceCredentialsResponse credentials) {
@@ -314,6 +394,13 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
         lwM2mClientsByRegistrationId.put(registration.getId(), client);
         profileUpdate(credentials.getDeviceProfile());
     }
+    /**
+     * Updates the requested data.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void update(LwM2mClient client) {
@@ -328,6 +415,13 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
             client.unlock();
         }
     }
+    /**
+     * Send msgs after sleeping.
+     *
+     * @param lwM2MClient lw m2mclient ({@link LwM2mClient})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void sendMsgsAfterSleeping(LwM2mClient lwM2MClient) {
@@ -356,11 +450,24 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
         }
         return powerMode;
     }
+    /**
+     * Returns lw m2m clients.
+     *
+     * @return {@link Collection}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public Collection<LwM2mClient> getLwM2mClients() {
         return lwM2mClientsByEndpoint.values();
     }
+    /**
+     * Returns profile.
+     *
+     * @param registration registration ({@link Registration})
+     * @return {@link Lwm2mDeviceProfileTransportConfiguration}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public Lwm2mDeviceProfileTransportConfiguration getProfile(Registration registration) {
@@ -387,6 +494,13 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
         }
         return result;
     }
+    /**
+     * Profile update.
+     *
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @return {@link Lwm2mDeviceProfileTransportConfiguration}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public Lwm2mDeviceProfileTransportConfiguration profileUpdate(DeviceProfile deviceProfile) {
@@ -394,6 +508,13 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
         profiles.put(deviceProfile.getUuidId(), clientProfile);
         return clientProfile;
     }
+    /**
+     * Returns supported id ver in client.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @return {@link Set}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public Set<String> getSupportedIdVerInClient(LwM2mClient client) {
@@ -406,11 +527,25 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
         });
         return (clientObjects.size() > 0) ? clientObjects : null;
     }
+    /**
+     * Returns client by device id.
+     *
+     * @param deviceId target device identifier
+     * @return {@link LwM2mClient}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public LwM2mClient getClientByDeviceId(UUID deviceId) {
         return lwM2mClientsByRegistrationId.values().stream().filter(e -> deviceId.equals(e.getDeviceId())).findFirst().orElse(null);
     }
+    /**
+     * Is downlink allowed.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     public boolean isDownlinkAllowed(LwM2mClient client) {
@@ -458,6 +593,13 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
             client.unlock();
         }
     }
+    /**
+     * Handles uplink.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onUplink(LwM2mClient client) {
@@ -515,6 +657,13 @@ public class LwM2mClientContextImpl implements LwM2mClientContext {
             client.unlock();
         }
     }
+    /**
+     * Returns request timeout.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @return {@link Long}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public Long getRequestTimeout(LwM2mClient client) {

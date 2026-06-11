@@ -24,8 +24,14 @@ import org.thingsboard.server.common.data.id.TenantId;
 import java.io.Serial;
 import java.io.Serializable;
 /**
- * Asset cache key.
+ * Serializable cache key for asset entries (asset and asset-profile DAO services and caches).
  */
+
+
+
+
+
+
 
 @Getter
 @EqualsAndHashCode

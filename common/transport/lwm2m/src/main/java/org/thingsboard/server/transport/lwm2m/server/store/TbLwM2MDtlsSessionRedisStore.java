@@ -30,6 +30,14 @@ public class TbLwM2MDtlsSessionRedisStore implements TbLwM2MDtlsSessionStore {
     public TbLwM2MDtlsSessionRedisStore(RedisConnectionFactory redisConnectionFactory) {
         this.connectionFactory = redisConnectionFactory;
     }
+    /**
+     * Put.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @param msg msg ({@link TbX509DtlsSessionInfo})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void put(String endpoint, TbX509DtlsSessionInfo msg) {
@@ -42,6 +50,13 @@ public class TbLwM2MDtlsSessionRedisStore implements TbLwM2MDtlsSessionStore {
             }
         }
     }
+    /**
+     * Returns the requested data.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return {@link TbX509DtlsSessionInfo}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public TbX509DtlsSessionInfo get(String endpoint) {
@@ -54,6 +69,13 @@ public class TbLwM2MDtlsSessionRedisStore implements TbLwM2MDtlsSessionStore {
             }
         }
     }
+    /**
+     * Removes the requested data.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void remove(String endpoint) {

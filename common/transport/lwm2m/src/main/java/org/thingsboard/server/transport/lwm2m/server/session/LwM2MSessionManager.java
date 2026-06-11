@@ -18,12 +18,19 @@ package org.thingsboard.server.transport.lwm2m.server.session;
 import org.thingsboard.server.gen.transport.TransportProtos;
 
 /**
- * lw m2msession manager contract.
+ * Manages LwM2M client registration sessions and links them to ThingsBoard device sessions.
  */
 public interface LwM2MSessionManager {
 
     void register(TransportProtos.SessionInfoProto sessionInfo);
 
+    /**
+     * Deregister.
+     *
+     * @param sessionInfo session info
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void deregister(TransportProtos.SessionInfoProto sessionInfo);
 
 

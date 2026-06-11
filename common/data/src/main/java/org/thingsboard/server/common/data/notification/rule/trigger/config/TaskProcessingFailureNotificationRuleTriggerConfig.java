@@ -26,6 +26,11 @@ import lombok.Data;
  * Configuration for task processing failure notification rule trigger.
  */
 public class TaskProcessingFailureNotificationRuleTriggerConfig implements NotificationRuleTriggerConfig {
+    /**
+     * Returns trigger type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     */
 
     @Override
     public NotificationRuleTriggerType getTriggerType() {

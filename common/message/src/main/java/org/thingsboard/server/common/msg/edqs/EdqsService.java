@@ -28,20 +28,67 @@ import org.thingsboard.server.common.data.id.TenantId;
  */
 public interface EdqsService {
 
+    /**
+     * Handles update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId entity id ({@link EntityId})
+     * @param entity entity ({@link Object})
+     */
     void onUpdate(TenantId tenantId, EntityId entityId, Object entity);
 
+    /**
+     * Handles update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param objectType object type ({@link ObjectType})
+     * @param object object ({@link EdqsObject})
+     */
     void onUpdate(TenantId tenantId, ObjectType objectType, EdqsObject object);
 
+    /**
+     * Handles delete.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId entity id ({@link EntityId})
+     */
     void onDelete(TenantId tenantId, EntityId entityId);
 
+    /**
+     * Handles delete.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param objectType object type ({@link ObjectType})
+     * @param object object ({@link EdqsObject})
+     */
     void onDelete(TenantId tenantId, ObjectType objectType, EdqsObject object);
 
+    /**
+     * Processes system request.
+     *
+     * @param request request payload with operation parameters
+     */
     void processSystemRequest(ToCoreEdqsRequest request);
 
+    /**
+     * Processes system msg.
+     *
+     * @param request request payload with operation parameters
+     */
     void processSystemMsg(ToCoreEdqsMsg request);
 
+    /**
+     * Is api enabled.
+     *
+     * @return the boolean result
+     */
     boolean isApiEnabled();
 
+    /**
+     * Returns state.
+     *
+     * @return {@link EdqsState}
+     */
     EdqsState getState();
 
 }

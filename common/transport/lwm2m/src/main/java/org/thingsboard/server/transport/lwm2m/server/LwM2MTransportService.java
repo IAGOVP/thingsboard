@@ -18,7 +18,9 @@ package org.thingsboard.server.transport.lwm2m.server;
 import org.thingsboard.server.common.data.TbTransportService;
 
 /**
- * Service API for lw m2mtransport persistence and domain operations.
+ * Service contract for lw m2mtransport (LwM2M transport and object model (ThingsBoard common module)).
+ *
+ * <p>Implemented by the corresponding class in this or the dao module.
  */
 public interface LwM2MTransportService extends TbTransportService {
 

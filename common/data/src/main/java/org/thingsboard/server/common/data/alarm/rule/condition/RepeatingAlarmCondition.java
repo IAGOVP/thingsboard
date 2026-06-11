@@ -34,6 +34,11 @@ public class RepeatingAlarmCondition extends AlarmCondition {
     @Valid
     @NotNull
     private AlarmConditionValue<Integer> count;
+    /**
+     * Returns type.
+     *
+     * @return {@link AlarmConditionType}
+     */
 
     @Override
     public AlarmConditionType getType() {

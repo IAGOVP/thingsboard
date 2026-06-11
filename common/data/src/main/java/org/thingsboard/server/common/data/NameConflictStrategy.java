@@ -17,10 +17,10 @@ package org.thingsboard.server.common.data;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema
 /**
  * name conflict strategy.
  */
+@Schema
 public record NameConflictStrategy(NameConflictPolicy policy, String separator, UniquifyStrategy uniquifyStrategy) {
 
     public static final NameConflictStrategy DEFAULT = new NameConflictStrategy(NameConflictPolicy.FAIL, null, null);

@@ -102,6 +102,11 @@ public class AssetProfile extends BaseData<AssetProfileId> implements HasName, H
         this.externalId = assetProfile.getExternalId();
         this.version = assetProfile.getVersion();
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link AssetProfileId}
+     */
 
     @Schema(description = "JSON object with the asset profile Id. " +
             "Specify this field to update the asset profile. " +
@@ -111,12 +116,22 @@ public class AssetProfile extends BaseData<AssetProfileId> implements HasName, H
     public AssetProfileId getId() {
         return super.getId();
     }
+    /**
+     * Returns created time.
+     *
+     * @return the long result
+     */
 
     @Schema(description = "Timestamp of the profile creation, in milliseconds", example = "1609459200000", accessMode = Schema.AccessMode.READ_ONLY)
     @Override
     public long getCreatedTime() {
         return super.getCreatedTime();
     }
+    /**
+     * Is default.
+     *
+     * @return the boolean result
+     */
 
     @Schema(description = "Used to mark the default profile. Default profile is used when the asset profile is not specified during asset creation.")
     public boolean isDefault() {

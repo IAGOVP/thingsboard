@@ -20,12 +20,23 @@ import org.thingsboard.server.common.msg.TbActorMsg;
 import org.thingsboard.server.common.msg.TbMsg;
 
 /**
- * rule chain aware msg contract.
+ * Message contract: rule chain aware msg.
  */
+
 public interface RuleChainAwareMsg extends TbActorMsg {
 
+    /**
+     * Returns rule chain id.
+     *
+     * @return {@link RuleChainId}
+     */
 	RuleChainId getRuleChainId();
 
+    /**
+     * Returns msg.
+     *
+     * @return {@link TbMsg}
+     */
 	TbMsg getMsg();
 	
 }

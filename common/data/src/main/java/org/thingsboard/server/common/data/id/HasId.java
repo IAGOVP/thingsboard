@@ -18,7 +18,7 @@ package org.thingsboard.server.common.data.id;
 import java.io.Serializable;
 
 /**
- * has id contract.
+ * Contract for entities that expose a typed {@link EntityId}.
  */
 public interface HasId<I extends HasUUID> extends Serializable {
 

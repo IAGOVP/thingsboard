@@ -46,6 +46,11 @@ public class RuleEngineComponentLifecycleEventNotificationRuleTriggerConfig impl
     @ArraySchema(schema = @Schema(implementation = ComponentLifecycleEvent.class))
     private Set<ComponentLifecycleEvent> ruleNodeEvents; // available options: STARTED, UPDATED, STOPPED. if empty - all events
     private boolean onlyRuleNodeLifecycleFailures;
+    /**
+     * Returns trigger type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     */
 
     @Override
     public NotificationRuleTriggerType getTriggerType() {

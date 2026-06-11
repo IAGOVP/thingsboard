@@ -31,20 +31,86 @@ import java.util.Set;
  */
 public interface NotificationService {
 
+    /**
+     * Saves or persists notification.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param notification notification ({@link Notification})
+     * @return {@link Notification}
+     */
     Notification saveNotification(TenantId tenantId, Notification notification);
 
+    /**
+     * Finds notification by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param notificationId notification id ({@link NotificationId})
+     * @return {@link Notification}
+     */
     Notification findNotificationById(TenantId tenantId, NotificationId notificationId);
 
+    /**
+     * Mark notification as read.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param recipientId recipient id ({@link UserId})
+     * @param notificationId notification id ({@link NotificationId})
+     * @return the boolean result
+     */
     boolean markNotificationAsRead(TenantId tenantId, UserId recipientId, NotificationId notificationId);
 
+    /**
+     * Mark all notifications as read.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deliveryMethod delivery method ({@link NotificationDeliveryMethod})
+     * @param recipientId recipient id ({@link UserId})
+     * @return the int result
+     */
     int markAllNotificationsAsRead(TenantId tenantId, NotificationDeliveryMethod deliveryMethod, UserId recipientId);
 
+    /**
+     * Finds notifications by recipient id and read status.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deliveryMethod delivery method ({@link NotificationDeliveryMethod})
+     * @param recipientId recipient id ({@link UserId})
+     * @param unreadOnly unread only
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<Notification> findNotificationsByRecipientIdAndReadStatus(TenantId tenantId, NotificationDeliveryMethod deliveryMethod, UserId recipientId, boolean unreadOnly, PageLink pageLink);
 
+    /**
+     * Finds latest unread notifications by recipient id and notification types.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deliveryMethod delivery method ({@link NotificationDeliveryMethod})
+     * @param recipientId recipient id ({@link UserId})
+     * @param types types ({@link Set})
+     * @param limit limit
+     * @return {@link PageData}
+     */
     PageData<Notification> findLatestUnreadNotificationsByRecipientIdAndNotificationTypes(TenantId tenantId, NotificationDeliveryMethod deliveryMethod, UserId recipientId, Set<NotificationType> types, int limit);
 
+    /**
+     * Counts unread notifications by recipient id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deliveryMethod delivery method ({@link NotificationDeliveryMethod})
+     * @param recipientId recipient id ({@link UserId})
+     * @return the int result
+     */
     int countUnreadNotificationsByRecipientId(TenantId tenantId, NotificationDeliveryMethod deliveryMethod, UserId recipientId);
 
+    /**
+     * Deletes notification.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param recipientId recipient id ({@link UserId})
+     * @param notificationId notification id ({@link NotificationId})
+     * @return the boolean result
+     */
     boolean deleteNotification(TenantId tenantId, UserId recipientId, NotificationId notificationId);
 
 }

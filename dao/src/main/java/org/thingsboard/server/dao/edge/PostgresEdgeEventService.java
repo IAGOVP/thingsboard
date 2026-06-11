@@ -36,8 +36,14 @@ import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 /**
- * Postgres edge event service.
+ * Spring component for postgres edge event service (edge instances, events, sessions, and synchronization).
  */
+
+
+
+
+
+
 
 @Slf4j
 @Service
@@ -51,22 +57,28 @@ public class PostgresEdgeEventService extends BaseEdgeEventService {
 
     private ExecutorService edgeEventExecutor;
 
+    
     /**
-
      * Init executor.
-
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @PostConstruct
     public void initExecutor() {
         edgeEventExecutor = Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName("edge-event-service"));
     }
 
+    
     /**
-
      * Shutdown executor.
-
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @PreDestroy
     public void shutdownExecutor() {
@@ -75,11 +87,15 @@ public class PostgresEdgeEventService extends BaseEdgeEventService {
         }
     }
 
+    
     /**
-
-     * Persists async.
-
+     * Saves or persists async.
+     *
+     * @param edgeEvent edge event ({@link EdgeEvent})
+     * @return future completing with {@link Void}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<Void> saveAsync(EdgeEvent edgeEvent) {

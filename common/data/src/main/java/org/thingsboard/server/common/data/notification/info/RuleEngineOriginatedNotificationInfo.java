@@ -39,6 +39,11 @@ public class RuleEngineOriginatedNotificationInfo implements RuleOriginatedNotif
     private String msgType;
     private Map<String, String> msgMetadata;
     private Map<String, String> msgData;
+    /**
+     * Returns template data.
+     *
+     * @return {@link Map}
+     */
 
     @Override
     public Map<String, String> getTemplateData() {
@@ -51,11 +56,21 @@ public class RuleEngineOriginatedNotificationInfo implements RuleOriginatedNotif
         templateData.put("customerId", msgCustomerId != null ? msgCustomerId.getId().toString() : "");
         return templateData;
     }
+    /**
+     * Returns state entity id.
+     *
+     * @return {@link EntityId}
+     */
 
     @Override
     public EntityId getStateEntityId() {
         return msgOriginator;
     }
+    /**
+     * Returns affected customer id.
+     *
+     * @return {@link CustomerId}
+     */
 
     @Override
     public CustomerId getAffectedCustomerId() {

@@ -31,6 +31,11 @@ public class X509CertificateChainProvisionConfiguration implements DeviceProfile
     private String provisionDeviceSecret;
     private String certificateRegExPattern;
     private boolean allowCreateNewDevicesByX509Certificate;
+    /**
+     * Returns type.
+     *
+     * @return {@link DeviceProfileProvisionType}
+     */
 
     @Override
     public DeviceProfileProvisionType getType() {

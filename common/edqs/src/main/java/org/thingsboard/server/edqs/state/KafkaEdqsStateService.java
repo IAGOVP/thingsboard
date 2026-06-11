@@ -56,8 +56,9 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
- * Kafka-backed EDQS state topic consumer/producer for clustered EDQS.
+ * Kafka-backed EDQS state topic consumer/producer for clustered EDQS nodes.
  */
+
 @Service
 @RequiredArgsConstructor
 @KafkaEdqsComponent
@@ -86,6 +87,14 @@ public class KafkaEdqsStateService implements EdqsStateService {
     private final AtomicInteger eventsReadCount = new AtomicInteger();
 
     private boolean ready = false;
+    /**
+     * Starts Kafka consumers and wires partition/state services.
+     *
+     * @param eventConsumer event consumer ({@link PartitionedQueueConsumerManager})
+     * @param otherConsumers other consumers ({@link List})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void init(PartitionedQueueConsumerManager<TbProtoQueueMsg<ToEdqsMsg>> eventConsumer, List<PartitionedQueueConsumerManager<?>> otherConsumers) {
@@ -188,6 +197,13 @@ public class KafkaEdqsStateService implements EdqsStateService {
                 })
                 .build();
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param partitions partitions ({@link Set})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void process(Set<TopicPartitionInfo> partitions) {
@@ -206,11 +222,28 @@ public class KafkaEdqsStateService implements EdqsStateService {
             discoveryService.setReady(true);
         });
     }
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param tenantId tenant that owns the indexed entities
+     * @param type type ({@link ObjectType})
+     * @param key key ({@link String})
+     * @param eventType event type ({@link EdqsEventType})
+     * @param msg Kafka queue message wrapper
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void save(TenantId tenantId, ObjectType type, String key, EdqsEventType eventType, ToEdqsMsg msg) {
         // do nothing here, backup is done by events consumer
     }
+    /**
+     * Returns true when all assigned Kafka partitions have been restored and the index is queryable.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isReady() {
@@ -220,6 +253,12 @@ public class KafkaEdqsStateService implements EdqsStateService {
     private TenantId getTenantId(ToEdqsMsg edqsMsg) {
         return TenantId.fromUUID(new UUID(edqsMsg.getTenantIdMSB(), edqsMsg.getTenantIdLSB()));
     }
+    /**
+     * Shuts down EDQS consumers and flushes pending state.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void stop() {

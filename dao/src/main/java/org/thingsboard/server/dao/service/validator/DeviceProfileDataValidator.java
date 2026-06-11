@@ -73,8 +73,11 @@ import static org.thingsboard.server.common.data.device.credentials.lwm2m.Lwm2mS
 import static org.thingsboard.server.common.data.device.credentials.lwm2m.Lwm2mServerIdentifier.PRIMARY_LWM2M_SERVER;
 import static org.thingsboard.server.common.data.device.credentials.lwm2m.Lwm2mServerIdentifier.isNotLwm2mServer;
 /**
- * Device profile data validator.
+ * Validates device profile entities before persistence.
+ *
+ * <p>Enforces constraints, uniqueness, and referential integrity at the DAO layer.
  */
+
 
 @Slf4j
 @Component
@@ -121,11 +124,16 @@ public class DeviceProfileDataValidator extends AbstractHasOtaPackageValidator<D
     @Value("${security.java_cacerts.password:}")
     private String javaCacertsPassword;
 
+    
     /**
-
-     * Validate data impl.
-
+     * Validates data impl.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateDataImpl(TenantId tenantId, DeviceProfile deviceProfile) {
@@ -246,11 +254,16 @@ public class DeviceProfileDataValidator extends AbstractHasOtaPackageValidator<D
         }
     }
 
+    
     /**
-
-     * Validate update.
-
+     * Validates update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected DeviceProfile validateUpdate(TenantId tenantId, DeviceProfile deviceProfile) {

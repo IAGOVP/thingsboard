@@ -52,8 +52,11 @@ import java.util.Optional;
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
 import static org.thingsboard.server.dao.service.Validator.validateId;
 /**
- * Spring service implementing api usage state API.
+ * Spring {@code @Service} implementing the api usage state DAO API.
+ *
+ * <p>Delegates to {@code *Dao} implementations and manages cache eviction (tenant API usage state and metering).
  */
+
 
 @Service("ApiUsageStateDaoService")
 @Slf4j
@@ -76,6 +79,13 @@ public class ApiUsageStateServiceImpl extends AbstractEntityService implements A
         this.tsService = tsService;
         this.apiUsageStateValidator = apiUsageStateValidator;
     }
+    /**
+     * Deletes api usage state by entity id.
+     *
+     * @param entityId target entity identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Transactional
     @Override
@@ -92,12 +102,29 @@ public class ApiUsageStateServiceImpl extends AbstractEntityService implements A
             eventPublisher.publishEvent(DeleteEntityEvent.builder().tenantId(apiUsageState.getTenantId()).entityId(apiUsageState.getId()).build());
         }
     }
+    /**
+     * Deletes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteEntity(TenantId tenantId, EntityId id, boolean force) {
         ApiUsageState apiUsageState = findApiUsageStateById(tenantId, (ApiUsageStateId) id);
         deleteApiUsageState(apiUsageState);
     }
+    /**
+     * Creates default api usage state.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link ApiUsageState}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ApiUsageState createDefaultApiUsageState(TenantId tenantId, EntityId entityId) {
@@ -172,6 +199,13 @@ public class ApiUsageStateServiceImpl extends AbstractEntityService implements A
 
         return saved;
     }
+    /**
+     * Updates the requested data.
+     *
+     * @param apiUsageState api usage state ({@link ApiUsageState})
+     * @return {@link ApiUsageState}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ApiUsageState update(ApiUsageState apiUsageState) {
@@ -184,6 +218,13 @@ public class ApiUsageStateServiceImpl extends AbstractEntityService implements A
                 .entity(savedState).build());
         return savedState;
     }
+    /**
+     * Finds tenant api usage state.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link ApiUsageState}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ApiUsageState findTenantApiUsageState(TenantId tenantId) {
@@ -191,12 +232,27 @@ public class ApiUsageStateServiceImpl extends AbstractEntityService implements A
         validateId(tenantId, id -> INCORRECT_TENANT_ID + id);
         return apiUsageStateDao.findTenantApiUsageState(tenantId.getId());
     }
+    /**
+     * Finds api usage state by entity id.
+     *
+     * @param entityId target entity identifier
+     * @return {@link ApiUsageState}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ApiUsageState findApiUsageStateByEntityId(EntityId entityId) {
         validateId(entityId.getId(), id -> "Invalid entity id " + id);
         return apiUsageStateDao.findApiUsageStateByEntityId(entityId);
     }
+    /**
+     * Finds api usage state by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @return {@link ApiUsageState}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ApiUsageState findApiUsageStateById(TenantId tenantId, ApiUsageStateId id) {
@@ -205,23 +261,52 @@ public class ApiUsageStateServiceImpl extends AbstractEntityService implements A
         validateId(id, u -> "Incorrect apiUsageStateId " + u);
         return apiUsageStateDao.findById(tenantId, id.getId());
     }
+    /**
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findApiUsageStateById(tenantId, new ApiUsageStateId(entityId.getId())));
     }
+    /**
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
         return FluentFuture.from(apiUsageStateDao.findByIdAsync(tenantId, entityId.getId()))
                 .transform(Optional::ofNullable, directExecutor());
     }
+    /**
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Transactional
     @Override
     public void deleteByTenantId(TenantId tenantId) {
         deleteApiUsageStateByEntityId(tenantId);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

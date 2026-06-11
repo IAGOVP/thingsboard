@@ -30,30 +30,58 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 /**
- * JPA implementation of oauth2client registration template dao.
+ * JPA/PostgreSQL implementation of oauth2client registration template dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Component
 @RequiredArgsConstructor
 @SqlDao
 public class JpaOAuth2ClientRegistrationTemplateDao extends JpaAbstractDao<OAuth2ClientRegistrationTemplateEntity, OAuth2ClientRegistrationTemplate> implements OAuth2ClientRegistrationTemplateDao {
     private final OAuth2ClientRegistrationTemplateRepository repository;
+    /**
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Class<OAuth2ClientRegistrationTemplateEntity> getEntityClass() {
         return OAuth2ClientRegistrationTemplateEntity.class;
     }
+    /**
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected JpaRepository<OAuth2ClientRegistrationTemplateEntity, UUID> getRepository() {
         return repository;
     }
+    /**
+     * Finds by provider id.
+     *
+     * @param providerId provider id ({@link String})
+     * @return optional {@link OAuth2ClientRegistrationTemplate}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Optional<OAuth2ClientRegistrationTemplate> findByProviderId(String providerId) {
         OAuth2ClientRegistrationTemplate oAuth2ClientRegistrationTemplate = DaoUtil.getData(repository.findByProviderId(providerId));
         return Optional.ofNullable(oAuth2ClientRegistrationTemplate);
     }
+    /**
+     * Finds all.
+     *
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<OAuth2ClientRegistrationTemplate> findAll() {

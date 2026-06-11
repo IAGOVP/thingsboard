@@ -23,11 +23,12 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.data.queue.Queue;
 import org.thingsboard.server.common.msg.queue.ServiceType;
 
+
+/**
+ * Identifies a logical queue (service type + queue name) for routing and discovery.
+ */
 @Data
 @AllArgsConstructor
-/**
- * Queue key.
- */
 public class QueueKey {
 
     private final ServiceType type;

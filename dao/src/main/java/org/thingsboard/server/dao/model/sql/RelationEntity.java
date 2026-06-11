@@ -41,8 +41,11 @@ import static org.thingsboard.server.dao.model.ModelConstants.RELATION_TYPE_GROU
 import static org.thingsboard.server.dao.model.ModelConstants.RELATION_TYPE_PROPERTY;
 import static org.thingsboard.server.dao.model.ModelConstants.VERSION_COLUMN;
 /**
- * Relation entity.
+ * JPA/Cassandra row model for relation.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @Entity
@@ -98,6 +101,12 @@ public final class RelationEntity implements ToData<EntityRelation> {
         this.relationTypeGroup = relation.getTypeGroup().name();
         this.additionalInfo = relation.getAdditionalInfo();
     }
+    /**
+     * To data.
+     *
+     * @return {@link EntityRelation}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityRelation toData() {

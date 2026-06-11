@@ -22,11 +22,10 @@ import org.thingsboard.server.common.msg.gen.MsgProtos;
 
 import java.io.Serializable;
 import java.util.UUID;
-
-@Data
 /**
  * Tb msg processing stack item.
  */
+@Data
 public class TbMsgProcessingStackItem implements Serializable {
 
     private final RuleChainId ruleChainId;

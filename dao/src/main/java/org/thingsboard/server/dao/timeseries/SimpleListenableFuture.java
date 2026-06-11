@@ -17,14 +17,59 @@ package org.thingsboard.server.dao.timeseries;
 
 import com.google.common.util.concurrent.AbstractFuture;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
- * Created by ashvayka on 21.02.17.
+
+
+
+
+
+ * Simple listenable future (Cassandra telemetry and latest-value DAO (Cassandra time-series DAO and latest-value caches)).
+
+
+
+
+
  */
+
+
+
+
+
+
 public class SimpleListenableFuture<V> extends AbstractFuture<V> {
+    /**
+     * Set.
+     *
+     * @param value value ({@link V})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean set(V value) {
         return super.set(value);
     }
+    /**
+     * Set exception.
+     *
+     * @param throwable throwable ({@link Throwable})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean setException(Throwable throwable) {
         return super.setException(throwable);

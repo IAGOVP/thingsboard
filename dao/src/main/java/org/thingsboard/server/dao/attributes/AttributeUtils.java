@@ -24,28 +24,97 @@ import org.thingsboard.server.dao.util.KvUtils;
 
 import java.util.List;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * Attribute utils.
+
+
+
+
+
+ * Attribute utils (server-side attribute key-value storage and caching).
+
+
+
+
+
 
  */
 
+
+
+
+
+
+
 public class AttributeUtils {
+    /**
+     * Validates the requested data.
+     *
+     * @param id entity UUID primary key
+     * @param scope attribute scope (SERVER_SCOPE, SHARED_SCOPE, etc.)
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Deprecated(since = "3.7.0")
     public static void validate(EntityId id, String scope) {
         Validator.validateId(id.getId(), uuid -> "Incorrect id " + uuid);
         Validator.validateString(scope, sc -> "Incorrect scope " + sc);
     }
+    /**
+     * Validates the requested data.
+     *
+     * @param id entity UUID primary key
+     * @param scope attribute scope (SERVER_SCOPE, SHARED_SCOPE, etc.)
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static void validate(EntityId id, AttributeScope scope) {
         Validator.validateId(id.getId(), uuid -> "Incorrect id " + uuid);
         Validator.checkNotNull(scope, "Incorrect scope " + scope);
     }
+    /**
+     * Validates the requested data.
+     *
+     * @param kvEntries kv entries ({@link List})
+     * @param valueNoXssValidation value no xss validation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static void validate(List<AttributeKvEntry> kvEntries,  boolean valueNoXssValidation) {
         kvEntries.forEach(tsKvEntry -> validate(tsKvEntry, valueNoXssValidation));
     }
+    /**
+     * Validates the requested data.
+     *
+     * @param kvEntry kv entry ({@link AttributeKvEntry})
+     * @param valueNoXssValidation value no xss validation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static void validate(AttributeKvEntry kvEntry, boolean valueNoXssValidation) {
         KvUtils.validate(kvEntry, valueNoXssValidation);

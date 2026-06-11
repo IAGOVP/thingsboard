@@ -25,7 +25,7 @@ import java.util.UUID;
 
 @Schema(allOf = EntityId.class)
 /**
- * Typed identifier for api key.
+ * Typed identifier for a personal access token / API key.
  */
 public class ApiKeyId extends UUIDBased implements EntityId {
 
@@ -36,10 +36,21 @@ public class ApiKeyId extends UUIDBased implements EntityId {
     public ApiKeyId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * From string.
+     *
+     * @param secretId secret id ({@link String})
+     * @return {@link ApiKeyId}
+     */
 
     public static ApiKeyId fromString(String secretId) {
         return new ApiKeyId(UUID.fromString(secretId));
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Override
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY, description = "string", example = "API_KEY", allowableValues = "API_KEY")

@@ -24,8 +24,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
 /**
- * Named parameter jdbc template configuration.
+ * Spring configuration for named parameter jdbc templateuration DAO beans.
+ *
+ * <p>Registers entity managers, repositories, and datasource routing.
  */
+
 
 @Component
 @RequiredArgsConstructor

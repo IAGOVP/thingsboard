@@ -63,6 +63,12 @@ public class CalculatedField extends BaseData<CalculatedFieldId> implements HasN
     public static final Set<EntityType> SUPPORTED_REFERENCED_ENTITIES = Collections.unmodifiableSet(EnumSet.of(
             EntityType.DEVICE, EntityType.ASSET, EntityType.CUSTOMER, EntityType.TENANT
     ));
+    /**
+     * Is supported ref entity.
+     *
+     * @param entity entity ({@link EntityId})
+     * @return the boolean result
+     */
 
     public static boolean isSupportedRefEntity(EntityId entity) {
         return SUPPORTED_REFERENCED_ENTITIES.contains(entity.getEntityType());
@@ -113,12 +119,22 @@ public class CalculatedField extends BaseData<CalculatedFieldId> implements HasN
         this.version = calculatedField.version;
         this.additionalInfo = calculatedField.additionalInfo;
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link CalculatedFieldId}
+     */
 
     @Schema(description = "JSON object with the Calculated Field Id. Referencing non-existing Calculated Field Id will cause error.")
     @Override
     public CalculatedFieldId getId() {
         return super.getId();
     }
+    /**
+     * Returns created time.
+     *
+     * @return the long result
+     */
 
     @Schema(description = "Timestamp of the calculated field creation, in milliseconds", example = "1609459200000", accessMode = Schema.AccessMode.READ_ONLY)
     @Override
@@ -127,12 +143,22 @@ public class CalculatedField extends BaseData<CalculatedFieldId> implements HasN
     }
 
     // Getter is ignored for serialization
+    /**
+     * Is debug mode.
+     *
+     * @return the boolean result
+     */
     @JsonIgnore
     public boolean isDebugMode() {
         return debugMode;
     }
 
     // Setter is annotated for deserialization
+    /**
+     * Set debug mode.
+     *
+     * @param debugMode debug mode
+     */
     @JsonSetter
     public void setDebugMode(boolean debugMode) {
         this.debugMode = debugMode;

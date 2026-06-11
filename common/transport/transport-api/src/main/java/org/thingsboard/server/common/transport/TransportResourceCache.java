@@ -28,7 +28,25 @@ public interface TransportResourceCache {
 
     Optional<TbResource> get(TenantId tenantId, ResourceType resourceType, String resourceId);
 
+    /**
+     * Updates the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceType resource type ({@link ResourceType})
+     * @param resourceI resource i ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void update(TenantId tenantId, ResourceType resourceType, String resourceI);
 
+    /**
+     * Evict.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceType resource type ({@link ResourceType})
+     * @param resourceId resource id ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void evict(TenantId tenantId, ResourceType resourceType, String resourceId);
 }

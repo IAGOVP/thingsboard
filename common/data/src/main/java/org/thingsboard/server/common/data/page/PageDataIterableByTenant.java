@@ -18,7 +18,7 @@ package org.thingsboard.server.common.data.page;
 import org.thingsboard.server.common.data.id.TenantId;
 
 /**
- * Page data iterable by tenant.
+ * Tenant-scoped {@link PageDataIterable} for multi-tenant batch processing.
  */
 public class PageDataIterableByTenant<T> extends BasePageDataIterable<T> {
 

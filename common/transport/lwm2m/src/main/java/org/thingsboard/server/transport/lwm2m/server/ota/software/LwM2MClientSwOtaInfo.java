@@ -37,14 +37,25 @@ public class LwM2MClientSwOtaInfo extends LwM2MClientOtaInfo<LwM2MSoftwareUpdate
     public LwM2MClientSwOtaInfo(String endpoint, String baseUrl, LwM2MSoftwareUpdateStrategy strategy) {
         super(endpoint, baseUrl, strategy);
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link OtaPackageType}
+     * @throws Exception on processing failure
+     */
 
     @JsonIgnore
     @Override
     public OtaPackageType getType() {
         return OtaPackageType.SOFTWARE;
     }
-
-
+    /**
+     * Updates the requested data.
+     *
+     * @param result result ({@link SoftwareUpdateResult})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void update(SoftwareUpdateResult result) {
         this.result = result;
 

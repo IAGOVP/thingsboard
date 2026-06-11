@@ -18,12 +18,14 @@ package org.thingsboard.server.queue;
 import java.util.Map;
 
 /**
- * tb queue msg headers contract.
+ * Contract for tb queue msg headers.
  */
 public interface TbQueueMsgHeaders {
 
+    /** Stages a key-value pair in the current transaction. */
     byte[] put(String key, byte[] value);
 
+    /** Get. */
     byte[] get(String key);
 
     Map<String, byte[]> getData();

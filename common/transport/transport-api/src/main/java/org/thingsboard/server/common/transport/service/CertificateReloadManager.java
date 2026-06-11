@@ -63,11 +63,27 @@ public class CertificateReloadManager implements SmartInitializingSingleton, Dis
 
     private final Map<String, CertificateWatcher> watchers = new ConcurrentHashMap<>();
     private volatile ScheduledExecutorService scheduler;
-
+    /**
+     * Register watcher.
+     *
+     * @param name name ({@link String})
+     * @param certPath cert path ({@link Path})
+     * @param reloadCallback reload callback ({@link Runnable})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void registerWatcher(String name, Path certPath, Runnable reloadCallback) {
         registerWatcher(name, List.of(certPath), reloadCallback);
     }
-
+    /**
+     * Register watcher.
+     *
+     * @param name name ({@link String})
+     * @param certPaths cert paths ({@link List})
+     * @param reloadCallback reload callback ({@link Runnable})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void registerWatcher(String name, List<Path> certPaths, Runnable reloadCallback) {
         watchers.put(name, new CertificateWatcher(certPaths, reloadCallback));
         log.info("Registered certificate watcher for: {} (watching {} file(s))", name, certPaths.size());
@@ -140,6 +156,12 @@ public class CertificateReloadManager implements SmartInitializingSingleton, Dis
             log.error("Error discovering SSL credentials configs", e);
         }
     }
+    /**
+     * Destroy.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void destroy() throws Exception {
@@ -150,6 +172,12 @@ public class CertificateReloadManager implements SmartInitializingSingleton, Dis
             }
         }
     }
+    /**
+     * After singletons instantiated.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void afterSingletonsInstantiated() {

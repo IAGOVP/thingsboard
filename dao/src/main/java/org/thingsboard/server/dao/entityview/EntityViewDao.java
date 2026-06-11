@@ -31,155 +31,226 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Created by Victor Basanets on 8/28/2017.
+ * Persistence contract for entity view.
+ *
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (ThingsBoard DAO layer).
  */
+
 public interface EntityViewDao extends Dao<EntityView>, ExportableEntityDao<EntityViewId, EntityView> {
 
+    
     /**
-     * Find entity view info by id.
+     * Finds entity view info by id.
      *
-     * @param tenantId the tenant id
-     * @param assetId the asset id
-     * @return the entity view info object
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityViewId entity view id ({@link UUID})
+     * @return {@link EntityViewInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     EntityViewInfo findEntityViewInfoById(TenantId tenantId, UUID entityViewId);
 
+    
     /**
-     * Save or update device object
+     * Saves or persists the requested data.
      *
-     * @param entityView the entity-view object
-     * @return saved entity-view object
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityView entity view ({@link EntityView})
+     * @return {@link EntityView}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     EntityView save(TenantId tenantId, EntityView entityView);
 
+    
     /**
-     * Find entity views by tenantId and page link.
+     * Finds entity views by tenant id.
      *
-     * @param tenantId the tenantId
-     * @param pageLink the page link
-     * @return the list of entity view objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<EntityView> findEntityViewsByTenantId(UUID tenantId, PageLink pageLink);
 
+    
     /**
-     * Find entity view infos by tenantId and page link.
+     * Finds entity view infos by tenant id.
      *
-     * @param tenantId the tenantId
-     * @param pageLink the page link
-     * @return the list of entity view info objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<EntityViewInfo> findEntityViewInfosByTenantId(UUID tenantId, PageLink pageLink);
 
+    
     /**
-     * Find entity views by tenantId, type and page link.
+     * Finds entity views by tenant id and type.
      *
-     * @param tenantId the tenantId
-     * @param type the type
-     * @param pageLink the page link
-     * @return the list of entity view objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<EntityView> findEntityViewsByTenantIdAndType(UUID tenantId, String type, PageLink pageLink);
 
+    
     /**
-     * Find entity view infos by tenantId, type and page link.
+     * Finds entity view infos by tenant id and type.
      *
-     * @param tenantId the tenantId
-     * @param type the type
-     * @param pageLink the page link
-     * @return the list of entity view info objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<EntityViewInfo> findEntityViewInfosByTenantIdAndType(UUID tenantId, String type, PageLink pageLink);
 
+    
     /**
-     * Find entity views by tenantId and entity view name.
+     * Finds entity view by tenant id and name.
      *
-     * @param tenantId the tenantId
-     * @param name the entity view name
-     * @return the optional entity view object
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return optional {@link EntityView}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     Optional<EntityView> findEntityViewByTenantIdAndName(UUID tenantId, String name);
 
+    
     /**
-     * Find entity views by tenantId, customerId and page link.
+     * Finds entity views by tenant id and customer id.
      *
-     * @param tenantId the tenantId
-     * @param customerId the customerId
-     * @param pageLink the page link
-     * @return the list of entity view objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<EntityView> findEntityViewsByTenantIdAndCustomerId(UUID tenantId,
                                                                 UUID customerId,
                                                                 PageLink pageLink);
 
+    
     /**
-     * Find entity view infos by tenantId, customerId and page link.
+     * Finds entity view infos by tenant id and customer id.
      *
-     * @param tenantId the tenantId
-     * @param customerId the customerId
-     * @param pageLink the page link
-     * @return the list of entity view info objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<EntityViewInfo> findEntityViewInfosByTenantIdAndCustomerId(UUID tenantId, UUID customerId, PageLink pageLink);
 
+    
     /**
-     * Find entity views by tenantId, customerId, type and page link.
+     * Finds entity views by tenant id and customer id and type.
      *
-     * @param tenantId the tenantId
-     * @param customerId the customerId
-     * @param type the type
-     * @param pageLink the page link
-     * @return the list of entity view objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<EntityView> findEntityViewsByTenantIdAndCustomerIdAndType(UUID tenantId,
                                                                        UUID customerId,
                                                                        String type,
                                                                        PageLink pageLink);
 
+    
     /**
-     * Find entity view infos by tenantId, customerId, type and page link.
+     * Finds entity view infos by tenant id and customer id and type.
      *
-     * @param tenantId the tenantId
-     * @param customerId the customerId
-     * @param type the type
-     * @param pageLink the page link
-     * @return the list of entity view info objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<EntityViewInfo> findEntityViewInfosByTenantIdAndCustomerIdAndType(UUID tenantId, UUID customerId, String type, PageLink pageLink);
+    /**
+     * Finds entity views by tenant id and entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<EntityView> findEntityViewsByTenantIdAndEntityId(UUID tenantId, UUID entityId);
+    /**
+     * Exists by tenant id and entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     boolean existsByTenantIdAndEntityId(UUID tenantId, UUID entityId);
 
+    
     /**
-     * Find tenants entity view types.
+     * Finds tenant entity view types async.
      *
-     * @return the list of tenant entity view type objects
+     * @param tenantId tenant that owns the entity or operation
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     ListenableFuture<List<EntitySubtype>> findTenantEntityViewTypesAsync(UUID tenantId);
 
+    
     /**
-     * Find entity views by tenantId, edgeId and page link.
+     * Finds entity views by tenant id and edge id.
      *
-     * @param tenantId the tenantId
-     * @param edgeId   the edgeId
-     * @param pageLink the page link
-     * @return the list of entity view objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link UUID})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<EntityView> findEntityViewsByTenantIdAndEdgeId(UUID tenantId,
                                                             UUID edgeId,
                                                             PageLink pageLink);
+    /**
+     * Finds entity views by tenant id and ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityViewIds entity view ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<EntityView> findEntityViewsByTenantIdAndIds(UUID tenantId, List<UUID> entityViewIds);
 
+    
     /**
-     * Find entity views by tenantId, edgeId, type and page link.
+     * Finds entity views by tenant id and edge id and type.
      *
-     * @param tenantId the tenantId
-     * @param edgeId   the edgeId
-     * @param type the type
-     * @param pageLink the page link
-     * @return the list of entity view objects
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link UUID})
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     PageData<EntityView> findEntityViewsByTenantIdAndEdgeIdAndType(UUID tenantId,
                                                             UUID edgeId,
                                                             String type,

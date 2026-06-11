@@ -31,20 +31,74 @@ import java.util.Optional;
  */
 public interface NotificationTemplateService {
 
+    /**
+     * Finds notification template by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id id ({@link NotificationTemplateId})
+     * @return {@link NotificationTemplate}
+     */
     NotificationTemplate findNotificationTemplateById(TenantId tenantId, NotificationTemplateId id);
 
+    /**
+     * Saves or persists notification template.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param notificationTemplate notification template ({@link NotificationTemplate})
+     * @return {@link NotificationTemplate}
+     */
     NotificationTemplate saveNotificationTemplate(TenantId tenantId, NotificationTemplate notificationTemplate);
 
+    /**
+     * Finds notification templates by tenant id and notification types.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param notificationTypes notification types ({@link List})
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<NotificationTemplate> findNotificationTemplatesByTenantIdAndNotificationTypes(TenantId tenantId, List<NotificationType> notificationTypes, PageLink pageLink);
 
+    /**
+     * Finds tenant or system notification template.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param notificationType notification type ({@link NotificationType})
+     * @return optional {@link NotificationTemplate}, empty if not found
+     */
     Optional<NotificationTemplate> findTenantOrSystemNotificationTemplate(TenantId tenantId, NotificationType notificationType);
 
+    /**
+     * Finds notification template by tenant id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param notificationType notification type ({@link NotificationType})
+     * @return optional {@link NotificationTemplate}, empty if not found
+     */
     Optional<NotificationTemplate> findNotificationTemplateByTenantIdAndType(TenantId tenantId, NotificationType notificationType);
 
+    /**
+     * Counts notification templates by tenant id and notification types.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param notificationTypes notification types ({@link Collection})
+     * @return the int result
+     */
     int countNotificationTemplatesByTenantIdAndNotificationTypes(TenantId tenantId, Collection<NotificationType> notificationTypes);
 
+    /**
+     * Deletes notification template by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id id ({@link NotificationTemplateId})
+     */
     void deleteNotificationTemplateById(TenantId tenantId, NotificationTemplateId id);
 
+    /**
+     * Deletes notification templates by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     */
     void deleteNotificationTemplatesByTenantId(TenantId tenantId);
 
 }

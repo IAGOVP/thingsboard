@@ -19,8 +19,11 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.thingsboard.server.common.data.id.OtaPackageId;
 /**
- * Ota package cache evict event.
+ * Cache eviction event published when ota package cache data changes.
+ *
+ * <p>Consumed by cache listeners to invalidate stale entries cluster-wide.
  */
+
 
 @Data
 @RequiredArgsConstructor

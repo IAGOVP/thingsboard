@@ -57,8 +57,11 @@ import static org.thingsboard.server.dao.DaoUtil.toUUIDs;
 import static org.thingsboard.server.dao.service.Validator.validateId;
 import static org.thingsboard.server.dao.service.Validator.validateIds;
 /**
- * Spring service implementing tenant API.
+ * Spring {@code @Service} implementing the tenant DAO API.
+ *
+ * <p>Delegates to {@code *Dao} implementations and manages cache eviction (tenants, tenant profiles, and profile caching).
  */
+
 
 @Service("TenantDaoService")
 @Slf4j
@@ -92,6 +95,13 @@ public class TenantServiceImpl extends AbstractCachedEntityService<TenantId, Ten
     private TenantDataValidator tenantValidator;
     @Autowired
     protected TbTransactionalCache<TenantId, Boolean> existsTenantCache;
+    /**
+     * Handles evict event.
+     *
+     * @param event event ({@link TenantEvictEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     @TransactionalEventListener
@@ -102,6 +112,13 @@ public class TenantServiceImpl extends AbstractCachedEntityService<TenantId, Ten
             existsTenantCache.evict(tenantId);
         }
     }
+    /**
+     * Finds tenant by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link Tenant}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Tenant findTenantById(TenantId tenantId) {
@@ -110,6 +127,13 @@ public class TenantServiceImpl extends AbstractCachedEntityService<TenantId, Ten
 
         return cache.getAndPutInTransaction(tenantId, () -> tenantDao.findById(tenantId, tenantId.getId()), true);
     }
+    /**
+     * Finds tenant info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link TenantInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TenantInfo findTenantInfoById(TenantId tenantId) {
@@ -117,6 +141,14 @@ public class TenantServiceImpl extends AbstractCachedEntityService<TenantId, Ten
         validateId(tenantId, id -> INCORRECT_TENANT_ID + id);
         return tenantDao.findTenantInfoById(tenantId, tenantId.getId());
     }
+    /**
+     * Finds tenant by id async.
+     *
+     * @param callerId caller id ({@link TenantId})
+     * @param tenantId tenant that owns the entity or operation
+     * @return future completing with {@link Tenant}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<Tenant> findTenantByIdAsync(TenantId callerId, TenantId tenantId) {
@@ -124,12 +156,27 @@ public class TenantServiceImpl extends AbstractCachedEntityService<TenantId, Ten
         validateId(tenantId, id -> INCORRECT_TENANT_ID + id);
         return tenantDao.findByIdAsync(callerId, tenantId.getId());
     }
+    /**
+     * Saves or persists tenant.
+     *
+     * @param tenant tenant ({@link Tenant})
+     * @return {@link Tenant}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     @Transactional
     public Tenant saveTenant(Tenant tenant) {
         return saveTenant(tenant, null);
     }
+    /**
+     * Saves or persists tenant.
+     *
+     * @param tenant tenant ({@link Tenant})
+     * @param defaultEntitiesCreator default entities creator ({@link Consumer})
+     * @return {@link Tenant}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     @Transactional
@@ -163,6 +210,13 @@ public class TenantServiceImpl extends AbstractCachedEntityService<TenantId, Ten
 
         return savedTenant;
     }
+    /**
+     * Deletes tenant.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteTenant(TenantId tenantId) {
@@ -190,6 +244,13 @@ public class TenantServiceImpl extends AbstractCachedEntityService<TenantId, Ten
                 EntityType.AI_MODEL
         );
     }
+    /**
+     * Finds tenants.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<Tenant> findTenants(PageLink pageLink) {
@@ -197,6 +258,13 @@ public class TenantServiceImpl extends AbstractCachedEntityService<TenantId, Ten
         Validator.validatePageLink(pageLink);
         return tenantDao.findTenants(TenantId.SYS_TENANT_ID, pageLink);
     }
+    /**
+     * Finds tenant infos.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<TenantInfo> findTenantInfos(PageLink pageLink) {
@@ -204,24 +272,51 @@ public class TenantServiceImpl extends AbstractCachedEntityService<TenantId, Ten
         Validator.validatePageLink(pageLink);
         return tenantDao.findTenantInfos(TenantId.SYS_TENANT_ID, pageLink);
     }
+    /**
+     * Finds tenant ids by tenant profile id.
+     *
+     * @param tenantProfileId tenant profile id ({@link TenantProfileId})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<TenantId> findTenantIdsByTenantProfileId(TenantProfileId tenantProfileId) {
         log.trace("Executing findTenantsByTenantProfileId [{}]", tenantProfileId);
         return tenantDao.findTenantIdsByTenantProfileId(tenantProfileId);
     }
+    /**
+     * Finds tenant by name.
+     *
+     * @param name entity or attribute name
+     * @return {@link Tenant}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Tenant findTenantByName(String name) {
         log.trace("Executing findTenantByName [{}]", name);
         return tenantDao.findTenantByName(TenantId.SYS_TENANT_ID, name);
     }
+    /**
+     * Deletes tenants.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteTenants() {
         log.trace("Executing deleteTenants");
         tenantsRemover.removeEntities(TenantId.SYS_TENANT_ID, TenantId.SYS_TENANT_ID);
     }
+    /**
+     * Finds tenants ids.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<TenantId> findTenantsIds(PageLink pageLink) {
@@ -229,12 +324,27 @@ public class TenantServiceImpl extends AbstractCachedEntityService<TenantId, Ten
         Validator.validatePageLink(pageLink);
         return tenantDao.findTenantsIds(pageLink);
     }
+    /**
+     * Finds tenants by ids.
+     *
+     * @param callerId caller id ({@link TenantId})
+     * @param tenantIds tenant ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<Tenant> findTenantsByIds(TenantId callerId, List<TenantId> tenantIds) {
         log.trace("Executing findTenantsByIds, callerId [{}], tenantIds [{}]", callerId, tenantIds);
         return tenantDao.findTenantsByIds(callerId.getId(), toUUIDs(tenantIds));
     }
+    /**
+     * Tenant exists.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean tenantExists(TenantId tenantId) {
@@ -253,17 +363,39 @@ public class TenantServiceImpl extends AbstractCachedEntityService<TenantId, Ten
             deleteTenant(TenantId.fromUUID(entity.getUuidId()));
         }
     };
+    /**
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findTenantById(TenantId.fromUUID(entityId.getId())));
     }
+    /**
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
         return FluentFuture.from(findTenantByIdAsync(tenantId, TenantId.fromUUID(entityId.getId())))
                 .transform(Optional::ofNullable, directExecutor());
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

@@ -48,6 +48,13 @@ public abstract class RpcDownlinkRequestCallbackProxy<R, T> implements DownlinkR
         this.request = requestMsg;
         this.callback = callback;
     }
+    /**
+     * Handles sent.
+     *
+     * @param request request payload with operation parameters
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     public boolean onSent(R request) {
@@ -65,6 +72,14 @@ public abstract class RpcDownlinkRequestCallbackProxy<R, T> implements DownlinkR
         transportService.process(client.getSession(), this.request, RpcStatus.SENT, TransportServiceCallback.EMPTY);
         return true;
     }
+    /**
+     * Handles success.
+     *
+     * @param request request payload with operation parameters
+     * @param response response ({@link T})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onSuccess(R request, T response) {
@@ -74,6 +89,14 @@ public abstract class RpcDownlinkRequestCallbackProxy<R, T> implements DownlinkR
             callback.onSuccess(request, response);
         }
     }
+    /**
+     * Handles validation error.
+     *
+     * @param params params ({@link String})
+     * @param msg msg ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onValidationError(String params, String msg) {
@@ -82,6 +105,14 @@ public abstract class RpcDownlinkRequestCallbackProxy<R, T> implements DownlinkR
             callback.onValidationError(params, msg);
         }
     }
+    /**
+     * Handles error.
+     *
+     * @param params params ({@link String})
+     * @param e e ({@link Exception})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onError(String params, Exception e) {
@@ -95,7 +126,13 @@ public abstract class RpcDownlinkRequestCallbackProxy<R, T> implements DownlinkR
             callback.onError(params, e);
         }
     }
-
+    /**
+     * Reply.
+     *
+     * @param response response ({@link LwM2MRpcResponseBody})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     protected void reply(LwM2MRpcResponseBody response) {
         TransportProtos.ToDeviceRpcResponseMsg.Builder msg = TransportProtos.ToDeviceRpcResponseMsg.newBuilder().setRequestId(request.getRequestId());
         String responseAsString = JacksonUtil.toString(response);
@@ -108,11 +145,23 @@ public abstract class RpcDownlinkRequestCallbackProxy<R, T> implements DownlinkR
     }
 
     abstract protected void sendRpcReplyOnSuccess(T response);
-
+    /**
+     * Send rpc reply on validation error.
+     *
+     * @param msg msg ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     protected void sendRpcReplyOnValidationError(String msg) {
         reply(LwM2MRpcResponseBody.builder().result(ResponseCode.BAD_REQUEST.getName()).error(msg).build());
     }
-
+    /**
+     * Send rpc reply on error.
+     *
+     * @param e e ({@link Exception})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     protected void sendRpcReplyOnError(Exception e) {
         String error = e.getMessage();
         if (error == null) {

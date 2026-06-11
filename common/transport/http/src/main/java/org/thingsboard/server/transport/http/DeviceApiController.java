@@ -94,7 +94,7 @@ import java.util.function.Consumer;
 public class DeviceApiController implements TbTransportService {
 
     /** URL prefix for all device HTTP API methods in this controller. */
-    static final String DEVICE_API_BASE = "/api/v1";
+    public static final String DEVICE_API_BASE = "/api/v1";
 
     private static final String MARKDOWN_CODE_BLOCK_START = "\n\n```json\n";
     private static final String MARKDOWN_CODE_BLOCK_END = "\n```\n\n";
@@ -151,6 +151,25 @@ public class DeviceApiController implements TbTransportService {
                     + ATTRIBUTE_PAYLOAD_EXAMPLE
                     + MARKDOWN_CODE_BLOCK_END
                     + REQUIRE_ACCESS_TOKEN)
+    /**
+     * Returns device attributes.
+     *
+     * @param ACCESS_TOKEN_PARAM_DESCRIPTION access token param description
+     * @param true true
+     * @param deviceToken device token ({@link String})
+     * @param scope" scope"
+     * @param true true
+     * @param "clientKeys" "client keys"
+     * @param false false
+     * @param clientKeys client keys ({@link String})
+     * @param scope" scope"
+     * @param true true
+     * @param "sharedKeys" "shared keys"
+     * @param false false
+     * @param sharedKeys shared keys ({@link String})
+     * @return {@link DeferredResult}
+     * @throws Exception on processing failure
+     */
     @RequestMapping(value = "/{deviceToken}/attributes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public DeferredResult<ResponseEntity> getDeviceAttributes(
             @Parameter(description = ACCESS_TOKEN_PARAM_DESCRIPTION, required = true, schema = @Schema(defaultValue = "YOUR_DEVICE_ACCESS_TOKEN"))
@@ -187,6 +206,16 @@ public class DeviceApiController implements TbTransportService {
                     + ATTRIBUTE_PAYLOAD_EXAMPLE
                     + MARKDOWN_CODE_BLOCK_END
                     + REQUIRE_ACCESS_TOKEN)
+    /**
+     * Post device attributes.
+     *
+     * @param ACCESS_TOKEN_PARAM_DESCRIPTION access token param description
+     * @param true true
+     * @param deviceToken device token ({@link String})
+     * @param json json ({@link String})
+     * @return {@link DeferredResult}
+     * @throws Exception on processing failure
+     */
     @RequestMapping(value = "/{deviceToken}/attributes", method = RequestMethod.POST)
     public DeferredResult<ResponseEntity> postDeviceAttributes(
             @Parameter(description = ACCESS_TOKEN_PARAM_DESCRIPTION, required = true , schema = @Schema(defaultValue = "YOUR_DEVICE_ACCESS_TOKEN"))
@@ -208,6 +237,17 @@ public class DeviceApiController implements TbTransportService {
                     + "\n Example of the request: "
                     + TS_PAYLOAD
                     + REQUIRE_ACCESS_TOKEN)
+    /**
+     * Post telemetry.
+     *
+     * @param ACCESS_TOKEN_PARAM_DESCRIPTION access token param description
+     * @param true true
+     * @param deviceToken device token ({@link String})
+     * @param json json ({@link String})
+     * @param request request payload with operation parameters
+     * @return {@link DeferredResult}
+     * @throws Exception on processing failure
+     */
     @RequestMapping(value = "/{deviceToken}/telemetry", method = RequestMethod.POST)
     public DeferredResult<ResponseEntity> postTelemetry(
             @Parameter(description = ACCESS_TOKEN_PARAM_DESCRIPTION, required = true , schema = @Schema(defaultValue = "YOUR_DEVICE_ACCESS_TOKEN"))
@@ -233,6 +273,16 @@ public class DeviceApiController implements TbTransportService {
                     + "Note: both 'secretKey' and 'durationMs' is optional parameters. " +
                     "In case the secretKey is not specified, the empty string as a default value is used. In case the durationMs is not specified, the system parameter device.claim.duration is used.\n\n"
                     + REQUIRE_ACCESS_TOKEN)
+    /**
+     * Saves or persists claiming info.
+     *
+     * @param ACCESS_TOKEN_PARAM_DESCRIPTION access token param description
+     * @param true true
+     * @param deviceToken device token ({@link String})
+     * @param json json ({@link String})
+     * @return {@link DeferredResult}
+     * @throws Exception on processing failure
+     */
     @RequestMapping(value = "/{deviceToken}/claim", method = RequestMethod.POST)
     public DeferredResult<ResponseEntity> saveClaimingInfo(
             @Parameter(description = ACCESS_TOKEN_PARAM_DESCRIPTION, required = true , schema = @Schema(defaultValue = "YOUR_DEVICE_ACCESS_TOKEN"))
@@ -254,6 +304,19 @@ public class DeviceApiController implements TbTransportService {
                     "Deprecated, since long polling is resource and network consuming. " +
                     "Consider using MQTT or CoAP protocol for light-weight real-time updates. \n\n" +
                     REQUIRE_ACCESS_TOKEN)
+    /**
+     * Subscribe to commands.
+     *
+     * @param ACCESS_TOKEN_PARAM_DESCRIPTION access token param description
+     * @param true true
+     * @param deviceToken device token ({@link String})
+     * @param seconds seconds
+     * @param "timeout" "timeout"
+     * @param false false
+     * @param timeout timeout
+     * @return {@link DeferredResult}
+     * @throws Exception on processing failure
+     */
     @RequestMapping(value = "/{deviceToken}/rpc", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public DeferredResult<ResponseEntity> subscribeToCommands(
             @Parameter(description = ACCESS_TOKEN_PARAM_DESCRIPTION, required = true , schema = @Schema(defaultValue = "YOUR_DEVICE_ACCESS_TOKEN"))
@@ -282,6 +345,22 @@ public class DeviceApiController implements TbTransportService {
             @ApiResponse(responseCode = "400", description = "Invalid structure of the request."),
             @ApiResponse(responseCode = "413", description = "Request payload is too large."),
     })
+    /**
+     * Reply to command.
+     *
+     * @param ACCESS_TOKEN_PARAM_DESCRIPTION access token param description
+     * @param true true
+     * @param deviceToken device token ({@link String})
+     * @param request" request" ({@link RPC})
+     * @param true true
+     * @param requestId request id ({@link Integer})
+     * @param request request payload with operation parameters
+     * @param {\"status\":\"success\"}" {\"status\":\"success\"}"
+     * @param json json ({@link String})
+     * @param httpServletRequest http servlet request ({@link HttpServletRequest})
+     * @return {@link DeferredResult}
+     * @throws Exception on processing failure
+     */
     @RequestMapping(value = "/{deviceToken}/rpc/{requestId}", method = RequestMethod.POST)
     public DeferredResult<ResponseEntity> replyToCommand(
             @Parameter(description = ACCESS_TOKEN_PARAM_DESCRIPTION, required = true , schema = @Schema(defaultValue = "YOUR_DEVICE_ACCESS_TOKEN"))
@@ -314,6 +393,18 @@ public class DeviceApiController implements TbTransportService {
             @ApiResponse(responseCode = "400", description = "Invalid structure of the request."),
             @ApiResponse(responseCode = "413", description = "Request payload too large."),
     })
+    /**
+     * Post rpc request.
+     *
+     * @param ACCESS_TOKEN_PARAM_DESCRIPTION access token param description
+     * @param true true
+     * @param deviceToken device token ({@link String})
+     * @param JSON" json"
+     * @param json json ({@link String})
+     * @param httpServletRequest http servlet request ({@link HttpServletRequest})
+     * @return {@link DeferredResult}
+     * @throws Exception on processing failure
+     */
     @RequestMapping(value = "/{deviceToken}/rpc", method = RequestMethod.POST)
     public DeferredResult<ResponseEntity> postRpcRequest(
             @Parameter(description = ACCESS_TOKEN_PARAM_DESCRIPTION, required = true , schema = @Schema(defaultValue = "YOUR_DEVICE_ACCESS_TOKEN"))
@@ -341,6 +432,19 @@ public class DeviceApiController implements TbTransportService {
                     "Deprecated, since long polling is resource and network consuming. " +
                     "Consider using MQTT or CoAP protocol for light-weight real-time updates. \n\n" +
                     REQUIRE_ACCESS_TOKEN)
+    /**
+     * Subscribe to attributes.
+     *
+     * @param ACCESS_TOKEN_PARAM_DESCRIPTION access token param description
+     * @param true true
+     * @param deviceToken device token ({@link String})
+     * @param seconds seconds
+     * @param "timeout" "timeout"
+     * @param false false
+     * @param timeout timeout
+     * @return {@link DeferredResult}
+     * @throws Exception on processing failure
+     */
     @RequestMapping(value = "/{deviceToken}/attributes/updates", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public DeferredResult<ResponseEntity> subscribeToAttributes(
             @Parameter(description = ACCESS_TOKEN_PARAM_DESCRIPTION, required = true , schema = @Schema(defaultValue = "YOUR_DEVICE_ACCESS_TOKEN"))
@@ -372,6 +476,27 @@ public class DeviceApiController implements TbTransportService {
                     "For example, device may request first 16 KB of firmware using 'chunk'=0 and 'size'=16384. " +
                     "Next 16KB using 'chunk'=1 and 'size'=16384. The last chunk should have less bytes then requested using 'size' parameter. \n\n" +
                     REQUIRE_ACCESS_TOKEN)
+    /**
+     * Returns firmware.
+     *
+     * @param ACCESS_TOKEN_PARAM_DESCRIPTION access token param description
+     * @param true true
+     * @param deviceToken device token ({@link String})
+     * @param firmware firmware
+     * @param attribute." attribute."
+     * @param title title ({@link String})
+     * @param firmware firmware
+     * @param attribute." attribute."
+     * @param version version ({@link String})
+     * @param "size" "size"
+     * @param false false
+     * @param size size
+     * @param "chunk" "chunk"
+     * @param false false
+     * @param chunk chunk
+     * @return {@link DeferredResult}
+     * @throws Exception on processing failure
+     */
     @RequestMapping(value = "/{deviceToken}/firmware", method = RequestMethod.GET)
     public DeferredResult<ResponseEntity> getFirmware(
             @Parameter(description = ACCESS_TOKEN_PARAM_DESCRIPTION, required = true , schema = @Schema(defaultValue = "YOUR_DEVICE_ACCESS_TOKEN"))
@@ -398,6 +523,27 @@ public class DeviceApiController implements TbTransportService {
                     "For example, device may request first 16 KB of software using 'chunk'=0 and 'size'=16384. " +
                     "Next 16KB using 'chunk'=1 and 'size'=16384. The last chunk should have less bytes then requested using 'size' parameter. \n\n" +
                     REQUIRE_ACCESS_TOKEN)
+    /**
+     * Returns software.
+     *
+     * @param ACCESS_TOKEN_PARAM_DESCRIPTION access token param description
+     * @param true true
+     * @param deviceToken device token ({@link String})
+     * @param software software
+     * @param attribute." attribute."
+     * @param title title ({@link String})
+     * @param software software
+     * @param attribute." attribute."
+     * @param version version ({@link String})
+     * @param "size" "size"
+     * @param false false
+     * @param size size
+     * @param "chunk" "chunk"
+     * @param false false
+     * @param chunk chunk
+     * @return {@link DeferredResult}
+     * @throws Exception on processing failure
+     */
     @RequestMapping(value = "/{deviceToken}/software", method = RequestMethod.GET)
     public DeferredResult<ResponseEntity> getSoftware(
             @Parameter(description = ACCESS_TOKEN_PARAM_DESCRIPTION, required = true , schema = @Schema(defaultValue = "YOUR_DEVICE_ACCESS_TOKEN"))
@@ -432,6 +578,13 @@ public class DeviceApiController implements TbTransportService {
                     "  \"credentialsValue\":\"DEVICE_ACCESS_TOKEN\",\n" +
                     "  \"status\":\"SUCCESS\"\n" +
                     "}" + MARKDOWN_CODE_BLOCK_END)
+    /**
+     * Provision device.
+     *
+     * @param json json ({@link String})
+     * @return {@link DeferredResult}
+     * @throws Exception on processing failure
+     */
     @RequestMapping(value = "/provision", method = RequestMethod.POST)
     public DeferredResult<ResponseEntity> provisionDevice(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "JSON with provision request. See API call description for example.")
@@ -463,6 +616,14 @@ public class DeviceApiController implements TbTransportService {
         private final DeferredResult<ResponseEntity> responseWriter;
         private final Consumer<SessionInfoProto> onSuccess;
 
+    /**
+     * Handles success.
+     *
+     * @param msg msg ({@link ValidateDeviceCredentialsResponse})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
+
         @Override
         public void onSuccess(ValidateDeviceCredentialsResponse msg) {
             if (msg.hasDeviceInfo()) {
@@ -471,6 +632,13 @@ public class DeviceApiController implements TbTransportService {
                 responseWriter.setResult(new ResponseEntity<>(HttpStatus.UNAUTHORIZED));
             }
         }
+        /**
+         * Handles error.
+         *
+         * @param e e ({@link Throwable})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onError(Throwable e) {
@@ -489,10 +657,25 @@ public class DeviceApiController implements TbTransportService {
     static class DeviceProvisionCallback implements TransportServiceCallback<ProvisionDeviceResponseMsg> {
         private final DeferredResult<ResponseEntity> responseWriter;
 
+    /**
+     * Handles success.
+     *
+     * @param msg msg ({@link ProvisionDeviceResponseMsg})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
+
         @Override
         public void onSuccess(ProvisionDeviceResponseMsg msg) {
             responseWriter.setResult(new ResponseEntity<>(JsonConverter.toJson(msg).toString(), HttpStatus.OK));
         }
+        /**
+         * Handles error.
+         *
+         * @param e e ({@link Throwable})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onError(Throwable e) {
@@ -516,6 +699,14 @@ public class DeviceApiController implements TbTransportService {
         private final int chunkSize;
         private final int chunk;
 
+    /**
+     * Handles success.
+     *
+     * @param otaPackageResponseMsg ota package response msg
+     * @return nothing
+     * @throws Exception on processing failure
+     */
+
         @Override
         public void onSuccess(TransportProtos.GetOtaPackageResponseMsg otaPackageResponseMsg) {
             if (!TransportProtos.ResponseStatus.SUCCESS.equals(otaPackageResponseMsg.getResponseStatus())) {
@@ -534,6 +725,13 @@ public class DeviceApiController implements TbTransportService {
                 responseWriter.setResult(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
             }
         }
+        /**
+         * Handles error.
+         *
+         * @param e e ({@link Throwable})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onError(Throwable e) {
@@ -556,10 +754,24 @@ public class DeviceApiController implements TbTransportService {
             this.transportService = transportService;
             this.sessionInfo = sessionInfo;
         }
+        /**
+         * Handles success.
+         *
+         * @param msg msg ({@link Void})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onSuccess(Void msg) {
         }
+        /**
+         * Handles error.
+         *
+         * @param e e ({@link Throwable})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onError(Throwable e) {
@@ -573,11 +785,25 @@ public class DeviceApiController implements TbTransportService {
         public HttpOkCallback(DeferredResult<ResponseEntity> responseWriter) {
             this.responseWriter = responseWriter;
         }
+        /**
+         * Handles success.
+         *
+         * @param msg msg ({@link Void})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onSuccess(Void msg) {
             responseWriter.setResult(new ResponseEntity<>(HttpStatus.OK));
         }
+        /**
+         * Handles error.
+         *
+         * @param e e ({@link Throwable})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onError(Throwable e) {
@@ -592,22 +818,54 @@ public class DeviceApiController implements TbTransportService {
         private final TransportService transportService;
         private final SessionInfoProto sessionInfo;
 
+    /**
+     * Handles get attributes response.
+     *
+     * @param msg msg ({@link GetAttributeResponseMsg})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
+
         @Override
         public void onGetAttributesResponse(GetAttributeResponseMsg msg) {
             responseWriter.setResult(new ResponseEntity<>(JsonConverter.toJson(msg).toString(), HttpStatus.OK));
         }
+        /**
+         * Handles attribute update.
+         *
+         * @param sessionId session id ({@link UUID})
+         * @param msg msg ({@link AttributeUpdateNotificationMsg})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onAttributeUpdate(UUID sessionId, AttributeUpdateNotificationMsg msg) {
             log.trace("[{}] Received attributes update notification to device", sessionId);
             responseWriter.setResult(new ResponseEntity<>(JsonConverter.toJson(msg).toString(), HttpStatus.OK));
         }
+        /**
+         * Handles remote session close command.
+         *
+         * @param sessionId session id ({@link UUID})
+         * @param sessionCloseNotification session close notification ({@link SessionCloseNotificationProto})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onRemoteSessionCloseCommand(UUID sessionId, SessionCloseNotificationProto sessionCloseNotification) {
             log.trace("[{}] Received the remote command to close the session: {}", sessionId, sessionCloseNotification.getMessage());
             responseWriter.setResult(new ResponseEntity<>(HttpStatus.REQUEST_TIMEOUT));
         }
+        /**
+         * Handles to device rpc request.
+         *
+         * @param sessionId session id ({@link UUID})
+         * @param msg msg ({@link ToDeviceRpcRequestMsg})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onToDeviceRpcRequest(UUID sessionId, ToDeviceRpcRequestMsg msg) {
@@ -615,11 +873,25 @@ public class DeviceApiController implements TbTransportService {
             responseWriter.setResult(new ResponseEntity<>(JsonConverter.toJson(msg, true).toString(), HttpStatus.OK));
             transportService.process(sessionInfo, msg, RpcStatus.DELIVERED, TransportServiceCallback.EMPTY);
         }
+        /**
+         * Handles to server rpc response.
+         *
+         * @param msg msg ({@link ToServerRpcResponseMsg})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onToServerRpcResponse(ToServerRpcResponseMsg msg) {
             responseWriter.setResult(new ResponseEntity<>(JsonConverter.toJson(msg).toString(), HttpStatus.OK));
         }
+        /**
+         * Handles device deleted.
+         *
+         * @param deviceId target device identifier
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onDeviceDeleted(DeviceId deviceId) {
@@ -637,6 +909,12 @@ public class DeviceApiController implements TbTransportService {
             return MediaType.APPLICATION_OCTET_STREAM;
         }
     }
+    /**
+     * Returns name.
+     *
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public String getName() {

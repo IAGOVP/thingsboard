@@ -34,8 +34,18 @@ public @/**
 interface NoNullChar {
 
     String message() default "should not contain 0x00 symbol";
+/**
+ * Groups.
+ *
+ * @return {@link Class}
+ */
 
     Class<?>[] groups() default {};
+/**
+ * Payload.
+ *
+ * @return {@link Class}
+ */
 
     Class<? extends Payload>[] payload() default {};
 

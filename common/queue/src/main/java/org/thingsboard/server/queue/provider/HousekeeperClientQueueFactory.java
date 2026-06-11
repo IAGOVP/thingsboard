@@ -19,8 +19,9 @@ import org.thingsboard.server.gen.transport.TransportProtos.ToHousekeeperService
 import org.thingsboard.server.queue.TbQueueProducer;
 import org.thingsboard.server.queue.common.TbProtoQueueMsg;
 
+
 /**
- * housekeeper client queue factory contract.
+ * Factory for housekeeper (background cleanup) client queue components.
  */
 public interface HousekeeperClientQueueFactory {
 

@@ -27,11 +27,12 @@ import org.thingsboard.server.common.data.util.CollectionsUtil;
 
 import java.util.List;
 
+/**
+ * Edqs data query (EDQS microservice).
+ */
+
 @EqualsAndHashCode(callSuper = true)
 @Getter
-/**
- * EDQS component: edqs data query.
- */
 public class EdqsDataQuery extends EdqsQuery {
 
     private final int pageSize;

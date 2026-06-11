@@ -48,8 +48,11 @@ import java.util.stream.Collectors;
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
 import static org.thingsboard.server.dao.service.Validator.checkNotNull;
 /**
- * Spring service implementing mobile app bundle API.
+ * Spring {@code @Service} implementing the mobile app bundle DAO API.
+ *
+ * <p>Delegates to {@code *Dao} implementations and manages cache eviction (mobile apps, bundles, and QR code settings).
  */
+
 
 @Slf4j
 @Service
@@ -64,11 +67,16 @@ public class MobileAppBundleServiceImpl extends AbstractEntityService implements
     @Autowired
     private DataValidator<MobileAppBundle> mobileAppBundleDataValidator;
 
+    
     /**
-
-     * Persists mobile app bundle.
-
+     * Saves or persists mobile app bundle.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param mobileAppBundle mobile app bundle ({@link MobileAppBundle})
+     * @return {@link MobileAppBundle}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public MobileAppBundle saveMobileAppBundle(TenantId tenantId, MobileAppBundle mobileAppBundle) {
@@ -86,11 +94,17 @@ public class MobileAppBundleServiceImpl extends AbstractEntityService implements
         }
     }
 
+    
     /**
-
      * Updates oauth2clients.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param mobileAppBundleId mobile app bundle id ({@link MobileAppBundleId})
+     * @param oAuth2ClientIds o auth2client ids ({@link List})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void updateOauth2Clients(TenantId tenantId, MobileAppBundleId mobileAppBundleId, List<OAuth2ClientId> oAuth2ClientIds) {
@@ -115,11 +129,16 @@ public class MobileAppBundleServiceImpl extends AbstractEntityService implements
                 .entityId(mobileAppBundleId).created(false).build());
     }
 
+    
     /**
-
-     * Loads mobile app bundle by id.
-
+     * Finds mobile app bundle by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param mobileAppBundleId mobile app bundle id ({@link MobileAppBundleId})
+     * @return {@link MobileAppBundle}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public MobileAppBundle findMobileAppBundleById(TenantId tenantId, MobileAppBundleId mobileAppBundleId) {
@@ -127,11 +146,16 @@ public class MobileAppBundleServiceImpl extends AbstractEntityService implements
         return mobileAppBundleDao.findById(tenantId, mobileAppBundleId.getId());
     }
 
+    
     /**
-
-     * Loads mobile app bundle infos by tenant id.
-
+     * Finds mobile app bundle infos by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<MobileAppBundleInfo> findMobileAppBundleInfosByTenantId(TenantId tenantId, PageLink pageLink) {
@@ -141,11 +165,16 @@ public class MobileAppBundleServiceImpl extends AbstractEntityService implements
         return mobileBundles;
     }
 
+    
     /**
-
-     * Loads mobile app bundle info by id.
-
+     * Finds mobile app bundle info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param mobileAppIdBundle mobile app id bundle ({@link MobileAppBundleId})
+     * @return {@link MobileAppBundleInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public MobileAppBundleInfo findMobileAppBundleInfoById(TenantId tenantId, MobileAppBundleId mobileAppIdBundle) {
@@ -157,11 +186,17 @@ public class MobileAppBundleServiceImpl extends AbstractEntityService implements
         return mobileAppBundleInfo;
     }
 
+    
     /**
-
-     * Loads mobile app bundle by pkg name and platform.
-
+     * Finds mobile app bundle by pkg name and platform.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pkgName pkg name ({@link String})
+     * @param platform platform ({@link PlatformType})
+     * @return {@link MobileAppBundle}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public MobileAppBundle findMobileAppBundleByPkgNameAndPlatform(TenantId tenantId, String pkgName, PlatformType platform) {
@@ -170,11 +205,16 @@ public class MobileAppBundleServiceImpl extends AbstractEntityService implements
         return mobileAppBundleDao.findByPkgNameAndPlatform(tenantId, pkgName, platform);
     }
 
+    
     /**
-
-     * Removes mobile app bundle by id.
-
+     * Deletes mobile app bundle by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param mobileAppBundleId mobile app bundle id ({@link MobileAppBundleId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteMobileAppBundleById(TenantId tenantId, MobileAppBundleId mobileAppBundleId) {
@@ -183,11 +223,15 @@ public class MobileAppBundleServiceImpl extends AbstractEntityService implements
         eventPublisher.publishEvent(DeleteEntityEvent.builder().tenantId(tenantId).entityId(mobileAppBundleId).build());
     }
 
+    
     /**
-
-     * Removes by tenant id.
-
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteByTenantId(TenantId tenantId) {
@@ -195,22 +239,32 @@ public class MobileAppBundleServiceImpl extends AbstractEntityService implements
         mobileAppBundleDao.deleteByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Loads entity.
-
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findMobileAppBundleById(tenantId, new MobileAppBundleId(entityId.getId())));
     }
 
+    
     /**
-
-     * Loads entity async.
-
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
@@ -218,11 +272,17 @@ public class MobileAppBundleServiceImpl extends AbstractEntityService implements
                 .transform(Optional::ofNullable, directExecutor());
     }
 
+    
     /**
-
-     * Removes entity.
-
+     * Deletes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -230,11 +290,14 @@ public class MobileAppBundleServiceImpl extends AbstractEntityService implements
         deleteMobileAppBundleById(tenantId, (MobileAppBundleId) id);
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

@@ -41,8 +41,11 @@ import java.util.UUID;
 
 import static java.util.stream.Collectors.toSet;
 /**
- * JPA implementation of ai model dao.
+ * JPA/PostgreSQL implementation of ai model dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @SqlDao
 @Component
@@ -51,55 +54,80 @@ class JpaAiModelDao extends JpaAbstractDao<AiModelEntity, AiModel> implements Ai
 
     private final AiModelRepository aiModelRepository;
 
+    
     /**
-
-     * Loads by tenant id and id.
-
+     * Finds by tenant id and id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param modelId model id ({@link AiModelId})
+     * @return optional {@link AiModel}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<AiModel> findByTenantIdAndId(TenantId tenantId, AiModelId modelId) {
         return aiModelRepository.findByTenantIdAndId(tenantId.getId(), modelId.getId()).map(DaoUtil::getData);
     }
 
+    
     /**
-
-     * Loads by tenant id and name.
-
+     * Finds by tenant id and name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return {@link AiModel}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AiModel findByTenantIdAndName(UUID tenantId, String name) {
         return DaoUtil.getData(aiModelRepository.findByTenantIdAndName(tenantId, name));
     }
 
+    
     /**
-
-     * Loads by tenant id and external id.
-
+     * Finds by tenant id and external id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param externalId external id ({@link UUID})
+     * @return {@link AiModel}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AiModel findByTenantIdAndExternalId(UUID tenantId, UUID externalId) {
         return DaoUtil.getData(aiModelRepository.findByTenantIdAndExternalId(tenantId, externalId));
     }
 
+    
     /**
-
-     * Loads all by tenant id.
-
+     * Finds all by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AiModel> findAllByTenantId(TenantId tenantId, PageLink pageLink) {
         return findByTenantId(tenantId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads by tenant id.
-
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AiModel> findByTenantId(UUID tenantId, PageLink pageLink) {
@@ -108,11 +136,16 @@ class JpaAiModelDao extends JpaAbstractDao<AiModelEntity, AiModel> implements Ai
         );
     }
 
+    
     /**
-
-     * Loads ids by tenant id.
-
+     * Finds ids by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AiModelId> findIdsByTenantId(UUID tenantId, PageLink pageLink) {
@@ -133,44 +166,61 @@ class JpaAiModelDao extends JpaAbstractDao<AiModelEntity, AiModel> implements Ai
         return PageRequest.of(pageLink.getPage(), pageLink.getPageSize(), sort);
     }
 
+    
     /**
-
-     * Get external id by internal.
-
+     * Returns external id by internal.
+     *
+     * @param internalId internal id ({@link AiModelId})
+     * @return {@link AiModelId}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AiModelId getExternalIdByInternal(AiModelId internalId) {
         return aiModelRepository.getExternalIdById(internalId.getId()).map(AiModelId::new).orElse(null);
     }
 
+    
     /**
-
      * Counts by tenant id.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link Long}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Long countByTenantId(TenantId tenantId) {
         return aiModelRepository.countByTenantId(tenantId.getId());
     }
 
+    
     /**
-
-     * Removes by id.
-
+     * Deletes by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param modelId model id ({@link AiModelId})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public boolean deleteById(TenantId tenantId, AiModelId modelId) {
         return aiModelRepository.deleteByIdIn(Set.of(modelId.getId())) > 0;
     }
 
+    
     /**
-
-     * Removes by tenant id.
-
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Set<AiModelId> deleteByTenantId(TenantId tenantId) {
@@ -179,44 +229,58 @@ class JpaAiModelDao extends JpaAbstractDao<AiModelEntity, AiModel> implements Ai
                 .collect(toSet());
     }
 
+    
     /**
-
-     * Removes by tenant id and id.
-
+     * Deletes by tenant id and id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param modelId model id ({@link AiModelId})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public boolean deleteByTenantIdAndId(TenantId tenantId, AiModelId modelId) {
         return aiModelRepository.deleteByTenantIdAndIdIn(tenantId.getId(), Set.of(modelId.getId())) > 0;
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {
         return EntityType.AI_MODEL;
     }
 
+    
     /**
-
-     * Get entity class.
-
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected Class<AiModelEntity> getEntityClass() {
         return AiModelEntity.class;
     }
 
+    
     /**
-
-     * Get repository.
-
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected JpaRepository<AiModelEntity, UUID> getRepository() {

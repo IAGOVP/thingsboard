@@ -29,8 +29,11 @@ import org.thingsboard.server.dao.model.ModelConstants;
 
 import java.util.UUID;
 /**
- * Queue stats entity.
+ * JPA/Cassandra row model for queue stats.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -59,6 +62,12 @@ public class QueueStatsEntity extends BaseSqlEntity<QueueStats> {
         this.queueName = queueStats.getQueueName();
         this.serviceId = queueStats.getServiceId();
     }
+    /**
+     * To data.
+     *
+     * @return {@link QueueStats}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public QueueStats toData() {

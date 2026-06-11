@@ -42,6 +42,11 @@ import java.io.Serializable;
 public interface AlarmSchedule extends Serializable {
 
     AlarmScheduleType getType();
+/**
+ * Returns dynamic value.
+ *
+ * @return {@link DynamicValue}
+ */
 
     DynamicValue<String> getDynamicValue();
 

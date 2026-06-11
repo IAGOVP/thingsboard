@@ -23,7 +23,7 @@ import java.util.UUID;
 
 @Schema
 /**
- * Typed identifier for qr code settings.
+ * Typed identifier for QR code provisioning settings.
  */
 public class QrCodeSettingsId extends UUIDBased {
 
@@ -33,6 +33,12 @@ public class QrCodeSettingsId extends UUIDBased {
     public QrCodeSettingsId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * From string.
+     *
+     * @param qrCodeSettingsId qr code settings id ({@link String})
+     * @return {@link QrCodeSettingsId}
+     */
 
     public static QrCodeSettingsId fromString(String qrCodeSettingsId) {
         return new QrCodeSettingsId(UUID.fromString(qrCodeSettingsId));

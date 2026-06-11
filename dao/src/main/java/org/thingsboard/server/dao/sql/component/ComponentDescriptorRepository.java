@@ -29,24 +29,60 @@ import org.thingsboard.server.dao.model.sql.ComponentDescriptorEntity;
 import java.util.UUID;
 
 /**
- * Created by Valerii Sosliuk on 5/6/2017.
+ * Spring Data JPA repository for component descriptor entities.
+ *
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
  */
+
 public interface ComponentDescriptorRepository extends JpaRepository<ComponentDescriptorEntity, UUID> {
+    /**
+     * Finds by clazz.
+     *
+     * @param clazz clazz ({@link String})
+     * @return {@link ComponentDescriptorEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     ComponentDescriptorEntity findByClazz(String clazz);
 
     @Query("SELECT cd FROM ComponentDescriptorEntity cd WHERE cd.type = :type " +
             "AND (:textSearch IS NULL OR ilike(cd.name, CONCAT('%', :textSearch, '%')) = true)")
+    /**
+     * Finds by type.
+     *
+     * @param type type ({@link ComponentType})
+     * @param textSearch text search ({@link String})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<ComponentDescriptorEntity> findByType(@Param("type") ComponentType type,
                                                @Param("textSearch") String textSearch,
                                                Pageable pageable);
 
     @Query("SELECT cd FROM ComponentDescriptorEntity cd WHERE cd.type = :type AND cd.scope = :scope " +
             "AND (:textSearch IS NULL OR ilike(cd.name, CONCAT('%', :textSearch, '%')) = true)")
+    /**
+     * Finds by scope and type.
+     *
+     * @param type type ({@link ComponentType})
+     * @param scope attribute scope (SERVER_SCOPE, SHARED_SCOPE, etc.)
+     * @param textSearch text search ({@link String})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<ComponentDescriptorEntity> findByScopeAndType(@Param("type") ComponentType type,
                                                        @Param("scope") ComponentScope scope,
                                                        @Param("textSearch") String textSearch,
                                                        Pageable pageable);
+    /**
+     * Deletes by clazz.
+     *
+     * @param clazz clazz ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Transactional
     @Modifying

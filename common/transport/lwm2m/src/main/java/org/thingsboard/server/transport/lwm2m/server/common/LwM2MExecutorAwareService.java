@@ -25,15 +25,35 @@ import java.util.concurrent.ExecutorService;
 public abstract class LwM2MExecutorAwareService {
 
     protected ExecutorService executor;
-
+    /**
+     * Returns executor size.
+     *
+     * @return monotonically increasing MQTT packet identifier
+     * @throws Exception on processing failure
+     */
     protected abstract int getExecutorSize();
-
+    /**
+     * Returns executor name.
+     *
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
     protected abstract String getExecutorName();
-
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     protected void init() {
         this.executor = ThingsBoardExecutors.newWorkStealingPool(getExecutorSize(), getExecutorName());
     }
-
+    /**
+     * Destroy.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void destroy() {
         if (executor != null) {
             executor.shutdownNow();

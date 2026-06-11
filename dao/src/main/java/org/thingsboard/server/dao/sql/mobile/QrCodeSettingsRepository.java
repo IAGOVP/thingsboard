@@ -25,18 +25,41 @@ import org.thingsboard.server.dao.model.sql.QrCodeSettingsEntity;
 import java.util.UUID;
 
 
+
+
 /**
 
 
- * qr code settings repository contract.
+ * Spring Data JPA repository for qr code settings entities.
+
+
+ *
+
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
 
  */
 
 
+
 public interface QrCodeSettingsRepository extends JpaRepository<QrCodeSettingsEntity, UUID> {
+    /**
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link QrCodeSettingsEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     QrCodeSettingsEntity findByTenantId(@Param("tenantId") UUID tenantId);
+    /**
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Transactional
     @Modifying

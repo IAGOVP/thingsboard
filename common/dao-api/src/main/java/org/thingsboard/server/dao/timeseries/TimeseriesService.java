@@ -37,40 +37,176 @@ import java.util.Optional;
  */
 public interface TimeseriesService {
 
+    /**
+     * Finds all by queries.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId entity id ({@link EntityId})
+     * @param queries queries ({@link List})
+     * @return future completing with {@link List}
+     */
     ListenableFuture<List<ReadTsKvQueryResult>> findAllByQueries(TenantId tenantId, EntityId entityId, List<ReadTsKvQuery> queries);
 
+    /**
+     * Finds all.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId entity id ({@link EntityId})
+     * @param queries queries ({@link List})
+     * @return future completing with {@link List}
+     */
     ListenableFuture<List<TsKvEntry>> findAll(TenantId tenantId, EntityId entityId, List<ReadTsKvQuery> queries);
 
+    /**
+     * Finds latest.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId entity id ({@link EntityId})
+     * @param key key ({@link String})
+     * @return future completing with optional {@link TsKvEntry}, empty if not found
+     */
     ListenableFuture<Optional<TsKvEntry>> findLatest(TenantId tenantId, EntityId entityId, String key);
 
+    /**
+     * Finds latest.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId entity id ({@link EntityId})
+     * @param keys keys ({@link Collection})
+     * @return future completing with {@link List}
+     */
     ListenableFuture<List<TsKvEntry>> findLatest(TenantId tenantId, EntityId entityId, Collection<String> keys);
 
+    /**
+     * Finds all latest.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId entity id ({@link EntityId})
+     * @return future completing with {@link List}
+     */
     ListenableFuture<List<TsKvEntry>> findAllLatest(TenantId tenantId, EntityId entityId);
 
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId entity id ({@link EntityId})
+     * @param tsKvEntry ts kv entry ({@link TsKvEntry})
+     * @return future completing with {@link TimeseriesSaveResult}
+     */
     ListenableFuture<TimeseriesSaveResult> save(TenantId tenantId, EntityId entityId, TsKvEntry tsKvEntry);
 
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId entity id ({@link EntityId})
+     * @param tsKvEntry ts kv entry ({@link List})
+     * @param ttl ttl
+     * @return future completing with {@link TimeseriesSaveResult}
+     */
     ListenableFuture<TimeseriesSaveResult> save(TenantId tenantId, EntityId entityId, List<TsKvEntry> tsKvEntry, long ttl);
 
+    /**
+     * Saves or persists without latest.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId entity id ({@link EntityId})
+     * @param tsKvEntry ts kv entry ({@link List})
+     * @param ttl ttl
+     * @return future completing with {@link TimeseriesSaveResult}
+     */
     ListenableFuture<TimeseriesSaveResult> saveWithoutLatest(TenantId tenantId, EntityId entityId, List<TsKvEntry> tsKvEntry, long ttl);
 
+    /**
+     * Saves or persists latest.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId entity id ({@link EntityId})
+     * @param tsKvEntries ts kv entries ({@link List})
+     * @return future completing with {@link TimeseriesSaveResult}
+     */
     ListenableFuture<TimeseriesSaveResult> saveLatest(TenantId tenantId, EntityId entityId, List<TsKvEntry> tsKvEntries);
 
+    /**
+     * Removes the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId entity id ({@link EntityId})
+     * @param queries queries ({@link List})
+     * @return future completing with {@link List}
+     */
     ListenableFuture<List<TsKvLatestRemovingResult>> remove(TenantId tenantId, EntityId entityId, List<DeleteTsKvQuery> queries);
 
+    /**
+     * Removes latest.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId entity id ({@link EntityId})
+     * @param keys keys ({@link Collection})
+     * @return future completing with {@link List}
+     */
     ListenableFuture<List<TsKvLatestRemovingResult>> removeLatest(TenantId tenantId, EntityId entityId, Collection<String> keys);
 
+    /**
+     * Removes all latest.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId entity id ({@link EntityId})
+     * @return future completing with {@link List}
+     */
     ListenableFuture<List<String>> removeAllLatest(TenantId tenantId, EntityId entityId);
 
+    /**
+     * Finds all keys by device profile id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfileId device profile id ({@link DeviceProfileId})
+     * @return {@link List}
+     */
     List<String> findAllKeysByDeviceProfileId(TenantId tenantId, DeviceProfileId deviceProfileId);
 
+    /**
+     * Finds all keys by entity ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityIds entity ids ({@link List})
+     * @return {@link List}
+     */
     List<String> findAllKeysByEntityIds(TenantId tenantId, List<EntityId> entityIds);
 
+    /**
+     * Finds all keys by entity ids async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityIds entity ids ({@link List})
+     * @return future completing with {@link List}
+     */
     ListenableFuture<List<String>> findAllKeysByEntityIdsAsync(TenantId tenantId, List<EntityId> entityIds);
 
+    /**
+     * Finds latest by entity ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityIds entity ids ({@link List})
+     * @return {@link List}
+     */
     List<TsKvEntry> findLatestByEntityIds(TenantId tenantId, List<EntityId> entityIds);
 
+    /**
+     * Finds latest by entity ids async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityIds entity ids ({@link List})
+     * @return future completing with {@link List}
+     */
     ListenableFuture<List<TsKvEntry>> findLatestByEntityIdsAsync(TenantId tenantId, List<EntityId> entityIds);
 
+    /**
+     * Cleanup.
+     *
+     * @param systemTtl system ttl
+     */
     void cleanup(long systemTtl);
 
 }

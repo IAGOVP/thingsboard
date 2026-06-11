@@ -15,6 +15,14 @@
  */
 package org.thingsboard.server.queue.kafka;
 
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Objects;
+import java.util.Properties;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -30,21 +38,13 @@ import org.thingsboard.server.queue.TbQueueCallback;
 import org.thingsboard.server.queue.TbQueueMsg;
 import org.thingsboard.server.queue.TbQueueProducer;
 
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Objects;
-import java.util.Properties;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
-
 /**
- * Created by ashvayka on 24.09.18.
+ * Kafka implementation of {@link TbQueueProducer}.
+ *
+ * <p>Wraps {@link KafkaProducer} with topic auto-creation, partition selection,
+ * and optional analytic headers for message tracing.
  */
 @Slf4j
-/**
- * Tb kafka producer template.
- */
 public class TbKafkaProducerTemplate<T extends TbQueueMsg> implements TbQueueProducer<T> {
 
     private final KafkaProducer<String, byte[]> producer;

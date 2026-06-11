@@ -50,9 +50,19 @@ public abstract class BaseData<I extends UUIDBased> extends IdBased<I> implement
             example = "1746028547220",
             accessMode = Schema.AccessMode.READ_ONLY
     )
+    /**
+     * Returns created time.
+     *
+     * @return the long result
+     */
     public long getCreatedTime() {
         return createdTime;
     }
+    /**
+     * Set created time.
+     *
+     * @param createdTime created time
+     */
 
     public void setCreatedTime(long createdTime) {
         this.createdTime = createdTime;

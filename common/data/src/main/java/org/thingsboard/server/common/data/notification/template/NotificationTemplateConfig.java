@@ -32,6 +32,11 @@ public class NotificationTemplateConfig {
     @Valid
     @NotEmpty
     private Map<NotificationDeliveryMethod, DeliveryMethodNotificationTemplate> deliveryMethodsTemplates;
+    /**
+     * Copy.
+     *
+     * @return {@link NotificationTemplateConfig}
+     */
 
     public NotificationTemplateConfig copy() {
         Map<NotificationDeliveryMethod, DeliveryMethodNotificationTemplate> templates = new HashMap<>(deliveryMethodsTemplates);

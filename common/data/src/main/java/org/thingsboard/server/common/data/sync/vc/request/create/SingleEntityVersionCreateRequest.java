@@ -30,6 +30,11 @@ public class SingleEntityVersionCreateRequest extends VersionCreateRequest {
 
     private EntityId entityId;
     private VersionCreateConfig config;
+    /**
+     * Returns type.
+     *
+     * @return {@link VersionCreateRequestType}
+     */
 
     @Override
     public VersionCreateRequestType getType() {

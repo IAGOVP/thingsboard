@@ -20,7 +20,9 @@ import lombok.Data;
 
 @Data
 /**
- * Sort order.
+ * Sort direction and property name for paginated queries.
+ *
+ * <p>Used inside {@link PageLink} to order results by entity fields (name, createdTime, etc.).
  */
 public class SortOrder {
 
@@ -35,6 +37,13 @@ public class SortOrder {
         this.property = property;
         this.direction = direction;
     }
+    /**
+     * Of.
+     *
+     * @param property property ({@link String})
+     * @param direction direction ({@link Direction})
+     * @return {@link SortOrder}
+     */
 
     public static SortOrder of(String property, Direction direction) {
         return new SortOrder(property, direction);

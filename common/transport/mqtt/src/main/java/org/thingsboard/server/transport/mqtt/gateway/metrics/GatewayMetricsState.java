@@ -43,11 +43,24 @@ public class GatewayMetricsState {
         this.updateLock = new ReentrantLock();
         this.sessionInfo = sessionInfo;
     }
-
+    /**
+     * Updates session info.
+     *
+     * @param sessionInfo session info
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void updateSessionInfo(TransportProtos.SessionInfoProto sessionInfo) {
         this.sessionInfo = sessionInfo;
     }
-
+    /**
+     * Updates the requested data.
+     *
+     * @param metricsData metrics data ({@link List})
+     * @param serverReceiveTs server receive ts
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void update(List<GatewayMetadata> metricsData, long serverReceiveTs) {
         updateLock.lock();
         try {
@@ -58,7 +71,12 @@ public class GatewayMetricsState {
             updateLock.unlock();
         }
     }
-
+    /**
+     * Returns state result.
+     *
+     * @return {@link Map}
+     * @throws Exception on processing failure
+     */
     public Map<String, ConnectorMetricsResult> getStateResult() {
         Map<String, ConnectorMetricsResult> result = new HashMap<>();
         updateLock.lock();
@@ -71,7 +89,12 @@ public class GatewayMetricsState {
 
         return result;
     }
-
+    /**
+     * Is empty.
+     *
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     public boolean isEmpty() {
         return connectors.isEmpty();
     }
@@ -118,7 +141,18 @@ public class GatewayMetricsState {
             return new ConnectorMetricsResult(avgGwLatency, minGwLatency, maxGwLatency, avgTransportLatency, minTransportLatency, maxTransportLatency);
         }
     }
-
+    /**
+     * Connector metrics result.
+     *
+     * @param avgGwLatency avg gw latency
+     * @param minGwLatency min gw latency
+     * @param maxGwLatency max gw latency
+     * @param avgTransportLatency avg transport latency
+     * @param minTransportLatency min transport latency
+     * @param maxTransportLatency max transport latency
+     * @return the record value
+     * @throws Exception on processing failure
+     */
     public record ConnectorMetricsResult(long avgGwLatency, long minGwLatency, long maxGwLatency,
                                          long avgTransportLatency, long minTransportLatency, long maxTransportLatency) {
     }

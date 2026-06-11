@@ -25,9 +25,18 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
 
 /**
- * Created by ashvayka on 11.05.17.
+ * Jackson deserializer that resolves {@link EntityId} subtype from {@code entityType} field.
  */
 public class EntityIdDeserializer extends JsonDeserializer<EntityId> {
+    /**
+     * Deserialize.
+     *
+     * @param jsonParser json parser ({@link JsonParser})
+     * @param ctx calculated-field execution context
+     * @return {@link EntityId}
+     * @throws IOException if ioexception is thrown during processing
+     * @throws JsonProcessingException if json processing exception is thrown during processing
+     */
 
     @Override
     public EntityId deserialize(JsonParser jsonParser, DeserializationContext ctx) throws IOException, JsonProcessingException {

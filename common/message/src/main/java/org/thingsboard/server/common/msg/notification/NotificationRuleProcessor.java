@@ -18,10 +18,16 @@ package org.thingsboard.server.common.msg.notification;
 import org.thingsboard.server.common.data.notification.rule.trigger.NotificationRuleTrigger;
 
 /**
- * notification rule processor contract.
+ * notification rule processor message contract.
  */
+
 public interface NotificationRuleProcessor {
 
+    /**
+     * Processes the requested data.
+     *
+     * @param trigger trigger ({@link NotificationRuleTrigger})
+     */
     void process(NotificationRuleTrigger trigger);
 
 }

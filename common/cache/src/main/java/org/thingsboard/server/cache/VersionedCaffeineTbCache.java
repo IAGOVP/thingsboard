@@ -23,14 +23,32 @@ import org.thingsboard.server.common.data.util.TbPair;
 import java.io.Serializable;
 
 /**
- * Versioned caffeine tb cache.
+ * Caffeine implementation of {@link VersionedTbCache} with in-process version checks.
+ *
+ * <p>Stores {@link org.thingsboard.server.common.data.util.TbPair} of (version, value) in the
+ * underlying cache. Puts succeed only when the new version exceeds the cached version.
+ *
+ * @param <K> versioned cache key
+ * @param <V> entity implementing {@link org.thingsboard.server.common.data.HasVersion}
+ * @see VersionedTbCache
+ * @see CaffeineTbTransactionalCache
  */
 public abstract class VersionedCaffeineTbCache<K extends VersionedCacheKey, V extends Serializable & HasVersion> extends CaffeineTbTransactionalCache<K, V> implements VersionedTbCache<K, V> {
 
+    /**
+     * @param cacheManager Spring cache manager
+     * @param cacheName    configured cache region name
+     */
     public VersionedCaffeineTbCache(CacheManager cacheManager, String cacheName) {
         super(cacheManager, cacheName);
     }
 
+    /**
+     * Returns the value portion of the stored version-value pair.
+     *
+     * @param key cache key
+     * @return value wrapper, or {@code null} on miss
+     */
     @Override
     public TbCacheValueWrapper<V> get(K key) {
         TbPair<Long, V> versionValuePair = doGet(key);
@@ -40,6 +58,12 @@ public abstract class VersionedCaffeineTbCache<K extends VersionedCacheKey, V ex
         return null;
     }
 
+    /**
+     * Puts only when the entity version is newer than the cached version.
+     *
+     * @param key   cache key
+     * @param value versioned entity
+     */
     @Override
     public void put(K key, V value) {
         Long version = getVersion(value);
@@ -67,6 +91,11 @@ public abstract class VersionedCaffeineTbCache<K extends VersionedCacheKey, V ex
         return source == null ? null : (TbPair<Long, V>) source.get();
     }
 
+    /**
+     * Removes the entire versioned entry.
+     *
+     * @param key cache key
+     */
     @Override
     public void evict(K key) {
         lock.lock();
@@ -78,6 +107,12 @@ public abstract class VersionedCaffeineTbCache<K extends VersionedCacheKey, V ex
         }
     }
 
+    /**
+     * Writes a versioned tombstone at the given version.
+     *
+     * @param key     cache key
+     * @param version eviction version stamp
+     */
     @Override
     public void evict(K key, Long version) {
         if (version == null) {

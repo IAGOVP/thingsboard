@@ -30,6 +30,11 @@ import java.time.ZonedDateTime;
  * Year interval.
  */
 public class YearInterval extends BaseAggInterval {
+    /**
+     * Returns type.
+     *
+     * @return {@link AggIntervalType}
+     */
 
     @Override
     public AggIntervalType getType() {
@@ -39,6 +44,12 @@ public class YearInterval extends BaseAggInterval {
     public YearInterval(String tz, Long offsetSec) {
         super(tz, offsetSec);
     }
+    /**
+     * Align to interval start.
+     *
+     * @param reference reference ({@link ZonedDateTime})
+     * @return {@link ZonedDateTime}
+     */
 
     @Override
     protected ZonedDateTime alignToIntervalStart(ZonedDateTime reference) {
@@ -47,6 +58,12 @@ public class YearInterval extends BaseAggInterval {
                 LocalTime.MIDNIGHT,
                 reference.getZone());
     }
+    /**
+     * Returns next interval start.
+     *
+     * @param currentStart current start ({@link ZonedDateTime})
+     * @return {@link ZonedDateTime}
+     */
 
     @Override
     public ZonedDateTime getNextIntervalStart(ZonedDateTime currentStart) {

@@ -54,7 +54,12 @@ public class SecureClientX509 {
         this.dtlsConnector = dtlsConnector;
         this.coapClient = getCoapClient(host, port, clientKeys, sharedKeys);
     }
-
+    /**
+     * Test.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void test() {
         executor.submit(() -> {
             try {
@@ -106,7 +111,13 @@ public class SecureClientX509 {
     private String getFutureUrl(String host, Integer port, String clientKeys, String sharedKeys) {
         return "coaps://" + host + ":" + port + "/api/v1/attributes?clientKeys=" + clientKeys + "&sharedKeys=" + sharedKeys;
     }
-
+    /**
+     * Main.
+     *
+     * @param args args
+     * @return nothing
+     * @throws URISyntaxException if urisyntax exception is thrown during processing
+     */
     public static void main(String[] args) throws URISyntaxException {
         System.out.println("Usage: java -cp ... org.thingsboard.server.transport.coap.client.SecureClientX509 " +
                 "host port keyStoreUriPath keyStoreAlias trustedAliasPattern clientKeys sharedKeys");

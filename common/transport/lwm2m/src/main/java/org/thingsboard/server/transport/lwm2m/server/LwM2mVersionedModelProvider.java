@@ -65,12 +65,26 @@ public class LwM2mVersionedModelProvider implements LwM2mModelProvider {
     private String getKeyIdVer(Integer objectId, String version) {
         return objectId != null ? objectId + LWM2M_SEPARATOR_KEY + ((version == null || version.isEmpty()) ? ObjectModel.DEFAULT_VERSION : version) : null;
     }
+    /**
+     * Returns object model.
+     *
+     * @param registration registration ({@link Registration})
+     * @return {@link LwM2mModel}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public LwM2mModel getObjectModel(Registration registration) {
         return new DynamicModel(registration);
     }
-
+    /**
+     * Evict.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key key ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void evict(TenantId tenantId, String key) {
         if (tenantId.isNullUid()) {
             models.values().forEach(m -> m.remove(key));
@@ -92,6 +106,14 @@ public class LwM2mVersionedModelProvider implements LwM2mModelProvider {
                 models.computeIfAbsent(tenantId, t -> new ConcurrentHashMap<>());
             }
         }
+        /**
+         * Returns resource model.
+         *
+         * @param objectId object id
+         * @param resourceId resource id
+         * @return {@link ResourceModel}
+         * @throws Exception on processing failure
+         */
 
         @Override
         public ResourceModel getResourceModel(int objectId, int resourceId) {
@@ -107,6 +129,13 @@ public class LwM2mVersionedModelProvider implements LwM2mModelProvider {
                 return null;
             }
         }
+        /**
+         * Returns object model.
+         *
+         * @param objectId object id
+         * @return {@link ObjectModel}
+         * @throws Exception on processing failure
+         */
 
         @Override
         public ObjectModel getObjectModel(int objectId) {
@@ -117,6 +146,12 @@ public class LwM2mVersionedModelProvider implements LwM2mModelProvider {
             }
             return null;
         }
+        /**
+         * Returns object models.
+         *
+         * @return {@link Collection}
+         * @throws Exception on processing failure
+         */
 
         @Override
         public Collection<ObjectModel> getObjectModels() {

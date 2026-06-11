@@ -26,16 +26,53 @@ import org.thingsboard.server.dao.entity.EntityDaoService;
  */
 public interface ApiUsageStateService extends EntityDaoService {
 
+    /**
+     * Creates default api usage state.
+     *
+     * @param id id ({@link TenantId})
+     * @param entityId entity id ({@link EntityId})
+     * @return {@link ApiUsageState}
+     */
     ApiUsageState createDefaultApiUsageState(TenantId id, EntityId entityId);
 
+    /**
+     * Updates the requested data.
+     *
+     * @param apiUsageState api usage state ({@link ApiUsageState})
+     * @return {@link ApiUsageState}
+     */
     ApiUsageState update(ApiUsageState apiUsageState);
 
+    /**
+     * Finds tenant api usage state.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link ApiUsageState}
+     */
     ApiUsageState findTenantApiUsageState(TenantId tenantId);
 
+    /**
+     * Finds api usage state by entity id.
+     *
+     * @param entityId entity id ({@link EntityId})
+     * @return {@link ApiUsageState}
+     */
     ApiUsageState findApiUsageStateByEntityId(EntityId entityId);
 
+    /**
+     * Deletes api usage state by entity id.
+     *
+     * @param entityId entity id ({@link EntityId})
+     */
     void deleteApiUsageStateByEntityId(EntityId entityId);
 
+    /**
+     * Finds api usage state by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id id ({@link ApiUsageStateId})
+     * @return {@link ApiUsageState}
+     */
     ApiUsageState findApiUsageStateById(TenantId tenantId, ApiUsageStateId id);
 
 }

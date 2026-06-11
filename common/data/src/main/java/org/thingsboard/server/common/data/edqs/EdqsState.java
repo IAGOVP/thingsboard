@@ -27,8 +27,9 @@ import static org.apache.commons.lang3.BooleanUtils.toBooleanDefaultIfNull;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 /**
- * Edqs state.
+ * Edqs state (EDQS data).
  */
+
 public class EdqsState {
 
     private Boolean edqsReady;
@@ -36,17 +37,42 @@ public class EdqsState {
     private EdqsSyncStatus syncStatus;
     @Setter
     private EdqsApiMode apiMode;
+    
+        /**
+         * Updates edqs ready.
+         *
+         * @param ready ready
+         * @return the boolean result
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
 
     public boolean updateEdqsReady(boolean ready) {
         boolean changed = toBooleanDefaultIfNull(this.edqsReady, false) != ready;
         this.edqsReady = ready;
         return changed;
     }
+    
+        /**
+         * Is api ready.
+         *
+         * @return the boolean result
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
 
     @JsonIgnore
     public boolean isApiReady() {
         return toBooleanDefaultIfNull(edqsReady, false) && syncStatus == EdqsSyncStatus.FINISHED;
     }
+    
+        /**
+         * Is api enabled.
+         *
+         * @return the boolean result
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
 
     @JsonIgnore
     public boolean isApiEnabled() {
@@ -62,12 +88,24 @@ public class EdqsState {
                ']';
     }
 
+    /**
+
+     * Enumerates edqs sync status values used by EDQS (EDQS data).
+
+     */
+
     public enum EdqsSyncStatus {
         REQUESTED,
         STARTED,
         FINISHED,
         FAILED
     }
+
+    /**
+
+     * Enumerates edqs api mode values used by EDQS (EDQS data).
+
+     */
 
     public enum EdqsApiMode {
         ENABLED,

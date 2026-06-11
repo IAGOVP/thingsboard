@@ -25,8 +25,11 @@ import org.thingsboard.server.cache.VersionedRedisTbCache;
 import org.thingsboard.server.common.data.CacheConstants;
 import org.thingsboard.server.common.data.asset.AssetProfile;
 /**
- * Asset profile redis cache.
+ * distributed Redis cache for asset profile (asset and asset-profile DAO services and caches).
+ *
+ * <p>Implements {@link org.thingsboard.server.cache.TbTransactionalCache} with DAO-specific key types.
  */
+
 
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "redis")
 @Service("AssetProfileCache")

@@ -49,8 +49,11 @@ import java.util.UUID;
 
 import static org.thingsboard.server.dao.DaoUtil.convertTenantEntityInfosToDto;
 /**
- * JPA implementation of asset dao.
+ * JPA/PostgreSQL implementation of asset dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Component
 @SqlDao
@@ -66,44 +69,60 @@ public class JpaAssetDao extends JpaAbstractDao<AssetEntity, Asset> implements A
     @Autowired
     private AssetProfileRepository assetProfileRepository;
 
+    
     /**
-
-     * Get entity class.
-
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected Class<AssetEntity> getEntityClass() {
         return AssetEntity.class;
     }
 
+    
     /**
-
-     * Get repository.
-
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected JpaRepository<AssetEntity, UUID> getRepository() {
         return assetRepository;
     }
 
+    
     /**
-
-     * Loads asset info by id.
-
+     * Finds asset info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetId asset id ({@link UUID})
+     * @return {@link AssetInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AssetInfo findAssetInfoById(TenantId tenantId, UUID assetId) {
         return DaoUtil.getData(assetRepository.findAssetInfoById(assetId));
     }
 
+    
     /**
-
-     * Loads assets by tenant id.
-
+     * Finds assets by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Asset> findAssetsByTenantId(UUID tenantId, PageLink pageLink) {
@@ -114,11 +133,16 @@ public class JpaAssetDao extends JpaAbstractDao<AssetEntity, Asset> implements A
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads asset infos by tenant id.
-
+     * Finds asset infos by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AssetInfo> findAssetInfosByTenantId(UUID tenantId, PageLink pageLink) {
@@ -129,11 +153,16 @@ public class JpaAssetDao extends JpaAbstractDao<AssetEntity, Asset> implements A
                         DaoUtil.toPageable(pageLink, AssetInfoEntity.assetInfoColumnMap)));
     }
 
+    
     /**
-
-     * Loads assets by tenant id and ids async.
-
+     * Finds assets by tenant id and ids async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetIds asset ids ({@link List})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<Asset>> findAssetsByTenantIdAndIdsAsync(UUID tenantId, List<UUID> assetIds) {
@@ -141,11 +170,17 @@ public class JpaAssetDao extends JpaAbstractDao<AssetEntity, Asset> implements A
                 DaoUtil.convertDataList(assetRepository.findByTenantIdAndIdIn(tenantId, assetIds)));
     }
 
+    
     /**
-
-     * Loads assets by tenant id and customer id.
-
+     * Finds assets by tenant id and customer id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Asset> findAssetsByTenantIdAndCustomerId(UUID tenantId, UUID customerId, PageLink pageLink) {
@@ -157,11 +192,17 @@ public class JpaAssetDao extends JpaAbstractDao<AssetEntity, Asset> implements A
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads asset infos by tenant id and customer id.
-
+     * Finds asset infos by tenant id and customer id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AssetInfo> findAssetInfosByTenantIdAndCustomerId(UUID tenantId, UUID customerId, PageLink pageLink) {
@@ -173,11 +214,17 @@ public class JpaAssetDao extends JpaAbstractDao<AssetEntity, Asset> implements A
                         DaoUtil.toPageable(pageLink, AssetInfoEntity.assetInfoColumnMap)));
     }
 
+    
     /**
-
-     * Loads assets by tenant id and customer id and ids async.
-
+     * Finds assets by tenant id and customer id and ids async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param assetIds asset ids ({@link List})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<Asset>> findAssetsByTenantIdAndCustomerIdAndIdsAsync(UUID tenantId, UUID customerId, List<UUID> assetIds) {
@@ -185,11 +232,16 @@ public class JpaAssetDao extends JpaAbstractDao<AssetEntity, Asset> implements A
                 DaoUtil.convertDataList(assetRepository.findByTenantIdAndCustomerIdAndIdIn(tenantId, customerId, assetIds)));
     }
 
+    
     /**
-
-     * Loads assets by tenant id and name.
-
+     * Finds assets by tenant id and name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return optional {@link Asset}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<Asset> findAssetsByTenantIdAndName(UUID tenantId, String name) {
@@ -197,11 +249,17 @@ public class JpaAssetDao extends JpaAbstractDao<AssetEntity, Asset> implements A
         return Optional.ofNullable(asset);
     }
 
+    
     /**
-
-     * Loads assets by tenant id and type.
-
+     * Finds assets by tenant id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Asset> findAssetsByTenantIdAndType(UUID tenantId, String type, PageLink pageLink) {
@@ -213,11 +271,17 @@ public class JpaAssetDao extends JpaAbstractDao<AssetEntity, Asset> implements A
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads asset infos by tenant id and type.
-
+     * Finds asset infos by tenant id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AssetInfo> findAssetInfosByTenantIdAndType(UUID tenantId, String type, PageLink pageLink) {
@@ -229,11 +293,17 @@ public class JpaAssetDao extends JpaAbstractDao<AssetEntity, Asset> implements A
                         DaoUtil.toPageable(pageLink, AssetInfoEntity.assetInfoColumnMap)));
     }
 
+    
     /**
-
-     * Loads asset infos by tenant id and asset profile id.
-
+     * Finds asset infos by tenant id and asset profile id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetProfileId asset profile id ({@link UUID})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AssetInfo> findAssetInfosByTenantIdAndAssetProfileId(UUID tenantId, UUID assetProfileId, PageLink pageLink) {
@@ -245,11 +315,17 @@ public class JpaAssetDao extends JpaAbstractDao<AssetEntity, Asset> implements A
                         DaoUtil.toPageable(pageLink, AssetInfoEntity.assetInfoColumnMap)));
     }
 
+    
     /**
-
-     * Loads asset ids by tenant id and asset profile id.
-
+     * Finds asset ids by tenant id and asset profile id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetProfileId asset profile id ({@link UUID})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AssetId> findAssetIdsByTenantIdAndAssetProfileId(UUID tenantId, UUID assetProfileId, PageLink pageLink) {
@@ -261,11 +337,18 @@ public class JpaAssetDao extends JpaAbstractDao<AssetEntity, Asset> implements A
                 .mapData(AssetId::new);
     }
 
+    
     /**
-
-     * Loads assets by tenant id and customer id and type.
-
+     * Finds assets by tenant id and customer id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Asset> findAssetsByTenantIdAndCustomerIdAndType(UUID tenantId, UUID customerId, String type, PageLink pageLink) {
@@ -278,11 +361,18 @@ public class JpaAssetDao extends JpaAbstractDao<AssetEntity, Asset> implements A
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads asset infos by tenant id and customer id and type.
-
+     * Finds asset infos by tenant id and customer id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AssetInfo> findAssetInfosByTenantIdAndCustomerIdAndType(UUID tenantId, UUID customerId, String type, PageLink pageLink) {
@@ -295,11 +385,18 @@ public class JpaAssetDao extends JpaAbstractDao<AssetEntity, Asset> implements A
                         DaoUtil.toPageable(pageLink, AssetInfoEntity.assetInfoColumnMap)));
     }
 
+    
     /**
-
-     * Loads asset infos by tenant id and customer id and asset profile id.
-
+     * Finds asset infos by tenant id and customer id and asset profile id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param assetProfileId asset profile id ({@link UUID})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AssetInfo> findAssetInfosByTenantIdAndCustomerIdAndAssetProfileId(UUID tenantId, UUID customerId, UUID assetProfileId, PageLink pageLink) {
@@ -312,33 +409,48 @@ public class JpaAssetDao extends JpaAbstractDao<AssetEntity, Asset> implements A
                         DaoUtil.toPageable(pageLink, AssetInfoEntity.assetInfoColumnMap)));
     }
 
+    
     /**
-
-     * Loads tenant asset types async.
-
+     * Finds tenant asset types async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<EntitySubtype>> findTenantAssetTypesAsync(UUID tenantId) {
         return service.submit(() -> convertTenantEntityInfosToDto(tenantId, EntityType.ASSET, assetProfileRepository.findActiveTenantAssetProfileNames(tenantId)));
     }
 
+    
     /**
-
      * Counts assets by asset profile id.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetProfileId asset profile id ({@link UUID})
+     * @return {@link Long}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Long countAssetsByAssetProfileId(TenantId tenantId, UUID assetProfileId) {
         return assetRepository.countByAssetProfileId(assetProfileId);
     }
 
+    
     /**
-
-     * Loads assets by tenant id and profile id.
-
+     * Finds assets by tenant id and profile id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param profileId profile id ({@link UUID})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Asset> findAssetsByTenantIdAndProfileId(UUID tenantId, UUID profileId, PageLink pageLink) {
@@ -350,11 +462,17 @@ public class JpaAssetDao extends JpaAbstractDao<AssetEntity, Asset> implements A
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads assets by tenant id and edge id.
-
+     * Finds assets by tenant id and edge id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link UUID})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Asset> findAssetsByTenantIdAndEdgeId(UUID tenantId, UUID edgeId, PageLink pageLink) {
@@ -367,11 +485,18 @@ public class JpaAssetDao extends JpaAbstractDao<AssetEntity, Asset> implements A
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads assets by tenant id and edge id and type.
-
+     * Finds assets by tenant id and edge id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link UUID})
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Asset> findAssetsByTenantIdAndEdgeIdAndType(UUID tenantId, UUID edgeId, String type, PageLink pageLink) {
@@ -385,11 +510,15 @@ public class JpaAssetDao extends JpaAbstractDao<AssetEntity, Asset> implements A
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Get all asset types.
-
+     * Returns all asset types.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     public PageData<TbPair<UUID, String>> getAllAssetTypes(PageLink pageLink) {
         log.debug("Try to find all asset types and pageLink [{}]", pageLink);
@@ -397,11 +526,15 @@ public class JpaAssetDao extends JpaAbstractDao<AssetEntity, Asset> implements A
                 DaoUtil.toPageable(pageLink, Arrays.asList(new SortOrder("tenantId"), new SortOrder("type")))));
     }
 
+    
     /**
-
-     * Loads profile entity id infos.
-
+     * Finds profile entity id infos.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<ProfileEntityIdInfo> findProfileEntityIdInfos(PageLink pageLink) {
@@ -409,11 +542,16 @@ public class JpaAssetDao extends JpaAbstractDao<AssetEntity, Asset> implements A
         return nativeAssetRepository.findProfileEntityIdInfos(DaoUtil.toPageable(pageLink));
     }
 
+    
     /**
-
-     * Loads profile entity id infos by tenant id.
-
+     * Finds profile entity id infos by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<ProfileEntityIdInfo> findProfileEntityIdInfosByTenantId(UUID tenantId, PageLink pageLink) {
@@ -421,11 +559,16 @@ public class JpaAssetDao extends JpaAbstractDao<AssetEntity, Asset> implements A
         return nativeAssetRepository.findProfileEntityIdInfosByTenantId(tenantId, DaoUtil.toPageable(pageLink));
     }
 
+    
     /**
-
-     * Loads entity infos by name prefix.
-
+     * Finds entity infos by name prefix.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<EntityInfo> findEntityInfosByNamePrefix(TenantId tenantId, String name) {
@@ -433,55 +576,78 @@ public class JpaAssetDao extends JpaAbstractDao<AssetEntity, Asset> implements A
         return assetRepository.findEntityInfosByNamePrefix(tenantId.getId(), name);
     }
 
+    
     /**
-
      * Counts by tenant id.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link Long}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Long countByTenantId(TenantId tenantId) {
         return assetRepository.countByTenantId(tenantId.getId());
     }
 
+    
     /**
-
-     * Loads by tenant id and external id.
-
+     * Finds by tenant id and external id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param externalId external id ({@link UUID})
+     * @return {@link Asset}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Asset findByTenantIdAndExternalId(UUID tenantId, UUID externalId) {
         return DaoUtil.getData(assetRepository.findByTenantIdAndExternalId(tenantId, externalId));
     }
 
+    
     /**
-
-     * Loads by tenant id and name.
-
+     * Finds by tenant id and name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return {@link Asset}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Asset findByTenantIdAndName(UUID tenantId, String name) {
         return findAssetsByTenantIdAndName(tenantId, name).orElse(null);
     }
 
+    
     /**
-
-     * Loads by tenant id.
-
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Asset> findByTenantId(UUID tenantId, PageLink pageLink) {
         return findAssetsByTenantId(tenantId, pageLink);
     }
 
+    
     /**
-
-     * Get external id by internal.
-
+     * Returns external id by internal.
+     *
+     * @param internalId internal id ({@link AssetId})
+     * @return {@link AssetId}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AssetId getExternalIdByInternal(AssetId internalId) {
@@ -489,33 +655,46 @@ public class JpaAssetDao extends JpaAbstractDao<AssetEntity, Asset> implements A
                 .map(AssetId::new).orElse(null);
     }
 
+    
     /**
-
-     * Loads all by tenant id.
-
+     * Finds all by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Asset> findAllByTenantId(TenantId tenantId, PageLink pageLink) {
         return findByTenantId(tenantId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads next batch.
-
+     * Finds next batch.
+     *
+     * @param uuid uuid ({@link UUID})
+     * @param batchSize batch size
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<AssetFields> findNextBatch(UUID uuid, int batchSize) {
         return assetRepository.findAllFields(uuid, Limit.of(batchSize));
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

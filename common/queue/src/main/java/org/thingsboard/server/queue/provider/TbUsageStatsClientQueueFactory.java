@@ -19,8 +19,9 @@ import org.thingsboard.server.gen.transport.TransportProtos.ToUsageStatsServiceM
 import org.thingsboard.server.queue.TbQueueProducer;
 import org.thingsboard.server.queue.common.TbProtoQueueMsg;
 
+
 /**
- * tb usage stats client queue factory contract.
+ * Factory for API usage statistics reporting queue components.
  */
 public interface TbUsageStatsClientQueueFactory {
 

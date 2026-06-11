@@ -18,7 +18,11 @@ package org.thingsboard.server.cache.user;
 import org.thingsboard.server.common.data.id.TenantId;
 
 /**
- * user cache evict event.
+ * Cluster broadcast event evicting User cache entries after create/update/delete.
+ *
+ * <p>Published to all ThingsBoard nodes so {@link UserCaffeineCache} and
+ * {@link UserRedisCache} stay consistent. Handlers evict old and new key variants
+ * when identifiers change (e.g. rename).
  */
 public record UserCacheEvictEvent(TenantId tenantId, String newEmail, String oldEmail) {
 }

@@ -25,8 +25,14 @@ import org.thingsboard.server.common.data.id.TenantId;
 
 import java.io.Serial;
 /**
- * Entity view cache key.
+ * Serializable cache key for entity view entries (ThingsBoard DAO layer).
  */
+
+
+
+
+
+
 
 @Getter
 @EqualsAndHashCode
@@ -47,14 +53,37 @@ public class EntityViewCacheKey implements VersionedCacheKey {
         this.entityId = entityId;
         this.entityViewId = entityViewId;
     }
+    /**
+     * By name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return {@link EntityViewCacheKey}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static EntityViewCacheKey byName(TenantId tenantId, String name) {
         return new EntityViewCacheKey(tenantId, name, null, null);
     }
+    /**
+     * By entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link EntityViewCacheKey}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static EntityViewCacheKey byEntityId(TenantId tenantId, EntityId entityId) {
         return new EntityViewCacheKey(tenantId, null, entityId, null);
     }
+    /**
+     * By id.
+     *
+     * @param id entity UUID primary key
+     * @return {@link EntityViewCacheKey}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static EntityViewCacheKey byId(EntityViewId id) {
         return new EntityViewCacheKey(null, null, null, id);
@@ -70,6 +99,12 @@ public class EntityViewCacheKey implements VersionedCacheKey {
             return tenantId + "_n_" + name;
         }
     }
+    /**
+     * Is versioned.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isVersioned() {

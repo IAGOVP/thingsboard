@@ -40,11 +40,26 @@ public class KeystoreSslCredentials extends AbstractSslCredentials {
     private String storePassword;
     private String keyPassword;
     private String keyAlias;
+    /**
+     * Can use.
+     *
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected boolean canUse() {
         return ResourceUtils.resourceExists(this, this.storeFile);
     }
+    /**
+     * Loads key store.
+     *
+     * @param trustsOnly trusts only
+     * @param keyPasswordArray key password array
+     * @return {@link KeyStore}
+     * @throws IOException if ioexception is thrown during processing
+     * @throws GeneralSecurityException if general security exception is thrown during processing
+     */
 
     @Override
     protected KeyStore loadKeyStore(boolean trustsOnly, char[] keyPasswordArray) throws IOException, GeneralSecurityException {
@@ -55,11 +70,24 @@ public class KeystoreSslCredentials extends AbstractSslCredentials {
         }
         return keyStore;
     }
+    /**
+     * Updates key alias.
+     *
+     * @param keyAlias key alias ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected void updateKeyAlias(String keyAlias) {
         this.keyAlias = keyAlias;
     }
+    /**
+     * Returns certificate file paths.
+     *
+     * @return {@link List}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public List<Path> getCertificateFilePaths() {

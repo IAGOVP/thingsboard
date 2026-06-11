@@ -36,7 +36,13 @@ public class RpcDiscoverCallback extends RpcLwM2MDownlinkCallback<DiscoverReques
     public RpcDiscoverCallback(TransportService transportService, LwM2mClient client, TransportProtos.ToDeviceRpcRequestMsg requestMsg, DownlinkRequestCallback<DiscoverRequest, DiscoverResponse> callback) {
         super(transportService, client, requestMsg, callback);
     }
-
+    /**
+     * Serialize successful response.
+     *
+     * @param response response ({@link DiscoverResponse})
+     * @return optional {@link String}, empty if not found
+     * @throws Exception on processing failure
+     */
     protected Optional<String> serializeSuccessfulResponse(DiscoverResponse response) {
         return Optional.of(serializer.serializeCoreLinkFormat(response.getObjectLinks()));
     }

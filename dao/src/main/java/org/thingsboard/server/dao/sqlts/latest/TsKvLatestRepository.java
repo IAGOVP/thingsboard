@@ -24,31 +24,68 @@ import org.thingsboard.server.dao.model.sqlts.latest.TsKvLatestEntity;
 import java.util.List;
 import java.util.UUID;
 
+
 /**
 
- * ts kv latest repository contract.
+ * Spring Data JPA repository for ts kv latest entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
+
 
 public interface TsKvLatestRepository extends JpaRepository<TsKvLatestEntity, TsKvLatestCompositeKey> {
 
     @Query(value = "SELECT DISTINCT key_dictionary.key AS strKey FROM ts_kv_latest " +
             "INNER JOIN key_dictionary ON ts_kv_latest.key = key_dictionary.key_id " +
             "WHERE ts_kv_latest.entity_id IN (SELECT id FROM device WHERE device_profile_id = :device_profile_id AND tenant_id = :tenant_id limit 100) ORDER BY key_dictionary.key", nativeQuery = true)
+    /**
+     * Returns keys by device profile id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfileId device profile id ({@link UUID})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     List<String> getKeysByDeviceProfileId(@Param("tenant_id") UUID tenantId, @Param("device_profile_id") UUID deviceProfileId);
 
     @Query(value = "SELECT DISTINCT key_dictionary.key AS strKey FROM ts_kv_latest " +
             "INNER JOIN key_dictionary ON ts_kv_latest.key = key_dictionary.key_id " +
             "WHERE ts_kv_latest.entity_id IN (SELECT id FROM device WHERE tenant_id = :tenant_id limit 100) ORDER BY key_dictionary.key", nativeQuery = true)
+    /**
+     * Returns keys by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     List<String> getKeysByTenantId(@Param("tenant_id") UUID tenantId);
 
     @Query(value = "SELECT DISTINCT key_dictionary.key AS strKey FROM ts_kv_latest " +
             "INNER JOIN key_dictionary ON ts_kv_latest.key = key_dictionary.key_id " +
             "WHERE ts_kv_latest.entity_id IN :entityIds ORDER BY key_dictionary.key", nativeQuery = true)
+    /**
+     * Finds all keys by entity ids.
+     *
+     * @param entityIds entity ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     List<String> findAllKeysByEntityIds(@Param("entityIds") List<UUID> entityIds);
 
     @Query(value = "SELECT entity_id, key, ts, bool_v, str_v, long_v, dbl_v, json_v, version FROM ts_kv_latest WHERE (entity_id, key) > " +
             "(:entityId, :key) ORDER BY entity_id, key LIMIT :batchSize", nativeQuery = true)
+    /**
+     * Finds next batch.
+     *
+     * @param entityId target entity identifier
+     * @param key attribute or cache key
+     * @param batchSize batch size
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     List<TsKvLatestEntity> findNextBatch(@Param("entityId") UUID entityId,
                                           @Param("key") int key,
                                           @Param("batchSize") int batchSize);

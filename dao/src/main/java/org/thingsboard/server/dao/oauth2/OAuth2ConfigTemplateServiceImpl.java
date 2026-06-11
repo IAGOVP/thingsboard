@@ -32,8 +32,11 @@ import java.util.Optional;
 import static org.thingsboard.server.dao.service.Validator.validateId;
 import static org.thingsboard.server.dao.service.Validator.validateString;
 /**
- * Spring service implementing oauth2config template API.
+ * Spring {@code @Service} implementing the oauth2config template DAO API.
+ *
+ * <p>Delegates to {@code *Dao} implementations and manages cache eviction (OAuth2 client registration templates).
  */
+
 
 @Slf4j
 @Service
@@ -46,11 +49,15 @@ public class OAuth2ConfigTemplateServiceImpl extends AbstractEntityService imple
     private final OAuth2ClientRegistrationTemplateDao clientRegistrationTemplateDao;
     private final DataValidator<OAuth2ClientRegistrationTemplate> clientRegistrationTemplateValidator;
 
+    
     /**
-
-     * Persists client registration template.
-
+     * Saves or persists client registration template.
+     *
+     * @param clientRegistrationTemplate client registration template ({@link OAuth2ClientRegistrationTemplate})
+     * @return {@link OAuth2ClientRegistrationTemplate}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public OAuth2ClientRegistrationTemplate saveClientRegistrationTemplate(OAuth2ClientRegistrationTemplate clientRegistrationTemplate) {
@@ -70,11 +77,15 @@ public class OAuth2ConfigTemplateServiceImpl extends AbstractEntityService imple
         return savedClientRegistrationTemplate;
     }
 
+    
     /**
-
-     * Loads client registration template by provider id.
-
+     * Finds client registration template by provider id.
+     *
+     * @param providerId provider id ({@link String})
+     * @return optional {@link OAuth2ClientRegistrationTemplate}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<OAuth2ClientRegistrationTemplate> findClientRegistrationTemplateByProviderId(String providerId) {
@@ -83,11 +94,15 @@ public class OAuth2ConfigTemplateServiceImpl extends AbstractEntityService imple
         return clientRegistrationTemplateDao.findByProviderId(providerId);
     }
 
+    
     /**
-
-     * Loads client registration template by id.
-
+     * Finds client registration template by id.
+     *
+     * @param templateId template id ({@link OAuth2ClientRegistrationTemplateId})
+     * @return {@link OAuth2ClientRegistrationTemplate}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public OAuth2ClientRegistrationTemplate findClientRegistrationTemplateById(OAuth2ClientRegistrationTemplateId templateId) {
@@ -96,11 +111,14 @@ public class OAuth2ConfigTemplateServiceImpl extends AbstractEntityService imple
         return clientRegistrationTemplateDao.findById(TenantId.SYS_TENANT_ID, templateId.getId());
     }
 
+    
     /**
-
-     * Loads all client registration templates.
-
+     * Finds all client registration templates.
+     *
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<OAuth2ClientRegistrationTemplate> findAllClientRegistrationTemplates() {
@@ -108,11 +126,15 @@ public class OAuth2ConfigTemplateServiceImpl extends AbstractEntityService imple
         return clientRegistrationTemplateDao.findAll();
     }
 
+    
     /**
-
-     * Removes client registration template by id.
-
+     * Deletes client registration template by id.
+     *
+     * @param templateId template id ({@link OAuth2ClientRegistrationTemplateId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteClientRegistrationTemplateById(OAuth2ClientRegistrationTemplateId templateId) {

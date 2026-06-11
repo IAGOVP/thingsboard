@@ -22,11 +22,10 @@ import org.thingsboard.server.common.msg.MsgType;
 
 import java.io.Serial;
 import java.util.UUID;
-
-@Data
 /**
  * To edge sync request.
  */
+@Data
 public class ToEdgeSyncRequest implements EdgeSessionMsg {
 
     @Serial

@@ -28,11 +28,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Slf4j
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 /**
  * Ssrf protection validator.
  */
+@Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SsrfProtectionValidator {
 
     private static volatile boolean enabled;

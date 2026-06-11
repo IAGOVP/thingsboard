@@ -25,7 +25,7 @@ import java.util.UUID;
 
 @Schema(allOf = EntityId.class)
 /**
- * Typed identifier for calculated field.
+ * Typed identifier for a calculated field definition on an entity.
  */
 public class CalculatedFieldId extends UUIDBased implements EntityId {
 
@@ -36,10 +36,21 @@ public class CalculatedFieldId extends UUIDBased implements EntityId {
     public CalculatedFieldId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * From string.
+     *
+     * @param calculatedFieldId calculated field id ({@link String})
+     * @return {@link CalculatedFieldId}
+     */
 
     public static CalculatedFieldId fromString(String calculatedFieldId) {
         return new CalculatedFieldId(UUID.fromString(calculatedFieldId));
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY, description = "string", example = "CALCULATED_FIELD", allowableValues = "CALCULATED_FIELD")
     @Override

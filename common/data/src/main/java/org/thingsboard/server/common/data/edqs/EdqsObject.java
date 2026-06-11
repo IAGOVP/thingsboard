@@ -19,15 +19,40 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.thingsboard.server.common.data.ObjectType;
 
 /**
- * edqs object contract.
+ * edqs object contract (EDQS data).
  */
+
 public interface EdqsObject {
+    
+    /**
+     * String key.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @JsonIgnore
     String stringKey();
+    
+     /**
+      * Version.
+      *
+      * @return {@link Long}
+      * @throws Exception if an unexpected error occurs during processing
+      */
+
 
     @JsonIgnore
     Long version();
+    
+    /**
+     * Type.
+     *
+     * @return {@link ObjectType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @JsonIgnore
     ObjectType type();

@@ -22,8 +22,11 @@ import lombok.EqualsAndHashCode;
 import org.thingsboard.server.common.data.rule.RuleChain;
 import org.thingsboard.server.dao.model.ModelConstants;
 /**
- * Rule chain entity.
+ * JPA/Cassandra row model for rule chain.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -38,6 +41,12 @@ public class RuleChainEntity extends AbstractRuleChainEntity<RuleChain> {
     public RuleChainEntity(RuleChain ruleChain) {
         super(ruleChain);
     }
+    /**
+     * To data.
+     *
+     * @return {@link RuleChain}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleChain toData() {

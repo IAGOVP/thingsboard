@@ -22,8 +22,11 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @/**
- * DAO contract for sql.
+public @
+/**
+ * sql dao contract for the DAO layer.
  */
+
+
 interface SqlDao {
 }

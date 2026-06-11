@@ -57,6 +57,11 @@ public abstract class TwoFaAccountConfig implements Serializable {
 
     @JsonIgnore
     protected transient boolean serializeHiddenFields;
+    /**
+     * Returns provider type.
+     *
+     * @return {@link TwoFaProviderType}
+     */
 
     @JsonIgnore
     public abstract TwoFaProviderType getProviderType();

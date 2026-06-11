@@ -34,6 +34,12 @@ public enum NotificationTargetType {
 
     @Getter
     private final Set<NotificationDeliveryMethod> supportedDeliveryMethods;
+    /**
+     * For delivery method.
+     *
+     * @param deliveryMethod delivery method ({@link NotificationDeliveryMethod})
+     * @return {@link NotificationTargetType}
+     */
 
     public static NotificationTargetType forDeliveryMethod(NotificationDeliveryMethod deliveryMethod) {
         return Arrays.stream(values())

@@ -17,8 +17,9 @@ package org.thingsboard.server.queue.common.consumer;
 
 import java.io.Serializable;
 
+
 /**
- * queue task type values.
+ * Enumerates queue consumer task kinds (main, retry, etc.) for thread-pool routing.
  */
 public enum QueueTaskType implements Serializable {
 

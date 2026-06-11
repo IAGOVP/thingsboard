@@ -26,7 +26,10 @@ import java.util.stream.Collectors;
 
 @Data
 /**
- * Page link.
+ * Pagination and sort parameters for DAO/REST list queries.
+ *
+ * <p>Specifies {@code pageSize}, {@code page} (zero-based), optional text search, and
+ * {@link SortOrder}. Passed to service methods that return {@link PageData}.
  */
 public class PageLink {
 
@@ -63,11 +66,24 @@ public class PageLink {
         this.textSearch = textSearch;
         this.sortOrder = sortOrder;
     }
+    /**
+     * Next page link.
+     *
+     * @return {@link PageLink}
+     */
 
     @JsonIgnore
     public PageLink nextPageLink() {
         return new PageLink(this.pageSize, this.page + 1, this.textSearch, this.sortOrder);
     }
+    /**
+     * To sort.
+     *
+     * @param sortOrder sort order ({@link SortOrder})
+     * @param columnMap column map ({@link Map})
+     * @param addDefaultSorting add default sorting
+     * @return {@link Sort}
+     */
 
     public Sort toSort(SortOrder sortOrder, Map<String, String> columnMap, boolean addDefaultSorting) {
         if (sortOrder == null) {
@@ -76,6 +92,14 @@ public class PageLink {
             return toSort(List.of(sortOrder), columnMap, addDefaultSorting);
         }
     }
+    /**
+     * To sort.
+     *
+     * @param sortOrders sort orders ({@link List})
+     * @param columnMap column map ({@link Map})
+     * @param addDefaultSorting add default sorting
+     * @return {@link Sort}
+     */
 
     public Sort toSort(List<SortOrder> sortOrders, Map<String, String> columnMap, boolean addDefaultSorting) {
         if (addDefaultSorting && !isDefaultSortOrderAvailable(sortOrders)) {
@@ -92,6 +116,12 @@ public class PageLink {
         }
         return new Sort.Order(Sort.Direction.fromString(sortOrder.getDirection().name()), property);
     }
+    /**
+     * Is default sort order available.
+     *
+     * @param sortOrders sort orders ({@link List})
+     * @return the boolean result
+     */
 
     public boolean isDefaultSortOrderAvailable(List<SortOrder> sortOrders) {
         for (SortOrder sortOrder : sortOrders) {

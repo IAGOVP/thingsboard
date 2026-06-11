@@ -109,28 +109,62 @@ public class EntityRelation implements HasVersion, Serializable, EdqsObject {
     @Schema(description = "Additional parameters of the relation.",
             implementation = JsonNode.class,
             example = "{\"description\":\"Power supply connection\"}")
+    /**
+     * Returns additional info.
+     *
+     * @return {@link JsonNode}
+     */
     public JsonNode getAdditionalInfo() {
         return BaseDataWithAdditionalInfo.getJson(() -> additionalInfo, () -> additionalInfoBytes);
     }
+    /**
+     * Set additional info.
+     *
+     * @param addInfo add info ({@link JsonNode})
+     */
 
     public void setAdditionalInfo(JsonNode addInfo) {
         BaseDataWithAdditionalInfo.setJson(addInfo, json -> this.additionalInfo = json, bytes -> this.additionalInfoBytes = bytes);
     }
+    /**
+     * String key.
+     *
+     * @return {@link String}
+     */
 
     @Override
     public String stringKey() {
         return "r_" + from + "_" + to + "_" + typeGroup + "_" + type;
     }
+    /**
+     * Version.
+     *
+     * @return {@link Long}
+     */
 
     @Override
     public Long version() {
         return version;
     }
+    /**
+     * Type.
+     *
+     * @return {@link ObjectType}
+     */
 
     @Override
     public ObjectType type() {
         return ObjectType.RELATION;
     }
+    /**
+     * Key.
+     *
+     * @param from from ({@link UUID})
+     * @param to to ({@link UUID})
+     * @param typeGroup type group ({@link RelationTypeGroup})
+     * @param type type ({@link String})
+     * @return the record value
+     */
 
     public record Key(UUID from, UUID to, RelationTypeGroup typeGroup, String type) implements EdqsObjectKey {}
 

@@ -18,14 +18,20 @@ package org.thingsboard.server.common.transport.activity.strategy;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-@ToString
-@EqualsAndHashCode
 /**
  * First event activity strategy.
  */
+@ToString
+@EqualsAndHashCode
 public final class FirstEventActivityStrategy implements ActivityStrategy {
 
     private boolean firstEventReceived;
+    /**
+     * Handles activity.
+     *
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     public synchronized boolean onActivity() {
@@ -35,6 +41,12 @@ public final class FirstEventActivityStrategy implements ActivityStrategy {
         }
         return false;
     }
+    /**
+     * Handles reporting period end.
+     *
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     public synchronized boolean onReportingPeriodEnd() {

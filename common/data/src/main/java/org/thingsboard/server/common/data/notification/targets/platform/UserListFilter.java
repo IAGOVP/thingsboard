@@ -33,6 +33,11 @@ public class UserListFilter implements UsersFilter {
     @ArraySchema(schema = @Schema(implementation = UUID.class))
     @NotEmpty
     private List<UUID> usersIds;
+    /**
+     * Returns type.
+     *
+     * @return {@link UsersFilterType}
+     */
 
     @Override
     public UsersFilterType getType() {

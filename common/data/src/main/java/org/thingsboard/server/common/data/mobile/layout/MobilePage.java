@@ -50,10 +50,20 @@ import java.io.Serializable;
  * mobile page contract.
  */
 public interface MobilePage extends Serializable {
+    /**
+     * Returns type.
+     *
+     * @return {@link MobilePageType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
     @JsonView(Views.Private.class)
     MobilePageType getType();
+    /**
+     * Is visible.
+     *
+     * @return the boolean result
+     */
 
     @JsonView(Views.Private.class)
     boolean isVisible();

@@ -51,8 +51,19 @@ public abstract class Event extends BaseData<EventId> {
         this.serviceId = serviceId;
         this.createdTime = ts;
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link EventType}
+     */
 
     public abstract EventType getType();
+    /**
+     * To info.
+     *
+     * @param entityType entity type ({@link EntityType})
+     * @return {@link EventInfo}
+     */
 
     public EventInfo toInfo(EntityType entityType) {
         EventInfo eventInfo = new EventInfo();
@@ -65,6 +76,13 @@ public abstract class Event extends BaseData<EventId> {
         eventInfo.setBody(OBJECT_MAPPER.createObjectNode().put("server", getServiceId()));
         return eventInfo;
     }
+    /**
+     * Put not null.
+     *
+     * @param json json ({@link ObjectNode})
+     * @param key key ({@link String})
+     * @param value value ({@link String})
+     */
 
     protected static void putNotNull(ObjectNode json, String key, String value) {
         if (value != null) {

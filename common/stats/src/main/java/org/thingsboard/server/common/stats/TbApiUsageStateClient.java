@@ -19,10 +19,11 @@ import org.thingsboard.server.common.data.ApiUsageState;
 import org.thingsboard.server.common.data.id.TenantId;
 
 /**
- * tb api usage state client contract.
+ * Contract for tb api usage state client.
  */
 public interface TbApiUsageStateClient {
 
+    /** Returns the api usage state. */
     ApiUsageState getApiUsageState(TenantId tenantId);
 
 }

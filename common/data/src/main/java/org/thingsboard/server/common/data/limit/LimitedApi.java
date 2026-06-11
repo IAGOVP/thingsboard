@@ -85,6 +85,12 @@ public enum LimitedApi {
         this.perTenant = perTenant;
         this.refillRateLimitIntervally = refillRateLimitIntervally;
     }
+    /**
+     * Returns limit config.
+     *
+     * @param profileConfiguration profile configuration ({@link DefaultTenantProfileConfiguration})
+     * @return {@link String}
+     */
 
     public String getLimitConfig(DefaultTenantProfileConfiguration profileConfiguration) {
         return Optional.ofNullable(configExtractor)

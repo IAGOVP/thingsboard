@@ -33,8 +33,11 @@ import org.thingsboard.server.dao.model.ModelConstants;
 
 import java.util.UUID;
 /**
- * Api usage state entity.
+ * JPA/Cassandra row model for api usage state.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -94,6 +97,12 @@ public class ApiUsageStateEntity extends BaseVersionedEntity<ApiUsageState> impl
         this.smsExecState = ur.getSmsExecState();
         this.alarmExecState = ur.getAlarmExecState();
     }
+    /**
+     * To data.
+     *
+     * @return {@link ApiUsageState}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ApiUsageState toData() {

@@ -26,8 +26,22 @@ import java.util.function.Function;
  */
 public interface ApiLimitService {
 
+    /**
+     * Checks entities limit.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityType entity type ({@link EntityType})
+     * @return the boolean result
+     */
     boolean checkEntitiesLimit(TenantId tenantId, EntityType entityType);
 
+    /**
+     * Returns limit.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param extractor extractor ({@link Function})
+     * @return the long result
+     */
     long getLimit(TenantId tenantId, Function<DefaultTenantProfileConfiguration, Number> extractor);
 
 }

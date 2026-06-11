@@ -31,7 +31,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Device aware session context.
+ * Session context bound to an authenticated {@link org.thingsboard.server.common.data.Device}.
+ *
+ * <p>Extends {@link SessionContext} with device info, subscriptions, and activity reporting.
  */
 @Data
 public abstract class DeviceAwareSessionContext implements SessionContext {
@@ -53,16 +55,35 @@ public abstract class DeviceAwareSessionContext implements SessionContext {
 
     @Setter
     private volatile boolean connected;
-
+    /**
+     * Returns device id.
+     *
+     * @return {@link DeviceId}
+     * @throws Exception on processing failure
+     */
     public DeviceId getDeviceId() {
         return deviceId;
     }
-
+    /**
+     * Set device info.
+     *
+     * @param deviceInfo device info ({@link TransportDeviceInfo})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void setDeviceInfo(TransportDeviceInfo deviceInfo) {
         this.deviceInfo = deviceInfo;
         this.deviceId = deviceInfo.getDeviceId();
         this.tenantId = deviceInfo.getTenantId();
     }
+    /**
+     * Handles device profile update.
+     *
+     * @param sessionInfo session info
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onDeviceProfileUpdate(TransportProtos.SessionInfoProto sessionInfo, DeviceProfile deviceProfile) {
@@ -70,6 +91,15 @@ public abstract class DeviceAwareSessionContext implements SessionContext {
         this.deviceProfile = deviceProfile;
         this.deviceInfo.setDeviceType(deviceProfile.getName());
     }
+    /**
+     * Handles device update.
+     *
+     * @param sessionInfo session info
+     * @param device device ({@link Device})
+     * @param deviceProfileOpt device profile opt ({@link Optional})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onDeviceUpdate(TransportProtos.SessionInfoProto sessionInfo, Device device, Optional<DeviceProfile> deviceProfileOpt) {
@@ -78,15 +108,30 @@ public abstract class DeviceAwareSessionContext implements SessionContext {
         this.deviceInfo.setDeviceType(device.getType());
         deviceProfileOpt.ifPresent(profile -> this.deviceProfile = profile);
     }
-
+    /**
+     * Is connected.
+     *
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     public boolean isConnected() {
         return connected;
     }
-
+    /**
+     * Set disconnected.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void setDisconnected() {
         this.connected = false;
     }
-
+    /**
+     * Is sparkplug.
+     *
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     public boolean isSparkplug() {
         DeviceProfileTransportConfiguration transportConfiguration = this.deviceProfile.getProfileData().getTransportConfiguration();
         if (transportConfiguration instanceof MqttDeviceProfileTransportConfiguration) {

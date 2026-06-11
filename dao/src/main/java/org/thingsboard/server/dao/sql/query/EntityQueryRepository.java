@@ -22,17 +22,48 @@ import org.thingsboard.server.common.data.query.EntityCountQuery;
 import org.thingsboard.server.common.data.query.EntityData;
 import org.thingsboard.server.common.data.query.EntityDataQuery;
 
+
 /**
 
- * entity query repository contract.
+ * Spring Data JPA repository for entity query entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
 
+
 public interface EntityQueryRepository {
+    /**
+     * Counts entities by query.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param query filter and sort query definition
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     long countEntitiesByQuery(TenantId tenantId, CustomerId customerId, EntityCountQuery query);
+    /**
+     * Finds entity data by query.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param query filter and sort query definition
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<EntityData> findEntityDataByQuery(TenantId tenantId, CustomerId customerId, EntityDataQuery query);
+    /**
+     * Finds entity data by query internal.
+     *
+     * @param query filter and sort query definition
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<EntityData> findEntityDataByQueryInternal(EntityDataQuery query);
 

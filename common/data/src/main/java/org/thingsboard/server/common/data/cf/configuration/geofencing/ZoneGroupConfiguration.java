@@ -50,6 +50,11 @@ public class ZoneGroupConfiguration {
 
     private String relationType;
     private EntitySearchDirection direction;
+    /**
+     * Validates the requested data.
+     *
+     * @param name name ({@link String})
+     */
 
     public void validate(String name) {
         if (EntityCoordinates.ENTITY_ID_LATITUDE_ARGUMENT_KEY.equals(name) || EntityCoordinates.ENTITY_ID_LONGITUDE_ARGUMENT_KEY.equals(name)) {
@@ -68,14 +73,30 @@ public class ZoneGroupConfiguration {
             throw new IllegalArgumentException("Relation direction must be specified for '" + name + "' zone group!");
         }
     }
+    /**
+     * Has relation query source.
+     *
+     * @return the boolean result
+     */
 
     public boolean hasRelationQuerySource() {
         return toArgument().hasRelationQuerySource();
     }
+    /**
+     * Has current owner source.
+     *
+     * @return the boolean result
+     */
 
     public boolean hasCurrentOwnerSource() {
         return toArgument().hasOwnerSource();
     }
+    /**
+     * Is cf entity source.
+     *
+     * @param cfEntityId cf entity id ({@link EntityId})
+     * @return the boolean result
+     */
 
     @JsonIgnore
     public boolean isCfEntitySource(EntityId cfEntityId) {
@@ -84,11 +105,22 @@ public class ZoneGroupConfiguration {
         }
         return refEntityId != null && refEntityId.equals(cfEntityId);
     }
+    /**
+     * Is linked cf entity source.
+     *
+     * @param cfEntityId cf entity id ({@link EntityId})
+     * @return the boolean result
+     */
 
     @JsonIgnore
     public boolean isLinkedCfEntitySource(EntityId cfEntityId) {
         return refEntityId != null && !refEntityId.equals(cfEntityId);
     }
+    /**
+     * To argument.
+     *
+     * @return {@link Argument}
+     */
 
     public Argument toArgument() {
         var argument = new Argument();

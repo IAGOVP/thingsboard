@@ -49,6 +49,11 @@ public class AlarmsDeletionHousekeeperTask extends HousekeeperTask {
         super(tenantId, entityId, HousekeeperTaskType.DELETE_ALARMS);
         this.alarms = alarms;
     }
+    /**
+     * Returns description.
+     *
+     * @return {@link String}
+     */
 
     @Override
     public String getDescription() {

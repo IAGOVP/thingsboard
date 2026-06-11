@@ -21,17 +21,16 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-@Slf4j
-@Data
 /**
  * Tb coap dtls session in memory storage.
  */
+@Slf4j
+@Data
 public class TbCoapDtlsSessionInMemoryStorage {
 
     private final ConcurrentMap<TbCoapDtlsSessionKey, TbCoapDtlsSessionInfo> dtlsSessionsMap = new ConcurrentHashMap<>();
     private long dtlsSessionInactivityTimeout;
     private long dtlsSessionReportTimeout;
-
 
     public TbCoapDtlsSessionInMemoryStorage(long dtlsSessionInactivityTimeout, long dtlsSessionReportTimeout) {
         this.dtlsSessionInactivityTimeout = dtlsSessionInactivityTimeout;

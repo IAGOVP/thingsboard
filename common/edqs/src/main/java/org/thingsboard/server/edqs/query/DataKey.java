@@ -16,9 +16,11 @@
 package org.thingsboard.server.edqs.query;
 
 import org.thingsboard.server.common.data.query.EntityKeyType;
+
 /**
- * EDQS component: data key.
+ * Data key (EDQS microservice).
  */
+
 public record DataKey(EntityKeyType type, String key, Integer keyId) {
 
 }

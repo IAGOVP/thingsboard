@@ -25,8 +25,11 @@ import org.thingsboard.server.cache.TbJsonRedisSerializer;
 import org.thingsboard.server.common.data.CacheConstants;
 import org.thingsboard.server.dao.entity.EntityCountCacheKey;
 /**
- * Entity count redis cache.
+ * distributed Redis cache for entity count (entity count caching for rate limits (generic entity services, counts, and DAO registry)).
+ *
+ * <p>Implements {@link org.thingsboard.server.cache.TbTransactionalCache} with DAO-specific key types.
  */
+
 
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "redis")
 @Service("EntityCountCache")

@@ -35,6 +35,11 @@ public class DurationAlarmConditionSpec implements AlarmConditionSpec {
     private TimeUnit unit;
     @Schema(description = "Duration predicate")
     private FilterPredicateValue<Long> predicate;
+    /**
+     * Returns type.
+     *
+     * @return {@link AlarmConditionSpecType}
+     */
 
     @Override
     public AlarmConditionSpecType getType() {

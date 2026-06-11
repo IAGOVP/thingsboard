@@ -31,6 +31,12 @@ public class TbLwM2MDiscoverAllRequest implements TbLwM2MDownlinkRequest<String>
     private TbLwM2MDiscoverAllRequest(long timeout) {
         this.timeout = timeout;
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link LwM2MOperationType}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public LwM2MOperationType getType() {

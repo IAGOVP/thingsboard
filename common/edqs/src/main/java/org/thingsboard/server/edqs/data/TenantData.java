@@ -19,14 +19,24 @@ import org.thingsboard.server.common.data.EntityType;
 import org.thingsboard.server.common.data.edqs.fields.TenantFields;
 
 import java.util.UUID;
+
 /**
- * In-memory EDQS projection of tenant entity fields and metadata.
+ * In-memory EDQS projection of tenant entity fields.
+ *
+ * <p>Updated from {@link org.thingsboard.server.common.data.edqs.EdqsEvent} and used during query execution.
  */
+
 public class TenantData extends BaseEntityData<TenantFields> {
 
     public TenantData(UUID entityId) {
         super(entityId);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

@@ -54,23 +54,51 @@ public class DefaultTransportTenantProfileCache implements TransportTenantProfil
 
     private TransportRateLimitService rateLimitService;
     private TransportService transportService;
+    /**
+     * Set rate limit service.
+     *
+     * @param rateLimitService rate limit service ({@link TransportRateLimitService})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Lazy
     @Autowired
     public void setRateLimitService(TransportRateLimitService rateLimitService) {
         this.rateLimitService = rateLimitService;
     }
+    /**
+     * Set transport service.
+     *
+     * @param transportService transport service ({@link TransportService})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Lazy
     @Autowired
     public void setTransportService(TransportService transportService) {
         this.transportService = transportService;
     }
+    /**
+     * Returns the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link TenantProfile}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public TenantProfile get(TenantId tenantId) {
         return getTenantProfile(tenantId);
     }
+    /**
+     * Put.
+     *
+     * @param proto proto
+     * @return {@link TenantProfileUpdateResult}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public TenantProfileUpdateResult put(TransportProtos.TenantProfileProto proto) {
@@ -80,6 +108,14 @@ public class DefaultTransportTenantProfileCache implements TransportTenantProfil
         Set<TenantId> affectedTenants = tenantProfileIds.get(profile.getId());
         return new TenantProfileUpdateResult(profile, affectedTenants != null ? affectedTenants : Collections.emptySet());
     }
+    /**
+     * Put.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param profileId profile id ({@link TenantProfileId})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     public boolean put(TenantId tenantId, TenantProfileId profileId) {
@@ -94,6 +130,13 @@ public class DefaultTransportTenantProfileCache implements TransportTenantProfil
             return false;
         }
     }
+    /**
+     * Removes the requested data.
+     *
+     * @param profileId profile id ({@link TenantProfileId})
+     * @return {@link Set}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public Set<TenantId> remove(TenantProfileId profileId) {

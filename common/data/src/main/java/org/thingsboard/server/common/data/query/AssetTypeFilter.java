@@ -39,6 +39,11 @@ public class AssetTypeFilter implements EntityFilter {
     private String assetType;
 
     private List<String> assetTypes;
+    /**
+     * Returns asset types.
+     *
+     * @return {@link List}
+     */
 
     public List<String> getAssetTypes() {
         return !CollectionUtils.isEmpty(assetTypes) ? assetTypes : Collections.singletonList(assetType);
@@ -46,6 +51,11 @@ public class AssetTypeFilter implements EntityFilter {
 
     @Getter
     private String assetNameFilter;
+    /**
+     * Returns type.
+     *
+     * @return {@link EntityFilterType}
+     */
 
     @Override
     public EntityFilterType getType() {

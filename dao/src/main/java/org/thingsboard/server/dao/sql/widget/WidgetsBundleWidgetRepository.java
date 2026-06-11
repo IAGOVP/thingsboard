@@ -22,13 +22,26 @@ import org.thingsboard.server.dao.model.sql.WidgetsBundleWidgetEntity;
 import java.util.List;
 import java.util.UUID;
 
+
 /**
 
- * widgets bundle widget repository contract.
+ * Spring Data JPA repository for widgets bundle widget entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
 
+
 public interface WidgetsBundleWidgetRepository extends JpaRepository<WidgetsBundleWidgetEntity, WidgetsBundleWidgetCompositeKey> {
+    /**
+     * Finds all by widgets bundle id.
+     *
+     * @param widgetsBundleId widgets bundle id ({@link UUID})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<WidgetsBundleWidgetEntity> findAllByWidgetsBundleId(UUID widgetsBundleId);
 

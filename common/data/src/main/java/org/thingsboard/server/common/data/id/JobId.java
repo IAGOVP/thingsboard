@@ -25,7 +25,7 @@ import java.util.UUID;
 
 @Schema(allOf = EntityId.class)
 /**
- * Typed identifier for job.
+ * Typed identifier for a background job execution.
  */
 public class JobId extends UUIDBased implements EntityId {
 
@@ -36,6 +36,11 @@ public class JobId extends UUIDBased implements EntityId {
     public JobId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY, description = "string", example = "JOB", allowableValues = "JOB")
     @Override

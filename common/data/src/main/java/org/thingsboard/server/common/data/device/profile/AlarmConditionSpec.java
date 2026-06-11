@@ -47,6 +47,11 @@ import java.io.Serializable;
  * alarm condition spec contract.
  */
 public interface AlarmConditionSpec extends Serializable {
+    /**
+     * Returns type.
+     *
+     * @return {@link AlarmConditionSpecType}
+     */
 
     @JsonIgnore
     AlarmConditionSpecType getType();

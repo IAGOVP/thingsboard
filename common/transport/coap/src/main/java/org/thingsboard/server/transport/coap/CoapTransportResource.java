@@ -95,6 +95,13 @@ public class CoapTransportResource extends AbstractCoapTransportResource {
         long sessionReportTimeout = ctx.getSessionReportTimeout();
         ctx.getScheduler().scheduleAtFixedRate(clients::reportActivity, new Random().nextInt((int) sessionReportTimeout), sessionReportTimeout, TimeUnit.MILLISECONDS);
     }
+    /**
+     * Processes handle get.
+     *
+     * @param exchange exchange ({@link CoapExchange})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected void processHandleGet(CoapExchange exchange) {
@@ -125,6 +132,13 @@ public class CoapTransportResource extends AbstractCoapTransportResource {
         }
         processRequest(exchange, coapSessionMsgType);
     }
+    /**
+     * Processes handle post.
+     *
+     * @param exchange exchange ({@link CoapExchange})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected void processHandlePost(CoapExchange exchange) {
@@ -363,7 +377,13 @@ public class CoapTransportResource extends AbstractCoapTransportResource {
             return Optional.empty();
         }
     }
-
+    /**
+     * Returns feature type.
+     *
+     * @param request request payload with operation parameters
+     * @return optional {@link FeatureType}, empty if not found
+     * @throws Exception on processing failure
+     */
     protected Optional<FeatureType> getFeatureType(Request request) {
         List<String> uriPath = request.getOptions().getUriPath();
         try {
@@ -384,7 +404,13 @@ public class CoapTransportResource extends AbstractCoapTransportResource {
         }
         return Optional.empty();
     }
-
+    /**
+     * Returns request id.
+     *
+     * @param request request payload with operation parameters
+     * @return optional {@link Integer}, empty if not found
+     * @throws Exception on processing failure
+     */
     public static Optional<Integer> getRequestId(Request request) {
         List<String> uriPath = request.getOptions().getUriPath();
         try {
@@ -398,6 +424,13 @@ public class CoapTransportResource extends AbstractCoapTransportResource {
         }
         return Optional.empty();
     }
+    /**
+     * Returns child.
+     *
+     * @param name name ({@link String})
+     * @return {@link Resource}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public Resource getChild(String name) {
@@ -412,6 +445,13 @@ public class CoapTransportResource extends AbstractCoapTransportResource {
             this.exchange = exchange;
             this.payloadType = payloadType;
         }
+        /**
+         * Handles success.
+         *
+         * @param msg msg
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onSuccess(TransportProtos.ProvisionDeviceResponseMsg msg) {
@@ -425,6 +465,13 @@ public class CoapTransportResource extends AbstractCoapTransportResource {
                 exchange.respond(responseCode, msg.toByteArray());
             }
         }
+        /**
+         * Handles error.
+         *
+         * @param e e ({@link Throwable})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onError(Throwable e) {
@@ -434,22 +481,57 @@ public class CoapTransportResource extends AbstractCoapTransportResource {
     }
 
     public class CoapResourceObserver implements ResourceObserver {
+        /**
+         * Changed name.
+         *
+         * @param old old ({@link String})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void changedName(String old) {
         }
+        /**
+         * Changed path.
+         *
+         * @param old old ({@link String})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void changedPath(String old) {
         }
+        /**
+         * Added child.
+         *
+         * @param child child ({@link Resource})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void addedChild(Resource child) {
         }
+        /**
+         * Removes d child.
+         *
+         * @param child child ({@link Resource})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void removedChild(Resource child) {
         }
+        /**
+         * Added observe relation.
+         *
+         * @param relation relation ({@link ObserveRelation})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void addedObserveRelation(ObserveRelation relation) {
@@ -458,6 +540,13 @@ public class CoapTransportResource extends AbstractCoapTransportResource {
             clients.registerObserveRelation(token, relation);
             log.trace("Added Observe relation for token: {}", token);
         }
+        /**
+         * Removes d observe relation.
+         *
+         * @param relation relation ({@link ObserveRelation})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void removedObserveRelation(ObserveRelation relation) {

@@ -18,7 +18,7 @@ package org.thingsboard.server.common.data.id;
 import java.util.UUID;
 
 /**
- * has uuid contract.
+ * Marker for objects exposing a {@link java.util.UUID} identifier.
  */
 public interface HasUUID {
 

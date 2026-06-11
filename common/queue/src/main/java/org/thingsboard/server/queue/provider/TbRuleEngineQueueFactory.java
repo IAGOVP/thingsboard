@@ -37,45 +37,21 @@ import org.thingsboard.server.queue.TbQueueRequestTemplate;
 import org.thingsboard.server.queue.common.TbProtoJsQueueMsg;
 import org.thingsboard.server.queue.common.TbProtoQueueMsg;
 
+
 /**
- * Responsible for initialization of various Producers and Consumers used by TB Core Node.
- * Implementation Depends on the queue queue.type from yml or TB_QUEUE_TYPE environment variable
+ * Factory creating queue producers and consumers for TbRuleEngine message flows.
  */
 public interface TbRuleEngineQueueFactory extends TbUsageStatsClientQueueFactory, HousekeeperClientQueueFactory, EdqsClientQueueFactory {
 
-    /**
-     * Used to push messages to instances of TB Transport Service
-     *
-     * @return
-     */
+    
+        
     TbQueueProducer<TbProtoQueueMsg<ToTransportMsg>> createTransportNotificationsMsgProducer();
-
-    /**
-     * Used to push messages to instances of TB RuleEngine Service
-     *
-     * @return
-     */
+        
     TbQueueProducer<TbProtoQueueMsg<ToRuleEngineMsg>> createRuleEngineMsgProducer();
-
-    /**
-     * Used to push notifications to instances of TB RuleEngine Service
-     *
-     * @return
-     */
+        
     TbQueueProducer<TbProtoQueueMsg<ToRuleEngineNotificationMsg>> createRuleEngineNotificationsMsgProducer();
-
-    /**
-     * Used to push messages to other instances of TB Core Service
-     *
-     * @return
-     */
+        
     TbQueueProducer<TbProtoQueueMsg<ToCoreMsg>> createTbCoreMsgProducer();
-
-    /**
-     * Used to push notifications to other instances of TB Core Service
-     *
-     * @return
-     */
     TbQueueProducer<TbProtoQueueMsg<ToCoreNotificationMsg>> createTbCoreNotificationsMsgProducer();
 
     TbQueueProducer<TbProtoQueueMsg<ToEdgeMsg>> createEdgeMsgProducer();
@@ -86,38 +62,16 @@ public interface TbRuleEngineQueueFactory extends TbUsageStatsClientQueueFactory
         return null;
     }
 
-    /**
-     * Used to consume messages about firmware update notifications to TB Core Service
-     *
-     * @return
-     */
+    
+        
     TbQueueProducer<TbProtoQueueMsg<ToOtaPackageStateServiceMsg>> createToOtaPackageStateServiceMsgProducer();
-
-    /**
-     * Used to consume messages by TB Rule Engine Service
-     *
-     * @param configuration
-     * @return
-     */
+        
     TbQueueConsumer<TbProtoQueueMsg<ToRuleEngineMsg>> createToRuleEngineMsgConsumer(Queue configuration);
-
-    /**
-     * Used to consume messages by TB Rule Engine Service
-     * Intended usage for consumer per partition strategy
-     *
-     * @param configuration
-     * @param partitionId   as a suffix for consumer name
-     * @return TbQueueConsumer
-     */
     default TbQueueConsumer<TbProtoQueueMsg<ToRuleEngineMsg>> createToRuleEngineMsgConsumer(Queue configuration, Integer partitionId) {
         return createToRuleEngineMsgConsumer(configuration);
     }
 
-    /**
-     * Used to consume high priority messages by TB Rule Engine Service
-     *
-     * @return
-     */
+    
     TbQueueConsumer<TbProtoQueueMsg<ToRuleEngineNotificationMsg>> createToRuleEngineNotificationsMsgConsumer();
 
     TbQueueRequestTemplate<TbProtoJsQueueMsg<JsInvokeProtos.RemoteJsRequest>, TbProtoQueueMsg<JsInvokeProtos.RemoteJsResponse>> createRemoteJsRequestTemplate();

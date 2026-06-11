@@ -26,32 +26,118 @@ import org.thingsboard.server.gen.transport.TransportProtos.ProvisionDeviceReque
 import java.util.UUID;
 
 /**
- * coap transport adaptor contract.
+ * Converts CoAP request payloads to transport protobuf and builds CoAP responses.
  */
 public interface CoapTransportAdaptor {
 
     TransportProtos.PostTelemetryMsg convertToPostTelemetry(UUID sessionId, Request inbound, Descriptors.Descriptor telemetryMsgDescriptor) throws AdaptorException;
 
+    /**
+     * Convert to post attributes.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param inbound inbound ({@link Request})
+     * @param attributesMsgDescriptor attributes msg descriptor
+     * @return the TransportProtos.PostAttributeMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
     TransportProtos.PostAttributeMsg convertToPostAttributes(UUID sessionId, Request inbound, Descriptors.Descriptor attributesMsgDescriptor) throws AdaptorException;
 
+    /**
+     * Convert to get attributes.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param inbound inbound ({@link Request})
+     * @return the TransportProtos.GetAttributeRequestMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
     TransportProtos.GetAttributeRequestMsg convertToGetAttributes(UUID sessionId, Request inbound) throws AdaptorException;
 
+    /**
+     * Convert to device rpc response.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param inbound inbound ({@link Request})
+     * @param rpcResponseMsgDescriptor rpc response msg descriptor
+     * @return the TransportProtos.ToDeviceRpcResponseMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
     TransportProtos.ToDeviceRpcResponseMsg convertToDeviceRpcResponse(UUID sessionId, Request inbound, Descriptors.Descriptor rpcResponseMsgDescriptor) throws AdaptorException;
 
+    /**
+     * Convert to server rpc request.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param inbound inbound ({@link Request})
+     * @return the TransportProtos.ToServerRpcRequestMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
     TransportProtos.ToServerRpcRequestMsg convertToServerRpcRequest(UUID sessionId, Request inbound) throws AdaptorException;
 
+    /**
+     * Convert to claim device.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param inbound inbound ({@link Request})
+     * @param sessionInfo session info
+     * @return the TransportProtos.ClaimDeviceMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
     TransportProtos.ClaimDeviceMsg convertToClaimDevice(UUID sessionId, Request inbound, TransportProtos.SessionInfoProto sessionInfo) throws AdaptorException;
 
+    /**
+     * Convert to publish.
+     *
+     * @param responseMsg response msg
+     * @return {@link Response}
+     * @throws AdaptorException on invalid payload or topic format
+     */
     Response convertToPublish(TransportProtos.GetAttributeResponseMsg responseMsg) throws AdaptorException;
 
+    /**
+     * Convert to publish.
+     *
+     * @param notificationMsg notification msg
+     * @return {@link Response}
+     * @throws AdaptorException on invalid payload or topic format
+     */
     Response convertToPublish(TransportProtos.AttributeUpdateNotificationMsg notificationMsg) throws AdaptorException;
 
+    /**
+     * Convert to publish.
+     *
+     * @param rpcRequest rpc request
+     * @param rpcRequestDynamicMessageBuilder rpc request dynamic message builder
+     * @return {@link Response}
+     * @throws AdaptorException on invalid payload or topic format
+     */
     Response convertToPublish(TransportProtos.ToDeviceRpcRequestMsg rpcRequest, DynamicMessage.Builder rpcRequestDynamicMessageBuilder) throws AdaptorException;
 
+    /**
+     * Convert to publish.
+     *
+     * @param msg msg
+     * @return {@link Response}
+     * @throws AdaptorException on invalid payload or topic format
+     */
     Response convertToPublish(TransportProtos.ToServerRpcResponseMsg msg) throws AdaptorException;
 
+    /**
+     * Convert to provision request msg.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param inbound inbound ({@link Request})
+     * @return {@link ProvisionDeviceRequestMsg}
+     * @throws AdaptorException on invalid payload or topic format
+     */
     ProvisionDeviceRequestMsg convertToProvisionRequestMsg(UUID sessionId, Request inbound) throws AdaptorException;
 
+    /**
+     * Returns content format.
+     *
+     * @return monotonically increasing MQTT packet identifier
+     * @throws Exception on processing failure
+     */
     int getContentFormat();
 
 }

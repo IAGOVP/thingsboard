@@ -25,6 +25,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 /**
  * Guava session builder.
  */
+
 public class GuavaSessionBuilder extends SessionBuilder<GuavaSessionBuilder, GuavaSession> {
 
     @Override

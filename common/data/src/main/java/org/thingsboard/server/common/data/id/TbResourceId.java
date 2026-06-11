@@ -24,7 +24,7 @@ import java.util.UUID;
 
 @Schema(allOf = EntityId.class)
 /**
- * Typed identifier for tb resource.
+ * Typed identifier for a platform resource (JS module, image) ({@link org.thingsboard.server.common.data.EntityType#TB_RESOURCE}).
  */
 public class TbResourceId extends UUIDBased implements EntityId {
 
@@ -34,6 +34,11 @@ public class TbResourceId extends UUIDBased implements EntityId {
     public TbResourceId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY, description = "string", example = "TB_RESOURCE", allowableValues = "TB_RESOURCE")
     @Override

@@ -39,6 +39,11 @@ public class EntitiesLimitIncreaseRequestNotificationInfo implements Notificatio
     private String increaseLimitActionLabel;
     private String increaseLimitLink;
     private String baseUrl;
+    /**
+     * Returns template data.
+     *
+     * @return {@link Map}
+     */
 
     @Override
     public Map<String, String> getTemplateData() {

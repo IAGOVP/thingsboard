@@ -30,20 +30,46 @@ import java.util.Optional;
 import java.util.UUID;
 
 
+
+
 /**
 
 
- * rule node debug event repository contract.
+ * Spring Data JPA repository for rule node debug event entities.
+
+
+ *
+
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
 
  */
 
 
+
 public interface RuleNodeDebugEventRepository extends EventRepository<RuleNodeDebugEventEntity, RuleNodeDebugEvent>, JpaRepository<RuleNodeDebugEventEntity, UUID> {
+    /**
+     * Finds latest events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     @Query(nativeQuery = true,  value = "SELECT * FROM rule_node_debug_event e WHERE e.tenant_id = :tenantId AND e.entity_id = :entityId ORDER BY e.ts DESC LIMIT :limit")
     List<RuleNodeDebugEventEntity> findLatestEvents(@Param("tenantId") UUID tenantId, @Param("entityId") UUID entityId, @Param("limit") int limit);
+    /**
+     * Finds latest debug rule node in event.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link RuleNodeDebugEventEntity}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Query(nativeQuery = true,  value = "SELECT * FROM rule_node_debug_event e WHERE e.tenant_id = :tenantId AND e.entity_id = :entityId AND e.e_type = 'IN' ORDER BY e.ts DESC LIMIT 1")
     Optional<RuleNodeDebugEventEntity> findLatestDebugRuleNodeInEvent(@Param("tenantId") UUID tenantId, @Param("entityId") UUID entityId);
@@ -55,6 +81,17 @@ public interface RuleNodeDebugEventRepository extends EventRepository<RuleNodeDe
             "AND (:startTime IS NULL OR e.ts >= :startTime) " +
             "AND (:endTime IS NULL OR e.ts <= :endTime)"
     )
+    /**
+     * Finds events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<RuleNodeDebugEventEntity> findEvents(@Param("tenantId") UUID tenantId,
                                               @Param("entityId") UUID entityId,
                                               @Param("startTime") Long startTime,
@@ -96,6 +133,28 @@ public interface RuleNodeDebugEventRepository extends EventRepository<RuleNodeDe
                     "AND ((:isError = FALSE) OR e.e_error IS NOT NULL) " +
                     "AND (:error IS NULL OR e.e_error ILIKE concat('%', :error, '%'))"
     )
+    /**
+     * Finds events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @param server server ({@link String})
+     * @param type type ({@link String})
+     * @param eventEntityId event entity id ({@link String})
+     * @param eventEntityType event entity type ({@link String})
+     * @param eventMsgId event msg id ({@link String})
+     * @param eventMsgType event msg type ({@link String})
+     * @param relationType relation type ({@link String})
+     * @param data data ({@link String})
+     * @param metadata metadata ({@link String})
+     * @param isError is error
+     * @param error error ({@link String})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<RuleNodeDebugEventEntity> findEvents(@Param("tenantId") UUID tenantId,
                                               @Param("entityId") UUID entityId,
                                               @Param("startTime") Long startTime,
@@ -121,6 +180,16 @@ public interface RuleNodeDebugEventRepository extends EventRepository<RuleNodeDe
             "AND (:startTime IS NULL OR e.ts >= :startTime) " +
             "AND (:endTime IS NULL OR e.ts <= :endTime)"
     )
+    /**
+     * Removes events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
     void removeEvents(@Param("tenantId") UUID tenantId,
                       @Param("entityId") UUID entityId,
                       @Param("startTime") Long startTime,
@@ -145,6 +214,27 @@ public interface RuleNodeDebugEventRepository extends EventRepository<RuleNodeDe
                     "AND (:metadata IS NULL OR e.e_metadata ILIKE concat('%', :metadata, '%')) " +
                     "AND ((:isError = FALSE) OR e.e_error IS NOT NULL) " +
                     "AND (:error IS NULL OR e.e_error ILIKE concat('%', :error, '%'))")
+    /**
+     * Removes events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @param server server ({@link String})
+     * @param type type ({@link String})
+     * @param eventEntityId event entity id ({@link String})
+     * @param eventEntityType event entity type ({@link String})
+     * @param eventMsgId event msg id ({@link String})
+     * @param eventMsgType event msg type ({@link String})
+     * @param relationType relation type ({@link String})
+     * @param data data ({@link String})
+     * @param metadata metadata ({@link String})
+     * @param isError is error
+     * @param error error ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
     void removeEvents(@Param("tenantId") UUID tenantId,
                       @Param("entityId") UUID entityId,
                       @Param("startTime") Long startTime,

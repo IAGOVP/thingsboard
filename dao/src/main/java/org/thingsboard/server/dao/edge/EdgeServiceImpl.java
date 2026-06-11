@@ -92,8 +92,11 @@ import static org.thingsboard.server.dao.service.Validator.validateIds;
 import static org.thingsboard.server.dao.service.Validator.validatePageLink;
 import static org.thingsboard.server.dao.service.Validator.validateString;
 /**
- * Spring service implementing edge API.
+ * Spring {@code @Service} implementing the edge DAO API.
+ *
+ * <p>Delegates to {@code *Dao} implementations and manages cache eviction (edge instances, events, sessions, and synchronization).
  */
+
 
 @Service("EdgeDaoService")
 @Slf4j
@@ -142,11 +145,15 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
     @Value("${edges.state.persistToTelemetry:false}")
     private boolean persistToTelemetry;
 
+    
     /**
-
-     * Handle evict event.
-
+     * Handles evict event.
+     *
+     * @param event event ({@link EdgeCacheEvictEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @TransactionalEventListener
@@ -159,11 +166,16 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         cache.evict(keys);
     }
 
+    
     /**
-
-     * Loads edge by id.
-
+     * Finds edge by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link EdgeId})
+     * @return {@link Edge}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Edge findEdgeById(TenantId tenantId, EdgeId edgeId) {
@@ -172,11 +184,16 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         return edgeDao.findById(tenantId, edgeId.getId());
     }
 
+    
     /**
-
-     * Loads edge info by id.
-
+     * Finds edge info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link EdgeId})
+     * @return {@link EdgeInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EdgeInfo findEdgeInfoById(TenantId tenantId, EdgeId edgeId) {
@@ -185,11 +202,16 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         return edgeDao.findEdgeInfoById(tenantId, edgeId.getId());
     }
 
+    
     /**
-
-     * Loads edge by id async.
-
+     * Finds edge by id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link EdgeId})
+     * @return future completing with {@link Edge}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<Edge> findEdgeByIdAsync(TenantId tenantId, EdgeId edgeId) {
@@ -198,11 +220,16 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         return edgeDao.findByIdAsync(tenantId, edgeId.getId());
     }
 
+    
     /**
-
-     * Loads edge by tenant id and name.
-
+     * Finds edge by tenant id and name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return {@link Edge}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Edge findEdgeByTenantIdAndName(TenantId tenantId, String name) {
@@ -213,11 +240,16 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
                         .orElse(null), true);
     }
 
+    
     /**
-
-     * Loads edge by tenant id and name async.
-
+     * Finds edge by tenant id and name async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return future completing with {@link Edge}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<Edge> findEdgeByTenantIdAndNameAsync(TenantId tenantId, String name) {
@@ -226,11 +258,16 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         return executor.submit(() -> findEdgeByTenantIdAndName(tenantId, name));
     }
 
+    
     /**
-
-     * Loads edge by routing key.
-
+     * Finds edge by routing key.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param routingKey routing key ({@link String})
+     * @return optional {@link Edge}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<Edge> findEdgeByRoutingKey(TenantId tenantId, String routingKey) {
@@ -239,11 +276,15 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         return edgeDao.findByRoutingKey(tenantId.getId(), routingKey);
     }
 
+    
     /**
-
-     * Loads active edges.
-
+     * Finds active edges.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Edge> findActiveEdges(PageLink pageLink) {
@@ -252,11 +293,15 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         return edgeDao.findActiveEdges(pageLink);
     }
 
+    
     /**
-
-     * Persists edge.
-
+     * Saves or persists edge.
+     *
+     * @param edge edge ({@link Edge})
+     * @return {@link Edge}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Edge saveEdge(Edge edge) {
@@ -288,11 +333,17 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         }
     }
 
+    
     /**
-
-     * Assign edge to customer.
-
+     * Assigns edge to customer.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link EdgeId})
+     * @param customerId target customer identifier
+     * @return {@link Edge}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Edge assignEdgeToCustomer(TenantId tenantId, EdgeId edgeId, CustomerId customerId) {
@@ -308,11 +359,16 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         return result;
     }
 
+    
     /**
-
-     * Unassign edge from customer.
-
+     * Unassigns edge from customer.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link EdgeId})
+     * @return {@link Edge}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Edge unassignEdgeFromCustomer(TenantId tenantId, EdgeId edgeId) {
@@ -329,11 +385,16 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         return result;
     }
 
+    
     /**
-
-     * Removes edge.
-
+     * Deletes edge.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link EdgeId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -352,11 +413,17 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         eventPublisher.publishEvent(DeleteEntityEvent.builder().tenantId(tenantId).entityId(edgeId).build());
     }
 
+    
     /**
-
-     * Removes entity.
-
+     * Deletes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -364,11 +431,16 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         deleteEdge(tenantId, (EdgeId) id);
     }
 
+    
     /**
-
-     * Loads edge ids by tenant id.
-
+     * Finds edge ids by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EdgeId> findEdgeIdsByTenantId(TenantId tenantId, PageLink pageLink) {
@@ -378,11 +450,16 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         return edgeDao.findEdgeIdsByTenantId(tenantId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads edges by tenant id.
-
+     * Finds edges by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Edge> findEdgesByTenantId(TenantId tenantId, PageLink pageLink) {
@@ -392,11 +469,17 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         return edgeDao.findEdgesByTenantId(tenantId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads edges by tenant id and type.
-
+     * Finds edges by tenant id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Edge> findEdgesByTenantIdAndType(TenantId tenantId, String type, PageLink pageLink) {
@@ -407,11 +490,17 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         return edgeDao.findEdgesByTenantIdAndType(tenantId.getId(), type, pageLink);
     }
 
+    
     /**
-
-     * Loads edge infos by tenant id and type.
-
+     * Finds edge infos by tenant id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EdgeInfo> findEdgeInfosByTenantIdAndType(TenantId tenantId, String type, PageLink pageLink) {
@@ -422,11 +511,16 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         return edgeDao.findEdgeInfosByTenantIdAndType(tenantId.getId(), type, pageLink);
     }
 
+    
     /**
-
-     * Loads edge infos by tenant id.
-
+     * Finds edge infos by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EdgeInfo> findEdgeInfosByTenantId(TenantId tenantId, PageLink pageLink) {
@@ -436,11 +530,16 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         return edgeDao.findEdgeInfosByTenantId(tenantId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads edges by tenant id and ids async.
-
+     * Finds edges by tenant id and ids async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeIds edge ids ({@link List})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<Edge>> findEdgesByTenantIdAndIdsAsync(TenantId tenantId, List<EdgeId> edgeIds) {
@@ -450,11 +549,15 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         return edgeDao.findEdgesByTenantIdAndIdsAsync(tenantId.getId(), toUUIDs(edgeIds));
     }
 
+    
     /**
-
-     * Removes edges by tenant id.
-
+     * Deletes edges by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteEdgesByTenantId(TenantId tenantId) {
@@ -463,22 +566,32 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         tenantEdgesRemover.removeEntities(tenantId, tenantId);
     }
 
+    
     /**
-
-     * Removes by tenant id.
-
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteByTenantId(TenantId tenantId) {
         deleteEdgesByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Loads edges by tenant id and customer id.
-
+     * Finds edges by tenant id and customer id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Edge> findEdgesByTenantIdAndCustomerId(TenantId tenantId, CustomerId customerId, PageLink pageLink) {
@@ -489,11 +602,18 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         return edgeDao.findEdgesByTenantIdAndCustomerId(tenantId.getId(), customerId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads edges by tenant id and customer id and type.
-
+     * Finds edges by tenant id and customer id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Edge> findEdgesByTenantIdAndCustomerIdAndType(TenantId tenantId, CustomerId customerId, String type, PageLink pageLink) {
@@ -505,11 +625,17 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         return edgeDao.findEdgesByTenantIdAndCustomerIdAndType(tenantId.getId(), customerId.getId(), type, pageLink);
     }
 
+    
     /**
-
-     * Loads edge infos by tenant id and customer id.
-
+     * Finds edge infos by tenant id and customer id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EdgeInfo> findEdgeInfosByTenantIdAndCustomerId(TenantId tenantId, CustomerId customerId, PageLink pageLink) {
@@ -520,11 +646,18 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         return edgeDao.findEdgeInfosByTenantIdAndCustomerId(tenantId.getId(), customerId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads edge infos by tenant id and customer id and type.
-
+     * Finds edge infos by tenant id and customer id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EdgeInfo> findEdgeInfosByTenantIdAndCustomerIdAndType(TenantId tenantId, CustomerId customerId, String type, PageLink pageLink) {
@@ -536,11 +669,17 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         return edgeDao.findEdgeInfosByTenantIdAndCustomerIdAndType(tenantId.getId(), customerId.getId(), type, pageLink);
     }
 
+    
     /**
-
-     * Loads edges by tenant id customer id and ids async.
-
+     * Finds edges by tenant id customer id and ids async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param edgeIds edge ids ({@link List})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<Edge>> findEdgesByTenantIdCustomerIdAndIdsAsync(TenantId tenantId, CustomerId customerId, List<EdgeId> edgeIds) {
@@ -552,11 +691,16 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
                 customerId.getId(), toUUIDs(edgeIds));
     }
 
+    
     /**
-
-     * Unassign customer edges.
-
+     * Unassigns customer edges.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void unassignCustomerEdges(TenantId tenantId, CustomerId customerId) {
@@ -566,11 +710,16 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         customerEdgeRemover.removeEntities(tenantId, customerId);
     }
 
+    
     /**
-
-     * Loads edges by query.
-
+     * Finds edges by query.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param query filter and sort query definition
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<Edge>> findEdgesByQuery(TenantId tenantId, EdgeSearchQuery query) {
@@ -594,11 +743,15 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         return edges;
     }
 
+    
     /**
-
-     * Loads edge types by tenant id.
-
+     * Finds edge types by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<List<EntitySubtype>> findEdgeTypesByTenantId(TenantId tenantId) {
@@ -612,11 +765,16 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
                 }, MoreExecutors.directExecutor());
     }
 
+    
     /**
-
-     * Assign default rule chains to edge.
-
+     * Assigns default rule chains to edge.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link EdgeId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void assignDefaultRuleChainsToEdge(TenantId tenantId, EdgeId edgeId) {
@@ -628,11 +786,17 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         }
     }
 
+    
     /**
-
-     * Loads edges by tenant id and entity id.
-
+     * Finds edges by tenant id and entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Edge> findEdgesByTenantIdAndEntityId(TenantId tenantId, EntityId entityId, PageLink pageLink) {
@@ -642,11 +806,17 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         return edgeDao.findEdgesByTenantIdAndEntityId(tenantId.getId(), entityId.getId(), entityId.getEntityType(), pageLink);
     }
 
+    
     /**
-
-     * Loads edge ids by tenant id and entity id.
-
+     * Finds edge ids by tenant id and entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EdgeId> findEdgeIdsByTenantIdAndEntityId(TenantId tenantId, EntityId entityId, PageLink pageLink) {
@@ -656,11 +826,16 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         return edgeDao.findEdgeIdsByTenantIdAndEntityId(tenantId.getId(), entityId.getId(), entityId.getEntityType(), pageLink);
     }
 
+    
     /**
-
-     * Loads edges by tenant profile id.
-
+     * Finds edges by tenant profile id.
+     *
+     * @param tenantProfileId tenant profile id ({@link TenantProfileId})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Edge> findEdgesByTenantProfileId(TenantProfileId tenantProfileId, PageLink pageLink) {
@@ -721,11 +896,16 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         }
     };
 
+    
     /**
-
-     * Loads all related edge ids.
-
+     * Finds all related edge ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<EdgeId> findAllRelatedEdgeIds(TenantId tenantId, EntityId entityId) {
@@ -744,11 +924,17 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         return result;
     }
 
+    
     /**
-
-     * Loads related edge ids by entity id.
-
+     * Finds related edge ids by entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EdgeId> findRelatedEdgeIdsByEntityId(TenantId tenantId, EntityId entityId, PageLink pageLink) {
@@ -798,11 +984,17 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         return new PageData<>(edgeIds, pageData.getTotalPages(), pageData.getTotalElements(), pageData.hasNext());
     }
 
+    
     /**
-
-     * Loads missing to related rule chains.
-
+     * Finds missing to related rule chains.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link EdgeId})
+     * @param tbRuleChainInputNodeClassName tb rule chain input node class name ({@link String})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public String findMissingToRelatedRuleChains(TenantId tenantId, EdgeId edgeId, String tbRuleChainInputNodeClassName) {
@@ -836,11 +1028,17 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         return result.toString();
     }
 
+    
     /**
-
      * Set edge root rule chain.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edge edge ({@link Edge})
+     * @param ruleChainId rule chain id ({@link RuleChainId})
+     * @return {@link Edge}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Edge setEdgeRootRuleChain(TenantId tenantId, Edge edge, RuleChainId ruleChainId) {
@@ -853,11 +1051,17 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         return savedEdge;
     }
 
+    
     /**
-
      * Is edge active async.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link EdgeId})
+     * @param key attribute or cache key
+     * @return future completing with {@link Boolean}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<Boolean> isEdgeActiveAsync(TenantId tenantId, EdgeId edgeId, String key) {
@@ -881,33 +1085,47 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
         return result;
     }
 
+    
     /**
-
      * Counts by tenant id.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public long countByTenantId(TenantId tenantId) {
         return edgeDao.countByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Loads entity.
-
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findEdgeById(tenantId, new EdgeId(entityId.getId())));
     }
 
+    
     /**
-
-     * Loads entity async.
-
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
@@ -915,11 +1133,14 @@ public class EdgeServiceImpl extends AbstractCachedEntityService<EdgeCacheKey, E
                 .transform(Optional::ofNullable, directExecutor());
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

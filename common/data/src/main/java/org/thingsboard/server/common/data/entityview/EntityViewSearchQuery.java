@@ -39,6 +39,11 @@ public class EntityViewSearchQuery {
     private String relationType;
     @Schema(description = "Array of entity view types to filter the related entities (e.g. 'Temperature Sensor', 'Smoke Sensor').")
     private List<String> entityViewTypes;
+    /**
+     * To entity search query.
+     *
+     * @return {@link EntityRelationsQuery}
+     */
 
     public EntityRelationsQuery toEntitySearchQuery() {
         EntityRelationsQuery query = new EntityRelationsQuery();

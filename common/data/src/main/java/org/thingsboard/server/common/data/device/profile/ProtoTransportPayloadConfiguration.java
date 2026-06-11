@@ -51,26 +51,60 @@ public class ProtoTransportPayloadConfiguration implements TransportPayloadTypeC
     @Schema(
             description = "Transport payload type", requiredMode = Schema.RequiredMode.REQUIRED
     )
+    /**
+     * Returns transport payload type.
+     *
+     * @return {@link TransportPayloadType}
+     */
     @Override
     public TransportPayloadType getTransportPayloadType() {
         return TransportPayloadType.PROTOBUF;
     }
+    /**
+     * Returns telemetry dynamic message descriptor.
+     *
+     * @param deviceTelemetryProtoSchema device telemetry proto schema ({@link String})
+     * @return the Descriptors.Descriptor value
+     */
 
     public Descriptors.Descriptor getTelemetryDynamicMessageDescriptor(String deviceTelemetryProtoSchema) {
         return DynamicProtoUtils.getDescriptor(deviceTelemetryProtoSchema, TELEMETRY_PROTO_SCHEMA);
     }
+    /**
+     * Returns attributes dynamic message descriptor.
+     *
+     * @param deviceAttributesProtoSchema device attributes proto schema ({@link String})
+     * @return the Descriptors.Descriptor value
+     */
 
     public Descriptors.Descriptor getAttributesDynamicMessageDescriptor(String deviceAttributesProtoSchema) {
         return DynamicProtoUtils.getDescriptor(deviceAttributesProtoSchema, ATTRIBUTES_PROTO_SCHEMA);
     }
+    /**
+     * Returns rpc response dynamic message descriptor.
+     *
+     * @param deviceRpcResponseProtoSchema device rpc response proto schema ({@link String})
+     * @return the Descriptors.Descriptor value
+     */
 
     public Descriptors.Descriptor getRpcResponseDynamicMessageDescriptor(String deviceRpcResponseProtoSchema) {
         return DynamicProtoUtils.getDescriptor(deviceRpcResponseProtoSchema, RPC_RESPONSE_PROTO_SCHEMA);
     }
+    /**
+     * Returns rpc request dynamic message builder.
+     *
+     * @param deviceRpcRequestProtoSchema device rpc request proto schema ({@link String})
+     * @return the DynamicMessage.Builder value
+     */
 
     public DynamicMessage.Builder getRpcRequestDynamicMessageBuilder(String deviceRpcRequestProtoSchema) {
         return DynamicProtoUtils.getDynamicMessageBuilder(deviceRpcRequestProtoSchema, RPC_REQUEST_PROTO_SCHEMA);
     }
+    /**
+     * Returns device rpc response proto schema.
+     *
+     * @return {@link String}
+     */
 
     public String getDeviceRpcResponseProtoSchema() {
         if (StringUtils.isNotEmpty(deviceRpcResponseProtoSchema)) {
@@ -84,6 +118,11 @@ public class ProtoTransportPayloadConfiguration implements TransportPayloadTypeC
                     "}";
         }
     }
+    /**
+     * Returns device rpc request proto schema.
+     *
+     * @return {@link String}
+     */
 
     public String getDeviceRpcRequestProtoSchema() {
         if (StringUtils.isNotEmpty(deviceRpcRequestProtoSchema)) {

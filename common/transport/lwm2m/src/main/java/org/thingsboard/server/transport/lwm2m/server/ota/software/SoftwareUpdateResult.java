@@ -28,7 +28,7 @@ import lombok.Getter;
  * 2: Software successfully installed.
  * 3: Successfully Downloaded and package integrity verified
  * (( 4-49, for expansion, of other scenarios))
- * ** Failed
+ * * Failed
  * 50: Not enough storage for the new software package.
  * 51: Out of memory during downloading process.
  * 52: Connection lost during downloading process.
@@ -68,7 +68,13 @@ public enum SoftwareUpdateResult {
         this.type = type;
         this.isAgain = isAgain;
     }
-
+    /**
+     * From update result sw by type.
+     *
+     * @param type type ({@link String})
+     * @return {@link SoftwareUpdateResult}
+     * @throws Exception on processing failure
+     */
     public static SoftwareUpdateResult fromUpdateResultSwByType(String type) {
         for (SoftwareUpdateResult to : SoftwareUpdateResult.values()) {
             if (to.type.equals(type)) {
@@ -77,7 +83,13 @@ public enum SoftwareUpdateResult {
         }
         throw new IllegalArgumentException(String.format("Unsupported SW Update Result type  : %s", type));
     }
-
+    /**
+     * From update result sw by code.
+     *
+     * @param code code
+     * @return {@link SoftwareUpdateResult}
+     * @throws Exception on processing failure
+     */
     public static SoftwareUpdateResult fromUpdateResultSwByCode(int code) {
         for (SoftwareUpdateResult to : SoftwareUpdateResult.values()) {
             if (to.code == code) {

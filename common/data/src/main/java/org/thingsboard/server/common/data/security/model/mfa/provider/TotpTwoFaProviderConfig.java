@@ -28,6 +28,11 @@ public class TotpTwoFaProviderConfig implements TwoFaProviderConfig {
 
     @NotBlank
     private String issuerName;
+    /**
+     * Returns provider type.
+     *
+     * @return {@link TwoFaProviderType}
+     */
 
     @Override
     public TwoFaProviderType getProviderType() {

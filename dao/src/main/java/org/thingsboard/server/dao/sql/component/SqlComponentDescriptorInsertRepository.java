@@ -18,8 +18,14 @@ package org.thingsboard.server.dao.sql.component;
 import org.springframework.stereotype.Repository;
 import org.thingsboard.server.dao.model.sql.ComponentDescriptorEntity;
 /**
- * Sql component descriptor insert repository.
+ * Sql component descriptor insert repository (JPA/PostgreSQL persistence layer (JPA repositories and PostgreSQL DAO implementations)).
  */
+
+
+
+
+
+
 
 @Repository
 public class SqlComponentDescriptorInsertRepository extends AbstractComponentDescriptorInsertRepository {
@@ -36,22 +42,31 @@ public class SqlComponentDescriptorInsertRepository extends AbstractComponentDes
     private static final String INSERT_OR_UPDATE_ON_P_KEY_CONFLICT = getInsertOrUpdateStatement(P_KEY_CONFLICT_STATEMENT, ON_P_KEY_CONFLICT_UPDATE_STATEMENT);
     private static final String INSERT_OR_UPDATE_ON_UNQ_KEY_CONFLICT = getInsertOrUpdateStatement(UNQ_KEY_CONFLICT_STATEMENT, ON_UNQ_KEY_CONFLICT_UPDATE_STATEMENT);
 
+    
     /**
-
-     * Persists or update.
-
+     * Saves or updates the requested data.
+     *
+     * @param entity domain entity to persist or validate
+     * @return {@link ComponentDescriptorEntity}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ComponentDescriptorEntity saveOrUpdate(ComponentDescriptorEntity entity) {
         return saveAndGet(entity, INSERT_OR_UPDATE_ON_P_KEY_CONFLICT, INSERT_OR_UPDATE_ON_UNQ_KEY_CONFLICT);
     }
 
+    
     /**
-
      * Do process save or update.
-
+     *
+     * @param entity domain entity to persist or validate
+     * @param query filter and sort query definition
+     * @return {@link ComponentDescriptorEntity}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected ComponentDescriptorEntity doProcessSaveOrUpdate(ComponentDescriptorEntity entity, String query) {

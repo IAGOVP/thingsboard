@@ -40,8 +40,11 @@ import java.util.UUID;
 
 import static org.thingsboard.server.dao.model.ModelConstants.ENTITY_TYPE_PROPERTY;
 /**
- * Abstract entity view entity.
+ * JPA/Cassandra row model for abstract view.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -129,6 +132,12 @@ public abstract class AbstractEntityViewEntity<T extends EntityView> extends Bas
         this.additionalInfo = entityViewEntity.getAdditionalInfo();
         this.externalId = entityViewEntity.getExternalId();
     }
+    /**
+     * To entity view.
+     *
+     * @return {@link EntityView}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected EntityView toEntityView() {
         EntityView entityView = new EntityView(new EntityViewId(getUuid()));

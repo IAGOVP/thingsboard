@@ -21,10 +21,24 @@ package org.thingsboard.server.common.transport;
 public interface TransportServiceCallback<T> {
 
     TransportServiceCallback<Void> EMPTY = new TransportServiceCallback<Void>() {
+        /**
+         * Handles success.
+         *
+         * @param msg msg ({@link Void})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
         @Override
         public void onSuccess(Void msg) {
 
         }
+        /**
+         * Handles error.
+         *
+         * @param e e ({@link Throwable})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onError(Throwable e) {
@@ -32,8 +46,22 @@ public interface TransportServiceCallback<T> {
         }
     };
 
+    /**
+     * Handles success.
+     *
+     * @param msg msg ({@link T})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void onSuccess(T msg);
 
+    /**
+     * Handles error.
+     *
+     * @param e e ({@link Throwable})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void onError(Throwable e);
 
 }

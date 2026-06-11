@@ -18,9 +18,10 @@ package org.thingsboard.common.util;
 import java.util.concurrent.ScheduledExecutorService;
 
 /**
- * executor provider contract.
+ * Contract for executor provider.
  */
 public interface ExecutorProvider {
 
+    /** Returns the executor. */
     ScheduledExecutorService getExecutor();
 }

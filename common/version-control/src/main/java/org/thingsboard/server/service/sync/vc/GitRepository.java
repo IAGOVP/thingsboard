@@ -100,10 +100,10 @@ import static org.eclipse.jgit.transport.RemoteRefUpdate.Status.REJECTED_NONFAST
 import static org.eclipse.jgit.transport.RemoteRefUpdate.Status.REJECTED_OTHER_REASON;
 import static org.eclipse.jgit.transport.RemoteRefUpdate.Status.REJECTED_REMOTE_CHANGED;
 
-@Slf4j
 /**
  * Git repository.
  */
+@Slf4j
 public class GitRepository {
 
     private final Git git;
@@ -255,6 +255,7 @@ public class GitRepository {
     }
 
     public PageData<Commit> listCommits(String branch, PageLink pageLink) throws IOException, GitAPIException {
+        /** List commits. */
         return listCommits(branch, null, pageLink);
     }
 
@@ -273,6 +274,7 @@ public class GitRepository {
         }
 
         Iterable<RevCommit> commits = execute(command);
+        /** Iterable to page data. */
         return iterableToPageData(commits, this::toCommit, pageLink, revCommitComparatorFunction);
     }
 
@@ -282,6 +284,7 @@ public class GitRepository {
 
     public List<RepoFile> listFilesAtCommit(String commitId, String path, int depth) {
         RevCommit commit = resolveCommit(commitId);
+        /** List files at commit. */
         return listFilesAtCommit(commit, path, depth);
     }
 
@@ -310,6 +313,7 @@ public class GitRepository {
 
     public byte[] getFileContentAtCommit(String file, String commitId) {
         RevCommit commit = resolveCommit(commitId);
+        /** Returns the file content at commit. */
         return getFileContentAtCommit(file, commit);
     }
 
@@ -331,7 +335,6 @@ public class GitRepository {
             }
         }
     }
-
 
     public void createAndCheckoutOrphanBranch(String name) throws GitAPIException {
         log.debug("Executing createAndCheckoutOrphanBranch [{}][{}]", settings.getRepositoryUri(), name);
@@ -369,9 +372,9 @@ public class GitRepository {
         RevCommit revCommit = execute(git.commit()
                 .setAuthor(authorName, authorEmail)
                 .setMessage(message));
+        /** To commit. */
         return toCommit(revCommit);
     }
-
 
     public void push(String localBranch, String remoteBranch) throws GitAPIException {
         if (settings.isLocalOnly()) {

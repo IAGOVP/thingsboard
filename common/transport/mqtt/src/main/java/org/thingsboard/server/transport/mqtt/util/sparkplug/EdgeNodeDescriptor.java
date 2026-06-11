@@ -43,20 +43,33 @@ public class EdgeNodeDescriptor implements SparkplugDescriptor{
         this.edgeNodeId = tokens[1];
         this.descriptorString = descriptorString;
     }
-
+    /**
+     * Returns group id.
+     *
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
     public String getGroupId() {
         return groupId;
     }
-
+    /**
+     * Returns edge node id.
+     *
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
     public String getEdgeNodeId() {
         return edgeNodeId;
     }
 
+    
     /**
-     * Returns a {@link String} representing the Edge Node's Descriptor of the form: "<groupId>/<edgeNodeId>".
+     * Returns descriptor string.
      *
-     * @return a {@link String} representing the Edge Node's Descriptor.
+     * @return {@link String}
+     * @throws Exception on processing failure
      */
+
     @Override
     public String getDescriptorString() {
         return descriptorString;

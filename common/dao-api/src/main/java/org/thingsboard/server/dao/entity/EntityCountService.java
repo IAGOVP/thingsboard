@@ -23,7 +23,20 @@ import org.thingsboard.server.common.data.id.TenantId;
  */
 public interface EntityCountService {
 
+    /**
+     * Counts by tenant id and entity type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityType entity type ({@link EntityType})
+     * @return the long result
+     */
     long countByTenantIdAndEntityType(TenantId tenantId, EntityType entityType);
 
+    /**
+     * Publish count entity evict event.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityType entity type ({@link EntityType})
+     */
     void publishCountEntityEvictEvent(TenantId tenantId, EntityType entityType);
 }

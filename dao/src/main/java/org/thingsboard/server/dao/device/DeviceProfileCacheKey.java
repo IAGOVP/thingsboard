@@ -23,8 +23,14 @@ import org.thingsboard.server.common.data.id.TenantId;
 
 import java.io.Serial;
 /**
- * Device profile cache key.
+ * Serializable cache key for device profile entries (devices, credentials, profiles, and connectivity).
  */
+
+
+
+
+
+
 
 @Data
 public class DeviceProfileCacheKey implements VersionedCacheKey {
@@ -45,18 +51,47 @@ public class DeviceProfileCacheKey implements VersionedCacheKey {
         this.defaultProfile = defaultProfile;
         this.provisionDeviceKey = provisionDeviceKey;
     }
+    /**
+     * For name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return {@link DeviceProfileCacheKey}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static DeviceProfileCacheKey forName(TenantId tenantId, String name) {
         return new DeviceProfileCacheKey(tenantId, name, null, false, null);
     }
+    /**
+     * For id.
+     *
+     * @param id entity UUID primary key
+     * @return {@link DeviceProfileCacheKey}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static DeviceProfileCacheKey forId(DeviceProfileId id) {
         return new DeviceProfileCacheKey(null, null, id, false, null);
     }
+    /**
+     * For default profile.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link DeviceProfileCacheKey}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static DeviceProfileCacheKey forDefaultProfile(TenantId tenantId) {
         return new DeviceProfileCacheKey(tenantId, null, null, true, null);
     }
+    /**
+     * For provision key.
+     *
+     * @param provisionDeviceKey provision device key ({@link String})
+     * @return {@link DeviceProfileCacheKey}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static DeviceProfileCacheKey forProvisionKey(String provisionDeviceKey) {
         return new DeviceProfileCacheKey(null, null, null, false, provisionDeviceKey);
@@ -76,6 +111,12 @@ public class DeviceProfileCacheKey implements VersionedCacheKey {
         }
         return tenantId + "_" + name;
     }
+    /**
+     * Is versioned.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isVersioned() {

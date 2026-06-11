@@ -28,8 +28,14 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
 /**
- * Sql insert ts repository.
+ * Sql insert ts repository (time-series SQL/Timescale persistence (SQL/Timescale time-series key-value storage)).
  */
+
+
+
+
+
+
 
 @SqlTsDao
 @Repository
@@ -38,6 +44,13 @@ public class SqlInsertTsRepository extends AbstractInsertRepository implements I
 
     private static final String INSERT_ON_CONFLICT_DO_UPDATE = "INSERT INTO ts_kv (entity_id, key, ts, bool_v, str_v, long_v, dbl_v, json_v) VALUES (?, ?, ?, ?, ?, ?, ?, cast(? AS json)) " +
             "ON CONFLICT (entity_id, key, ts) DO UPDATE SET bool_v = ?, str_v = ?, long_v = ?, dbl_v = ?, json_v = cast(? AS json);";
+    /**
+     * Saves or updates the requested data.
+     *
+     * @param entities entities ({@link List})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void saveOrUpdate(List<TsKvEntity> entities) {

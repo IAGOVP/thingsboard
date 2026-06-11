@@ -23,8 +23,11 @@ import org.thingsboard.server.common.data.asset.Asset;
 
 import static org.thingsboard.server.dao.model.ModelConstants.ASSET_TABLE_NAME;
 /**
- * Asset entity.
+ * JPA/Cassandra row model for asset.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -39,6 +42,12 @@ public final class AssetEntity extends AbstractAssetEntity<Asset> {
     public AssetEntity(Asset asset) {
         super(asset);
     }
+    /**
+     * To data.
+     *
+     * @return {@link Asset}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Asset toData() {

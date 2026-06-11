@@ -20,10 +20,13 @@ import org.thingsboard.server.common.msg.TbActorMsg;
 /** Handle for sending messages to an actor ({@link TbActorMailbox} implements this). */
 public interface TbActorRef {
 
+    /** Returns the actor id. */
     TbActorId getActorId();
 
+    /** Enqueues a message on the target actor's mailbox (normal priority). */
     void tell(TbActorMsg actorMsg);
 
+    /** Enqueues a high-priority message processed before normal queue traffic. */
     void tellWithHighPriority(TbActorMsg actorMsg);
 
 }

@@ -35,6 +35,11 @@ public class SlackNotificationTargetConfig extends NotificationTargetConfig {
     @NotNull
     @Valid
     private SlackConversation conversation;
+    /**
+     * Returns type.
+     *
+     * @return {@link NotificationTargetType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Type of the notification target")
     @Override

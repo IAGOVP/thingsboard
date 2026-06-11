@@ -70,8 +70,11 @@ import static org.thingsboard.server.dao.DaoUtil.toUUIDs;
 import static org.thingsboard.server.dao.service.Validator.validateId;
 import static org.thingsboard.server.dao.service.Validator.validateString;
 /**
- * Spring service implementing device profile API.
+ * Spring {@code @Service} implementing the device profile DAO API.
+ *
+ * <p>Delegates to {@code *Dao} implementations and manages cache eviction (devices, credentials, profiles, and connectivity).
  */
+
 
 @Service("DeviceProfileDaoService")
 @Slf4j
@@ -99,11 +102,15 @@ public class DeviceProfileServiceImpl extends CachedVersionedEntityService<Devic
     @Autowired
     private ImageService imageService;
 
+    
     /**
-
-     * Handle evict event.
-
+     * Handles evict event.
+     *
+     * @param event event ({@link DeviceProfileEvictEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @TransactionalEventListener(classes = DeviceProfileEvictEvent.class)
     @Override
@@ -127,22 +134,33 @@ public class DeviceProfileServiceImpl extends CachedVersionedEntityService<Devic
         cache.evict(toEvict);
     }
 
+    
     /**
-
-     * Loads device profile by id.
-
+     * Finds device profile by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfileId device profile id ({@link DeviceProfileId})
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceProfile findDeviceProfileById(TenantId tenantId, DeviceProfileId deviceProfileId) {
         return findDeviceProfileById(tenantId, deviceProfileId, true);
     }
 
+    
     /**
-
-     * Loads device profile by id.
-
+     * Finds device profile by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfileId device profile id ({@link DeviceProfileId})
+     * @param putInCache put in cache
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceProfile findDeviceProfileById(TenantId tenantId, DeviceProfileId deviceProfileId, boolean putInCache) {
@@ -152,22 +170,33 @@ public class DeviceProfileServiceImpl extends CachedVersionedEntityService<Devic
                 () -> deviceProfileDao.findById(tenantId, deviceProfileId.getId()), putInCache);
     }
 
+    
     /**
-
-     * Loads device profile by name.
-
+     * Finds device profile by name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param profileName profile name ({@link String})
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceProfile findDeviceProfileByName(TenantId tenantId, String profileName) {
         return findDeviceProfileByName(tenantId, profileName, true);
     }
 
+    
     /**
-
-     * Loads device profile by name.
-
+     * Finds device profile by name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param profileName profile name ({@link String})
+     * @param putInCache put in cache
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceProfile findDeviceProfileByName(TenantId tenantId, String profileName, boolean putInCache) {
@@ -177,11 +206,15 @@ public class DeviceProfileServiceImpl extends CachedVersionedEntityService<Devic
                 () -> deviceProfileDao.findByName(tenantId, profileName), true, putInCache);
     }
 
+    
     /**
-
-     * Loads device profile by provision device key.
-
+     * Finds device profile by provision device key.
+     *
+     * @param provisionDeviceKey provision device key ({@link String})
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceProfile findDeviceProfileByProvisionDeviceKey(String provisionDeviceKey) {
@@ -191,11 +224,16 @@ public class DeviceProfileServiceImpl extends CachedVersionedEntityService<Devic
                 () -> deviceProfileDao.findByProvisionDeviceKey(provisionDeviceKey), false);
     }
 
+    
     /**
-
-     * Loads device profile info by id.
-
+     * Finds device profile info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfileId device profile id ({@link DeviceProfileId})
+     * @return {@link DeviceProfileInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceProfileInfo findDeviceProfileInfoById(TenantId tenantId, DeviceProfileId deviceProfileId) {
@@ -204,22 +242,32 @@ public class DeviceProfileServiceImpl extends CachedVersionedEntityService<Devic
         return toDeviceProfileInfo(findDeviceProfileById(tenantId, deviceProfileId));
     }
 
+    
     /**
-
-     * Persists device profile.
-
+     * Saves or persists device profile.
+     *
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceProfile saveDeviceProfile(DeviceProfile deviceProfile) {
         return saveDeviceProfile(deviceProfile, true, true);
     }
 
+    
     /**
-
-     * Persists device profile.
-
+     * Saves or persists device profile.
+     *
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @param doValidate do validate
+     * @param publishSaveEvent publish save event
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceProfile saveDeviceProfile(DeviceProfile deviceProfile, boolean doValidate, boolean publishSaveEvent) {
@@ -274,11 +322,16 @@ public class DeviceProfileServiceImpl extends CachedVersionedEntityService<Devic
         return savedDeviceProfile;
     }
 
+    
     /**
-
-     * Removes device profile.
-
+     * Deletes device profile.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfileId device profile id ({@link DeviceProfileId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -288,11 +341,17 @@ public class DeviceProfileServiceImpl extends CachedVersionedEntityService<Devic
         deleteEntity(tenantId, deviceProfileId, false);
     }
 
+    
     /**
-
-     * Removes entity.
-
+     * Deletes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -321,11 +380,16 @@ public class DeviceProfileServiceImpl extends CachedVersionedEntityService<Devic
         }
     }
 
+    
     /**
-
-     * Loads device profiles.
-
+     * Finds device profiles.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<DeviceProfile> findDeviceProfiles(TenantId tenantId, PageLink pageLink) {
@@ -335,11 +399,17 @@ public class DeviceProfileServiceImpl extends CachedVersionedEntityService<Devic
         return deviceProfileDao.findDeviceProfiles(tenantId, pageLink);
     }
 
+    
     /**
-
-     * Loads device profile infos.
-
+     * Finds device profile infos.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @param transportType transport type ({@link String})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<DeviceProfileInfo> findDeviceProfileInfos(TenantId tenantId, PageLink pageLink, String transportType) {
@@ -349,11 +419,16 @@ public class DeviceProfileServiceImpl extends CachedVersionedEntityService<Devic
         return deviceProfileDao.findDeviceProfileInfos(tenantId, pageLink, transportType);
     }
 
+    
     /**
-
-     * Loads or create device profile.
-
+     * Finds or create device profile.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceProfile findOrCreateDeviceProfile(TenantId tenantId, String name) {
@@ -374,11 +449,15 @@ public class DeviceProfileServiceImpl extends CachedVersionedEntityService<Devic
         return deviceProfile;
     }
 
+    
     /**
-
      * Creates default device profile.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceProfile createDefaultDeviceProfile(TenantId tenantId) {
@@ -407,11 +486,15 @@ public class DeviceProfileServiceImpl extends CachedVersionedEntityService<Devic
         return saveDeviceProfile(deviceProfile, true, publishSaveEvent);
     }
 
+    
     /**
-
-     * Loads default device profile.
-
+     * Finds default device profile.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceProfile findDefaultDeviceProfile(TenantId tenantId) {
@@ -421,11 +504,15 @@ public class DeviceProfileServiceImpl extends CachedVersionedEntityService<Devic
                 () -> deviceProfileDao.findDefaultDeviceProfile(tenantId), true);
     }
 
+    
     /**
-
-     * Loads default device profile info.
-
+     * Finds default device profile info.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link DeviceProfileInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceProfileInfo findDefaultDeviceProfileInfo(TenantId tenantId) {
@@ -434,11 +521,16 @@ public class DeviceProfileServiceImpl extends CachedVersionedEntityService<Devic
         return toDeviceProfileInfo(findDefaultDeviceProfile(tenantId));
     }
 
+    
     /**
-
      * Set default device profile.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfileId device profile id ({@link DeviceProfileId})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public boolean setDefaultDeviceProfile(TenantId tenantId, DeviceProfileId deviceProfileId) {
@@ -466,11 +558,15 @@ public class DeviceProfileServiceImpl extends CachedVersionedEntityService<Devic
         return false;
     }
 
+    
     /**
-
-     * Removes device profiles by tenant id.
-
+     * Deletes device profiles by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteDeviceProfilesByTenantId(TenantId tenantId) {
@@ -479,33 +575,47 @@ public class DeviceProfileServiceImpl extends CachedVersionedEntityService<Devic
         tenantDeviceProfilesRemover.removeEntities(tenantId, tenantId);
     }
 
+    
     /**
-
-     * Removes by tenant id.
-
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteByTenantId(TenantId tenantId) {
         deleteDeviceProfilesByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Loads entity.
-
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findDeviceProfileById(tenantId, new DeviceProfileId(entityId.getId())));
     }
 
+    
     /**
-
-     * Loads entity async.
-
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
@@ -513,22 +623,30 @@ public class DeviceProfileServiceImpl extends CachedVersionedEntityService<Devic
                 .transform(Optional::ofNullable, directExecutor());
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {
         return EntityType.DEVICE_PROFILE;
     }
 
+    
     /**
-
-     * Loads device profile names by tenant id.
-
+     * Finds device profile names by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param activeOnly active only
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<EntityInfo> findDeviceProfileNamesByTenantId(TenantId tenantId, boolean activeOnly) {
@@ -539,11 +657,16 @@ public class DeviceProfileServiceImpl extends CachedVersionedEntityService<Devic
                 .collect(Collectors.toList());
     }
 
+    
     /**
-
-     * Loads device profiles by ids.
-
+     * Finds device profiles by ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfileIds device profile ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<DeviceProfileInfo> findDeviceProfilesByIds(TenantId tenantId, List<DeviceProfileId> deviceProfileIds) {

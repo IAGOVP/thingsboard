@@ -29,13 +29,28 @@ import java.util.Map;
  * notification info contract.
  */
 public interface NotificationInfo {
+    /**
+     * Returns template data.
+     *
+     * @return {@link Map}
+     */
 
     @JsonIgnore
     Map<String, String> getTemplateData();
+/**
+ * Returns state entity id.
+ *
+ * @return {@link EntityId}
+ */
 
     default EntityId getStateEntityId() {
         return null;
     }
+/**
+ * Returns dashboard id.
+ *
+ * @return {@link DashboardId}
+ */
 
     default DashboardId getDashboardId() {
         return null;

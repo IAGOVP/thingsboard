@@ -36,7 +36,12 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 @Schema
 @EqualsAndHashCode(callSuper = true)
 /**
- * User.
+ * Platform user account with role-based access within a tenant or customer scope.
+ *
+ * <p>Stores email, name, {@link org.thingsboard.server.common.data.security.Authority} (SYS_ADMIN,
+ * TENANT_ADMIN, CUSTOMER_USER), and tenant/customer association. Credentials and activation state
+ * live in separate {@code UserCredentials} entity. Used for REST authentication, notifications,
+ * and alarm assignee tracking. API: {@code /api/user}.
  */
 public class User extends BaseDataWithAdditionalInfo<UserId> implements HasName, HasTenantId, HasCustomerId, NotificationRecipient, HasVersion {
 
@@ -77,6 +82,11 @@ public class User extends BaseDataWithAdditionalInfo<UserId> implements HasName,
         this.phone = user.getPhone();
         this.version = user.getVersion();
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link UserId}
+     */
 
 
     @Schema(description = "JSON object with the User Id. " +
@@ -87,39 +97,79 @@ public class User extends BaseDataWithAdditionalInfo<UserId> implements HasName,
     public UserId getId() {
         return super.getId();
     }
+    /**
+     * Returns created time.
+     *
+     * @return the long result
+     */
 
     @Schema(description = "Timestamp of the user creation, in milliseconds", example = "1609459200000", accessMode = Schema.AccessMode.READ_ONLY)
     @Override
     public long getCreatedTime() {
         return super.getCreatedTime();
     }
+    /**
+     * Returns tenant id.
+     *
+     * @return {@link TenantId}
+     */
 
     @Schema(description = "JSON object with the Tenant Id.")
     public TenantId getTenantId() {
         return tenantId;
     }
+    /**
+     * Set tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     */
 
     public void setTenantId(TenantId tenantId) {
         this.tenantId = tenantId;
     }
+    /**
+     * Returns customer id.
+     *
+     * @return {@link CustomerId}
+     */
 
     @Schema(description = "JSON object with the Customer Id.")
     public CustomerId getCustomerId() {
         return customerId;
     }
+    /**
+     * Set customer id.
+     *
+     * @param customerId customer id ({@link CustomerId})
+     */
 
     public void setCustomerId(CustomerId customerId) {
         this.customerId = customerId;
     }
+    /**
+     * Returns email.
+     *
+     * @return {@link String}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Email of the user", example = "user@example.com")
     public String getEmail() {
         return email;
     }
+    /**
+     * Set email.
+     *
+     * @param email email ({@link String})
+     */
 
     public void setEmail(String email) {
         this.email = email;
     }
+    /**
+     * Returns name.
+     *
+     * @return {@link String}
+     */
 
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "Duplicates the email of the user, readonly", example = "user@example.com")
     @Override
@@ -127,38 +177,78 @@ public class User extends BaseDataWithAdditionalInfo<UserId> implements HasName,
     public String getName() {
         return email;
     }
+    /**
+     * Returns authority.
+     *
+     * @return {@link Authority}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Authority", example = "SYS_ADMIN, TENANT_ADMIN or CUSTOMER_USER")
     public Authority getAuthority() {
         return authority;
     }
+    /**
+     * Set authority.
+     *
+     * @param authority authority ({@link Authority})
+     */
 
     public void setAuthority(Authority authority) {
         this.authority = authority;
     }
+    /**
+     * Returns first name.
+     *
+     * @return {@link String}
+     */
 
     @Schema(description = "First name of the user", example = "John")
     public String getFirstName() {
         return firstName;
     }
+    /**
+     * Set first name.
+     *
+     * @param firstName first name ({@link String})
+     */
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
+    /**
+     * Returns last name.
+     *
+     * @return {@link String}
+     */
 
     @Schema(description = "Last name of the user", example = "Doe")
     public String getLastName() {
         return lastName;
     }
+    /**
+     * Set last name.
+     *
+     * @param lastName last name ({@link String})
+     */
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+    /**
+     * Returns phone.
+     *
+     * @return {@link String}
+     */
 
     @Schema(description = "Phone number of the user", example = "38012345123")
     public String getPhone() {
         return phone;
     }
+    /**
+     * Set phone.
+     *
+     * @param phone phone ({@link String})
+     */
 
     public void setPhone(String phone) {
         this.phone = phone;
@@ -174,15 +264,33 @@ public class User extends BaseDataWithAdditionalInfo<UserId> implements HasName,
             implementation = com.fasterxml.jackson.databind.JsonNode.class,
             example = "{\"defaultDashboardId\":\"784f394c-42b6-435a-983c-b7beff2784f9\",\"defaultDashboardFullscreen\":false," +
                     "\"homeDashboardId\":\"784f394c-42b6-435a-983c-b7beff2784f9\",\"homeDashboardHideToolbar\":true,\"lang\":\"en_US\"}")
+    /**
+     * Returns additional info.
+     *
+     * @return {@link JsonNode}
+     */
     @Override
     public JsonNode getAdditionalInfo() {
         return super.getAdditionalInfo();
     }
+    /**
+     * Returns title.
+     *
+     * @return {@link String}
+     */
 
     @JsonIgnore
     public String getTitle() {
         return getTitle(email, firstName, lastName);
     }
+    /**
+     * Returns title.
+     *
+     * @param email email ({@link String})
+     * @param firstName first name ({@link String})
+     * @param lastName last name ({@link String})
+     * @return {@link String}
+     */
 
     public static String getTitle(String email, String firstName, String lastName) {
         String title = "";
@@ -225,16 +333,31 @@ public class User extends BaseDataWithAdditionalInfo<UserId> implements HasName,
         builder.append("]");
         return builder.toString();
     }
+    /**
+     * Is system admin.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     public boolean isSystemAdmin() {
         return tenantId == null || EntityId.NULL_UUID.equals(tenantId.getId());
     }
+    /**
+     * Is tenant admin.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     public boolean isTenantAdmin() {
         return !isSystemAdmin() && (customerId == null || EntityId.NULL_UUID.equals(customerId.getId()));
     }
+    /**
+     * Is customer user.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     public boolean isCustomerUser() {

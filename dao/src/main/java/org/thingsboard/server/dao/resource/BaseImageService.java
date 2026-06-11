@@ -73,7 +73,10 @@ import static org.apache.commons.lang3.ArrayUtils.get;
 import static org.thingsboard.server.common.data.StringUtils.isNotEmpty;
 /**
  * Default DAO-layer service implementation for image.
+ *
+ * <p>Coordinates validation, caching, cluster events, and {@code *Dao} persistence (tenant/system resources (images, JS modules, etc.)).
  */
+
 
 @Service
 @Slf4j
@@ -120,11 +123,14 @@ public class BaseImageService extends BaseResourceService implements ImageServic
         this.widgetsBundleDao = widgetsBundleDao;
     }
 
+    
     /**
-
      * Init.
-
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @PostConstruct
     public void init() {
@@ -135,11 +141,15 @@ public class BaseImageService extends BaseResourceService implements ImageServic
         imageContainerDaoMap.put(EntityType.DASHBOARD, dashboardInfoDao);
     }
 
+    
     /**
-
-     * Persists image.
-
+     * Saves or persists image.
+     *
+     * @param image image ({@link TbResource})
+     * @return {@link TbResourceInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @SneakyThrows
@@ -191,11 +201,15 @@ public class BaseImageService extends BaseResourceService implements ImageServic
         return RandomStringUtils.randomAlphanumeric(32);
     }
 
+    
     /**
-
-     * Persists image info.
-
+     * Saves or persists image info.
+     *
+     * @param imageInfo image info ({@link TbResourceInfo})
+     * @return {@link TbResourceInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public TbResourceInfo saveImageInfo(TbResourceInfo imageInfo) {
@@ -203,11 +217,16 @@ public class BaseImageService extends BaseResourceService implements ImageServic
         return saveResource(new TbResource(imageInfo));
     }
 
+    
     /**
-
-     * Get image info by tenant id and key.
-
+     * Returns image info by tenant id and key.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key attribute or cache key
+     * @return {@link TbResourceInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public TbResourceInfo getImageInfoByTenantIdAndKey(TenantId tenantId, String key) {
@@ -215,11 +234,15 @@ public class BaseImageService extends BaseResourceService implements ImageServic
         return findResourceInfoByTenantIdAndKey(tenantId, ResourceType.IMAGE, key);
     }
 
+    
     /**
-
-     * Get all image keys by tenant id.
-
+     * Returns all image keys by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Set<String> getAllImageKeysByTenantId(TenantId tenantId) {
@@ -227,22 +250,32 @@ public class BaseImageService extends BaseResourceService implements ImageServic
         return resourceInfoDao.findKeysByTenantIdAndResourceTypeAndResourceKeyPrefix(tenantId, ResourceType.IMAGE, "");
     }
 
+    
     /**
-
-     * Get public image info by key.
-
+     * Returns public image info by key.
+     *
+     * @param publicResourceKey public resource key ({@link String})
+     * @return {@link TbResourceInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public TbResourceInfo getPublicImageInfoByKey(String publicResourceKey) {
         return resourceInfoDao.findPublicResourceByKey(ResourceType.IMAGE, publicResourceKey);
     }
 
+    
     /**
-
-     * Get images by tenant id.
-
+     * Returns images by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param imageSubType image sub type ({@link ResourceSubType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<TbResourceInfo> getImagesByTenantId(TenantId tenantId, ResourceSubType imageSubType, PageLink pageLink) {
@@ -255,11 +288,17 @@ public class BaseImageService extends BaseResourceService implements ImageServic
         return findTenantResourcesByTenantId(filter, pageLink);
     }
 
+    
     /**
-
-     * Get all images by tenant id.
-
+     * Returns all images by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param imageSubType image sub type ({@link ResourceSubType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<TbResourceInfo> getAllImagesByTenantId(TenantId tenantId, ResourceSubType imageSubType, PageLink pageLink) {
@@ -272,22 +311,32 @@ public class BaseImageService extends BaseResourceService implements ImageServic
         return findAllTenantResourcesByTenantId(filter, pageLink);
     }
 
+    
     /**
-
-     * Get image data.
-
+     * Returns image data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param imageId image id ({@link TbResourceId})
+     * @return the byte[] value
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public byte[] getImageData(TenantId tenantId, TbResourceId imageId) {
         return getResourceData(tenantId, imageId);
     }
 
+    
     /**
-
-     * Get image preview.
-
+     * Returns image preview.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param imageId image id ({@link TbResourceId})
+     * @return the byte[] value
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public byte[] getImagePreview(TenantId tenantId, TbResourceId imageId) {
@@ -295,11 +344,15 @@ public class BaseImageService extends BaseResourceService implements ImageServic
         return resourceDao.getResourcePreview(tenantId, imageId);
     }
 
+    
     /**
-
-     * Export image.
-
+     * Exports image.
+     *
+     * @param imageInfo image info ({@link TbResourceInfo})
+     * @return {@link ResourceExportData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ResourceExportData exportImage(TbResourceInfo imageInfo) {
@@ -319,11 +372,17 @@ public class BaseImageService extends BaseResourceService implements ImageServic
                 .build();
     }
 
+    
     /**
-
      * To image.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param imageData image data ({@link ResourceExportData})
+     * @param checkExisting check existing
+     * @return {@link TbResource}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public TbResource toImage(TenantId tenantId, ResourceExportData imageData, boolean checkExisting) {
@@ -362,11 +421,16 @@ public class BaseImageService extends BaseResourceService implements ImageServic
         return image;
     }
 
+    
     /**
-
-     * Removes image.
-
+     * Deletes image.
+     *
+     * @param imageInfo image info ({@link TbResourceInfo})
+     * @param force force
+     * @return {@link TbImageDeleteResult}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public TbImageDeleteResult deleteImage(TbResourceInfo imageInfo, boolean force) {
@@ -398,11 +462,16 @@ public class BaseImageService extends BaseResourceService implements ImageServic
         return result.success(success).build();
     }
 
+    
     /**
-
      * Creates or update system image.
-
+     *
+     * @param resourceKey resource key ({@link String})
+     * @param data data
+     * @return {@link TbResourceInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public TbResourceInfo createOrUpdateSystemImage(String resourceKey, byte[] data) {
@@ -428,33 +497,47 @@ public class BaseImageService extends BaseResourceService implements ImageServic
         return saveImage(image);
     }
 
+    
     /**
-
      * Calculate image etag.
-
+     *
+     * @param imageData image data
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public String calculateImageEtag(byte[] imageData) {
         return calculateEtag(imageData);
     }
 
+    
     /**
-
-     * Loads system or tenant image by etag.
-
+     * Finds system or tenant image by etag.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param etag etag ({@link String})
+     * @return {@link TbResourceInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public TbResourceInfo findSystemOrTenantImageByEtag(TenantId tenantId, String etag) {
         return findSystemOrTenantResourceByEtag(tenantId, ResourceType.IMAGE, etag);
     }
 
+    
     /**
-
      * Replace base64with image url.
-
+     *
+     * @param entity domain entity to persist or validate
+     * @param type type ({@link String})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional(noRollbackFor = Exception.class) // we don't want transaction to rollback in case of an image processing failure
     @Override
@@ -471,11 +554,15 @@ public class BaseImageService extends BaseResourceService implements ImageServic
         return result.updated();
     }
 
+    
     /**
-
      * Updates images usage.
-
+     *
+     * @param widgetTypeDetails widget type details ({@link WidgetTypeDetails})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional(noRollbackFor = Exception.class) // we don't want transaction to rollback in case of an image processing failure
     @Override
@@ -505,11 +592,15 @@ public class BaseImageService extends BaseResourceService implements ImageServic
         return updated;
     }
 
+    
     /**
-
      * Updates images usage.
-
+     *
+     * @param dashboard dashboard ({@link Dashboard})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional(noRollbackFor = Exception.class) // we don't want transaction to rollback in case of an image processing failure
     @Override
@@ -645,11 +736,15 @@ public class BaseImageService extends BaseResourceService implements ImageServic
         return updated.get();
     }
 
+    
     /**
-
      * Inline image.
-
+     *
+     * @param entity domain entity to persist or validate
+     * @return {@link T}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public <T extends HasImage> T inlineImage(T entity) {
@@ -664,11 +759,15 @@ public class BaseImageService extends BaseResourceService implements ImageServic
         return entity;
     }
 
+    
     /**
-
-     * Get used images.
-
+     * Returns used images.
+     *
+     * @param dashboard dashboard ({@link Dashboard})
+     * @return {@link Collection}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Collection<TbResourceInfo> getUsedImages(Dashboard dashboard) {
@@ -686,11 +785,15 @@ public class BaseImageService extends BaseResourceService implements ImageServic
         return images.values();
     }
 
+    
     /**
-
-     * Get used images.
-
+     * Returns used images.
+     *
+     * @param widgetTypeDetails widget type details ({@link WidgetTypeDetails})
+     * @return {@link Collection}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Collection<TbResourceInfo> getUsedImages(WidgetTypeDetails widgetTypeDetails) {
@@ -715,11 +818,15 @@ public class BaseImageService extends BaseResourceService implements ImageServic
         return images.values();
     }
 
+    
     /**
-
      * Inline image for edge.
-
+     *
+     * @param entity domain entity to persist or validate
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void inlineImageForEdge(HasImage entity) {
@@ -727,11 +834,15 @@ public class BaseImageService extends BaseResourceService implements ImageServic
         entity.setImage(inlineImage(entity.getTenantId(), "image", entity.getImage(), false));
     }
 
+    
     /**
-
      * Inline images for edge.
-
+     *
+     * @param dashboard dashboard ({@link Dashboard})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void inlineImagesForEdge(Dashboard dashboard) {
@@ -740,11 +851,15 @@ public class BaseImageService extends BaseResourceService implements ImageServic
         inlineImages(dashboard.getTenantId(), dashboard.getConfiguration(), false);
     }
 
+    
     /**
-
      * Inline images for edge.
-
+     *
+     * @param widgetTypeDetails widget type details ({@link WidgetTypeDetails})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void inlineImagesForEdge(WidgetTypeDetails widgetTypeDetails) {
@@ -842,6 +957,12 @@ public class BaseImageService extends BaseResourceService implements ImageServic
             return null;
         }
     }
+
+    /**
+
+     * Spring component for update result (tenant/system resources (images, JS modules, etc.)).
+
+     */
 
     private record UpdateResult(boolean updated, String value) {
 

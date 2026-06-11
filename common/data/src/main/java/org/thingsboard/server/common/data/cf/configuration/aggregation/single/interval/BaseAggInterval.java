@@ -37,20 +37,40 @@ public abstract class BaseAggInterval implements AggInterval {
     @NotBlank
     protected String tz;
     protected Long offsetSec; // delay seconds since start of interval
+    /**
+     * Returns zone id.
+     *
+     * @return {@link ZoneId}
+     */
 
     @Override
     public ZoneId getZoneId() {
         return ZoneId.of(tz);
     }
+    /**
+     * Returns offset safe.
+     *
+     * @return the long result
+     */
 
     protected long getOffsetSafe() {
         return offsetSec != null ? offsetSec : 0L;
     }
+    /**
+     * Returns current interval duration millis.
+     *
+     * @return the long result
+     */
 
     @Override
     public long getCurrentIntervalDurationMillis() {
         return getCurrentIntervalEndTs() - getCurrentIntervalStartTs();
     }
+    /**
+     * Returns current interval start ts.
+     *
+     * @return the long result
+     */
 
     @Override
     public long getCurrentIntervalStartTs() {
@@ -58,6 +78,12 @@ public abstract class BaseAggInterval implements AggInterval {
         ZonedDateTime now = ZonedDateTime.now(zoneId);
         return getDateTimeIntervalStartTs(now);
     }
+    /**
+     * Returns date time interval start ts.
+     *
+     * @param dateTime date time ({@link ZonedDateTime})
+     * @return the long result
+     */
 
     @Override
     public long getDateTimeIntervalStartTs(ZonedDateTime dateTime) {
@@ -67,6 +93,11 @@ public abstract class BaseAggInterval implements AggInterval {
         ZonedDateTime actualStart = alignedStart.plusSeconds(offset);
         return actualStart.toInstant().toEpochMilli();
     }
+    /**
+     * Returns current interval end ts.
+     *
+     * @return the long result
+     */
 
     @Override
     public long getCurrentIntervalEndTs() {
@@ -74,6 +105,12 @@ public abstract class BaseAggInterval implements AggInterval {
         ZonedDateTime now = ZonedDateTime.now(zoneId);
         return getDateTimeIntervalEndTs(now);
     }
+    /**
+     * Returns date time interval end ts.
+     *
+     * @param dateTime date time ({@link ZonedDateTime})
+     * @return the long result
+     */
 
     @Override
     public long getDateTimeIntervalEndTs(ZonedDateTime dateTime) {
@@ -83,13 +120,30 @@ public abstract class BaseAggInterval implements AggInterval {
         ZonedDateTime actualEnd = alignedEnd.plusSeconds(offset);
         return actualEnd.toInstant().toEpochMilli();
     }
+    /**
+     * Align to interval start.
+     *
+     * @param reference reference ({@link ZonedDateTime})
+     * @return {@link ZonedDateTime}
+     */
 
     protected abstract ZonedDateTime alignToIntervalStart(ZonedDateTime reference);
+    /**
+     * Returns aligned boundary.
+     *
+     * @param reference reference ({@link ZonedDateTime})
+     * @param next next
+     * @return {@link ZonedDateTime}
+     */
 
     protected ZonedDateTime getAlignedBoundary(ZonedDateTime reference, boolean next) {
         ZonedDateTime base = alignToIntervalStart(reference);
         return next ? getNextIntervalStart(base) : base;
     }
+    /**
+     * Validates the requested data.
+     *
+     */
 
     @Override
     public void validate() {

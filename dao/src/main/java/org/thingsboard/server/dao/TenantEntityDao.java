@@ -19,17 +19,38 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.data.page.PageData;
 import org.thingsboard.server.common.data.page.PageLink;
 
+
 /**
 
- * Persistence contract for tenant entity (see JPA/Cassandra implementations).
+ * DAO contract for tenant-owned entities with name uniqueness checks.
+
+ *
+
+ * <p>Extends {@link Dao} with tenant-scoped name lookup used by entity services and validators.
 
  */
 
+
 public interface TenantEntityDao<T> {
+    /**
+     * Counts by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link Long}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     default Long countByTenantId(TenantId tenantId) {
         throw new UnsupportedOperationException();
     }
+    /**
+     * Finds all by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     default PageData<T> findAllByTenantId(TenantId tenantId, PageLink pageLink) {
         throw new UnsupportedOperationException();

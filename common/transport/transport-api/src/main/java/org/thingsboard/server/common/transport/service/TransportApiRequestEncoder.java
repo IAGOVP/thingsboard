@@ -22,6 +22,13 @@ import org.thingsboard.server.queue.kafka.TbKafkaEncoder;
  * Transport api request encoder.
  */
 public class TransportApiRequestEncoder implements TbKafkaEncoder<TransportApiRequestMsg> {
+    /**
+     * Encode.
+     *
+     * @param value value ({@link TransportApiRequestMsg})
+     * @return the byte[] value
+     * @throws Exception on processing failure
+     */
     @Override
     public byte[] encode(TransportApiRequestMsg value) {
         return value.toByteArray();

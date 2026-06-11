@@ -19,15 +19,35 @@ import org.thingsboard.server.common.data.id.UserId;
 import org.thingsboard.server.common.data.security.UserAuthSettings;
 import org.thingsboard.server.dao.Dao;
 
+
 /**
 
- * Persistence contract for user auth settings (see JPA/Cassandra implementations).
+ * Persistence contract for user auth settings.
+
+ *
+
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (users, credentials, and user settings).
 
  */
 
+
 public interface UserAuthSettingsDao extends Dao<UserAuthSettings> {
+    /**
+     * Finds by user id.
+     *
+     * @param userId target user identifier
+     * @return {@link UserAuthSettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     UserAuthSettings findByUserId(UserId userId);
+    /**
+     * Removes by user id.
+     *
+     * @param userId target user identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void removeByUserId(UserId userId);
 

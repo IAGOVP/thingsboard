@@ -27,16 +27,58 @@ import org.thingsboard.server.dao.entity.EntityDaoService;
  */
 public interface AdminSettingsService extends EntityDaoService {
 
+    /**
+     * Finds admin settings by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param adminSettingsId admin settings id ({@link AdminSettingsId})
+     * @return {@link AdminSettings}
+     */
     AdminSettings findAdminSettingsById(TenantId tenantId, AdminSettingsId adminSettingsId);
 
+    /**
+     * Finds admin settings by key.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key key ({@link String})
+     * @return {@link AdminSettings}
+     */
     AdminSettings findAdminSettingsByKey(TenantId tenantId, String key);
 
+    /**
+     * Finds admin settings by tenant id and key.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key key ({@link String})
+     * @return {@link AdminSettings}
+     */
     AdminSettings findAdminSettingsByTenantIdAndKey(TenantId tenantId, String key);
 
+    /**
+     * Finds all by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<AdminSettings> findAllByTenantId(TenantId tenantId, PageLink pageLink);
 
+    /**
+     * Saves or persists admin settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param adminSettings admin settings ({@link AdminSettings})
+     * @return {@link AdminSettings}
+     */
     AdminSettings saveAdminSettings(TenantId tenantId, AdminSettings adminSettings);
 
+    /**
+     * Deletes admin settings by tenant id and key.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key key ({@link String})
+     * @return the boolean result
+     */
     boolean deleteAdminSettingsByTenantIdAndKey(TenantId tenantId, String key);
 
 }

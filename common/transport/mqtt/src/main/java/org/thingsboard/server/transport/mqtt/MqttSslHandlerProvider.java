@@ -59,6 +59,12 @@ public class MqttSslHandlerProvider implements SmartInitializingSingleton {
 
     @Autowired
     private TransportService transportService;
+    /**
+     * Mqtt ssl credentials.
+     *
+     * @return {@link SslCredentialsConfig}
+     * @throws Exception on processing failure
+     */
 
     @Bean
     @ConfigurationProperties(prefix = "transport.mqtt.ssl.credentials")
@@ -71,6 +77,12 @@ public class MqttSslHandlerProvider implements SmartInitializingSingleton {
     private SslCredentialsConfig mqttSslCredentialsConfig;
 
     private volatile SSLContext sslContext;
+    /**
+     * After singletons instantiated.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void afterSingletonsInstantiated() {
@@ -84,7 +96,12 @@ public class MqttSslHandlerProvider implements SmartInitializingSingleton {
             log.info("MQTT SSL context rebuilt. New connections will use the new certificate.");
         });
     }
-
+    /**
+     * Returns ssl handler.
+     *
+     * @return {@link SslHandler}
+     * @throws Exception on processing failure
+     */
     public SslHandler getSslHandler() {
         SSLContext ctx = sslContext;
         // Defensive lazy init in case afterSingletonsInstantiated hasn't run yet (e.g., test wiring).
@@ -149,17 +166,39 @@ public class MqttSslHandlerProvider implements SmartInitializingSingleton {
             this.trustManager = trustManager;
             this.transportService = transportService;
         }
+        /**
+         * Returns accepted issuers.
+         *
+         * @return the X509Certificate[] value
+         * @throws Exception on processing failure
+         */
 
         @Override
         public X509Certificate[] getAcceptedIssuers() {
             return trustManager.getAcceptedIssuers();
         }
+        /**
+         * Checks server trusted.
+         *
+         * @param chain chain
+         * @param authType auth type ({@link String})
+         * @return nothing
+         * @throws CertificateException if certificate exception is thrown during processing
+         */
 
         @Override
         public void checkServerTrusted(X509Certificate[] chain,
                                        String authType) throws CertificateException {
             trustManager.checkServerTrusted(chain, authType);
         }
+        /**
+         * Checks client trusted.
+         *
+         * @param chain chain
+         * @param authType auth type ({@link String})
+         * @return nothing
+         * @throws CertificateException if certificate exception is thrown during processing
+         */
 
         @Override
         public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
@@ -174,6 +213,13 @@ public class MqttSslHandlerProvider implements SmartInitializingSingleton {
                 transportService.process(DeviceTransportType.MQTT, TransportProtos.ValidateOrCreateDeviceX509CertRequestMsg
                                 .newBuilder().setCertificateChain(certificateChain).build(),
                         new TransportServiceCallback<>() {
+                            /**
+                             * Handles success.
+                             *
+                             * @param msg msg ({@link ValidateDeviceCredentialsResponse})
+                             * @return nothing
+                             * @throws Exception on processing failure
+                             */
                             @Override
                             public void onSuccess(ValidateDeviceCredentialsResponse msg) {
                                 if (!StringUtils.isEmpty(msg.getCredentials())) {
@@ -181,6 +227,13 @@ public class MqttSslHandlerProvider implements SmartInitializingSingleton {
                                 }
                                 latch.countDown();
                             }
+                            /**
+                             * Handles error.
+                             *
+                             * @param e e ({@link Throwable})
+                             * @return nothing
+                             * @throws Exception on processing failure
+                             */
 
                             @Override
                             public void onError(Throwable e) {

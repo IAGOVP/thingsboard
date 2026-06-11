@@ -15,17 +15,19 @@
  */
 package org.thingsboard.server.queue.discovery.event;
 
+import java.util.List;
+
+
 import lombok.Getter;
 import lombok.ToString;
 import org.thingsboard.server.gen.transport.TransportProtos.ServiceInfo;
 
-import java.util.List;
 
+/**
+ * Published when services join or leave the cluster discovery registry.
+ */
 @Getter
 @ToString
-/**
- * Service list changed event.
- */
 public class ServiceListChangedEvent extends TbApplicationEvent {
     private final List<ServiceInfo> otherServices;
     private final ServiceInfo currentService;

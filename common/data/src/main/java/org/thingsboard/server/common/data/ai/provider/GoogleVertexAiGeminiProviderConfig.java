@@ -19,10 +19,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-@Schema
 /**
  * Configuration for google vertex ai gemini provider.
  */
+@Schema
 public record GoogleVertexAiGeminiProviderConfig(
         @NotBlank String fileName, // not used on BE, but needed for UI
         @NotNull String projectId,

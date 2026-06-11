@@ -40,7 +40,10 @@ import java.util.function.Supplier;
 @Slf4j
 @Getter
 @RequiredArgsConstructor
-public final class TbActorMailbox implements TbActorCtx {
+public final/**
+ * Class for tb actor mailbox.
+ */
+class TbActorMailbox implements TbActorCtx {
 
     private static final boolean HIGH_PRIORITY = true;
     private static final boolean NORMAL_PRIORITY = false;
@@ -65,7 +68,7 @@ public final class TbActorMailbox implements TbActorCtx {
     private volatile TbActorStopReason stopReason;
 
     /** Schedules asynchronous {@link TbActor#init(TbActorCtx)} on the dispatcher; retries per {@link InitFailureStrategy}. */
-    public void initActor() {
+public void initActor() {
         dispatcher.getExecutor().execute(() -> tryInit(1));
     }
 
@@ -240,7 +243,7 @@ public final class TbActorMailbox implements TbActorCtx {
     }
 
     /** Marks destroyed, runs {@link TbActor#destroy}, and notifies pending messages via {@link TbActorMsg#onTbActorStopped}. */
-    public void destroy(Throwable cause) {
+public void destroy(Throwable cause) {
         if (stopReason == null) {
             stopReason = TbActorStopReason.STOPPED;
         }

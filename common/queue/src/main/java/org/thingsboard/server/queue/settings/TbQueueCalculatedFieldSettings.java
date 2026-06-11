@@ -20,12 +20,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+
+/**
+ * Kafka settings for calculated-field state synchronization queues.
+ */
 @Lazy
 @Data
 @Component
-/**
- * Tb queue calculated field settings.
- */
 public class TbQueueCalculatedFieldSettings {
 
     @Value("${queue.calculated_fields.event_topic}")

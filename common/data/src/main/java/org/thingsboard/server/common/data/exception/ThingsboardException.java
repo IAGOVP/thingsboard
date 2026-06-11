@@ -46,6 +46,11 @@ public class ThingsboardException extends Exception {
         super(cause);
         this.errorCode = errorCode;
     }
+    /**
+     * Returns error code.
+     *
+     * @return {@link ThingsboardErrorCode}
+     */
 
     public ThingsboardErrorCode getErrorCode() {
         return errorCode;

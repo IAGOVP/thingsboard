@@ -16,18 +16,41 @@
 package org.thingsboard.server.transport.lwm2m.server.downlink;
 
 /**
- * downlink request callback contract.
+ * downlink request callback contract (LwM2M transport and object model (ThingsBoard common module)).
  */
 public interface DownlinkRequestCallback<R, T> {
 
     default boolean onSent(R request) {
         return true;
     }
-
+/**
+ * Handles success.
+ *
+ * @param request request payload with operation parameters
+ * @param response response ({@link T})
+ * @return nothing
+ * @throws Exception on processing failure
+ */
     void onSuccess(R request, T response);
 
+    /**
+     * Handles validation error.
+     *
+     * @param params params ({@link String})
+     * @param msg msg ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void onValidationError(String params, String msg);
 
+    /**
+     * Handles error.
+     *
+     * @param params params ({@link String})
+     * @param e e ({@link Exception})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void onError(String params, Exception e);
 
 }

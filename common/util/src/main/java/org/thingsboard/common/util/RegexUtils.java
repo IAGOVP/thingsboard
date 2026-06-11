@@ -29,10 +29,10 @@ import java.util.regex.Pattern;
 
 import static org.springframework.util.ConcurrentReferenceHashMap.ReferenceType.SOFT;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 /**
  * Regex utils.
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RegexUtils {
 
     public static final Pattern UUID_PATTERN = Pattern.compile("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}");

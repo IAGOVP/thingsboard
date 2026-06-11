@@ -34,7 +34,10 @@ import java.util.Iterator;
 /**
  * Azure iot hub util.
  */
-public final class AzureIotHubUtil {
+public final/**
+ * Class for azure iot hub util.
+ */
+class AzureIotHubUtil {
 
     private static final String BASE_DIR_PATH = System.getProperty("user.dir");
     private static final String APP_DIR = "application";

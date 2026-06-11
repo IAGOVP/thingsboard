@@ -36,8 +36,14 @@ import java.util.EnumSet;
 import java.util.Optional;
 import java.util.Set;
 /**
- * Clean up service.
+ * Spring component for clean up service (TTL cleanup and background housekeeping tasks).
  */
+
+
+
+
+
+
 
 @Component
 @RequiredArgsConstructor
@@ -53,11 +59,15 @@ public class CleanUpService {
             EntityType.NOTIFICATION_TARGET, EntityType.NOTIFICATION_RULE, EntityType.AI_MODEL
     );
 
+    
     /**
-
-     * Handle entity deletion event.
-
+     * Handles entity deletion event.
+     *
+     * @param event event ({@link DeleteEntityEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @TransactionalEventListener(fallbackExecution = true) // after transaction commit
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
@@ -78,11 +88,16 @@ public class CleanUpService {
         }
     }
 
+    
     /**
-
      * Clean up related data.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     public void cleanUpRelatedData(TenantId tenantId, EntityId entityId) {
         log.debug("[{}][{}][{}] Cleaning up related data", tenantId, entityId.getEntityType(), entityId.getId());
@@ -97,11 +112,16 @@ public class CleanUpService {
         }
     }
 
+    
     /**
-
      * Removes tenant entities.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityTypes entity types
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     public void removeTenantEntities(TenantId tenantId, EntityType... entityTypes) {
         for (EntityType entityType : entityTypes) {

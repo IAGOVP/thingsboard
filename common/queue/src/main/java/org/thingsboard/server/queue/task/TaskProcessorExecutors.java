@@ -17,22 +17,24 @@ package org.thingsboard.server.queue.task;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+
+
 import lombok.Getter;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.thingsboard.common.util.ThingsBoardExecutors;
 import org.thingsboard.common.util.ThingsBoardThreadFactory;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
+/**
+ * Thread pool executors for parallel background task processing.
+ */
 @Getter
 @Lazy
 @Component
-/**
- * Task processor executors.
- */
 public class TaskProcessorExecutors {
 
     private ExecutorService consumersExecutor;

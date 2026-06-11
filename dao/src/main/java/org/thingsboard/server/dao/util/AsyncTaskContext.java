@@ -21,8 +21,14 @@ import lombok.Data;
 import java.util.UUID;
 
 /**
- * Created by ashvayka on 24.10.18.
+ * Async task context (DAO utilities (KV conversion, rate executors, JSON mapping)).
  */
+
+
+
+
+
+
 @Data
 public class AsyncTaskContext<T extends AsyncTask, V> {
 

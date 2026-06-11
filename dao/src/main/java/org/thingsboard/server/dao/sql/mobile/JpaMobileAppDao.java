@@ -33,8 +33,11 @@ import org.thingsboard.server.dao.util.SqlDao;
 
 import java.util.UUID;
 /**
- * JPA implementation of mobile app dao.
+ * JPA/PostgreSQL implementation of mobile app dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Component
 @RequiredArgsConstructor
@@ -42,16 +45,37 @@ import java.util.UUID;
 public class JpaMobileAppDao extends JpaAbstractDao<MobileAppEntity, MobileApp> implements MobileAppDao {
 
     private final MobileAppRepository mobileAppRepository;
+    /**
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Class<MobileAppEntity> getEntityClass() {
         return MobileAppEntity.class;
     }
+    /**
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected JpaRepository<MobileAppEntity, UUID> getRepository() {
         return mobileAppRepository;
     }
+    /**
+     * Finds by bundle id and platform type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param mobileAppBundleId mobile app bundle id ({@link MobileAppBundleId})
+     * @param platformType platform type ({@link PlatformType})
+     * @return {@link MobileApp}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public MobileApp findByBundleIdAndPlatformType(TenantId tenantId, MobileAppBundleId mobileAppBundleId, PlatformType platformType) {
@@ -61,21 +85,52 @@ public class JpaMobileAppDao extends JpaAbstractDao<MobileAppEntity, MobileApp> 
             default -> null;
         };
     }
+    /**
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param platformType platform type ({@link PlatformType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<MobileApp> findByTenantId(TenantId tenantId, PlatformType platformType, PageLink pageLink) {
         return DaoUtil.toPageData(mobileAppRepository.findByTenantId(tenantId.getId(), platformType, pageLink.getTextSearch(), DaoUtil.toPageable(pageLink)));
     }
+    /**
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteByTenantId(TenantId tenantId) {
         mobileAppRepository.deleteByTenantId(tenantId.getId());
     }
+    /**
+     * Finds by pkg name and platform type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pkgName pkg name ({@link String})
+     * @param platform platform ({@link PlatformType})
+     * @return {@link MobileApp}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public MobileApp findByPkgNameAndPlatformType(TenantId tenantId, String pkgName, PlatformType platform) {
         return DaoUtil.getData(mobileAppRepository.findByPkgNameAndPlatformType(pkgName, platform));
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

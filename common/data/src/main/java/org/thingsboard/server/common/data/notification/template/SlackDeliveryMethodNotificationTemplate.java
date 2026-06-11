@@ -40,17 +40,32 @@ public class SlackDeliveryMethodNotificationTemplate extends DeliveryMethodNotif
     public SlackDeliveryMethodNotificationTemplate(DeliveryMethodNotificationTemplate other) {
         super(other);
     }
+    /**
+     * Returns body.
+     *
+     * @return {@link String}
+     */
 
     @NoXss(fieldName = "Slack message")
     @Override
     public String getBody() {
         return super.getBody();
     }
+    /**
+     * Returns method.
+     *
+     * @return {@link NotificationDeliveryMethod}
+     */
 
     @Override
     public NotificationDeliveryMethod getMethod() {
         return NotificationDeliveryMethod.SLACK;
     }
+    /**
+     * Copy.
+     *
+     * @return {@link SlackDeliveryMethodNotificationTemplate}
+     */
 
     @Override
     public SlackDeliveryMethodNotificationTemplate copy() {

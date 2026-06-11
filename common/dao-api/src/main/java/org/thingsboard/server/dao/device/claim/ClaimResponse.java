@@ -16,8 +16,9 @@
 package org.thingsboard.server.dao.device.claim;
 
 /**
- * claim response values.
+ * Enumerates claim response values used by DAO configuration.
  */
+
 public enum ClaimResponse {
 
     SUCCESS,

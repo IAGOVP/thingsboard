@@ -33,8 +33,11 @@ import org.thingsboard.server.dao.util.SqlDao;
 
 import java.util.List;
 /**
- * JPA implementation of user settings dao.
+ * JPA/PostgreSQL implementation of user settings dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Slf4j
 @Component
@@ -43,33 +46,82 @@ public class JpaUserSettingsDao implements UserSettingsDao, TenantEntityDao<User
 
     @Autowired
     private UserSettingsRepository userSettingsRepository;
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userSettings user settings ({@link UserSettings})
+     * @return {@link UserSettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UserSettings save(TenantId tenantId, UserSettings userSettings) {
         log.trace("save [{}][{}]", tenantId, userSettings);
         return DaoUtil.getData(userSettingsRepository.save(new UserSettingsEntity(userSettings)));
     }
+    /**
+     * Finds by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @return {@link UserSettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UserSettings findById(TenantId tenantId, UserSettingsCompositeKey id) {
         return DaoUtil.getData(userSettingsRepository.findById(id));
     }
+    /**
+     * Removes by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void removeById(TenantId tenantId, UserSettingsCompositeKey id) {
         userSettingsRepository.deleteById(id);
     }
+    /**
+     * Removes by user id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void removeByUserId(TenantId tenantId, UserId userId) {
         userSettingsRepository.deleteByUserId(userId.getId());
     }
+    /**
+     * Finds by type and path.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link UserSettingsType})
+     * @param path path
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<UserSettings> findByTypeAndPath(TenantId tenantId, UserSettingsType type, String... path) {
         log.trace("findByTypeAndPath [{}][{}][{}]", tenantId, type, path);
         return DaoUtil.convertDataList(userSettingsRepository.findByTypeAndPathExisting(type.name(), path));
     }
+    /**
+     * Finds all by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<UserSettings> findAllByTenantId(TenantId tenantId, PageLink pageLink) {

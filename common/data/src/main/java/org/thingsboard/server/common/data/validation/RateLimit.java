@@ -32,10 +32,25 @@ public @/**
 interface RateLimit {
 
     String message() default "rate limit has duplicate 'Per seconds' configuration.";
+/**
+ * Field name.
+ *
+ * @return {@link String}
+ */
 
     String fieldName() default "";
+/**
+ * Groups.
+ *
+ * @return {@link Class}
+ */
 
     Class<?>[] groups() default {};
+/**
+ * Payload.
+ *
+ * @return {@link Class}
+ */
 
     Class<? extends Payload>[] payload() default {};
 

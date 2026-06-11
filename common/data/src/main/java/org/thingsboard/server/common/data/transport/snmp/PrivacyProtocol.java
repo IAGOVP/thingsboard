@@ -33,10 +33,21 @@ public enum PrivacyProtocol {
     PrivacyProtocol(String oid) {
         this.oid = oid;
     }
+    /**
+     * Returns oid.
+     *
+     * @return {@link String}
+     */
 
     public String getOid() {
         return oid;
     }
+    /**
+     * For name.
+     *
+     * @param name name ({@link String})
+     * @return optional {@link PrivacyProtocol}, empty if not found
+     */
 
     public static Optional<PrivacyProtocol> forName(String name) {
         return Arrays.stream(values())

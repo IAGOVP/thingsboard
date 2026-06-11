@@ -86,6 +86,11 @@ public class Edge extends BaseDataWithAdditionalInfo<EdgeId> implements HasLabel
         this.secret = edge.getSecret();
         this.version = edge.getVersion();
     }
+    /**
+     * Updates the requested data.
+     *
+     * @param edge edge ({@link Edge})
+     */
 
     public void update(Edge edge) {
         this.tenantId = edge.getTenantId();
@@ -98,6 +103,11 @@ public class Edge extends BaseDataWithAdditionalInfo<EdgeId> implements HasLabel
         this.secret = edge.getSecret();
         this.version = edge.getVersion();
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link EdgeId}
+     */
 
     @Schema(description = "JSON object with the Edge Id. " +
             "Specify this field to update the Edge. " +
@@ -107,50 +117,95 @@ public class Edge extends BaseDataWithAdditionalInfo<EdgeId> implements HasLabel
     public EdgeId getId() {
         return super.getId();
     }
+    /**
+     * Returns created time.
+     *
+     * @return the long result
+     */
 
     @Schema(description = "Timestamp of the edge creation, in milliseconds", example = "1609459200000", accessMode = Schema.AccessMode.READ_ONLY)
     @Override
     public long getCreatedTime() {
         return super.getCreatedTime();
     }
+    /**
+     * Returns tenant id.
+     *
+     * @return {@link TenantId}
+     */
 
     @Schema(description = "JSON object with Tenant Id. Use 'assignDeviceToTenant' to change the Tenant Id.", accessMode = Schema.AccessMode.READ_ONLY)
     @Override
     public TenantId getTenantId() {
         return this.tenantId;
     }
+    /**
+     * Returns customer id.
+     *
+     * @return {@link CustomerId}
+     */
 
     @Schema(description = "JSON object with Customer Id. Use 'assignEdgeToCustomer' to change the Customer Id.", accessMode = Schema.AccessMode.READ_ONLY)
     @Override
     public CustomerId getCustomerId() {
         return this.customerId;
     }
+    /**
+     * Returns root rule chain id.
+     *
+     * @return {@link RuleChainId}
+     */
 
     @Schema(description = "JSON object with Root Rule Chain Id. Use 'setEdgeRootRuleChain' to change the Root Rule Chain Id.", accessMode = Schema.AccessMode.READ_ONLY)
     public RuleChainId getRootRuleChainId() {
         return this.rootRuleChainId;
     }
+    /**
+     * Returns name.
+     *
+     * @return {@link String}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Unique Edge Name in scope of Tenant", example = "Silo_A_Edge")
     @Override
     public String getName() {
         return this.name;
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link String}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Edge type", example = "Silos")
     public String getType() {
         return this.type;
     }
+    /**
+     * Returns label.
+     *
+     * @return {@link String}
+     */
 
     @Schema(description = "Label that may be used in widgets", example = "Silo Edge on far field")
     public String getLabel() {
         return this.label;
     }
+    /**
+     * Returns routing key.
+     *
+     * @return {@link String}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Edge routing key ('username') to authorize on cloud")
     public String getRoutingKey() {
         return this.routingKey;
     }
+    /**
+     * Returns secret.
+     *
+     * @return {@link String}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Edge secret ('password') to authorize on cloud")
     public String getSecret() {
@@ -161,6 +216,11 @@ public class Edge extends BaseDataWithAdditionalInfo<EdgeId> implements HasLabel
             "May include: 'description' (string).",
             implementation = com.fasterxml.jackson.databind.JsonNode.class,
             example = "{\"description\":\"Edge at location A\"}")
+    /**
+     * Returns additional info.
+     *
+     * @return {@link JsonNode}
+     */
     @Override
     public JsonNode getAdditionalInfo() {
         return super.getAdditionalInfo();

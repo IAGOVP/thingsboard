@@ -22,10 +22,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
-@Schema
 /**
  * Configuration for ollama provider.
  */
+@Schema
 public record OllamaProviderConfig(
         @NotNull String baseUrl,
         @NotNull @Valid OllamaAuth auth

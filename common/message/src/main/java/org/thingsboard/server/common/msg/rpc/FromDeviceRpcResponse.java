@@ -21,14 +21,11 @@ import org.thingsboard.server.common.data.rpc.RpcError;
 import java.io.Serializable;
 import java.util.Optional;
 import java.util.UUID;
+/**
+ * RPC response payload returned from a device.
+ */
 
-/**
- * @author Andrew Shvayka
- */
 @Data
-/**
- * From device rpc response.
- */
 public class FromDeviceRpcResponse implements Serializable {
 
     private static final long serialVersionUID = -3799452502112373491L;

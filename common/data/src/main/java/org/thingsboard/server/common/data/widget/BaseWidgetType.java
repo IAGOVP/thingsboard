@@ -72,6 +72,11 @@ public class BaseWidgetType extends BaseData<WidgetTypeId> implements HasName, H
         this.scada = widgetType.isScada();
         this.version = widgetType.getVersion();
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link WidgetTypeId}
+     */
 
     @Schema(description = "JSON object with the Widget Type Id. " +
             "Specify this field to update the Widget Type. " +
@@ -81,6 +86,11 @@ public class BaseWidgetType extends BaseData<WidgetTypeId> implements HasName, H
     public WidgetTypeId getId() {
         return super.getId();
     }
+    /**
+     * Returns created time.
+     *
+     * @return the long result
+     */
 
     @Schema(description = "Timestamp of the Widget Type creation, in milliseconds", example = "1609459200000", accessMode = Schema.AccessMode.READ_ONLY)
     @Override

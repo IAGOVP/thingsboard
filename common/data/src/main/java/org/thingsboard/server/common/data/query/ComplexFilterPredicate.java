@@ -31,6 +31,11 @@ public class ComplexFilterPredicate implements KeyFilterPredicate {
     private ComplexOperation operation;
     @ArraySchema(schema = @Schema(ref = "#/components/schemas/KeyFilterPredicate"))
     private List<KeyFilterPredicate> predicates;
+    /**
+     * Returns type.
+     *
+     * @return {@link FilterPredicateType}
+     */
 
     @Override
     public FilterPredicateType getType() {

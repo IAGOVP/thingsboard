@@ -90,6 +90,12 @@ public class DefaultLwM2mTransportService implements LwM2MTransportService, Smar
 
     private volatile LeshanServer server;
     private volatile LwM2mServerListener serverListener;
+    /**
+     * After singletons instantiated.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void afterSingletonsInstantiated() {
@@ -103,6 +109,12 @@ public class DefaultLwM2mTransportService implements LwM2MTransportService, Smar
             }
         });
     }
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @AfterStartUp(order = AfterStartUp.AFTER_TRANSPORT_SERVICE)
     public void init() {
@@ -121,6 +133,12 @@ public class DefaultLwM2mTransportService implements LwM2MTransportService, Smar
         this.server.getSendService().addListener(serverListener.sendListener);
         log.info("Started LwM2M transport server.");
     }
+    /**
+     * Shutdown.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @PreDestroy
     public void shutdown() {
@@ -136,11 +154,11 @@ public class DefaultLwM2mTransportService implements LwM2MTransportService, Smar
     private LeshanServer getLhServer() {
         LeshanServerBuilder builder = new LeshanServerBuilder();
 
-        /* Define model provider (Create Models )*/
+          */
         builder.setObjectModelProvider(modelProvider);
 
 
-        /* Set securityStore with new registrationStore */
+          */
         builder.setSecurityStore(securityStore);
         builder.setRegistrationStore(registrationStore);
         builder.setAuthorizer(authorizer);
@@ -186,7 +204,7 @@ public class DefaultLwM2mTransportService implements LwM2MTransportService, Smar
             setDtlsConnectorConfigCidLength(serverCoapConfig, config.getDtlsCidLength());
         }
 
-        /* Create DTLS Config */
+          */
         this.setServerWithCredentials(builder);
         // Set Californium Configuration
         endpointsBuilder.setConfiguration(serverCoapConfig);
@@ -228,7 +246,7 @@ public class DefaultLwM2mTransportService implements LwM2MTransportService, Smar
             builder.setCertificateChain(sslCredentials.getCertificateChain());
             builder.setAuthorizer(authorizer);
         } else {
-            /* by default trust all */
+              */
             builder.setTrustedCertificates(new X509Certificate[0]);
         }
     }
@@ -308,6 +326,12 @@ public class DefaultLwM2mTransportService implements LwM2MTransportService, Smar
     private void destroyEndpoints(LeshanServer server) {
         server.getEndpointsProvider().forEach(LwM2mServerEndpointsProvider::destroy);
     }
+    /**
+     * Returns name.
+     *
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public String getName() {

@@ -25,6 +25,11 @@ import org.thingsboard.server.common.data.DeviceProfileType;
  * Configuration for default device profileuration.
  */
 public class DefaultDeviceProfileConfiguration implements DeviceProfileConfiguration {
+    /**
+     * Returns type.
+     *
+     * @return {@link DeviceProfileType}
+     */
 
     @Override
     public DeviceProfileType getType() {

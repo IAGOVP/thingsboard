@@ -18,10 +18,16 @@ package org.thingsboard.server.dao.util;
 import org.thingsboard.server.common.data.id.TenantId;
 
 /**
- * Created by ashvayka on 24.10.18.
+ * async task contract for the DAO layer.
  */
+
 public interface AsyncTask {
 
+    /**
+     * Returns tenant id.
+     *
+     * @return {@link TenantId}
+     */
     TenantId getTenantId();
 
 }

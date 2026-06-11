@@ -42,7 +42,12 @@ public class NoSecClient {
         URI uri = new URI(getFutureUrl(host, port, accessToken, clientKeys, sharedKeys));
         this.coapClient = new CoapClient(uri);
     }
-
+    /**
+     * Test.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void test() {
         executor.submit(() -> {
             try {
@@ -84,7 +89,13 @@ public class NoSecClient {
     private String getFutureUrl(String host, Integer port, String accessToken, String clientKeys, String sharedKeys) {
         return "coap://" + host + ":" + port + "/api/v1/" + accessToken + "/attributes?clientKeys=" + clientKeys + "&sharedKeys=" + sharedKeys;
     }
-
+    /**
+     * Main.
+     *
+     * @param args args
+     * @return nothing
+     * @throws URISyntaxException if urisyntax exception is thrown during processing
+     */
     public static void main(String[] args) throws URISyntaxException {
         System.out.println("Usage: java -cp ... org.thingsboard.server.transport.coap.client.NoSecClient " +
                 "host port accessToken clientKeys sharedKeys");

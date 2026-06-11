@@ -25,10 +25,10 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
-@Slf4j
 /**
  * Tb coap server message deliverer.
  */
+@Slf4j
 public class TbCoapServerMessageDeliverer extends ServerMessageDeliverer {
 
     public TbCoapServerMessageDeliverer(Resource root) {

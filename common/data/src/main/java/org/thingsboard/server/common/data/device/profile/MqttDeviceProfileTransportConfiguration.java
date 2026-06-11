@@ -50,23 +50,48 @@ public class MqttDeviceProfileTransportConfiguration implements DeviceProfileTra
     private Set<String> sparkplugAttributesMetricNames;
     @Schema
     private boolean sendAckOnValidationException;
+    /**
+     * Returns type.
+     *
+     * @return {@link DeviceTransportType}
+     */
 
     @Override
     public DeviceTransportType getType() {
         return DeviceTransportType.MQTT;
     }
+    /**
+     * Returns transport payload type configuration.
+     *
+     * @return {@link TransportPayloadTypeConfiguration}
+     */
 
     public TransportPayloadTypeConfiguration getTransportPayloadTypeConfiguration() {
         return Objects.requireNonNullElseGet(transportPayloadTypeConfiguration, JsonTransportPayloadConfiguration::new);
     }
+    /**
+     * Returns device telemetry topic.
+     *
+     * @return {@link String}
+     */
 
     public String getDeviceTelemetryTopic() {
         return StringUtils.notBlankOrDefault(deviceTelemetryTopic, MqttTopics.DEVICE_TELEMETRY_TOPIC);
     }
+    /**
+     * Returns device attributes topic.
+     *
+     * @return {@link String}
+     */
 
     public String getDeviceAttributesTopic() {
         return StringUtils.notBlankOrDefault(deviceAttributesTopic, MqttTopics.DEVICE_ATTRIBUTES_TOPIC);
     }
+    /**
+     * Returns device attributes subscribe topic.
+     *
+     * @return {@link String}
+     */
 
     public String getDeviceAttributesSubscribeTopic() {
         return StringUtils.notBlankOrDefault(deviceAttributesSubscribeTopic, MqttTopics.DEVICE_ATTRIBUTES_TOPIC);

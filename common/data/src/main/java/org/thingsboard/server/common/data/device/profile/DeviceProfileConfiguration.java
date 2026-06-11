@@ -43,6 +43,11 @@ import java.io.Serializable;
  * device profile configuration contract.
  */
 public interface DeviceProfileConfiguration extends Serializable {
+    /**
+     * Returns type.
+     *
+     * @return {@link DeviceProfileType}
+     */
 
     @JsonIgnore
     DeviceProfileType getType();

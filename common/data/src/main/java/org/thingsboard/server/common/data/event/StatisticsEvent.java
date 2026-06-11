@@ -46,11 +46,22 @@ public class StatisticsEvent extends Event {
     private final long messagesProcessed;
     @Getter
     private final long errorsOccurred;
+    /**
+     * Returns type.
+     *
+     * @return {@link EventType}
+     */
 
     @Override
     public EventType getType() {
         return EventType.STATS;
     }
+    /**
+     * To info.
+     *
+     * @param entityType entity type ({@link EntityType})
+     * @return {@link EventInfo}
+     */
 
     @Override
     public EventInfo toInfo(EntityType entityType) {

@@ -23,7 +23,8 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 @ConditionalOnProperty(prefix = "database.ts", value = "type", havingValue = "timescale")
 public @/**
- * DAO contract for timescale dbts.
+ * timescale dbts dao contract for the DAO layer.
  */
+
 interface TimescaleDBTsDao {
 }

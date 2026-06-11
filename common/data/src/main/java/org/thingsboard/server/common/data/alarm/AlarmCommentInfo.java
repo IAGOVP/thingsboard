@@ -23,7 +23,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 /**
- * Alarm comment info.
+ * Alarm comment with author display name for REST responses.
  */
 public class AlarmCommentInfo extends AlarmComment {
     private static final long serialVersionUID = 2807343093519543377L;

@@ -46,13 +46,21 @@ import java.util.UUID;
 import static org.thingsboard.server.common.data.device.profile.MqttTopics.DEVICE_SOFTWARE_FIRMWARE_RESPONSES_TOPIC_FORMAT;
 
 /**
- * Json mqtt adaptor.
+ * JSON payload adaptor for default MQTT device API topics (telemetry, attributes, RPC, provision, OTA).
  */
 @Component
 @Slf4j
 public class JsonMqttAdaptor implements MqttTransportAdaptor {
 
     protected static final Charset UTF8 = StandardCharsets.UTF_8;
+    /**
+     * Convert to post telemetry.
+     *
+     * @param ctx MQTT session context
+     * @param inbound inbound ({@link MqttPublishMessage})
+     * @return the TransportProtos.PostTelemetryMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public TransportProtos.PostTelemetryMsg convertToPostTelemetry(MqttDeviceAwareSessionContext ctx, MqttPublishMessage inbound) throws AdaptorException {
@@ -64,6 +72,14 @@ public class JsonMqttAdaptor implements MqttTransportAdaptor {
             throw new AdaptorException(ex);
         }
     }
+    /**
+     * Convert to post attributes.
+     *
+     * @param ctx MQTT session context
+     * @param inbound inbound ({@link MqttPublishMessage})
+     * @return the TransportProtos.PostAttributeMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public TransportProtos.PostAttributeMsg convertToPostAttributes(MqttDeviceAwareSessionContext ctx, MqttPublishMessage inbound) throws AdaptorException {
@@ -75,6 +91,14 @@ public class JsonMqttAdaptor implements MqttTransportAdaptor {
             throw new AdaptorException(ex);
         }
     }
+    /**
+     * Convert to claim device.
+     *
+     * @param ctx MQTT session context
+     * @param inbound inbound ({@link MqttPublishMessage})
+     * @return the TransportProtos.ClaimDeviceMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public TransportProtos.ClaimDeviceMsg convertToClaimDevice(MqttDeviceAwareSessionContext ctx, MqttPublishMessage inbound) throws AdaptorException {
@@ -86,6 +110,14 @@ public class JsonMqttAdaptor implements MqttTransportAdaptor {
             throw new AdaptorException(ex);
         }
     }
+    /**
+     * Convert to provision request msg.
+     *
+     * @param ctx MQTT session context
+     * @param inbound inbound ({@link MqttPublishMessage})
+     * @return the TransportProtos.ProvisionDeviceRequestMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public TransportProtos.ProvisionDeviceRequestMsg convertToProvisionRequestMsg(MqttDeviceAwareSessionContext ctx, MqttPublishMessage inbound) throws AdaptorException {
@@ -96,73 +128,198 @@ public class JsonMqttAdaptor implements MqttTransportAdaptor {
             throw new AdaptorException(ex);
         }
     }
+    /**
+     * Convert to get attributes.
+     *
+     * @param ctx MQTT session context
+     * @param inbound inbound ({@link MqttPublishMessage})
+     * @param topicBase topic base ({@link String})
+     * @return the TransportProtos.GetAttributeRequestMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public TransportProtos.GetAttributeRequestMsg convertToGetAttributes(MqttDeviceAwareSessionContext ctx, MqttPublishMessage inbound, String topicBase) throws AdaptorException {
         return processGetAttributeRequestMsg(inbound, topicBase);
     }
+    /**
+     * Convert to device rpc response.
+     *
+     * @param ctx MQTT session context
+     * @param inbound inbound ({@link MqttPublishMessage})
+     * @param topicBase topic base ({@link String})
+     * @return the TransportProtos.ToDeviceRpcResponseMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public TransportProtos.ToDeviceRpcResponseMsg convertToDeviceRpcResponse(MqttDeviceAwareSessionContext ctx, MqttPublishMessage inbound, String topicBase) throws AdaptorException {
         return processToDeviceRpcResponseMsg(inbound, topicBase);
     }
+    /**
+     * Convert to server rpc request.
+     *
+     * @param ctx MQTT session context
+     * @param inbound inbound ({@link MqttPublishMessage})
+     * @param topicBase topic base ({@link String})
+     * @return the TransportProtos.ToServerRpcRequestMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public TransportProtos.ToServerRpcRequestMsg convertToServerRpcRequest(MqttDeviceAwareSessionContext ctx, MqttPublishMessage inbound, String topicBase) throws AdaptorException {
         return processToServerRpcRequestMsg(ctx, inbound, topicBase);
     }
+    /**
+     * Convert to publish.
+     *
+     * @param ctx MQTT session context
+     * @param responseMsg response msg
+     * @param topicBase topic base ({@link String})
+     * @return MQTT publish message, or empty if conversion is not applicable
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public Optional<MqttMessage> convertToPublish(MqttDeviceAwareSessionContext ctx, TransportProtos.GetAttributeResponseMsg responseMsg, String topicBase) throws AdaptorException {
         return processConvertFromAttributeResponseMsg(ctx, responseMsg, topicBase);
     }
+    /**
+     * Convert to gateway publish.
+     *
+     * @param ctx MQTT session context
+     * @param deviceName device name ({@link String})
+     * @param responseMsg response msg
+     * @return MQTT publish message, or empty if conversion is not applicable
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public Optional<MqttMessage> convertToGatewayPublish(MqttDeviceAwareSessionContext ctx, String deviceName, TransportProtos.GetAttributeResponseMsg responseMsg) throws AdaptorException {
         return processConvertFromGatewayAttributeResponseMsg(ctx, deviceName, responseMsg);
     }
+    /**
+     * Convert to publish.
+     *
+     * @param ctx MQTT session context
+     * @param notificationMsg notification msg
+     * @param topic topic ({@link String})
+     * @return MQTT publish message, or empty if conversion is not applicable
+     * @throws Exception on processing failure
+     */
 
     @Override
     public Optional<MqttMessage> convertToPublish(MqttDeviceAwareSessionContext ctx, TransportProtos.AttributeUpdateNotificationMsg notificationMsg, String topic) {
         return Optional.of(createMqttPublishMsg(ctx, topic, JsonConverter.toJson(notificationMsg)));
     }
+    /**
+     * Convert to gateway publish.
+     *
+     * @param ctx MQTT session context
+     * @param deviceName device name ({@link String})
+     * @param notificationMsg notification msg
+     * @return MQTT publish message, or empty if conversion is not applicable
+     * @throws Exception on processing failure
+     */
 
     @Override
     public Optional<MqttMessage> convertToGatewayPublish(MqttDeviceAwareSessionContext ctx, String deviceName, TransportProtos.AttributeUpdateNotificationMsg notificationMsg) {
         JsonObject result = JsonConverter.getJsonObjectForGateway(deviceName, notificationMsg);
         return Optional.of(createMqttPublishMsg(ctx, MqttTopics.GATEWAY_ATTRIBUTES_TOPIC, result));
     }
+    /**
+     * Convert to publish.
+     *
+     * @param ctx MQTT session context
+     * @param rpcRequest rpc request
+     * @param topicBase topic base ({@link String})
+     * @return MQTT publish message, or empty if conversion is not applicable
+     * @throws Exception on processing failure
+     */
 
     @Override
     public Optional<MqttMessage> convertToPublish(MqttDeviceAwareSessionContext ctx, TransportProtos.ToDeviceRpcRequestMsg rpcRequest, String topicBase) {
         return Optional.of(createMqttPublishMsg(ctx, topicBase + rpcRequest.getRequestId(), JsonConverter.toJson(rpcRequest, false)));
     }
+    /**
+     * Convert to gateway publish.
+     *
+     * @param ctx MQTT session context
+     * @param deviceName device name ({@link String})
+     * @param rpcRequest rpc request
+     * @return MQTT publish message, or empty if conversion is not applicable
+     * @throws Exception on processing failure
+     */
 
     @Override
     public Optional<MqttMessage> convertToGatewayPublish(MqttDeviceAwareSessionContext ctx, String deviceName, TransportProtos.ToDeviceRpcRequestMsg rpcRequest) {
         return Optional.of(createMqttPublishMsg(ctx, MqttTopics.GATEWAY_RPC_TOPIC, JsonConverter.toGatewayJson(deviceName, rpcRequest)));
     }
+    /**
+     * Convert to publish.
+     *
+     * @param ctx MQTT session context
+     * @param rpcResponse rpc response
+     * @param topicBase topic base ({@link String})
+     * @return MQTT publish message, or empty if conversion is not applicable
+     * @throws Exception on processing failure
+     */
 
     @Override
     public Optional<MqttMessage> convertToPublish(MqttDeviceAwareSessionContext ctx, TransportProtos.ToServerRpcResponseMsg rpcResponse, String topicBase) {
         return Optional.of(createMqttPublishMsg(ctx, topicBase + rpcResponse.getRequestId(), JsonConverter.toJson(rpcResponse)));
     }
+    /**
+     * Convert to publish.
+     *
+     * @param ctx MQTT session context
+     * @param provisionResponse provision response
+     * @return MQTT publish message, or empty if conversion is not applicable
+     * @throws Exception on processing failure
+     */
 
     @Override
     public Optional<MqttMessage> convertToPublish(MqttDeviceAwareSessionContext ctx, TransportProtos.ProvisionDeviceResponseMsg provisionResponse) {
         return Optional.of(createMqttPublishMsg(ctx, MqttTopics.DEVICE_PROVISION_RESPONSE_TOPIC, JsonConverter.toJson(provisionResponse)));
     }
+    /**
+     * Convert to gateway device disconnect publish.
+     *
+     * @param ctx MQTT session context
+     * @param deviceName device name ({@link String})
+     * @param reasonCode reason code
+     * @return MQTT publish message, or empty if conversion is not applicable
+     * @throws Exception on processing failure
+     */
 
     @Override
     public Optional<MqttMessage> convertToGatewayDeviceDisconnectPublish(MqttDeviceAwareSessionContext ctx, String deviceName, int reasonCode) {
         return Optional.of(createMqttPublishMsg(ctx, MqttTopics.GATEWAY_DISCONNECT_TOPIC, JsonConverter.toGatewayDeviceDisconnectJson(deviceName, reasonCode)));
     }
+    /**
+     * Convert to publish.
+     *
+     * @param ctx MQTT session context
+     * @param firmwareChunk firmware chunk
+     * @param requestId request id ({@link String})
+     * @param chunk chunk
+     * @param firmwareType firmware type ({@link OtaPackageType})
+     * @return MQTT publish message, or empty if conversion is not applicable
+     * @throws Exception on processing failure
+     */
 
     @Override
     public Optional<MqttMessage> convertToPublish(MqttDeviceAwareSessionContext ctx, byte[] firmwareChunk, String requestId, int chunk, OtaPackageType firmwareType) {
         return Optional.of(createMqttPublishMsg(ctx, String.format(DEVICE_SOFTWARE_FIRMWARE_RESPONSES_TOPIC_FORMAT, firmwareType.getKeyPrefix(), requestId, chunk), firmwareChunk));
     }
-
+    /**
+     * Validates json payload.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param payloadData payload data ({@link ByteBuf})
+     * @return {@link JsonElement}
+     * @throws AdaptorException on invalid payload or topic format
+     */
     public static JsonElement validateJsonPayload(UUID sessionId, ByteBuf payloadData) throws AdaptorException {
         String payload = validatePayload(sessionId, payloadData, false);
         try {
@@ -241,7 +398,15 @@ public class JsonMqttAdaptor implements MqttTransportAdaptor {
             return Optional.of(createMqttPublishMsg(ctx, MqttTopics.GATEWAY_ATTRIBUTES_RESPONSE_TOPIC, result));
         }
     }
-
+    /**
+     * Creates mqtt publish msg.
+     *
+     * @param ctx MQTT session context
+     * @param topic topic ({@link String})
+     * @param json json ({@link JsonElement})
+     * @return {@link MqttPublishMessage}
+     * @throws Exception on processing failure
+     */
     protected MqttPublishMessage createMqttPublishMsg(MqttDeviceAwareSessionContext ctx, String topic, JsonElement json) {
         MqttFixedHeader mqttFixedHeader =
                 new MqttFixedHeader(MqttMessageType.PUBLISH, false, ctx.getQoSForTopic(topic), false, 0);

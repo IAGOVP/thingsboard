@@ -30,7 +30,11 @@ import org.thingsboard.server.common.data.validation.NoXss;
 
 @EqualsAndHashCode(callSuper = true)
 /**
- * Customer.
+ * Sub-division of a tenant for B2B scenarios (end-customer organizations).
+ *
+ * <p>Customers scope device/asset visibility for customer users. Holds title, contact info, and
+ * optional {@code additionalInfo} (e.g. home dashboard). Assigned entities inherit customer
+ * ownership for RBAC. Managed via REST ({@code /api/customer}) and {@code CustomerService}.
  */
 public class Customer extends ContactBased<CustomerId> implements HasTenantId, ExportableEntity<CustomerId>, HasTitle, HasVersion {
 
@@ -63,22 +67,47 @@ public class Customer extends ContactBased<CustomerId> implements HasTenantId, E
         this.externalId = customer.getExternalId();
         this.version = customer.getVersion();
     }
+    /**
+     * Returns tenant id.
+     *
+     * @return {@link TenantId}
+     */
 
     public TenantId getTenantId() {
         return tenantId;
     }
+    /**
+     * Set tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     */
 
     public void setTenantId(TenantId tenantId) {
         this.tenantId = tenantId;
     }
+    /**
+     * Returns title.
+     *
+     * @return {@link String}
+     */
 
     public String getTitle() {
         return title;
     }
+    /**
+     * Set title.
+     *
+     * @param title title ({@link String})
+     */
 
     public void setTitle(String title) {
         this.title = title;
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link CustomerId}
+     */
 
     @Schema(description = "JSON object with the customer Id. " +
             "Specify this field to update the customer. " +
@@ -88,54 +117,99 @@ public class Customer extends ContactBased<CustomerId> implements HasTenantId, E
     public CustomerId getId() {
         return super.getId();
     }
+    /**
+     * Returns created time.
+     *
+     * @return the long result
+     */
 
     @Schema(description = "Timestamp of the customer creation, in milliseconds", example = "1609459200000", accessMode = Schema.AccessMode.READ_ONLY)
     @Override
     public long getCreatedTime() {
         return super.getCreatedTime();
     }
+    /**
+     * Returns country.
+     *
+     * @return {@link String}
+     */
 
     @Schema(description = "Country", example = "US")
     @Override
     public String getCountry() {
         return super.getCountry();
     }
+    /**
+     * Returns state.
+     *
+     * @return {@link String}
+     */
 
     @Schema(description = "State", example = "NY")
     @Override
     public String getState() {
         return super.getState();
     }
+    /**
+     * Returns city.
+     *
+     * @return {@link String}
+     */
 
     @Schema(description = "City", example = "New York")
     @Override
     public String getCity() {
         return super.getCity();
     }
+    /**
+     * Returns address.
+     *
+     * @return {@link String}
+     */
 
     @Schema(description = "Address Line 1", example = "42 Broadway Suite 12-400")
     @Override
     public String getAddress() {
         return super.getAddress();
     }
+    /**
+     * Returns address2.
+     *
+     * @return {@link String}
+     */
 
     @Schema(description = "Address Line 2", example = "")
     @Override
     public String getAddress2() {
         return super.getAddress2();
     }
+    /**
+     * Returns zip.
+     *
+     * @return {@link String}
+     */
 
     @Schema(description = "Zip code", example = "10004")
     @Override
     public String getZip() {
         return super.getZip();
     }
+    /**
+     * Returns phone.
+     *
+     * @return {@link String}
+     */
 
     @Schema(description = "Phone number", example = "+1(415)777-7777")
     @Override
     public String getPhone() {
         return super.getPhone();
     }
+    /**
+     * Returns email.
+     *
+     * @return {@link String}
+     */
 
     @Schema(description = "Email", example = "example@company.com")
     @Override
@@ -149,10 +223,20 @@ public class Customer extends ContactBased<CustomerId> implements HasTenantId, E
             "'isPublic' (boolean, whether this is a public customer).",
             implementation = com.fasterxml.jackson.databind.JsonNode.class,
             example = "{\"description\":\"Regional customer\",\"homeDashboardId\":\"784f394c-42b6-435a-983c-b7beff2784f9\",\"homeDashboardHideToolbar\":false,\"isPublic\":false}")
+    /**
+     * Returns additional info.
+     *
+     * @return {@link JsonNode}
+     */
     @Override
     public JsonNode getAdditionalInfo() {
         return super.getAdditionalInfo();
     }
+    /**
+     * Is public.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     public boolean isPublic() {
@@ -162,11 +246,21 @@ public class Customer extends ContactBased<CustomerId> implements HasTenantId, E
 
         return false;
     }
+    /**
+     * To short customer info.
+     *
+     * @return {@link ShortCustomerInfo}
+     */
 
     @JsonIgnore
     public ShortCustomerInfo toShortCustomerInfo() {
         return new ShortCustomerInfo(id, title, isPublic());
     }
+    /**
+     * Returns name.
+     *
+     * @return {@link String}
+     */
 
     @Override
     @JsonProperty(access = Access.READ_ONLY)

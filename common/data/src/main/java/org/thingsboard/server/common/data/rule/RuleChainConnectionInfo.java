@@ -25,9 +25,6 @@ import org.thingsboard.server.common.data.id.RuleChainId;
  */
 @Schema
 @Data
-/**
- * Rule chain connection info.
- */
 public class RuleChainConnectionInfo {
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "Index of rule node in the 'nodes' array of the RuleChainMetaData. Indicates the 'from' part of the connection.")
     private int fromIndex;

@@ -193,18 +193,40 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
     boolean isSSL() {
         return sslHandler != null;
     }
+    /**
+     * Channel registered.
+     *
+     * @param ctx MQTT session context
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
         super.channelRegistered(ctx);
         context.channelRegistered(isSSL());
     }
+    /**
+     * Channel unregistered.
+     *
+     * @param ctx MQTT session context
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
         super.channelUnregistered(ctx);
         context.channelUnregistered(isSSL());
     }
+    /**
+     * Channel read.
+     *
+     * @param ctx MQTT session context
+     * @param msg msg ({@link Object})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
@@ -485,7 +507,6 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
      * @param topicName
      * @param mqttMsg
      */
-
     private void handleSparkplugPublishMsg(ChannelHandlerContext ctx, String topicName, MqttPublishMessage mqttMsg) {
         int msgId = mqttMsg.variableHeader().packetId();
         try {
@@ -732,11 +753,25 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
 
     private <T> TransportServiceCallback<Void> getPubAckCallback(final ChannelHandlerContext ctx, final int msgId, final T msg) {
         return new TransportServiceCallback<>() {
+            /**
+             * Handles success.
+             *
+             * @param dummy dummy ({@link Void})
+             * @return nothing
+             * @throws Exception on processing failure
+             */
             @Override
             public void onSuccess(Void dummy) {
                 log.trace("[{}] Published msg: {}", sessionId, msg);
                 ack(ctx, msgId, MqttReasonCodes.PubAck.SUCCESS);
             }
+            /**
+             * Handles error.
+             *
+             * @param e e ({@link Throwable})
+             * @return nothing
+             * @throws Exception on processing failure
+             */
 
             @Override
             public void onError(Throwable e) {
@@ -756,6 +791,13 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
             this.msgId = msgId;
             this.msg = msg;
         }
+        /**
+         * Handles success.
+         *
+         * @param provisionResponseMsg provision response msg
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onSuccess(TransportProtos.ProvisionDeviceResponseMsg provisionResponseMsg) {
@@ -772,6 +814,13 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
                 log.trace("[{}] Failed to convert device provision response to MQTT msg", sessionId, e);
             }
         }
+        /**
+         * Handles error.
+         *
+         * @param e e ({@link Throwable})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onError(Throwable e) {
@@ -797,6 +846,13 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
             this.chunkSize = chunkSize;
             this.chunk = chunk;
         }
+        /**
+         * Handles success.
+         *
+         * @param response response
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onSuccess(TransportProtos.GetOtaPackageResponseMsg response) {
@@ -808,6 +864,13 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
                 sendOtaPackageError(ctx, response.getResponseStatus().toString());
             }
         }
+        /**
+         * Handles error.
+         *
+         * @param e e ({@link Throwable})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onError(Throwable e) {
@@ -957,13 +1020,12 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
         registerSubQoS(topic, grantedQoSList, reqQoS);
     }
 
+    
     /**
-     * 3.0.0 Edge Node Session Establishment:
-     * ncmd-subscribe
-     * [tck-id-message-flow-edge-node-ncmd-subscribe] The MQTT client associated with the Edge
-     * Node MUST subscribe to a topic of the form spBv1.0/group_id/NCMD/edge_node_id where
-     * group_id is the Sparkplug Group ID and the edge_node_id is the Sparkplug Edge Node ID for
-     * this Edge Node. It MUST subscribe on this topic with a QoS of 1.
+     * Processes attributes rpc subscribe sparkplug node.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
      */
     public void processAttributesRpcSubscribeSparkplugNode() {
         List<Integer> grantedQoSList = new ArrayList<>();
@@ -974,7 +1036,15 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
                 .build(), null);
         registerSubQoS(MqttTopics.DEVICE_ATTRIBUTES_TOPIC, grantedQoSList, AT_LEAST_ONCE);
     }
-
+    /**
+     * Register sub qo s.
+     *
+     * @param topic topic ({@link String})
+     * @param grantedQoSList granted qo slist ({@link List})
+     * @param reqQoS req qo s ({@link MqttQoS})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void registerSubQoS(String topic, List<Integer> grantedQoSList, MqttQoS reqQoS) {
         grantedQoSList.add(getMinSupportedQos(reqQoS));
         mqttQoSMap.put(new MqttTopicMatcher(topic), getMinSupportedQos(reqQoS));
@@ -1102,10 +1172,24 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
         }
         transportService.process(DeviceTransportType.MQTT, request.build(),
                 new TransportServiceCallback<>() {
+                    /**
+                     * Handles success.
+                     *
+                     * @param msg msg ({@link ValidateDeviceCredentialsResponse})
+                     * @return nothing
+                     * @throws Exception on processing failure
+                     */
                     @Override
                     public void onSuccess(ValidateDeviceCredentialsResponse msg) {
                         onValidateDeviceResponse(msg, ctx, connectMessage);
                     }
+                    /**
+                     * Handles error.
+                     *
+                     * @param e e ({@link Throwable})
+                     * @return nothing
+                     * @throws Exception on processing failure
+                     */
 
                     @Override
                     public void onError(Throwable e) {
@@ -1125,10 +1209,24 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
             String sha3Hash = EncryptionUtil.getSha3Hash(strCert);
             transportService.process(DeviceTransportType.MQTT, ValidateDeviceX509CertRequestMsg.newBuilder().setHash(sha3Hash).build(),
                     new TransportServiceCallback<>() {
+                        /**
+                         * Handles success.
+                         *
+                         * @param msg msg ({@link ValidateDeviceCredentialsResponse})
+                         * @return nothing
+                         * @throws Exception on processing failure
+                         */
                         @Override
                         public void onSuccess(ValidateDeviceCredentialsResponse msg) {
                             onValidateDeviceResponse(msg, ctx, connectMessage);
                         }
+                        /**
+                         * Handles error.
+                         *
+                         * @param e e ({@link Throwable})
+                         * @return nothing
+                         * @throws Exception on processing failure
+                         */
 
                         @Override
                         public void onError(Throwable e) {
@@ -1165,11 +1263,26 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
         connAckBuilder.returnCode(finalReturnCode);
         return connAckBuilder.build();
     }
+    /**
+     * Channel read complete.
+     *
+     * @param ctx MQTT session context
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) {
         ctx.flush();
     }
+    /**
+     * Exception caught.
+     *
+     * @param ctx MQTT session context
+     * @param cause cause ({@link Throwable})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
@@ -1225,7 +1338,15 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
                 return MqttVersion.MQTT_3_1_1;
         }
     }
-
+    /**
+     * Creates mqtt pub ack msg.
+     *
+     * @param deviceSessionCtx device session ctx ({@link DeviceSessionCtx})
+     * @param requestId request id
+     * @param returnCode return code
+     * @return {@link MqttMessage}
+     * @throws Exception on processing failure
+     */
     public static MqttMessage createMqttPubAckMsg(DeviceSessionCtx deviceSessionCtx, int requestId, byte returnCode) {
         MqttMessageBuilders.PubAckBuilder pubAckMsgBuilder = MqttMessageBuilders.pubAck().packetId(requestId);
         if (MqttVersion.MQTT_5.equals(deviceSessionCtx.getMqttVersion())) {
@@ -1233,7 +1354,14 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
         }
         return pubAckMsgBuilder.build();
     }
-
+    /**
+     * Creates mqtt disconnect msg.
+     *
+     * @param deviceSessionCtx device session ctx ({@link DeviceSessionCtx})
+     * @param returnCode return code
+     * @return {@link MqttMessage}
+     * @throws Exception on processing failure
+     */
     public static MqttMessage createMqttDisconnectMsg(DeviceSessionCtx deviceSessionCtx, byte returnCode) {
         MqttMessageBuilders.DisconnectBuilder disconnectBuilder = MqttMessageBuilders.disconnect();
         if (MqttVersion.MQTT_5.equals(deviceSessionCtx.getMqttVersion())) {
@@ -1296,8 +1424,8 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
     }
 
     /**
-     *  The Death Certificate topic and payload described here are not “published” as an MQTT message by a client,
-     *  but provided as parameters within the MQTT CONNECT control packet when this Sparkplug Edge Node first establishes the MQTT Client session.
+     * The Death Certificate topic and payload described here are not “published” as an MQTT message by a client,
+     * but provided as parameters within the MQTT CONNECT control packet when this Sparkplug Edge Node first establishes the MQTT Client session.
      * - NDEATH message MUST be registered as a Will Message in the MQTT CONNECT packet.
      * -- in the MQTT CONNECT packet The NDEATH message MUST set the MQTT Will QoS to 1.
      * -- in the MQTT CONNECT packet The NDEATH message MUST set the MQTT Will Retained flag to false.
@@ -1327,13 +1455,25 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
         }
         return null;
     }
+    /**
+     * Operation complete.
+     *
+     * @param future future ({@link Future})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void operationComplete(Future<? super Void> future) throws Exception {
         log.trace("[{}] Channel closed!", sessionId);
         doDisconnect();
     }
-
+    /**
+     * Do disconnect.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void doDisconnect() {
         if (deviceSessionCtx.isConnected()) {
             log.debug("[{}] Client disconnected!", sessionId);
@@ -1376,6 +1516,13 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
             deviceSessionCtx.setDeviceProfile(msg.getDeviceProfile());
             deviceSessionCtx.setSessionInfo(SessionInfoCreator.create(msg, context, sessionId));
             transportService.process(deviceSessionCtx.getSessionInfo(), SESSION_EVENT_MSG_OPEN, new TransportServiceCallback<Void>() {
+                /**
+                 * Handles success.
+                 *
+                 * @param msg msg ({@link Void})
+                 * @return nothing
+                 * @throws Exception on processing failure
+                 */
                 @Override
                 public void onSuccess(Void msg) {
                     SessionMetaData sessionMetaData = transportService.registerAsyncSession(deviceSessionCtx.getSessionInfo(), MqttTransportHandler.this);
@@ -1389,6 +1536,13 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
                     log.debug("[{}] Client connected!", sessionId);
                     transportService.getCallbackExecutor().execute(() -> processMsgQueue(ctx)); //this callback will execute in Producer worker thread and hard or blocking work have to be submitted to the separate thread.
                 }
+                /**
+                 * Handles error.
+                 *
+                 * @param e e ({@link Throwable})
+                 * @return nothing
+                 * @throws Exception on processing failure
+                 */
 
                 @Override
                 public void onError(Throwable e) {
@@ -1405,6 +1559,13 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
             });
         }
     }
+    /**
+     * Handles get attributes response.
+     *
+     * @param response response
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onGetAttributesResponse(TransportProtos.GetAttributeResponseMsg response) {
@@ -1417,6 +1578,14 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
             log.trace("[{}] Failed to convert device attributes response to MQTT msg", sessionId, e);
         }
     }
+    /**
+     * Handles attribute update.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param notification notification
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onAttributeUpdate(UUID sessionId, TransportProtos.AttributeUpdateNotificationMsg notification) {
@@ -1455,6 +1624,14 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
             log.trace("[{}] Failed to convert device/Edge Node attributes update to MQTT msg", sessionId, e);
         }
     }
+    /**
+     * Handles remote session close command.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param sessionCloseNotification session close notification
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onRemoteSessionCloseCommand(UUID sessionId, TransportProtos.SessionCloseNotificationProto sessionCloseNotification) {
@@ -1468,6 +1645,14 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
         };
         closeCtx(deviceSessionCtx.getChannel(), returnCode);
     }
+    /**
+     * Handles to device rpc request.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param rpcRequest rpc request
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onToDeviceRpcRequest(UUID sessionId, TransportProtos.ToDeviceRpcRequestMsg rpcRequest) {
@@ -1550,7 +1735,15 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
                             rpcRequest.getMethodName() + ". This node does not have a metricName: [" + tsKvProto.getKv().getKey() + "]");
         }
     }
-
+    /**
+     * Send to device rpc request.
+     *
+     * @param payload payload ({@link MqttMessage})
+     * @param rpcRequest rpc request
+     * @param sessionInfo session info
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void sendToDeviceRpcRequest(MqttMessage payload, TransportProtos.ToDeviceRpcRequestMsg rpcRequest, TransportProtos.SessionInfoProto sessionInfo) {
         int msgId = ((MqttPublishMessage) payload).variableHeader().packetId();
         int requestId = rpcRequest.getRequestId();
@@ -1585,6 +1778,13 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
             }
         });
     }
+    /**
+     * Handles to server rpc response.
+     *
+     * @param rpcResponse rpc response
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onToServerRpcResponse(TransportProtos.ToServerRpcResponseMsg rpcResponse) {
@@ -1605,11 +1805,28 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
     private boolean isAckExpected(MqttMessage message) {
         return message.fixedHeader().qosLevel().value() > 0;
     }
+    /**
+     * Handles device profile update.
+     *
+     * @param sessionInfo session info
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onDeviceProfileUpdate(TransportProtos.SessionInfoProto sessionInfo, DeviceProfile deviceProfile) {
         deviceSessionCtx.onDeviceProfileUpdate(sessionInfo, deviceProfile);
     }
+    /**
+     * Handles device update.
+     *
+     * @param sessionInfo session info
+     * @param device device ({@link Device})
+     * @param deviceProfileOpt device profile opt ({@link Optional})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onDeviceUpdate(TransportProtos.SessionInfoProto sessionInfo, Device device, Optional<DeviceProfile> deviceProfileOpt) {
@@ -1618,6 +1835,13 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
             gatewaySessionHandler.onGatewayUpdate(sessionInfo, device, deviceProfileOpt);
         }
     }
+    /**
+     * Handles device deleted.
+     *
+     * @param deviceId target device identifier
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onDeviceDeleted(DeviceId deviceId) {
@@ -1628,13 +1852,31 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
             gatewaySessionHandler.onGatewayDelete(deviceId);
         }
     }
-
+    /**
+     * Send error rpc response.
+     *
+     * @param sessionInfo session info
+     * @param requestId request id
+     * @param result result ({@link ThingsboardErrorCode})
+     * @param errorMsg error msg ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void sendErrorRpcResponse(TransportProtos.SessionInfoProto sessionInfo, int requestId, ThingsboardErrorCode result, String errorMsg) {
         String payload = JacksonUtil.toString(SparkplugRpcResponseBody.builder().result(result.name()).error(errorMsg).build());
         TransportProtos.ToDeviceRpcResponseMsg msg = TransportProtos.ToDeviceRpcResponseMsg.newBuilder().setRequestId(requestId).setError(payload).build();
         transportService.process(sessionInfo, msg, null);
     }
-
+    /**
+     * Send success rpc response.
+     *
+     * @param sessionInfo session info
+     * @param requestId request id
+     * @param result result ({@link ResponseCode})
+     * @param successMsg success msg ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void sendSuccessRpcResponse(TransportProtos.SessionInfoProto sessionInfo, int requestId, ResponseCode result, String successMsg) {
         String payload = JacksonUtil.toString(SparkplugRpcResponseBody.builder().result(result.getName()).result(successMsg).build());
         TransportProtos.ToDeviceRpcResponseMsg msg = TransportProtos.ToDeviceRpcResponseMsg.newBuilder().setRequestId(requestId).setError(payload).build();

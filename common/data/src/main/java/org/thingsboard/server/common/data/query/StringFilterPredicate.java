@@ -30,6 +30,11 @@ public class StringFilterPredicate implements SimpleKeyFilterPredicate<String> {
     @Valid
     private FilterPredicateValue<String> value;
     private boolean ignoreCase;
+    /**
+     * Returns type.
+     *
+     * @return {@link FilterPredicateType}
+     */
 
     @Override
     public FilterPredicateType getType() {

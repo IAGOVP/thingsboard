@@ -29,13 +29,27 @@ import org.thingsboard.server.common.data.Device;
 import org.thingsboard.server.common.util.ProtoUtils;
 import org.thingsboard.server.gen.transport.TransportProtos;
 
+/**
+ * Redis {@link VersionedRedisTbCache} for {@link org.thingsboard.server.common.data.Device} entities.
+ *
+ * <p>Spring bean {@code "DeviceCache"} activated when
+ * {@code cache.type=redis}. Shares cluster-wide state via {@link TBRedisCacheConfiguration}.
+ * Cache name: {@link org.thingsboard.server.common.data.CacheConstants#DEVICE_CACHE}.
+ *
+ * @see DeviceCacheKey
+ * @see VersionedRedisTbCache
+ */
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "redis")
 @Service("DeviceCache")
-/**
- * Device redis cache.
- */
 public class DeviceRedisCache extends VersionedRedisTbCache<DeviceCacheKey, Device> {
 
+    /**
+     * Constructs the Redis cache with JSON serialization and TTL from {@link CacheSpecsMap}.
+     *
+     * @param configuration     Redis connection and evict TTL settings
+     * @param cacheSpecsMap     per-cache size and TTL configuration
+     * @param connectionFactory Redis connection from {@link TBRedisCacheConfiguration}
+     */
     public DeviceRedisCache(TBRedisCacheConfiguration configuration, CacheSpecsMap cacheSpecsMap, RedisConnectionFactory connectionFactory) {
         super(CacheConstants.DEVICE_CACHE, cacheSpecsMap, connectionFactory, configuration, new TbRedisSerializer<>() {
 

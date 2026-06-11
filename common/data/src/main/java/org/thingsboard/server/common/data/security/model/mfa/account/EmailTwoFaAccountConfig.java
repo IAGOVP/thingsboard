@@ -33,6 +33,11 @@ public class EmailTwoFaAccountConfig extends OtpBasedTwoFaAccountConfig {
     @NotBlank
     @Email
     private String email;
+    /**
+     * Returns provider type.
+     *
+     * @return {@link TwoFaProviderType}
+     */
 
     @Override
     public TwoFaProviderType getProviderType() {

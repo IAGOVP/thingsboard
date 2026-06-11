@@ -30,14 +30,18 @@ import java.util.UUID;
 public interface ScriptInvokeService {
 
     /** Compiles script body and returns a script instance id. */
+    /** Eval. */
     ListenableFuture<UUID> eval(TenantId tenantId, ScriptType scriptType, String scriptBody, String... argNames);
 
     /** Runs a previously compiled script with positional arguments. */
+    /** Invoke script. */
     ListenableFuture<Object> invokeScript(TenantId tenantId, CustomerId customerId, UUID scriptId, Object... args);
 
     /** Releases script engine resources for the given script id. */
+    /** Release. */
     ListenableFuture<Void> release(UUID scriptId);
 
+    /** Returns the language. */
     ScriptLanguage getLanguage();
 
 }

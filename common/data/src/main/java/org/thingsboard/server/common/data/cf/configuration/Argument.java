@@ -37,18 +37,38 @@ public class Argument {
 
     private Integer limit;
     private Long timeWindow;
+    /**
+     * Has dynamic source.
+     *
+     * @return the boolean result
+     */
 
     public boolean hasDynamicSource() {
         return refDynamicSourceConfiguration != null;
     }
+    /**
+     * Has relation query source.
+     *
+     * @return the boolean result
+     */
 
     public boolean hasRelationQuerySource() {
         return hasDynamicSource() && refDynamicSourceConfiguration.getType() == CFArgumentDynamicSourceType.RELATION_PATH_QUERY;
     }
+    /**
+     * Has owner source.
+     *
+     * @return the boolean result
+     */
 
     public boolean hasOwnerSource() {
         return hasDynamicSource() && refDynamicSourceConfiguration.getType() == CFArgumentDynamicSourceType.CURRENT_OWNER;
     }
+    /**
+     * Has ts rolling argument.
+     *
+     * @return the boolean result
+     */
 
     public boolean hasTsRollingArgument() {
         return ArgumentType.TS_ROLLING.equals(refEntityKey.getType());

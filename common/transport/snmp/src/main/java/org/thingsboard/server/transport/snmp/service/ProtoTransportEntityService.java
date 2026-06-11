@@ -39,7 +39,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProtoTransportEntityService {
     private final TransportService transportService;
-
+    /**
+     * Returns device by id.
+     *
+     * @param id id ({@link DeviceId})
+     * @return {@link Device}
+     * @throws Exception on processing failure
+     */
     public Device getDeviceById(DeviceId id) {
         TransportProtos.GetDeviceResponseMsg deviceProto = transportService.getDevice(TransportProtos.GetDeviceRequestMsg.newBuilder()
                 .setDeviceIdMSB(id.getId().getMostSignificantBits())
@@ -67,7 +73,13 @@ public class ProtoTransportEntityService {
 
         return device;
     }
-
+    /**
+     * Returns device credentials by device id.
+     *
+     * @param deviceId target device identifier
+     * @return {@link DeviceCredentials}
+     * @throws Exception on processing failure
+     */
     public DeviceCredentials getDeviceCredentialsByDeviceId(DeviceId deviceId) {
         TransportProtos.GetDeviceCredentialsResponseMsg deviceCredentialsResponse = transportService.getDeviceCredentials(
                 TransportProtos.GetDeviceCredentialsRequestMsg.newBuilder()
@@ -82,7 +94,14 @@ public class ProtoTransportEntityService {
             throw new IllegalArgumentException("Device credentials not found");
         }
     }
-
+    /**
+     * Returns snmp devices ids.
+     *
+     * @param page page
+     * @param pageSize page size
+     * @return the TransportProtos.GetSnmpDevicesResponseMsg value
+     * @throws Exception on processing failure
+     */
     public TransportProtos.GetSnmpDevicesResponseMsg getSnmpDevicesIds(int page, int pageSize) {
         TransportProtos.GetSnmpDevicesRequestMsg requestMsg = TransportProtos.GetSnmpDevicesRequestMsg.newBuilder()
                 .setPage(page)

@@ -28,10 +28,9 @@ import java.util.Arrays;
 /**
  * Spring Boot entry point for the Entity Data Query Service (EDQS) microservice.
  *
- * <p>Scans {@code org.thingsboard.server.edqs} plus queue/discovery packages, loads {@code edqs.yml}
- * by default, and starts {@link org.thingsboard.server.edqs.processor.EdqsProcessor} Kafka consumers.
- * Entity queries from tb-node use Kafka request-reply, not REST (except {@link EdqsController} readiness).
+ * <p>Loads {@code edqs.yml}, enables Kafka queue components, and starts {@link org.thingsboard.server.edqs.processor.EdqsProcessor} consumers for in-memory entity indexing.
  */
+
 @SpringBootConfiguration
 @EnableAsync
 @EnableScheduling
@@ -44,7 +43,13 @@ public class ThingsboardEdqsApplication {
     private static final String SPRING_CONFIG_NAME_KEY = "--spring.config.name";
     private static final String DEFAULT_SPRING_CONFIG_PARAM = SPRING_CONFIG_NAME_KEY + "=" + "edqs";
 
-    /** Starts EDQS; injects {@value #DEFAULT_SPRING_CONFIG_PARAM} when not passed on the command line. */
+    /**
+     * Starts the EDQS Spring Boot application.
+     *
+     * <p>Appends {@code --spring.config.name=edqs} when not provided so {@code edqs.yml} is loaded.
+     *
+     * @param args standard Spring Boot command-line arguments
+     */
     public static void main(String[] args) {
         SpringApplication.run(ThingsboardEdqsApplication.class, updateArguments(args));
     }

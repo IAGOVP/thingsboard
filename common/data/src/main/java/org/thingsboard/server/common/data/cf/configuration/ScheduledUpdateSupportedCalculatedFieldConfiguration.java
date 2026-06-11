@@ -23,14 +23,35 @@ import jakarta.validation.constraints.PositiveOrZero;
 public interface ScheduledUpdateSupportedCalculatedFieldConfiguration extends CalculatedFieldConfiguration {
 
     boolean isScheduledUpdateEnabled();
+    /**
+     * Returns scheduled update interval.
+     *
+     * @return {@link Integer}
+     */
 
     @PositiveOrZero
     Integer getScheduledUpdateInterval();
+/**
+ * Set scheduled update interval.
+ *
+ * @param interval interval ({@link Integer})
+ */
 
     void setScheduledUpdateInterval(Integer interval);
+/**
+ * Validates the requested data.
+ *
+ * @param minAllowedScheduledUpdateInterval min allowed scheduled update interval
+ */
 
     default void validate(long minAllowedScheduledUpdateInterval) {
         if (getScheduledUpdateInterval() < minAllowedScheduledUpdateInterval) {
+            /**
+             * Illegal argument exception.
+             *
+             * @param seconds" seconds"
+             * @return the throw new value
+             */
             throw new IllegalArgumentException("Scheduled update interval (" + getScheduledUpdateInterval() +
                     " seconds) is less than minimum allowed interval in tenant profile: " + minAllowedScheduledUpdateInterval + " seconds");
         }

@@ -54,7 +54,12 @@ public class SecureClientNoAuth {
         this.dtlsConnector = dtlsConnector;
         this.coapClient = getCoapClient(host, port, accessToken, clientKeys, sharedKeys);
     }
-
+    /**
+     * Test.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void test() {
         executor.submit(() -> {
             try {
@@ -106,7 +111,13 @@ public class SecureClientNoAuth {
     private String getFutureUrl(String host, Integer port, String accessToken, String clientKeys, String sharedKeys) {
         return "coaps://" + host + ":" + port + "/api/v1/" + accessToken + "/attributes?clientKeys=" + clientKeys + "&sharedKeys=" + sharedKeys;
     }
-
+    /**
+     * Main.
+     *
+     * @param args args
+     * @return nothing
+     * @throws URISyntaxException if urisyntax exception is thrown during processing
+     */
     public static void main(String[] args) throws URISyntaxException {
         System.out.println("Usage: java -cp ... org.thingsboard.server.transport.coap.client.SecureClientNoAuth " +
                 "host port accessToken keyStoreUriPath keyStoreAlias trustedAliasPattern clientKeys sharedKeys");

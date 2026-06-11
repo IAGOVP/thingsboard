@@ -23,7 +23,8 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 @ConditionalOnExpression("'${database.ts_latest.type}'=='sql' || '${database.ts_latest.type}'=='timescale'")
 public @/**
- * DAO contract for sql ts latest any.
+ * sql ts latest any dao contract for the DAO layer.
  */
+
 interface SqlTsLatestAnyDao {
 }

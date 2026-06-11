@@ -28,13 +28,28 @@ import org.thingsboard.server.dao.model.sql.StatisticsEventEntity;
 import java.util.List;
 import java.util.UUID;
 
+
 /**
 
- * statistics event repository contract.
+ * Spring Data JPA repository for statistics event entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
 
+
 public interface StatisticsEventRepository extends EventRepository<StatisticsEventEntity, StatisticsEvent>, JpaRepository<StatisticsEventEntity, UUID> {
+    /**
+     * Finds latest events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     @Query(nativeQuery = true,  value = "SELECT * FROM stats_event e WHERE e.tenant_id = :tenantId AND e.entity_id = :entityId ORDER BY e.ts DESC LIMIT :limit")
@@ -46,6 +61,17 @@ public interface StatisticsEventRepository extends EventRepository<StatisticsEve
             "AND (:startTime IS NULL OR e.ts >= :startTime) " +
             "AND (:endTime IS NULL OR e.ts <= :endTime)"
     )
+    /**
+     * Finds events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<StatisticsEventEntity> findEvents(@Param("tenantId") UUID tenantId,
                                            @Param("entityId") UUID entityId,
                                            @Param("startTime") Long startTime,
@@ -75,6 +101,22 @@ public interface StatisticsEventRepository extends EventRepository<StatisticsEve
                     "AND (:minErrorsOccurred IS NULL OR e.e_errors_occurred >= :minErrorsOccurred) " +
                     "AND (:maxErrorsOccurred IS NULL OR e.e_errors_occurred < :maxErrorsOccurred)"
     )
+    /**
+     * Finds events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @param server server ({@link String})
+     * @param minMessagesProcessed min messages processed ({@link Integer})
+     * @param maxMessagesProcessed max messages processed ({@link Integer})
+     * @param minErrorsOccurred min errors occurred ({@link Integer})
+     * @param maxErrorsOccurred max errors occurred ({@link Integer})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<StatisticsEventEntity> findEvents(@Param("tenantId") UUID tenantId,
                                            @Param("entityId") UUID entityId,
                                            @Param("startTime") Long startTime,
@@ -94,6 +136,16 @@ public interface StatisticsEventRepository extends EventRepository<StatisticsEve
             "AND (:startTime IS NULL OR e.ts >= :startTime) " +
             "AND (:endTime IS NULL OR e.ts <= :endTime)"
     )
+    /**
+     * Removes events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
     void removeEvents(@Param("tenantId") UUID tenantId,
                       @Param("entityId") UUID entityId,
                       @Param("startTime") Long startTime,
@@ -114,6 +166,21 @@ public interface StatisticsEventRepository extends EventRepository<StatisticsEve
                     "AND (:maxErrorsOccurred IS NULL OR e.e_errors_occurred < :maxErrorsOccurred)"
 
     )
+    /**
+     * Removes events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @param server server ({@link String})
+     * @param minMessagesProcessed min messages processed ({@link Integer})
+     * @param maxMessagesProcessed max messages processed ({@link Integer})
+     * @param minErrorsOccurred min errors occurred ({@link Integer})
+     * @param maxErrorsOccurred max errors occurred ({@link Integer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
     void removeEvents(@Param("tenantId") UUID tenantId,
                       @Param("entityId") UUID entityId,
                       @Param("startTime") Long startTime,

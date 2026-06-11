@@ -21,6 +21,11 @@ package org.thingsboard.server.common.data.cf.configuration;
 public interface ExpressionBasedCalculatedFieldConfiguration extends ArgumentsBasedCalculatedFieldConfiguration {
 
     String getExpression();
+/**
+ * Set expression.
+ *
+ * @param expression expression ({@link String})
+ */
 
     void setExpression(String expression);
 

@@ -27,18 +27,43 @@ import org.thingsboard.server.dao.model.sql.UserAuthSettingsEntity;
 
 import java.util.UUID;
 /**
- * user auth settings repository contract.
+ * Spring Data JPA repository for user auth settings entities.
+ *
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
  */
+
 
 @Repository
 public interface UserAuthSettingsRepository extends JpaRepository<UserAuthSettingsEntity, UUID> {
+    /**
+     * Finds by user id.
+     *
+     * @param userId target user identifier
+     * @return {@link UserAuthSettingsEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     UserAuthSettingsEntity findByUserId(UUID userId);
+    /**
+     * Deletes by user id.
+     *
+     * @param userId target user identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Transactional
     @Modifying
     @Query("DELETE FROM UserAuthSettingsEntity e WHERE e.userId = :userId")
     void deleteByUserId(@Param("userId") UUID userId);
+    /**
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Query("SELECT s FROM UserAuthSettingsEntity s WHERE s.userId IN (SELECT u.id FROM UserEntity u WHERE u.tenantId = :tenantId)")
     Page<UserAuthSettingsEntity> findByTenantId(@Param("tenantId") UUID tenantId, Pageable pageable);

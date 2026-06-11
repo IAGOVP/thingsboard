@@ -75,17 +75,31 @@ public class Job extends BaseData<JobId> implements HasTenantId {
         this.configuration.setTasksKey(UUID.randomUUID().toString());
         presetResult();
     }
+    /**
+     * Preset result.
+     *
+     */
 
     public void presetResult() {
         this.result = switch (type) {
             case DUMMY -> new DummyJobResult();
         };
     }
+    /**
+     * Returns configuration.
+     *
+     * @return {@link C}
+     */
 
     @SuppressWarnings("unchecked")
     public <C extends JobConfiguration> C getConfiguration() {
         return (C) configuration;
     }
+    /**
+     * Returns error.
+     *
+     * @return {@link String}
+     */
 
     @JsonIgnore
     public String getError() {

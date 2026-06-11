@@ -29,6 +29,11 @@ import org.thingsboard.server.common.data.cf.CalculatedFieldType;
 public class SimpleCalculatedFieldConfiguration extends BaseCalculatedFieldConfiguration implements ExpressionBasedCalculatedFieldConfiguration, HasUseLatestTsConfig {
 
     private boolean useLatestTs;
+    /**
+     * Returns type.
+     *
+     * @return {@link CalculatedFieldType}
+     */
 
     @Override
     public CalculatedFieldType getType() {

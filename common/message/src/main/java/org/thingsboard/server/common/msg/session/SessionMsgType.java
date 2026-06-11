@@ -16,9 +16,9 @@
 package org.thingsboard.server.common.msg.session;
 
 /**
- * @deprecated This  /**
-  * is values.
-  */
+ * Enumerates is values for message routing or payloads.
+ */
+
 enum is deprecated and will be removed in a future version.
  * Note: This enum was originally part of the public API but is now specific to CoAP transport only.
  * Please use {@link org.thingsboard.server.transport.coap.CoapSessionMsgType} instead.

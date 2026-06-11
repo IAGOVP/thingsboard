@@ -20,8 +20,14 @@ import org.thingsboard.server.common.data.audit.ActionType;
 import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.data.relation.EntityRelation;
 /**
- * Relation action event.
+ * Relation action event (entity lifecycle action cause tracking).
  */
+
+
+
+
+
+
 
 @Data
 public class RelationActionEvent {

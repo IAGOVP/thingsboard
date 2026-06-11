@@ -18,10 +18,11 @@ package org.thingsboard.server.queue;
 import com.google.common.util.concurrent.ListenableFuture;
 
 /**
- * tb queue handler contract.
+ * Contract for tb queue handler.
  */
 public interface TbQueueHandler<Request extends TbQueueMsg, Response extends TbQueueMsg> {
 
+    /** Handle. */
     ListenableFuture<Response> handle(Request request);
 
     default Response constructErrorResponseMsg(Request request, Throwable cause) {

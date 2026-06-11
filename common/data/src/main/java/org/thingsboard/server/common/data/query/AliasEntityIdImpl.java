@@ -47,26 +47,51 @@ class AliasEntityIdImpl implements AliasEntityId {
             }
         }
     }
+    /**
+     * Returns alias entity type.
+     *
+     * @return {@link AliasEntityType}
+     */
 
     @Override
     public AliasEntityType getAliasEntityType() {
         return aliasEntityType;
     }
+    /**
+     * Default entity id.
+     *
+     * @return {@link EntityId}
+     */
 
     @Override
     public EntityId defaultEntityId() {
         return defaultEntityId;
     }
+    /**
+     * To entity id.
+     *
+     * @return {@link EntityId}
+     */
 
     @Override
     public EntityId toEntityId() {
         return EntityIdFactory.getByTypeAndUuid(entityType, id);
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link UUID}
+     */
 
     @Override
     public UUID getId() {
         return id;
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Override
     public EntityType getEntityType() {

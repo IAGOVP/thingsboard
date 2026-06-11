@@ -68,9 +68,19 @@ import java.io.Serializable;
  * notification rule trigger config contract.
  */
 public interface NotificationRuleTriggerConfig extends Serializable {
+    /**
+     * Returns trigger type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
     NotificationRuleTriggerType getTriggerType();
+    /**
+     * Returns deduplication key.
+     *
+     * @return {@link String}
+     */
 
     @JsonIgnore
     default String getDeduplicationKey() {

@@ -25,6 +25,11 @@ import org.thingsboard.server.common.data.DeviceTransportType;
  * Configuration for default device profile transporturation.
  */
 public class DefaultDeviceProfileTransportConfiguration implements DeviceProfileTransportConfiguration {
+    /**
+     * Returns type.
+     *
+     * @return {@link DeviceTransportType}
+     */
 
     @Override
     public DeviceTransportType getType() {

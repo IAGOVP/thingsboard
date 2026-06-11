@@ -27,8 +27,14 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.UUID;
 /**
- * Default query log component.
+ * Spring component for default query log component (JPA/PostgreSQL persistence layer (JPA repositories and PostgreSQL DAO implementations)).
  */
+
+
+
+
+
+
 
 @Component
 @Slf4j
@@ -38,6 +44,15 @@ public class DefaultQueryLogComponent implements QueryLogComponent {
     private boolean logSqlQueries;
     @Value("${sql.log_queries_threshold:5000}")
     private long logQueriesThreshold;
+    /**
+     * Log query.
+     *
+     * @param ctx calculated-field execution context
+     * @param query filter and sort query definition
+     * @param duration duration
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void logQuery(SqlQueryContext ctx, String query, long duration) {

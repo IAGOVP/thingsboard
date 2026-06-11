@@ -28,17 +28,42 @@ import org.thingsboard.server.common.data.query.TsValue;
 public interface TsKvEntry extends KvEntry, HasVersion {
 
     long getTs();
+    /**
+     * Returns data points.
+     *
+     * @return the int result
+     */
 
     @JsonIgnore
     int getDataPoints();
+    /**
+     * To ts value.
+     *
+     * @return {@link TsValue}
+     */
 
     @JsonIgnore
     default TsValue toTsValue() {
+        /**
+         * Ts value.
+         *
+         * @return the return new value
+         */
         return new TsValue(getTs(), getValueAsString());
     }
+    /**
+     * Is deleted entry.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     default boolean isDeletedEntry() {
+        /**
+         * Returns ts.
+         *
+         * @return the return value
+         */
         return getTs() == 0 && (getValue() == null || getValueAsString().isEmpty());
     }
 

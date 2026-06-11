@@ -15,6 +15,10 @@
  */
 package org.thingsboard.server.queue.discovery;
 
+import java.util.Collections;
+import java.util.List;
+
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -23,16 +27,14 @@ import org.springframework.stereotype.Service;
 import org.thingsboard.server.gen.transport.TransportProtos;
 import org.thingsboard.server.queue.util.AfterStartUp;
 
-import java.util.Collections;
-import java.util.List;
 
+/**
+ * No-op {@link DiscoveryService} for single-node / in-memory queue deployments.
+ */
 @Service
 @ConditionalOnProperty(prefix = "zk", value = "enabled", havingValue = "false", matchIfMissing = true)
 @Slf4j
 @DependsOn("environmentLogService")
-/**
- * Dummy discovery service.
- */
 public class DummyDiscoveryService implements DiscoveryService {
 
     private final TbServiceInfoProvider serviceInfoProvider;

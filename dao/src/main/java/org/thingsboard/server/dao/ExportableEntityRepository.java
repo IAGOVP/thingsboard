@@ -17,13 +17,27 @@ package org.thingsboard.server.dao;
 
 import java.util.UUID;
 
+
 /**
 
- * exportable entity repository contract.
+ * Spring Data JPA repository for exportable entity entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
 
+
 public interface ExportableEntityRepository<D> {
+    /**
+     * Finds by tenant id and external id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param externalId external id ({@link UUID})
+     * @return {@link D}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     D findByTenantIdAndExternalId(UUID tenantId, UUID externalId);
 

@@ -30,10 +30,32 @@ public interface TransportTenantProfileCache {
 
     TenantProfile get(TenantId tenantId);
 
+    /**
+     * Put.
+     *
+     * @param proto proto
+     * @return {@link TenantProfileUpdateResult}
+     * @throws Exception on processing failure
+     */
     TenantProfileUpdateResult put(TransportProtos.TenantProfileProto proto);
 
+    /**
+     * Put.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param profileId profile id ({@link TenantProfileId})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     boolean put(TenantId tenantId, TenantProfileId profileId);
 
+    /**
+     * Removes the requested data.
+     *
+     * @param profileId profile id ({@link TenantProfileId})
+     * @return {@link Set}
+     * @throws Exception on processing failure
+     */
     Set<TenantId> remove(TenantProfileId profileId);
 
 }

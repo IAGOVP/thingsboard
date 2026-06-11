@@ -18,6 +18,7 @@ package org.thingsboard.server.dao.cassandra.guava;
 /**
  * Guava session utils.
  */
+
 public class GuavaSessionUtils {
     public static GuavaSessionBuilder builder() {
         return new GuavaSessionBuilder();

@@ -22,25 +22,77 @@ import org.thingsboard.server.common.data.page.PageLink;
 
 import java.util.UUID;
 
+
 /**
 
- * Persistence contract for exportable entity (see JPA/Cassandra implementations).
+ * Persistence contract for exportable entity.
+
+ *
+
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (ThingsBoard DAO layer).
 
  */
 
+
 public interface ExportableEntityDao<I extends EntityId, T extends ExportableEntity<I>> extends Dao<T> {
+    /**
+     * Finds by tenant id and external id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param externalId external id ({@link UUID})
+     * @return {@link T}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     T findByTenantIdAndExternalId(UUID tenantId, UUID externalId);
+    /**
+     * Finds by tenant id and name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return {@link T}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     default T findByTenantIdAndName(UUID tenantId, String name) { throw new UnsupportedOperationException(); }
+    /**
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<T> findByTenantId(UUID tenantId, PageLink pageLink);
+    /**
+     * Finds ids by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     default PageData<I> findIdsByTenantId(UUID tenantId, PageLink pageLink) {
         return findByTenantId(tenantId, pageLink).mapData(ExportableEntity::getId);
     }
+    /**
+     * Returns external id by internal.
+     *
+     * @param internalId internal id ({@link I})
+     * @return {@link I}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     I getExternalIdByInternal(I internalId);
+    /**
+     * Finds default entity by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link T}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     default T findDefaultEntityByTenantId(UUID tenantId) { throw new UnsupportedOperationException(); }
 

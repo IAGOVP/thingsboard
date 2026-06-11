@@ -19,17 +19,41 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
 
 /**
- * Tb java redis serializer.
+ * Java native serialization {@link TbRedisSerializer} using Spring {@link org.springframework.data.redis.serializer.RedisSerializer#java()}.
+ *
+ * <p>Produces compact binary payloads but requires compatible class versions across cluster nodes.
+ * Prefer {@link TbJsonRedisSerializer} for entity caches unless binary compatibility is required.
+ *
+ * @param <K> cache key type
+ * @param <V> cache value type
+ * @see TbRedisSerializer
  */
 public class TbJavaRedisSerializer<K, V> implements TbRedisSerializer<K, V> {
 
+    /** Delegating Spring Java serializer. */
+
     final RedisSerializer<Object> serializer = RedisSerializer.java();
 
+/**
+         * {@inheritDoc}
+         *
+         * @param value value to serialize
+         * @return Java-serialized bytes
+         * @throws org.springframework.data.redis.serializer.SerializationException on failure
+         */
     @Override
     public byte[] serialize(V value) throws SerializationException {
         return serializer.serialize(value);
     }
 
+/**
+         * {@inheritDoc}
+         *
+         * @param key   cache key (unused)
+         * @param bytes Java-serialized bytes
+         * @return deserialized object
+         * @throws org.springframework.data.redis.serializer.SerializationException on failure
+         */
     @Override
     public V deserialize(K key, byte[] bytes) throws SerializationException {
         return (V) serializer.deserialize(bytes);

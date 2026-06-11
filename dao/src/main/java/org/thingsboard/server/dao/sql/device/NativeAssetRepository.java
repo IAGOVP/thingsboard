@@ -15,10 +15,16 @@
  */
 package org.thingsboard.server.dao.sql.device;
 
+
 /**
 
- * native asset repository contract.
+ * Spring Data JPA repository for native asset entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
+
 
 public interface NativeAssetRepository extends NativeProfileEntityRepository {}

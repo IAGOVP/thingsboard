@@ -16,7 +16,7 @@
 package org.thingsboard.server.queue.environment;
 
 /**
- * Service API for distributed lock persistence and domain operations.
+ * Distributed lock service for coordinating exclusive operations across cluster nodes.
  */
 public interface DistributedLockService {
 

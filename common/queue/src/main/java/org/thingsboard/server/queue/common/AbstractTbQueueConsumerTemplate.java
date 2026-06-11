@@ -16,12 +16,6 @@
 package org.thingsboard.server.queue.common;
 
 import jakarta.annotation.Nonnull;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-import org.thingsboard.server.common.msg.queue.TopicPartitionInfo;
-import org.thingsboard.server.queue.TbQueueConsumer;
-import org.thingsboard.server.queue.TbQueueMsg;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,12 +26,21 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.thingsboard.server.common.msg.queue.TopicPartitionInfo;
+import org.thingsboard.server.queue.TbQueueConsumer;
+import org.thingsboard.server.queue.TbQueueMsg;
+
 import static java.util.Collections.emptyList;
 
-@Slf4j
 /**
- * Abstract tb queue consumer template.
+ * Base {@link TbQueueConsumer} with subscription queueing and poll loop scaffolding.
+ *
+ * <p>Subclasses implement transport-specific polling ({@code doPoll}) and commit logic.
+ * Handles dynamic partition reassignment via {@link #subscribe(Set)}.
  */
+@Slf4j
 public abstract class AbstractTbQueueConsumerTemplate<R, T extends TbQueueMsg> implements TbQueueConsumer<T> {
 
     public static final long ONE_MILLISECOND_IN_NANOS = TimeUnit.MILLISECONDS.toNanos(1);

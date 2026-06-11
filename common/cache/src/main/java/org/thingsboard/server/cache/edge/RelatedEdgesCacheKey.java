@@ -25,13 +25,16 @@ import org.thingsboard.server.common.data.id.TenantId;
 import java.io.Serial;
 import java.io.Serializable;
 
+/**
+ * Cache key for edges related to a tenant-scoped {@link org.thingsboard.server.common.data.id.EntityId}.
+ *
+ * @see RelatedEdgesCacheValue
+ * @see RelatedEdgesCaffeineCache
+ */
 @Getter
 @EqualsAndHashCode
 @RequiredArgsConstructor
 @Builder
-/**
- * Related edges cache key.
- */
 public class RelatedEdgesCacheKey implements Serializable {
 
     @Serial
@@ -40,6 +43,9 @@ public class RelatedEdgesCacheKey implements Serializable {
     private final TenantId tenantId;
     private final EntityId entityId;
 
+/**
+         * @return {@code "{" + tenantId + "}" + entityId} key suffix
+         */
     @Override
     public String toString() {
         return "{" + tenantId + "}" + entityId;

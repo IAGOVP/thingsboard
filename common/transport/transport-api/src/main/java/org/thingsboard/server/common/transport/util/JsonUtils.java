@@ -31,7 +31,13 @@ import java.util.regex.Pattern;
 public class JsonUtils {
 
     private static final Pattern BASE64_PATTERN = Pattern.compile("^[A-Za-z0-9+/]+={0,2}$");
-
+    /**
+     * Returns json object.
+     *
+     * @param tsKv ts kv ({@link List})
+     * @return {@link JsonObject}
+     * @throws Exception on processing failure
+     */
     public static JsonObject getJsonObject(List<KeyValueProto> tsKv) {
         JsonObject json = new JsonObject();
         for (KeyValueProto kv : tsKv) {
@@ -55,7 +61,13 @@ public class JsonUtils {
         }
         return json;
     }
-
+    /**
+     * Parse.
+     *
+     * @param value value ({@link Object})
+     * @return {@link JsonElement}
+     * @throws Exception on processing failure
+     */
     public static JsonElement parse(Object value) {
         if (value instanceof Integer) {
             return new JsonPrimitive((Integer) value);
@@ -80,7 +92,13 @@ public class JsonUtils {
             throw new IllegalArgumentException("Unsupported type: " + value.getClass().getSimpleName());
         }
     }
-
+    /**
+     * Convert to json object.
+     *
+     * @param map map ({@link Map})
+     * @return {@link JsonObject}
+     * @throws Exception on processing failure
+     */
     public static JsonObject convertToJsonObject(Map<String, ?> map) {
         JsonObject jsonObject = new JsonObject();
         for (Map.Entry<String, ?> entry : map.entrySet()) {
@@ -89,7 +107,13 @@ public class JsonUtils {
 
         return jsonObject;
     }
-
+    /**
+     * Is base64.
+     *
+     * @param value value ({@link String})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     public static boolean isBase64(String value) {
         return value.length() % 4 == 0 && BASE64_PATTERN.matcher(value).matches();
     }

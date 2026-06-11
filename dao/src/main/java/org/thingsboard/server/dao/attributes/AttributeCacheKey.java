@@ -24,8 +24,14 @@ import org.thingsboard.server.common.data.id.EntityId;
 
 import java.io.Serial;
 /**
- * Attribute cache key.
+ * Serializable cache key for attribute entries (server-side attribute key-value storage and caching).
  */
+
+
+
+
+
+
 
 @EqualsAndHashCode
 @Getter
@@ -43,6 +49,12 @@ public class AttributeCacheKey implements VersionedCacheKey {
     public String toString() {
         return "{" + entityId + "}" + scope + "_" + key;
     }
+    /**
+     * Is versioned.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isVersioned() {

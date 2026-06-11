@@ -25,7 +25,22 @@ import org.thingsboard.server.dao.device.provision.ProvisionResponse;
  */
 public interface DeviceProvisionService {
 
+    /**
+     * Provision device.
+     *
+     * @param provisionRequest provision request ({@link ProvisionRequest})
+     * @return {@link ProvisionResponse}
+     * @throws ProvisionFailedException if provision failed exception is thrown
+     */
     ProvisionResponse provisionDevice(ProvisionRequest provisionRequest) throws ProvisionFailedException;
 
+    /**
+     * Provision device via x509chain.
+     *
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @param provisionRequest provision request ({@link ProvisionRequest})
+     * @return {@link ProvisionResponse}
+     * @throws ProvisionFailedException if provision failed exception is thrown
+     */
     ProvisionResponse provisionDeviceViaX509Chain(DeviceProfile deviceProfile, ProvisionRequest provisionRequest) throws ProvisionFailedException;
 }

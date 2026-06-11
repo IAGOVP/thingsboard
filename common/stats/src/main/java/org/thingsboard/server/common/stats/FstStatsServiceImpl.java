@@ -23,10 +23,10 @@ import org.thingsboard.server.common.data.FstStatsService;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
-@Service
 /**
  * Default implementation of fst stats service.
  */
+@Service
 public class FstStatsServiceImpl implements FstStatsService {
     private final ConcurrentHashMap<String, StatsCounter> encodeCounters = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, StatsCounter> decodeCounters = new ConcurrentHashMap<>();

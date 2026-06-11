@@ -22,8 +22,11 @@ import lombok.EqualsAndHashCode;
 import org.thingsboard.server.common.data.EntityView;
 import org.thingsboard.server.dao.model.ModelConstants;
 /**
- * Entity view entity.
+ * JPA/Cassandra row model for view.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -38,6 +41,12 @@ public class EntityViewEntity extends AbstractEntityViewEntity<EntityView> {
     public EntityViewEntity(EntityView entityView) {
         super(entityView);
     }
+    /**
+     * To data.
+     *
+     * @return {@link EntityView}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityView toData() {

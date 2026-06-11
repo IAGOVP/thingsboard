@@ -23,9 +23,13 @@ import org.thingsboard.server.edqs.repo.TenantRepo;
 import org.thingsboard.server.edqs.util.RepositoryUtils;
 
 import java.util.regex.Pattern;
+
 /**
  * EDQS query processor for entity name entity filters.
+ *
+ * <p>Evaluates {@link org.thingsboard.server.common.data.query.EntityFilter} against a {@link org.thingsboard.server.edqs.repo.TenantRepo} (EDQS microservice — entity filter query processors).
  */
+
 public class EntityNameQueryProcessor extends AbstractSimpleQueryProcessor<EntityNameFilter> {
 
     private final Pattern pattern;
@@ -34,6 +38,13 @@ public class EntityNameQueryProcessor extends AbstractSimpleQueryProcessor<Entit
         super(repo, ctx, query, (EntityNameFilter) query.getEntityFilter(), ((EntityNameFilter) query.getEntityFilter()).getEntityType());
         pattern = RepositoryUtils.toEntityNameSqlLikePattern(filter.getEntityNameFilter());
     }
+    /**
+     * Matches.
+     *
+     * @param ed ed ({@link EntityData})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected boolean matches(EntityData ed) {

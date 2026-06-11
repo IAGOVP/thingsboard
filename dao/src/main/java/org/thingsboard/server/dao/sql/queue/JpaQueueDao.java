@@ -36,8 +36,11 @@ import org.thingsboard.server.dao.util.SqlDao;
 import java.util.List;
 import java.util.UUID;
 /**
- * JPA implementation of queue dao.
+ * JPA/PostgreSQL implementation of queue dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Slf4j
 @Component
@@ -46,55 +49,124 @@ public class JpaQueueDao extends JpaAbstractDao<QueueEntity, Queue> implements Q
 
     @Autowired
     private QueueRepository queueRepository;
+    /**
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Class<QueueEntity> getEntityClass() {
         return QueueEntity.class;
     }
+    /**
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected JpaRepository<QueueEntity, UUID> getRepository() {
         return queueRepository;
     }
+    /**
+     * Finds queue by tenant id and topic.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param topic topic ({@link String})
+     * @return {@link Queue}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Queue findQueueByTenantIdAndTopic(TenantId tenantId, String topic) {
         return DaoUtil.getData(queueRepository.findByTenantIdAndTopic(tenantId.getId(), topic));
     }
+    /**
+     * Finds queue by tenant id and name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return {@link Queue}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Queue findQueueByTenantIdAndName(TenantId tenantId, String name) {
         return DaoUtil.getData(queueRepository.findByTenantIdAndName(tenantId.getId(), name));
     }
+    /**
+     * Finds all by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<Queue> findAllByTenantId(TenantId tenantId) {
         List<QueueEntity> entities = queueRepository.findByTenantId(tenantId.getId());
         return DaoUtil.convertDataList(entities);
     }
+    /**
+     * Finds all main queues.
+     *
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<Queue> findAllMainQueues() {
         List<QueueEntity> entities = Lists.newArrayList(queueRepository.findAllByName(DataConstants.MAIN_QUEUE_NAME));
         return DaoUtil.convertDataList(entities);
     }
+    /**
+     * Finds all queues.
+     *
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<Queue> findAllQueues() {
         List<QueueEntity> entities = Lists.newArrayList(queueRepository.findAll());
         return DaoUtil.convertDataList(entities);
     }
+    /**
+     * Finds queues by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<Queue> findQueuesByTenantId(TenantId tenantId, PageLink pageLink) {
         return DaoUtil.toPageData(queueRepository
                 .findByTenantId(tenantId.getId(), pageLink.getTextSearch(), DaoUtil.toPageable(pageLink)));
     }
+    /**
+     * Finds all by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<Queue> findAllByTenantId(TenantId tenantId, PageLink pageLink) {
         return findQueuesByTenantId(tenantId, pageLink);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

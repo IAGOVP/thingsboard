@@ -19,8 +19,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.thingsboard.server.common.data.id.EntityId;
 /**
- * Cassandra partition cache key.
+ * Serializable cache key for cassandra partition entries (Cassandra telemetry and latest-value DAO (Cassandra time-series DAO and latest-value caches)).
  */
+
+
+
+
+
+
 
 @Data
 @AllArgsConstructor

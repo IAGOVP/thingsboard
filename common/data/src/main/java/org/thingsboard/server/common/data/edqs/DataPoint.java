@@ -18,25 +18,82 @@ package org.thingsboard.server.common.data.edqs;
 import org.thingsboard.server.common.data.kv.DataType;
 
 /**
- * data point contract.
+ * Typed attribute or latest-TS value stored in the EDQS index (data point).
  */
+
 public interface DataPoint extends Comparable<DataPoint> {
 
     String NOT_SUPPORTED = "Not supported!";
+   /**
+    * Returns ts.
+    *
+    * @return the long result
+    * @throws Exception if an unexpected error occurs during processing
+    */
+
 
     long getTs();
+  /**
+   * Returns type.
+   *
+   * @return {@link DataType}
+   * @throws Exception if an unexpected error occurs during processing
+   */
+
 
     DataType getType();
+ /**
+  * Returns str.
+  *
+  * @return {@link String}
+  * @throws Exception if an unexpected error occurs during processing
+  */
+
 
     String getStr();
+  /**
+   * Returns long.
+   *
+   * @return the long result
+   * @throws Exception if an unexpected error occurs during processing
+   */
+
 
     long getLong();
+ /**
+  * Returns double.
+  *
+  * @return the double result
+  * @throws Exception if an unexpected error occurs during processing
+  */
+
 
     double getDouble();
+   /**
+    * Returns bool.
+    *
+    * @return the boolean result
+    * @throws Exception if an unexpected error occurs during processing
+    */
+
 
     boolean getBool();
+     /**
+      * Returns json.
+      *
+      * @return {@link String}
+      * @throws Exception if an unexpected error occurs during processing
+      */
+
 
     String getJson();
+    /**
+     * Value to string.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     String valueToString();
 

@@ -31,16 +31,31 @@ public class StringDataEntry extends BasicKvEntry {
         super(key);
         this.value = value;
     }
+    /**
+     * Returns data type.
+     *
+     * @return {@link DataType}
+     */
 
     @Override
     public DataType getDataType() {
         return DataType.STRING;
     }
+    /**
+     * Returns str value.
+     *
+     * @return optional {@link String}, empty if not found
+     */
 
     @Override
     public Optional<String> getStrValue() {
         return Optional.ofNullable(value);
     }
+    /**
+     * Returns value.
+     *
+     * @return {@link Object}
+     */
 
     @Override
     public Object getValue() {
@@ -68,6 +83,11 @@ public class StringDataEntry extends BasicKvEntry {
     public String toString() {
         return "StringDataEntry{" + "value='" + value + '\'' + "} " + super.toString();
     }
+    /**
+     * Returns value as string.
+     *
+     * @return {@link String}
+     */
 
     @Override
     public String getValueAsString() {

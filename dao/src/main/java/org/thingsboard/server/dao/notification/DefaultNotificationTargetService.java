@@ -49,8 +49,14 @@ import java.util.Optional;
 
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
 /**
- * Default notification target service.
+ * Spring component for default notification target service (notification templates, targets, rules, and delivery requests).
  */
+
+
+
+
+
+
 
 @Service
 @Slf4j
@@ -62,11 +68,16 @@ public class DefaultNotificationTargetService extends AbstractEntityService impl
     private final NotificationRuleDao notificationRuleDao;
     private final UserService userService;
 
+    
     /**
-
-     * Persists notification target.
-
+     * Saves or persists notification target.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param notificationTarget notification target ({@link NotificationTarget})
+     * @return {@link NotificationTarget}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public NotificationTarget saveNotificationTarget(TenantId tenantId, NotificationTarget notificationTarget) {
@@ -81,66 +92,99 @@ public class DefaultNotificationTargetService extends AbstractEntityService impl
         }
     }
 
+    
     /**
-
-     * Loads notification target by id.
-
+     * Finds notification target by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @return {@link NotificationTarget}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public NotificationTarget findNotificationTargetById(TenantId tenantId, NotificationTargetId id) {
         return notificationTargetDao.findById(tenantId, id.getId());
     }
 
+    
     /**
-
-     * Loads notification targets by tenant id.
-
+     * Finds notification targets by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<NotificationTarget> findNotificationTargetsByTenantId(TenantId tenantId, PageLink pageLink) {
         return notificationTargetDao.findByTenantIdAndPageLink(tenantId, pageLink);
     }
 
+    
     /**
-
-     * Loads notification targets by tenant id and supported notification type.
-
+     * Finds notification targets by tenant id and supported notification type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param notificationType notification type ({@link NotificationType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<NotificationTarget> findNotificationTargetsByTenantIdAndSupportedNotificationType(TenantId tenantId, NotificationType notificationType, PageLink pageLink) {
         return notificationTargetDao.findByTenantIdAndSupportedNotificationTypeAndPageLink(tenantId, notificationType, pageLink);
     }
 
+    
     /**
-
-     * Loads notification targets by tenant id and ids.
-
+     * Finds notification targets by tenant id and ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ids ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<NotificationTarget> findNotificationTargetsByTenantIdAndIds(TenantId tenantId, List<NotificationTargetId> ids) {
         return notificationTargetDao.findByTenantIdAndIds(tenantId, ids);
     }
 
+    
     /**
-
-     * Loads notification targets by tenant id and users filter type.
-
+     * Finds notification targets by tenant id and users filter type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param filterType filter type ({@link UsersFilterType})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<NotificationTarget> findNotificationTargetsByTenantIdAndUsersFilterType(TenantId tenantId, UsersFilterType filterType) {
         return notificationTargetDao.findByTenantIdAndUsersFilterType(tenantId, filterType);
     }
 
+    
     /**
-
-     * Loads recipients for notification target.
-
+     * Finds recipients for notification target.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param targetId target id ({@link NotificationTargetId})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<User> findRecipientsForNotificationTarget(TenantId tenantId, CustomerId customerId, NotificationTargetId targetId, PageLink pageLink) {
@@ -150,11 +194,17 @@ public class DefaultNotificationTargetService extends AbstractEntityService impl
         return findRecipientsForNotificationTargetConfig(notificationTarget.getTenantId(), (PlatformUsersNotificationTargetConfig) configuration, pageLink);
     }
 
+    
     /**
-
-     * Loads recipients for notification target config.
-
+     * Finds recipients for notification target config.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param targetConfig target config ({@link PlatformUsersNotificationTargetConfig})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<User> findRecipientsForNotificationTargetConfig(TenantId tenantId, PlatformUsersNotificationTargetConfig targetConfig, PageLink pageLink) {
@@ -162,11 +212,18 @@ public class DefaultNotificationTargetService extends AbstractEntityService impl
         return userService.findUsersByFilter(tenantId, usersFilter, pageLink);
     }
 
+    
     /**
-
-     * Loads recipients for rule notification target config.
-
+     * Finds recipients for rule notification target config.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param targetConfig target config ({@link PlatformUsersNotificationTargetConfig})
+     * @param info info ({@link RuleOriginatedNotificationInfo})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<User> findRecipientsForRuleNotificationTargetConfig(TenantId tenantId, PlatformUsersNotificationTargetConfig targetConfig, RuleOriginatedNotificationInfo info, PageLink pageLink) {
@@ -199,22 +256,33 @@ public class DefaultNotificationTargetService extends AbstractEntityService impl
         return new PageData<>();
     }
 
+    
     /**
-
-     * Removes notification target by id.
-
+     * Deletes notification target by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteNotificationTargetById(TenantId tenantId, NotificationTargetId id) {
         deleteEntity(tenantId, id, false);
     }
 
+    
     /**
-
-     * Removes entity.
-
+     * Deletes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteEntity(TenantId tenantId, EntityId id, boolean force) {
@@ -229,55 +297,77 @@ public class DefaultNotificationTargetService extends AbstractEntityService impl
         eventPublisher.publishEvent(DeleteEntityEvent.builder().tenantId(tenantId).entityId(id).build());
     }
 
+    
     /**
-
-     * Removes notification targets by tenant id.
-
+     * Deletes notification targets by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteNotificationTargetsByTenantId(TenantId tenantId) {
         notificationTargetDao.removeByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Removes by tenant id.
-
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteByTenantId(TenantId tenantId) {
         deleteNotificationTargetsByTenantId(tenantId);
     }
 
+    
     /**
-
      * Counts notification targets by tenant id.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public long countNotificationTargetsByTenantId(TenantId tenantId) {
         return notificationTargetDao.countByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Loads entity.
-
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findNotificationTargetById(tenantId, new NotificationTargetId(entityId.getId())));
     }
 
+    
     /**
-
-     * Loads entity async.
-
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
@@ -285,11 +375,14 @@ public class DefaultNotificationTargetService extends AbstractEntityService impl
                 .transform(Optional::ofNullable, directExecutor());
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

@@ -22,8 +22,11 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 @ConditionalOnProperty(prefix = "database.ts", value = "type", havingValue = "sql")
-public @/**
- * DAO contract for sql ts.
+public @
+/**
+ * sql ts dao contract for the DAO layer.
  */
+
+
 interface SqlTsDao {
 }

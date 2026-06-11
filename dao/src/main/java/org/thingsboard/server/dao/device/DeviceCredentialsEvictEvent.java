@@ -17,8 +17,11 @@ package org.thingsboard.server.dao.device;
 
 import lombok.Data;
 /**
- * Device credentials evict event.
+ * Cache eviction event published when device credentials data changes.
+ *
+ * <p>Consumed by cache listeners to invalidate stale entries cluster-wide.
  */
+
 
 @Data
 public class DeviceCredentialsEvictEvent {

@@ -25,8 +25,11 @@ import lombok.Setter;
 import org.thingsboard.server.common.data.BaseData;
 import org.thingsboard.server.common.data.HasVersion;
 /**
- * Base versioned entity.
+ * JPA/Cassandra row model for base versioned.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)

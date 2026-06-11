@@ -20,14 +20,25 @@ import org.thingsboard.server.common.data.query.EntityTypeFilter;
 import org.thingsboard.server.edqs.data.EntityData;
 import org.thingsboard.server.edqs.query.EdqsQuery;
 import org.thingsboard.server.edqs.repo.TenantRepo;
+
 /**
  * EDQS query processor for entity type entity filters.
+ *
+ * <p>Evaluates {@link org.thingsboard.server.common.data.query.EntityFilter} against a {@link org.thingsboard.server.edqs.repo.TenantRepo} (EDQS microservice — entity filter query processors).
  */
+
 public class EntityTypeQueryProcessor extends AbstractSimpleQueryProcessor<EntityTypeFilter> {
 
     public EntityTypeQueryProcessor(TenantRepo repo, QueryContext ctx, EdqsQuery query) {
         super(repo, ctx, query, (EntityTypeFilter) query.getEntityFilter(), ((EntityTypeFilter) query.getEntityFilter()).getEntityType());
     }
+    /**
+     * Matches.
+     *
+     * @param ed ed ({@link EntityData})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected boolean matches(EntityData ed) {

@@ -45,6 +45,12 @@ public class SslCredentialsConfig {
         this.name = name;
         this.trustsOnly = trustsOnly;
     }
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @PostConstruct
     public void init() {
@@ -69,7 +75,12 @@ public class SslCredentialsConfig {
             log.info("{}: Skipping initialization of disabled SSL credentials.", name);
         }
     }
-
+    /**
+     * Handles certificate file changed.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void onCertificateFileChanged() {
         log.info("{}: Certificate file changed. Reloading SSL credentials...", name);
         try {
@@ -90,7 +101,13 @@ public class SslCredentialsConfig {
             }
         }
     }
-
+    /**
+     * Register reload callback.
+     *
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void registerReloadCallback(Runnable callback) {
         this.reloadCallbacks.add(callback);
     }

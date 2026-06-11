@@ -25,13 +25,41 @@ import java.util.Optional;
  * Service API for oauth2config template persistence and domain operations.
  */
 public interface OAuth2ConfigTemplateService {
+    /**
+     * Saves or persists client registration template.
+     *
+     * @param clientRegistrationTemplate client registration template ({@link OAuth2ClientRegistrationTemplate})
+     * @return {@link OAuth2ClientRegistrationTemplate}
+     */
     OAuth2ClientRegistrationTemplate saveClientRegistrationTemplate(OAuth2ClientRegistrationTemplate clientRegistrationTemplate);
 
+    /**
+     * Finds client registration template by provider id.
+     *
+     * @param providerId provider id ({@link String})
+     * @return optional {@link OAuth2ClientRegistrationTemplate}, empty if not found
+     */
     Optional<OAuth2ClientRegistrationTemplate> findClientRegistrationTemplateByProviderId(String providerId);
 
+    /**
+     * Finds client registration template by id.
+     *
+     * @param templateId template id ({@link OAuth2ClientRegistrationTemplateId})
+     * @return {@link OAuth2ClientRegistrationTemplate}
+     */
     OAuth2ClientRegistrationTemplate findClientRegistrationTemplateById(OAuth2ClientRegistrationTemplateId templateId);
 
+    /**
+     * Finds all client registration templates.
+     *
+     * @return {@link List}
+     */
     List<OAuth2ClientRegistrationTemplate> findAllClientRegistrationTemplates();
 
+    /**
+     * Deletes client registration template by id.
+     *
+     * @param templateId template id ({@link OAuth2ClientRegistrationTemplateId})
+     */
     void deleteClientRegistrationTemplateById(OAuth2ClientRegistrationTemplateId templateId);
 }

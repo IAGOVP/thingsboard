@@ -45,9 +45,19 @@ public abstract class TaskResult {
         this.success = success;
         this.discarded = discarded;
     }
+    /**
+     * Returns job type.
+     *
+     * @return {@link JobType}
+     */
 
     @JsonIgnore
     public abstract JobType getJobType();
+    /**
+     * Returns error.
+     *
+     * @return {@link String}
+     */
 
     public abstract String getError();
 

@@ -60,22 +60,49 @@ public class GatewayMetricsService {
     private void init() {
         scheduler.scheduleAtFixedRate(this::reportMetrics, metricsReportIntervalSec, metricsReportIntervalSec, TimeUnit.SECONDS);
     }
-
+    /**
+     * Processes the requested data.
+     *
+     * @param sessionInfo session info
+     * @param gatewayId gateway id ({@link DeviceId})
+     * @param data data ({@link List})
+     * @param serverReceiveTs server receive ts
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void process(TransportProtos.SessionInfoProto sessionInfo, DeviceId gatewayId, List<GatewayMetadata> data, long serverReceiveTs) {
         states.computeIfAbsent(gatewayId, k -> new GatewayMetricsState(sessionInfo)).update(data, serverReceiveTs);
     }
-
+    /**
+     * Handles device update.
+     *
+     * @param sessionInfo session info
+     * @param gatewayId gateway id ({@link DeviceId})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void onDeviceUpdate(TransportProtos.SessionInfoProto sessionInfo, DeviceId gatewayId) {
         var state = states.get(gatewayId);
         if (state != null) {
             state.updateSessionInfo(sessionInfo);
         }
     }
-
+    /**
+     * Handles device delete.
+     *
+     * @param deviceId target device identifier
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void onDeviceDelete(DeviceId deviceId) {
         states.remove(deviceId);
     }
-
+    /**
+     * Report metrics.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void reportMetrics() {
         if (states.isEmpty()) {
             return;

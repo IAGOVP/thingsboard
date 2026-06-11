@@ -27,8 +27,9 @@ import org.thingsboard.server.common.data.query.EntityData;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 /**
- * Edqs response.
+ * Kafka response payload with {@link org.thingsboard.server.common.data.edqs.query.QueryResult} rows or counts.
  */
+
 public class EdqsResponse {
 
     private PageData<EntityData> entityDataQueryResult;

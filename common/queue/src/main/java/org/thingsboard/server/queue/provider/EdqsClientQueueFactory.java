@@ -21,8 +21,9 @@ import org.thingsboard.server.queue.TbQueueProducer;
 import org.thingsboard.server.queue.TbQueueRequestTemplate;
 import org.thingsboard.server.queue.common.TbProtoQueueMsg;
 
+
 /**
- * edqs client queue factory contract.
+ * Factory for Entity Data Query Service client queue components.
  */
 public interface EdqsClientQueueFactory {
 

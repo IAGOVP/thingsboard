@@ -18,11 +18,17 @@ package org.thingsboard.server.dao.rule;
 import org.thingsboard.server.common.data.rule.RuleChainDetails;
 import org.thingsboard.server.dao.Dao;
 
+
 /**
 
- * Persistence contract for rule chain details (see JPA/Cassandra implementations).
+ * Persistence contract for rule chain details.
+
+ *
+
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (rule chains, nodes, and node state).
 
  */
+
 
 public interface RuleChainDetailsDao extends Dao<RuleChainDetails> {
 

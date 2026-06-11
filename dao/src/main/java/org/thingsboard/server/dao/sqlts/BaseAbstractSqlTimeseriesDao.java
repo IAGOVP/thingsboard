@@ -31,11 +31,25 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 /**
- * Base abstract sql timeseries dao.
+ * Base abstract sql timeseries dao (time-series SQL/Timescale persistence (SQL/Timescale time-series key-value storage)).
  */
+
+
+
+
+
+
 
 @Slf4j
 public abstract class BaseAbstractSqlTimeseriesDao extends JpaAbstractDaoListeningExecutorService {
+    /**
+     * Returns read ts kv query result future.
+     *
+     * @param query filter and sort query definition
+     * @param future future ({@link ListenableFuture})
+     * @return future completing with {@link ReadTsKvQueryResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected ListenableFuture<ReadTsKvQueryResult> getReadTsKvQueryResultFuture(ReadTsKvQuery query, ListenableFuture<List<Optional<? extends AbstractTsKvEntity>>> future) {
         return Futures.transform(future, new Function<>() {

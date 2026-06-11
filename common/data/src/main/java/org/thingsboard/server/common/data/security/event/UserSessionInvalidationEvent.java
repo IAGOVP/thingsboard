@@ -29,11 +29,21 @@ public class UserSessionInvalidationEvent extends UserAuthDataChangedEvent {
         this.sessionId = sessionId;
         this.ts = System.currentTimeMillis();
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link String}
+     */
 
     @Override
     public String getId() {
         return sessionId;
     }
+    /**
+     * Returns ts.
+     *
+     * @return the long result
+     */
 
     @Override
     public long getTs() {

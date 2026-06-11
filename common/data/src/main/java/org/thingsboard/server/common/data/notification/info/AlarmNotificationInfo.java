@@ -51,6 +51,11 @@ public class AlarmNotificationInfo implements RuleOriginatedNotificationInfo {
     private CustomerId alarmCustomerId;
     private DashboardId dashboardId;
     private Map<String, String> details;
+    /**
+     * Returns template data.
+     *
+     * @return {@link Map}
+     */
 
     @Override
     public Map<String, String> getTemplateData() {
@@ -66,16 +71,31 @@ public class AlarmNotificationInfo implements RuleOriginatedNotificationInfo {
         templateData.put("alarmOriginatorId", alarmOriginator.getId().toString());
         return templateData;
     }
+    /**
+     * Returns affected customer id.
+     *
+     * @return {@link CustomerId}
+     */
 
     @Override
     public CustomerId getAffectedCustomerId() {
         return alarmCustomerId;
     }
+    /**
+     * Returns state entity id.
+     *
+     * @return {@link EntityId}
+     */
 
     @Override
     public EntityId getStateEntityId() {
         return alarmOriginator;
     }
+    /**
+     * Returns dashboard id.
+     *
+     * @return {@link DashboardId}
+     */
 
     @Override
     public DashboardId getDashboardId() {

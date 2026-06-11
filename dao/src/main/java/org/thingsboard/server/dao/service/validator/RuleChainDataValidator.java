@@ -44,8 +44,11 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 /**
- * Rule chain data validator.
+ * Validates rule chain entities before persistence.
+ *
+ * <p>Enforces constraints, uniqueness, and referential integrity at the DAO layer.
  */
+
 
 @Component
 @Slf4j
@@ -58,22 +61,32 @@ public class RuleChainDataValidator extends DataValidator<RuleChain> {
     @Autowired
     private TenantService tenantService;
 
+    
     /**
-
-     * Validate create.
-
+     * Validates create.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param data data ({@link RuleChain})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateCreate(TenantId tenantId, RuleChain data) {
         validateNumberOfEntitiesPerTenant(tenantId, EntityType.RULE_CHAIN);
     }
 
+    
     /**
-
-     * Validate data impl.
-
+     * Validates data impl.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChain rule chain ({@link RuleChain})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateDataImpl(TenantId tenantId, RuleChain ruleChain) {
@@ -101,11 +114,15 @@ public class RuleChainDataValidator extends DataValidator<RuleChain> {
         }
     }
 
+    
     /**
-
-     * Validate meta data.
-
+     * Validates meta data.
+     *
+     * @param ruleChainMetaData rule chain meta data ({@link RuleChainMetaData})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     public static List<Throwable> validateMetaData(RuleChainMetaData ruleChainMetaData) {
         validateMetaDataFieldsAndConnections(ruleChainMetaData);
@@ -115,11 +132,15 @@ public class RuleChainDataValidator extends DataValidator<RuleChain> {
                 .collect(Collectors.toList());
     }
 
+    
     /**
-
-     * Validate meta data fields and connections.
-
+     * Validates meta data fields and connections.
+     *
+     * @param ruleChainMetaData rule chain meta data ({@link RuleChainMetaData})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     public static void validateMetaDataFieldsAndConnections(RuleChainMetaData ruleChainMetaData) {
         ConstraintValidator.validateFields(ruleChainMetaData);
@@ -128,11 +149,15 @@ public class RuleChainDataValidator extends DataValidator<RuleChain> {
         }
     }
 
+    
     /**
-
-     * Validate rule node.
-
+     * Validates rule node.
+     *
+     * @param ruleNode rule node ({@link RuleNode})
+     * @return {@link Throwable}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     public static Throwable validateRuleNode(RuleNode ruleNode) {
         String errorPrefix = "'" + ruleNode.getName() + "' node configuration is invalid: ";

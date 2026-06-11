@@ -23,7 +23,7 @@ import java.util.UUID;
 
 @Schema
 /**
- * Typed identifier for alarm comment.
+ * Typed identifier for an {@link AlarmComment} ({@link org.thingsboard.server.common.data.EntityType#ALARM_COMMENT}).
  */
 public class AlarmCommentId extends UUIDBased {
 
@@ -33,6 +33,12 @@ public class AlarmCommentId extends UUIDBased {
     public AlarmCommentId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * From string.
+     *
+     * @param commentId comment id ({@link String})
+     * @return {@link AlarmCommentId}
+     */
 
     public static AlarmCommentId fromString(String commentId) {
         return new AlarmCommentId(UUID.fromString(commentId));

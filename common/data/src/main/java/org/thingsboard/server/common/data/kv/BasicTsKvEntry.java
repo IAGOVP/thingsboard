@@ -43,51 +43,101 @@ public class BasicTsKvEntry implements TsKvEntry {
         this.kv = kv;
         this.version = version;
     }
+    /**
+     * Returns key.
+     *
+     * @return {@link String}
+     */
 
     @Override
     public String getKey() {
         return kv.getKey();
     }
+    /**
+     * Returns data type.
+     *
+     * @return {@link DataType}
+     */
 
     @Override
     public DataType getDataType() {
         return kv.getDataType();
     }
+    /**
+     * Returns str value.
+     *
+     * @return optional {@link String}, empty if not found
+     */
 
     @Override
     public Optional<String> getStrValue() {
         return kv.getStrValue();
     }
+    /**
+     * Returns long value.
+     *
+     * @return optional {@link Long}, empty if not found
+     */
 
     @Override
     public Optional<Long> getLongValue() {
         return kv.getLongValue();
     }
+    /**
+     * Returns boolean value.
+     *
+     * @return optional {@link Boolean}, empty if not found
+     */
 
     @Override
     public Optional<Boolean> getBooleanValue() {
         return kv.getBooleanValue();
     }
+    /**
+     * Returns double value.
+     *
+     * @return optional {@link Double}, empty if not found
+     */
 
     @Override
     public Optional<Double> getDoubleValue() {
         return kv.getDoubleValue();
     }
+    /**
+     * Returns json value.
+     *
+     * @return optional {@link String}, empty if not found
+     */
 
     @Override
     public Optional<String> getJsonValue() {
         return kv.getJsonValue();
     }
+    /**
+     * Returns value.
+     *
+     * @return {@link Object}
+     */
 
     @Override
     public Object getValue() {
         return kv.getValue();
     }
+    /**
+     * Returns value as string.
+     *
+     * @return {@link String}
+     */
 
     @Override
     public String getValueAsString() {
         return kv.getValueAsString();
     }
+    /**
+     * Returns data points.
+     *
+     * @return the int result
+     */
 
     @Override
     public int getDataPoints() {

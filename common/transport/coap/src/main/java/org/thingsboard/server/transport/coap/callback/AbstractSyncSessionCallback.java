@@ -39,31 +39,76 @@ public abstract class AbstractSyncSessionCallback implements SessionMsgListener 
     protected final TbCoapClientState state;
     protected final CoapExchange exchange;
     protected final Request request;
+    /**
+     * Handles get attributes response.
+     *
+     * @param getAttributesResponse get attributes response
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onGetAttributesResponse(TransportProtos.GetAttributeResponseMsg getAttributesResponse) {
         logUnsupportedCommandMessage(getAttributesResponse);
     }
+    /**
+     * Handles attribute update.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param attributeUpdateNotification attribute update notification
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onAttributeUpdate(UUID sessionId, TransportProtos.AttributeUpdateNotificationMsg attributeUpdateNotification) {
         logUnsupportedCommandMessage(attributeUpdateNotification);
     }
+    /**
+     * Handles remote session close command.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param sessionCloseNotification session close notification
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onRemoteSessionCloseCommand(UUID sessionId, TransportProtos.SessionCloseNotificationProto sessionCloseNotification) {
 
     }
+    /**
+     * Handles device deleted.
+     *
+     * @param deviceId target device identifier
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onDeviceDeleted(DeviceId deviceId) {
 
     }
+    /**
+     * Handles to device rpc request.
+     *
+     * @param sessionId session id ({@link UUID})
+     * @param toDeviceRequest to device request
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onToDeviceRpcRequest(UUID sessionId, TransportProtos.ToDeviceRpcRequestMsg toDeviceRequest) {
         logUnsupportedCommandMessage(toDeviceRequest);
     }
+    /**
+     * Handles to server rpc response.
+     *
+     * @param toServerResponse to server response
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onToServerRpcResponse(TransportProtos.ToServerRpcResponseMsg toServerResponse) {
@@ -73,7 +118,13 @@ public abstract class AbstractSyncSessionCallback implements SessionMsgListener 
     private void logUnsupportedCommandMessage(Object update) {
         log.trace("[{}] Ignore unsupported update: {}", state.getDeviceId(), update);
     }
-
+    /**
+     * Is con request.
+     *
+     * @param state state ({@link TbCoapObservationState})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     public static boolean isConRequest(TbCoapObservationState state) {
         if (state != null) {
             return state.getExchange().advanced().getRequest().isConfirmable();
@@ -81,13 +132,26 @@ public abstract class AbstractSyncSessionCallback implements SessionMsgListener 
             return false;
         }
     }
+    /**
+     * Is multicast request.
+     *
+     * @param state state ({@link TbCoapObservationState})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     public static boolean isMulticastRequest(TbCoapObservationState state) {
         if (state != null) {
             return state.getExchange().advanced().getRequest().isMulticast();
         }
         return false;
     }
-
+    /**
+     * Respond.
+     *
+     * @param response response ({@link Response})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     protected void respond(Response response) {
         response.getOptions().setContentFormat(TbCoapContentFormatUtil.getContentFormat(exchange.getRequestOptions().getContentFormat(), state.getContentFormat()));
         response.setConfirmable(exchange.advanced().getRequest().isConfirmable());

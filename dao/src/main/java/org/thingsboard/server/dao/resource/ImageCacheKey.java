@@ -22,8 +22,9 @@ import lombok.With;
 import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.gen.transport.TransportProtos.ImageCacheKeyProto;
 /**
- * Image cache key.
+ * Serializable cache key for image entries (tenant/system resources (images, JS modules, etc.)).
  */
+
 
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -35,18 +36,48 @@ public class ImageCacheKey {
     private final boolean preview;
 
     private final String publicResourceKey;
+    /**
+     * For image.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key attribute or cache key
+     * @param preview preview
+     * @return {@link ImageCacheKey}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static ImageCacheKey forImage(TenantId tenantId, String key, boolean preview) {
         return new ImageCacheKey(tenantId, key, preview, null);
     }
+    /**
+     * For image.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key attribute or cache key
+     * @return {@link ImageCacheKey}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static ImageCacheKey forImage(TenantId tenantId, String key) {
         return forImage(tenantId, key, false);
     }
+    /**
+     * For public image.
+     *
+     * @param publicKey public key ({@link String})
+     * @return {@link ImageCacheKey}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static ImageCacheKey forPublicImage(String publicKey) {
         return new ImageCacheKey(null, null, false, publicKey);
     }
+    /**
+     * To proto.
+     *
+     * @return {@link ImageCacheKeyProto}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public ImageCacheKeyProto toProto() {
         var msg = ImageCacheKeyProto.newBuilder();
@@ -57,6 +88,12 @@ public class ImageCacheKey {
         }
         return msg.build();
     }
+    /**
+     * Is public.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean isPublic() {
         return this.publicResourceKey != null;

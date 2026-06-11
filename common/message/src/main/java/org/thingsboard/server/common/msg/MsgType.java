@@ -21,8 +21,9 @@ import org.thingsboard.server.common.msg.queue.PartitionChangeMsg;
 import org.thingsboard.server.common.msg.queue.QueueToRuleEngineMsg;
 
 /**
- * Created by ashvayka on 15.03.18.
+ * Enumerates msg type values for message routing or payloads.
  */
+
 public enum MsgType {
 
     /**

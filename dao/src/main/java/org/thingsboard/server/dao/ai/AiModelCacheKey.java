@@ -25,11 +25,48 @@ import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * Ai model cache key.
+
+
+
+
+
+ * Serializable cache key for ai model entries (ThingsBoard DAO layer).
+
+
+
+
+
 
  */
+
+
+
+
+
+
 
 record AiModelCacheKey(UUID tenantId, UUID modelId) implements VersionedCacheKey {
 
@@ -48,6 +85,12 @@ record AiModelCacheKey(UUID tenantId, UUID modelId) implements VersionedCacheKey
     static AiModelCacheKey of(TenantId tenantId, AiModelId modelId) {
         return new AiModelCacheKey(tenantId.getId(), modelId.getId());
     }
+    /**
+     * Is versioned.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isVersioned() {

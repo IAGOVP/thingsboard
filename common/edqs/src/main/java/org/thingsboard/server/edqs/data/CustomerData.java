@@ -23,9 +23,13 @@ import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+
 /**
- * In-memory EDQS projection of customer entity fields and metadata.
+ * In-memory EDQS projection of customer entity fields.
+ *
+ * <p>Updated from {@link org.thingsboard.server.common.data.edqs.EdqsEvent} and used during query execution.
  */
+
 public class CustomerData extends BaseEntityData<CustomerFields> {
 
     private final ConcurrentMap<EntityType, ConcurrentMap<UUID, EntityData<?>>> entitiesById = new ConcurrentHashMap<>();
@@ -33,11 +37,24 @@ public class CustomerData extends BaseEntityData<CustomerFields> {
     public CustomerData(UUID entityId) {
         super(entityId);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {
         return EntityType.CUSTOMER;
     }
+    /**
+     * Returns entities.
+     *
+     * @param entityType entity type ({@link EntityType})
+     * @return {@link Collection}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Collection<EntityData<?>> getEntities(EntityType entityType) {
         var map = entitiesById.get(entityType);
@@ -47,10 +64,25 @@ public class CustomerData extends BaseEntityData<CustomerFields> {
             return map.values();
         }
     }
+    /**
+     * Add or update.
+     *
+     * @param ed ed ({@link EntityData})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void addOrUpdate(EntityData<?> ed) {
         entitiesById.computeIfAbsent(ed.getEntityType(), et -> new ConcurrentHashMap<>()).put(ed.getId(), ed);
     }
+    /**
+     * Removes the requested data.
+     *
+     * @param entityType entity type ({@link EntityType})
+     * @param entityId target entity identifier
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean remove(EntityType entityType, UUID entityId) {
         var map = entitiesById.get(entityType);

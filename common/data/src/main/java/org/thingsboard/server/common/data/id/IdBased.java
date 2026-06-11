@@ -21,7 +21,9 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import java.util.UUID;
 
 /**
- * Id based.
+ * Base type for data objects keyed by a typed {@link EntityId}.
+ *
+ * @param <I> concrete {@link UUIDBased} identifier type
  */
 public abstract class IdBased<I extends UUIDBased> implements HasId<I> {
 	
@@ -35,15 +37,30 @@ public abstract class IdBased<I extends UUIDBased> implements HasId<I> {
 		super();
 		this.id = id;
 	}
+	/**
+	 * Set id.
+	 *
+	 * @param id id ({@link I})
+	 */
 
     @JsonSetter
 	public void setId(I id) {
 		this.id = id;
 	}
+	/**
+	 * Returns id.
+	 *
+	 * @return {@link I}
+	 */
 
 	public I getId() {
 		return id;
 	}
+	/**
+	 * Returns uuid id.
+	 *
+	 * @return {@link UUID}
+	 */
 
 	@JsonIgnore
 	public UUID getUuidId() {

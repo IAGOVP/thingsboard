@@ -27,21 +27,83 @@ import org.thingsboard.server.dao.Dao;
 import java.util.Optional;
 
 /**
- * @author Andrew Shvayka
+ * Persistence contract for component descriptor.
+ *
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (rule-engine component descriptor registry).
  */
+
 public interface ComponentDescriptorDao extends Dao<ComponentDescriptor> {
+    /**
+     * Saves or persists if not exist.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param component component ({@link ComponentDescriptor})
+     * @return optional {@link ComponentDescriptor}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     Optional<ComponentDescriptor> saveIfNotExist(TenantId tenantId, ComponentDescriptor component);
+    /**
+     * Finds by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param componentId component id ({@link ComponentDescriptorId})
+     * @return {@link ComponentDescriptor}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     ComponentDescriptor findById(TenantId tenantId, ComponentDescriptorId componentId);
+    /**
+     * Finds by clazz.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param clazz clazz ({@link String})
+     * @return {@link ComponentDescriptor}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     ComponentDescriptor findByClazz(TenantId tenantId, String clazz);
+    /**
+     * Finds by type and page link.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link ComponentType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<ComponentDescriptor> findByTypeAndPageLink(TenantId tenantId, ComponentType type, PageLink pageLink);
+    /**
+     * Finds by scope and type and page link.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param scope attribute scope (SERVER_SCOPE, SHARED_SCOPE, etc.)
+     * @param type type ({@link ComponentType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<ComponentDescriptor> findByScopeAndTypeAndPageLink(TenantId tenantId, ComponentScope scope, ComponentType type, PageLink pageLink);
+    /**
+     * Deletes by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param componentId component id ({@link ComponentDescriptorId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void deleteById(TenantId tenantId, ComponentDescriptorId componentId);
+    /**
+     * Deletes by clazz.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param clazz clazz ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void deleteByClazz(TenantId tenantId, String clazz);
 

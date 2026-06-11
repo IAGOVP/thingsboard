@@ -44,8 +44,11 @@ import java.util.stream.Collectors;
 
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
 /**
- * Spring service implementing oauth2client API.
+ * Spring {@code @Service} implementing the oauth2client DAO API.
+ *
+ * <p>Delegates to {@code *Dao} implementations and manages cache eviction (OAuth2 client registration templates).
  */
+
 
 @Slf4j
 @Service("OAuth2ClientService")
@@ -58,11 +61,15 @@ public class OAuth2ClientServiceImpl extends AbstractEntityService implements OA
     @Autowired
     private DataValidator<OAuth2Client> oAuth2ClientDataValidator;
 
+    
     /**
-
-     * Loads oauth2client login infos by domain name.
-
+     * Finds oauth2client login infos by domain name.
+     *
+     * @param domainName domain name ({@link String})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<OAuth2ClientLoginInfo> findOAuth2ClientLoginInfosByDomainName(String domainName) {
@@ -73,11 +80,16 @@ public class OAuth2ClientServiceImpl extends AbstractEntityService implements OA
                 .collect(Collectors.toList());
     }
 
+    
     /**
-
-     * Loads oauth2client login infos by mobile pkg name and platform type.
-
+     * Finds oauth2client login infos by mobile pkg name and platform type.
+     *
+     * @param pkgName pkg name ({@link String})
+     * @param platformType platform type ({@link PlatformType})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<OAuth2ClientLoginInfo> findOAuth2ClientLoginInfosByMobilePkgNameAndPlatformType(String pkgName, PlatformType platformType) {
@@ -88,11 +100,16 @@ public class OAuth2ClientServiceImpl extends AbstractEntityService implements OA
                 .collect(Collectors.toList());
     }
 
+    
     /**
-
-     * Persists oauth2client.
-
+     * Saves or persists oauth2client.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param oAuth2Client o auth2client ({@link OAuth2Client})
+     * @return {@link OAuth2Client}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public OAuth2Client saveOAuth2Client(TenantId tenantId, OAuth2Client oAuth2Client) {
@@ -103,11 +120,16 @@ public class OAuth2ClientServiceImpl extends AbstractEntityService implements OA
         return savedOauth2Client;
     }
 
+    
     /**
-
-     * Loads oauth2client by id.
-
+     * Finds oauth2client by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param oAuth2ClientId o auth2client id ({@link OAuth2ClientId})
+     * @return {@link OAuth2Client}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public OAuth2Client findOAuth2ClientById(TenantId tenantId, OAuth2ClientId oAuth2ClientId) {
@@ -115,11 +137,15 @@ public class OAuth2ClientServiceImpl extends AbstractEntityService implements OA
         return oauth2ClientDao.findById(tenantId, oAuth2ClientId.getId());
     }
 
+    
     /**
-
-     * Loads oauth2clients by tenant id.
-
+     * Finds oauth2clients by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<OAuth2Client> findOAuth2ClientsByTenantId(TenantId tenantId) {
@@ -127,11 +153,17 @@ public class OAuth2ClientServiceImpl extends AbstractEntityService implements OA
         return oauth2ClientDao.findByTenantId(tenantId.getId(), new PageLink(Integer.MAX_VALUE)).getData();
     }
 
+    
     /**
-
-     * Loads app secret.
-
+     * Finds app secret.
+     *
+     * @param oAuth2ClientId o auth2client id ({@link OAuth2ClientId})
+     * @param pkgName pkg name ({@link String})
+     * @param platformType platform type ({@link PlatformType})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public String findAppSecret(OAuth2ClientId oAuth2ClientId, String pkgName, PlatformType platformType) {
@@ -140,11 +172,16 @@ public class OAuth2ClientServiceImpl extends AbstractEntityService implements OA
         return oauth2ClientDao.findAppSecret(oAuth2ClientId.getId(), pkgName, platformType);
     }
 
+    
     /**
-
-     * Removes oauth2client by id.
-
+     * Deletes oauth2client by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param oAuth2ClientId o auth2client id ({@link OAuth2ClientId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteOAuth2ClientById(TenantId tenantId, OAuth2ClientId oAuth2ClientId) {
@@ -156,11 +193,15 @@ public class OAuth2ClientServiceImpl extends AbstractEntityService implements OA
                 .build());
     }
 
+    
     /**
-
-     * Removes oauth2clients by tenant id.
-
+     * Deletes oauth2clients by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteOauth2ClientsByTenantId(TenantId tenantId) {
@@ -168,11 +209,16 @@ public class OAuth2ClientServiceImpl extends AbstractEntityService implements OA
         oauth2ClientDao.deleteByTenantId(tenantId.getId());
     }
 
+    
     /**
-
-     * Loads oauth2client infos by tenant id.
-
+     * Finds oauth2client infos by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<OAuth2ClientInfo> findOAuth2ClientInfosByTenantId(TenantId tenantId, PageLink pageLink) {
@@ -181,11 +227,16 @@ public class OAuth2ClientServiceImpl extends AbstractEntityService implements OA
         return clients.mapData(OAuth2ClientInfo::new);
     }
 
+    
     /**
-
-     * Loads oauth2client infos by ids.
-
+     * Finds oauth2client infos by ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param oAuth2ClientIds o auth2client ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<OAuth2ClientInfo> findOAuth2ClientInfosByIds(TenantId tenantId, List<OAuth2ClientId> oAuth2ClientIds) {
@@ -197,11 +248,16 @@ public class OAuth2ClientServiceImpl extends AbstractEntityService implements OA
                 .collect(Collectors.toList());
     }
 
+    
     /**
-
      * Is propagate oauth2client to edge.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param oAuth2ClientId o auth2client id ({@link OAuth2ClientId})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public boolean isPropagateOAuth2ClientToEdge(TenantId tenantId, OAuth2ClientId oAuth2ClientId) {
@@ -209,33 +265,47 @@ public class OAuth2ClientServiceImpl extends AbstractEntityService implements OA
         return oauth2ClientDao.isPropagateToEdge(tenantId, oAuth2ClientId.getId());
     }
 
+    
     /**
-
-     * Removes by tenant id.
-
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteByTenantId(TenantId tenantId) {
         deleteOauth2ClientsByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Loads entity.
-
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findOAuth2ClientById(tenantId, new OAuth2ClientId(entityId.getId())));
     }
 
+    
     /**
-
-     * Loads entity async.
-
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
@@ -243,11 +313,17 @@ public class OAuth2ClientServiceImpl extends AbstractEntityService implements OA
                 .transform(Optional::ofNullable, directExecutor());
     }
 
+    
     /**
-
-     * Removes entity.
-
+     * Deletes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -255,11 +331,14 @@ public class OAuth2ClientServiceImpl extends AbstractEntityService implements OA
         deleteOAuth2ClientById(tenantId, (OAuth2ClientId) id);
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

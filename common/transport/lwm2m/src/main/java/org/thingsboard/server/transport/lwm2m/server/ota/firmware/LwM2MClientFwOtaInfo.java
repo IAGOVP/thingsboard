@@ -40,13 +40,25 @@ public class LwM2MClientFwOtaInfo extends LwM2MClientOtaInfo<LwM2MFirmwareUpdate
     public LwM2MClientFwOtaInfo(String endpoint, String baseUrl, LwM2MFirmwareUpdateStrategy strategy) {
         super(endpoint, baseUrl, strategy);
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link OtaPackageType}
+     * @throws Exception on processing failure
+     */
 
     @JsonIgnore
     @Override
     public OtaPackageType getType() {
         return OtaPackageType.FIRMWARE;
     }
-
+    /**
+     * Updates the requested data.
+     *
+     * @param result result ({@link FirmwareUpdateResult})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void update(FirmwareUpdateResult result) {
         this.result = result;
 

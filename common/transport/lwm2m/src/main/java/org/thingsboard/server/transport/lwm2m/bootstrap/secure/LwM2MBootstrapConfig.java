@@ -44,19 +44,19 @@ public class LwM2MBootstrapConfig implements Serializable {
 
     List<LwM2MBootstrapServerCredential> serverConfiguration;
 
-    /** -bootstrapServer, lwm2mServer
+    /**
      * interface ServerSecurityConfig
-     *   host?: string,
-     *   port?: number,
-     *   isBootstrapServer?: boolean,
-     *   securityMode: string,
-     *   clientPublicKeyOrId?: string,
-     *   clientSecretKey?: string,
-     *   serverPublicKey?: string;
-     *   clientHoldOffTime?: number,
-     *   serverId?: number,
-     *   bootstrapServerAccountTimeout: number
-     * */
+     * host?: string,
+     * port?: number,
+     * isBootstrapServer?: boolean,
+     * securityMode: string,
+     * clientPublicKeyOrId?: string,
+     * clientSecretKey?: string,
+     * serverPublicKey?: string;
+     * clientHoldOffTime?: number,
+     * serverId?: number,
+     * bootstrapServerAccountTimeout: number
+     */
     @Getter
     @Setter
     private LwM2MBootstrapClientCredential bootstrapServer;
@@ -73,6 +73,12 @@ public class LwM2MBootstrapConfig implements Serializable {
         this.lwm2mServer = lwm2mClientServer;
 
     }
+    /**
+     * Returns lw m2mbootstrap config.
+     *
+     * @return {@link BootstrapConfig}
+     * @throws Exception on processing failure
+     */
 
     @JsonIgnore
     public BootstrapConfig getLwM2MBootstrapConfig() {
@@ -86,10 +92,9 @@ public class LwM2MBootstrapConfig implements Serializable {
             configBs.security.put(id, serverSecurity);
             id++;
         }
-        /** in LwM2mDefaultBootstrapSessionManager -> initTasks
+        /**
          * Delete all security/config objects if update bootstrap server and lwm2m server
-         * if other: del or update only instances */
-
+         */
         return configBs;
     }
 

@@ -30,38 +30,48 @@ import java.util.function.Predicate;
  */
 public interface TbActorSystem {
 
+    /** Shared scheduler for actor retries and delayed tasks. */
     ScheduledExecutorService getScheduler();
 
     /** Binds a thread pool to a dispatcher id used when creating actors. */
     void createDispatcher(String dispatcherId, ExecutorService executor);
 
+    /** Shuts down the executor and unregisters the dispatcher. */
     void destroyDispatcher(String dispatcherId);
 
+    /** Returns the registered actor reference, or {@code null} if not found. */
     TbActorRef getActor(TbActorId actorId);
 
-    /** Creates a top-level actor (e.g. tenant calculated-field manager). */
+    /** Creates a top-level actor (e.g. tenant or app root). */
     TbActorRef createRootActor(String dispatcherId, TbActorCreator creator);
 
-    /** Creates a child actor under {@code parent} (e.g. device under tenant). */
+    /** Creates a child actor under {@code parent}. */
     TbActorRef createChildActor(String dispatcherId, TbActorCreator creator, TbActorId parent);
 
     /** Enqueues a message on the target actor's mailbox (normal priority). */
     void tell(TbActorId target, TbActorMsg actorMsg);
 
-    /** Enqueues a high-priority message (processed before normal queue). */
+    /** Enqueues a high-priority message processed before normal queue traffic. */
     void tellWithHighPriority(TbActorId target, TbActorMsg actorMsg);
 
+    /** Stops the given actor and destroys its mailbox. */
     void stop(TbActorRef actorRef);
 
+    /** Stops the actor identified by {@code actorId}. */
     void stop(TbActorId actorId);
 
+    /** Stops all actors and shuts down the actor system. */
     void stop();
 
+    /** Broadcasts a message to all direct child actors. */
     void broadcastToChildren(TbActorId parent, TbActorMsg msg);
 
+    /** Broadcasts a message to all children, optionally at high priority. */
     void broadcastToChildren(TbActorId parent, TbActorMsg msg, boolean highPriority);
 
+    /** Broadcasts a message to child actors matching {@code childFilter}. */
     void broadcastToChildren(TbActorId parent, Predicate<TbActorId> childFilter, TbActorMsg msg);
 
+    /** Returns child actor ids matching {@code childFilter}. */
     List<TbActorId> filterChildren(TbActorId parent, Predicate<TbActorId> childFilter);
 }

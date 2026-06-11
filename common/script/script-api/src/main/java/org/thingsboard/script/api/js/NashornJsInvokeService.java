@@ -44,12 +44,12 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.locks.ReentrantLock;
 
-@Slf4j
-@ConditionalOnProperty(prefix = "js", value = "evaluator", havingValue = "local", matchIfMissing = true)
-@Service
 /**
  * Nashorn js invoke service.
  */
+@Slf4j
+@ConditionalOnProperty(prefix = "js", value = "evaluator", havingValue = "local", matchIfMissing = true)
+@Service
 public class NashornJsInvokeService extends AbstractJsInvokeService {
 
     private NashornSandbox sandbox;

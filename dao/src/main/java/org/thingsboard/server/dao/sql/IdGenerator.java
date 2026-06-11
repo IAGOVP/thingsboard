@@ -30,11 +30,27 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.EnumSet;
 /**
- * Id generator.
+ * Id generator (JPA/PostgreSQL persistence layer (JPA repositories and PostgreSQL DAO implementations)).
  */
+
+
+
+
+
+
 
 @Slf4j
 public class IdGenerator implements BeforeExecutionGenerator {
+    /**
+     * Generate.
+     *
+     * @param session session ({@link SharedSessionContractImplementor})
+     * @param owner owner ({@link Object})
+     * @param currentValue current value ({@link Object})
+     * @param eventType event type ({@link EventType})
+     * @return {@link Object}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Object generate(SharedSessionContractImplementor session, Object owner, Object currentValue, EventType eventType) {
@@ -43,11 +59,23 @@ public class IdGenerator implements BeforeExecutionGenerator {
         }
         return Uuids.timeBased();
     }
+    /**
+     * Allow assigned identifiers.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean allowAssignedIdentifiers() {
         return true;
     }
+    /**
+     * Returns event types.
+     *
+     * @return {@link EnumSet}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EnumSet<EventType> getEventTypes() {

@@ -27,13 +27,49 @@ import org.thingsboard.server.common.data.rule.RuleNodeState;
  */
 public interface RuleNodeStateService {
 
+    /**
+     * Finds by rule node id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleNodeId rule node id ({@link RuleNodeId})
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<RuleNodeState> findByRuleNodeId(TenantId tenantId, RuleNodeId ruleNodeId, PageLink pageLink);
 
+    /**
+     * Finds by rule node id and entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleNodeId rule node id ({@link RuleNodeId})
+     * @param entityId entity id ({@link EntityId})
+     * @return {@link RuleNodeState}
+     */
     RuleNodeState findByRuleNodeIdAndEntityId(TenantId tenantId, RuleNodeId ruleNodeId, EntityId entityId);
 
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleNodeState rule node state ({@link RuleNodeState})
+     * @return {@link RuleNodeState}
+     */
     RuleNodeState save(TenantId tenantId, RuleNodeState ruleNodeState);
 
+    /**
+     * Removes by rule node id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param selfId self id ({@link RuleNodeId})
+     */
     void removeByRuleNodeId(TenantId tenantId, RuleNodeId selfId);
 
+    /**
+     * Removes by rule node id and entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param selfId self id ({@link RuleNodeId})
+     * @param entityId entity id ({@link EntityId})
+     */
     void removeByRuleNodeIdAndEntityId(TenantId tenantId, RuleNodeId selfId, EntityId entityId);
 }

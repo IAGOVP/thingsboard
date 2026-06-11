@@ -32,11 +32,21 @@ public enum PulseCounterType {
         this.prefix = prefix;
         this.majorResolution = majorResolution;
     }
-
+    /**
+     * Returns prefix.
+     *
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
     public String getPrefix() {
         return prefix;
     }
-
+    /**
+     * Returns major resolution.
+     *
+     * @return monotonically increasing MQTT packet identifier
+     * @throws Exception on processing failure
+     */
     public int getMajorResolution() {
         return majorResolution;
     }

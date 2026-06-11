@@ -46,6 +46,11 @@ import static org.thingsboard.server.common.data.ai.dto.TbContent.TbTextContent;
 public sealed interface TbContent permits TbTextContent {
 
     TbContentType contentType();
+/**
+ * To lang chain content.
+ *
+ * @return {@link Content}
+ */
 
     Content toLangChainContent();
 
@@ -59,6 +64,14 @@ public sealed interface TbContent permits TbTextContent {
             description = "Text-based content part of a user's prompt",
             allOf = TbContent.class
     )
+    /**
+     * Tb text content.
+     *
+     * @param Schema.RequiredMode.REQUIRED schema.required mode.required
+     * @param content" content"
+     * @param text text ({@link String})
+     * @return the record value
+     */
     record TbTextContent(
             @NotBlank
             @Schema(
@@ -68,11 +81,21 @@ public sealed interface TbContent permits TbTextContent {
             )
             String text
     ) implements TbContent {
+        /**
+         * Content type.
+         *
+         * @return {@link TbContentType}
+         */
 
         @Override
         public TbContentType contentType() {
             return TbContentType.TEXT;
         }
+        /**
+         * To lang chain content.
+         *
+         * @return {@link Content}
+         */
 
         @Override
         public Content toLangChainContent() {

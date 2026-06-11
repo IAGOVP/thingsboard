@@ -43,9 +43,18 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * cf argument dynamic source configuration contract.
  */
 public interface CfArgumentDynamicSourceConfiguration {
+    /**
+     * Returns type.
+     *
+     * @return {@link CFArgumentDynamicSourceType}
+     */
 
     @JsonIgnore
     CFArgumentDynamicSourceType getType();
+/**
+ * Validates the requested data.
+ *
+ */
 
     default void validate() {}
 

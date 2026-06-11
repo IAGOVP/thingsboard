@@ -76,6 +76,14 @@ public class LwM2MBootstrapConfigStoreTaskProvider implements LwM2MBootstrapTask
         readWriteLock = new ReentrantReadWriteLock();
         writeLock = readWriteLock.writeLock();
     }
+    /**
+     * Returns tasks.
+     *
+     * @param session session ({@link BootstrapSession})
+     * @param previousResponse previous response ({@link List})
+     * @return {@link Tasks}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public Tasks getTasks(BootstrapSession session, List<LwM2mResponse> previousResponse) {
@@ -124,16 +132,25 @@ public class LwM2MBootstrapConfigStoreTaskProvider implements LwM2MBootstrapTask
             return tasks;
         }
     }
-
+    /**
+     * Should start with discover.
+     *
+     * @param config config ({@link BootstrapConfig})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     protected boolean shouldStartWithDiscover(BootstrapConfig config) {
         return config.autoIdForSecurityObject;
     }
 
+    
     /**
-     * "Short Server ID": This Resource MUST be set when the Bootstrap-Server Resource has a value of 'false'.
-     * "Short Lwm2m Server ID":
-     * - Link Instance (lwm2m Server) hase linkParams with key = "ssid" value = "shortId" (ver lvm2m = 1.1).
-     * The values ID:0 values MUST NOT be used for identifying the LwM2M Server only BS.
+     * Finds instances id old by server id.
+     *
+     * @param discoverResponses discover responses ({@link BootstrapDiscoverResponse})
+     * @param endpoint endpoint ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
      */
     protected void findInstancesIdOldByServerId(BootstrapDiscoverResponse discoverResponses, String endpoint) {
         log.info("Object after discover: [{}]", Arrays.toString(discoverResponses.getObjectLinks()));
@@ -165,7 +182,12 @@ public class LwM2MBootstrapConfigStoreTaskProvider implements LwM2MBootstrapTask
             }
         }
     }
-
+    /**
+     * Returns store.
+     *
+     * @return {@link BootstrapConfigStore}
+     * @throws Exception on processing failure
+     */
     public BootstrapConfigStore getStore() {
         return this.store;
     }
@@ -189,21 +211,16 @@ public class LwM2MBootstrapConfigStoreTaskProvider implements LwM2MBootstrapTask
     }
 
 
-    /** Map<serverId ("Short Server ID"), InstanceId> => LwM2MBootstrapClientInstanceIds
-     * 1) Both
-     * - (Short) Server ID == null bs)
-     *  SECURITY = 0; InstanceId = 0
-     * - Short Server ID == 1 - 65534 lwm2m)
-     *  SECURITY = 0; InstanceId = 1
-     *  SERVER = 1; InstanceId = 0
-     * 2) Only BS Server
-     * - Short Server ID == null bs)
-     *  SECURITY = 0; InstanceId = 0
-     * 3) Only Lwm2m Server
-     * - Short Server ID == 1 - 65534 lwm2m)
-     *  SECURITY = 0; InstanceId = 0
-     *  SERVER = 1; InstanceId = 0
-     * */
+    
+    /**
+     * To requests.
+     *
+     * @param bootstrapConfigNew bootstrap config new ({@link BootstrapConfig})
+     * @param contentFormat content format ({@link ContentFormat})
+     * @param endpoint endpoint ({@link String})
+     * @return {@link List}
+     * @throws Exception on processing failure
+     */
     public List<BootstrapDownlinkRequest<? extends LwM2mResponse>> toRequests(BootstrapConfig bootstrapConfigNew,
                                                                               ContentFormat contentFormat,
                                                                               String endpoint) {
@@ -226,7 +243,7 @@ public class LwM2MBootstrapConfigStoreTaskProvider implements LwM2MBootstrapTask
             }
         }
 
-        /** lwm2m servers: Multiple instances of lwm2m servers can run simultaneously by SHORT_ID
+        /**
         if update -> delete and write by InstanceId
         if new -> only write with InstanceIdMax++
          */
@@ -308,6 +325,13 @@ public class LwM2MBootstrapConfigStoreTaskProvider implements LwM2MBootstrapTask
     private boolean validateLwm2mShortServerId(int id){
         return  id >= PRIMARY_LWM2M_SERVER.getId() && id <= LWM2M_SERVER_MAX.getId();
     }
+    /**
+     * Removes the requested data.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void remove(String endpoint) {
@@ -318,6 +342,13 @@ public class LwM2MBootstrapConfigStoreTaskProvider implements LwM2MBootstrapTask
             writeLock.unlock();
         }
     }
+    /**
+     * Put.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return nothing
+     * @throws InvalidConfigurationException if invalid configuration exception is thrown during processing
+     */
 
     @Override
     public void put(String endpoint) throws InvalidConfigurationException {

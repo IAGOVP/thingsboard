@@ -15,14 +15,6 @@
  */
 package org.thingsboard.server.queue.common.consumer;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-import org.thingsboard.common.util.ThingsBoardThreadFactory;
-import org.thingsboard.server.common.msg.queue.TopicPartitionInfo;
-import org.thingsboard.server.queue.TbQueueConsumer;
-import org.thingsboard.server.queue.TbQueueMsg;
-
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -32,10 +24,20 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
 
-@Slf4j
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.thingsboard.common.util.ThingsBoardThreadFactory;
+import org.thingsboard.server.common.msg.queue.TopicPartitionInfo;
+import org.thingsboard.server.queue.TbQueueConsumer;
+import org.thingsboard.server.queue.TbQueueMsg;
+
+
 /**
- * Queue consumer manager.
+ * Interface for starting and stopping a set of queue consumer tasks.
  */
+@Slf4j
 public class QueueConsumerManager<M extends TbQueueMsg> {
 
     private final String name;

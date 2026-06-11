@@ -47,6 +47,11 @@ public class EntityActionNotificationInfo implements RuleOriginatedNotificationI
     private String userEmail;
     private String userFirstName;
     private String userLastName;
+    /**
+     * Returns template data.
+     *
+     * @return {@link Map}
+     */
 
     @Override
     public Map<String, String> getTemplateData() {
@@ -62,11 +67,21 @@ public class EntityActionNotificationInfo implements RuleOriginatedNotificationI
                 "userLastName", userLastName
         );
     }
+    /**
+     * Returns affected customer id.
+     *
+     * @return {@link CustomerId}
+     */
 
     @Override
     public CustomerId getAffectedCustomerId() {
         return entityCustomerId;
     }
+    /**
+     * Returns state entity id.
+     *
+     * @return {@link EntityId}
+     */
 
     @Override
     public EntityId getStateEntityId() {

@@ -71,6 +71,11 @@ import java.util.UUID;
 public interface NotificationRuleRecipientsConfig extends Serializable {
 
     NotificationRuleTriggerType getTriggerType();
+    /**
+     * Returns targets table.
+     *
+     * @return {@link Map}
+     */
 
     @JsonIgnore
     Map<Integer, List<UUID>> getTargetsTable();

@@ -78,12 +78,22 @@ public class AuditLog extends BaseData<AuditLogId> {
         this.actionStatus = auditLog.getActionStatus();
         this.actionFailureDetails = auditLog.getActionFailureDetails();
     }
+    /**
+     * Returns created time.
+     *
+     * @return the long result
+     */
 
     @Schema(description = "Timestamp of the auditLog creation, in milliseconds", example = "1609459200000", accessMode = Schema.AccessMode.READ_ONLY)
     @Override
     public long getCreatedTime() {
         return super.getCreatedTime();
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link AuditLogId}
+     */
 
     @Schema(description = "JSON object with the auditLog Id")
     @Override

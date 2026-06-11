@@ -16,12 +16,13 @@
 package org.thingsboard.script.api.tbel;
 
 /**
- * tbel cf object contract.
+ * Contract for tbel cf object.
  */
 public interface TbelCfObject {
 
     long OBJ_SIZE = 32L; // Approximate calculation;
 
+    /** Memory size. */
     long memorySize();
 
 }

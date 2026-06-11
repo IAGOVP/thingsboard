@@ -21,6 +21,11 @@ package org.thingsboard.server.common.data.security;
 public interface DeviceCredentialsFilter {
 
     String getCredentialsId();
+/**
+ * Returns credentials type.
+ *
+ * @return {@link DeviceCredentialsType}
+ */
 
     DeviceCredentialsType getCredentialsType();
 

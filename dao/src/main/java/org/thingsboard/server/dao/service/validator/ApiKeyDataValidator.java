@@ -25,8 +25,11 @@ import org.thingsboard.server.dao.service.DataValidator;
 import org.thingsboard.server.dao.tenant.TenantService;
 import org.thingsboard.server.dao.user.UserService;
 /**
- * Api key data validator.
+ * Validates api key entities before persistence.
+ *
+ * <p>Enforces constraints, uniqueness, and referential integrity at the DAO layer.
  */
+
 
 @Component
 @RequiredArgsConstructor
@@ -36,11 +39,16 @@ public class ApiKeyDataValidator extends DataValidator<ApiKey> {
     private final TenantService tenantService;
     private final UserService userService;
 
+    
     /**
-
-     * Validate data impl.
-
+     * Validates data impl.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param apiKey api key ({@link ApiKey})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateDataImpl(TenantId tenantId, ApiKey apiKey) {
@@ -68,11 +76,16 @@ public class ApiKeyDataValidator extends DataValidator<ApiKey> {
         }
     }
 
+    
     /**
-
-     * Validate update.
-
+     * Validates update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param apiKey api key ({@link ApiKey})
+     * @return {@link ApiKey}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected ApiKey validateUpdate(TenantId tenantId, ApiKey apiKey) {

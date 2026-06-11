@@ -68,6 +68,7 @@ public class TbelCfTsRollingArg implements TbelCfArg, Iterable<TbelCfTsDoubleVal
     }
 
     public double max() {
+        /** Max. */
         return max(true);
     }
 
@@ -90,6 +91,7 @@ public class TbelCfTsRollingArg implements TbelCfArg, Iterable<TbelCfTsDoubleVal
     }
 
     public double min() {
+        /** Min. */
         return min(true);
     }
 
@@ -112,14 +114,17 @@ public class TbelCfTsRollingArg implements TbelCfArg, Iterable<TbelCfTsDoubleVal
     }
 
     public double avg() {
+        /** Avg. */
         return avg(true);
     }
 
     public double avg(boolean ignoreNaN) {
+        /** Mean. */
         return mean(ignoreNaN);
     }
 
     public double mean() {
+        /** Mean. */
         return mean(true);
     }
 
@@ -132,6 +137,7 @@ public class TbelCfTsRollingArg implements TbelCfArg, Iterable<TbelCfTsDoubleVal
     }
 
     public double std() {
+        /** Std. */
         return std(true);
     }
 
@@ -160,6 +166,7 @@ public class TbelCfTsRollingArg implements TbelCfArg, Iterable<TbelCfTsDoubleVal
     }
 
     public double median() {
+        /** Median. */
         return median(true);
     }
 
@@ -188,6 +195,7 @@ public class TbelCfTsRollingArg implements TbelCfArg, Iterable<TbelCfTsDoubleVal
     }
 
     public int count() {
+        /** Count. */
         return count(true);
     }
 
@@ -205,6 +213,7 @@ public class TbelCfTsRollingArg implements TbelCfArg, Iterable<TbelCfTsDoubleVal
     }
 
     public double last() {
+        /** Last. */
         return last(true);
     }
 
@@ -227,6 +236,7 @@ public class TbelCfTsRollingArg implements TbelCfArg, Iterable<TbelCfTsDoubleVal
     }
 
     public double first() {
+        /** First. */
         return first(true);
     }
 
@@ -249,6 +259,7 @@ public class TbelCfTsRollingArg implements TbelCfArg, Iterable<TbelCfTsDoubleVal
     }
 
     public double sum() {
+        /** Sum. */
         return sum(true);
     }
 
@@ -280,6 +291,7 @@ public class TbelCfTsRollingArg implements TbelCfArg, Iterable<TbelCfTsDoubleVal
     }
 
     public TbelCfTsRollingData mergeAll(List<TbelCfTsRollingArg> others) {
+        /** Merge all. */
         return mergeAll(others, null);
     }
 
@@ -351,7 +363,6 @@ public class TbelCfTsRollingArg implements TbelCfArg, Iterable<TbelCfTsDoubleVal
 
         return new TbelCfTsRollingData(timeWindow != null ? timeWindow : new TbTimeWindow(startTs, endTs), data);
     }
-
 
     @JsonIgnore
     public int getSize() {

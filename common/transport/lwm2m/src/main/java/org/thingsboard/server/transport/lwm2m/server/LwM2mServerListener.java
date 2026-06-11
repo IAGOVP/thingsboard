@@ -49,9 +49,17 @@ public class LwM2mServerListener {
     }
 
     public final RegistrationListener registrationListener = new RegistrationListener() {
+        
         /**
-         * Register – query represented as POST /rd?…
+         * Registered.
+         *
+         * @param registration registration ({@link Registration})
+         * @param previousReg previous reg ({@link Registration})
+         * @param previousObservations previous observations ({@link Collection})
+         * @return nothing
+         * @throws Exception on processing failure
          */
+
         @Override
         public void registered(Registration registration, Registration previousReg,
                                Collection<Observation> previousObservations) {
@@ -59,18 +67,35 @@ public class LwM2mServerListener {
             service.onRegistered(registration, previousObservations);
         }
 
+        
         /**
-         * Update – query represented as CoAP POST request for the URL received in response to Register.
+         * Updates d.
+         *
+         * @param update update ({@link RegistrationUpdate})
+         * @param updatedRegistration updated registration ({@link Registration})
+         * @param previousRegistration previous registration ({@link Registration})
+         * @return nothing
+         * @throws Exception on processing failure
          */
+
         @Override
         public void updated(RegistrationUpdate update, Registration updatedRegistration,
                             Registration previousRegistration) {
             service.updatedReg(updatedRegistration);
         }
 
+        
         /**
-         * De-register (CoAP DELETE) – Sent by the client when a shutdown procedure is initiated.
+         * Unregistered.
+         *
+         * @param registration registration ({@link Registration})
+         * @param observations observations ({@link Collection})
+         * @param expired expired
+         * @param newReg new reg ({@link Registration})
+         * @return nothing
+         * @throws Exception on processing failure
          */
+
         @Override
         public void unregistered(Registration registration, Collection<Observation> observations, boolean expired,
                                  Registration newReg) {
@@ -80,11 +105,25 @@ public class LwM2mServerListener {
     };
 
     public final PresenceListener presenceListener = new PresenceListener() {
+        /**
+         * Handles sleeping.
+         *
+         * @param registration registration ({@link Registration})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
         @Override
         public void onSleeping(Registration registration) {
             log.info("[{}] onSleeping", registration.getEndpoint());
             service.onSleepingDev(registration);
         }
+        /**
+         * Handles awake.
+         *
+         * @param registration registration ({@link Registration})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onAwake(Registration registration) {
@@ -94,6 +133,13 @@ public class LwM2mServerListener {
     };
 
     public final ObservationListener observationListener = new ObservationListener() {
+        /**
+         * Cancelled.
+         *
+         * @param observation observation ({@link Observation})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void cancelled(Observation observation) {
@@ -101,6 +147,15 @@ public class LwM2mServerListener {
                     "SingleObservation: " + ((SingleObservation) observation).getPath() :
                     "CompositeObservation: " + ((CompositeObservation) observation).getPaths());
        }
+        /**
+         * Handles response.
+         *
+         * @param observation observation ({@link SingleObservation})
+         * @param registration registration ({@link Registration})
+         * @param response response ({@link ObserveResponse})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onResponse(SingleObservation observation, Registration registration, ObserveResponse response) {
@@ -111,12 +166,30 @@ public class LwM2mServerListener {
                 }
             }
         }
+        /**
+         * Handles response.
+         *
+         * @param observation observation ({@link CompositeObservation})
+         * @param registration registration ({@link Registration})
+         * @param response response ({@link ObserveCompositeResponse})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onResponse(CompositeObservation observation, Registration registration, ObserveCompositeResponse response) {
             log.trace("Update Composite Observation [{}: {}].", observation.getRegistrationId(), observation.getPaths());
             service.onUpdateValueAfterReadCompositeResponse(registration, response);
         }
+        /**
+         * Handles error.
+         *
+         * @param observation observation ({@link Observation})
+         * @param registration registration ({@link Registration})
+         * @param error error ({@link Exception})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onError(Observation observation, Registration registration, Exception error) {
@@ -127,6 +200,14 @@ public class LwM2mServerListener {
                 service.onErrorObservation(registration, msgError);
             }
         }
+        /**
+         * New observation.
+         *
+         * @param observation observation ({@link Observation})
+         * @param registration registration ({@link Registration})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void newObservation(Observation observation, Registration registration) {
@@ -137,6 +218,15 @@ public class LwM2mServerListener {
     };
 
     public final SendListener sendListener = new SendListener() {
+        /**
+         * Data received.
+         *
+         * @param registration registration ({@link Registration})
+         * @param data data ({@link TimestampedLwM2mNodes})
+         * @param request request payload with operation parameters
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void dataReceived(Registration registration, TimestampedLwM2mNodes data, SendRequest request) {
@@ -145,6 +235,15 @@ public class LwM2mServerListener {
                 service.onUpdateValueWithSendRequest(registration, data);
             }
         }
+        /**
+         * Handles error.
+         *
+         * @param registration registration ({@link Registration})
+         * @param errorMessage error message ({@link String})
+         * @param error error ({@link Exception})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onError(Registration registration, String errorMessage, Exception error) {

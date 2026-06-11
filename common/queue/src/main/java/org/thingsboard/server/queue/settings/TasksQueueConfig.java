@@ -19,11 +19,11 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+/**
+ * Configuration properties for the background tasks queue (topic, concurrency, etc.).
+ */
 @Getter
 @Component
-/**
- * Configuration for tasks queue.
- */
 public class TasksQueueConfig {
 
     @Value("${queue.tasks.poll_interval:500}")

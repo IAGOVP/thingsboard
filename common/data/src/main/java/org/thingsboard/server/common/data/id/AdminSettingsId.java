@@ -25,7 +25,7 @@ import java.util.UUID;
 
 @Schema(allOf = EntityId.class)
 /**
- * Typed identifier for admin settings.
+ * Typed identifier for system or tenant admin settings.
  */
 public class AdminSettingsId extends UUIDBased implements EntityId {
 
@@ -36,6 +36,11 @@ public class AdminSettingsId extends UUIDBased implements EntityId {
     public AdminSettingsId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY, description = "string", example = "ADMIN_SETTINGS", allowableValues = "ADMIN_SETTINGS")
     @Override

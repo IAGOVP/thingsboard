@@ -26,6 +26,14 @@ import java.util.UUID;
  * Alias entity id serializer.
  */
 public class AliasEntityIdSerializer extends JsonSerializer<AliasEntityId> {
+    /**
+     * Serialize.
+     *
+     * @param value value ({@link AliasEntityId})
+     * @param gen gen ({@link JsonGenerator})
+     * @param serializers serializers ({@link SerializerProvider})
+     * @throws IOException if ioexception is thrown during processing
+     */
     @Override
     public void serialize(AliasEntityId value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
         gen.writeStartObject();

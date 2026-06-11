@@ -25,9 +25,40 @@ import java.util.UUID;
 
 import static org.thingsboard.server.dao.timeseries.CassandraBaseTimeseriesDao.DESC_ORDER;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
- * Created by ashvayka on 21.02.17.
+
+
+
+
+
+ * Ts kv query cursor (Cassandra telemetry and latest-value DAO (Cassandra time-series DAO and latest-value caches)).
+
+
+
+
+
  */
+
+
+
+
+
+
 public class TsKvQueryCursor extends QueryCursor {
 
     @Getter
@@ -45,15 +76,33 @@ public class TsKvQueryCursor extends QueryCursor {
         this.data = new ArrayList<>();
         this.currentLimit = baseQuery.getLimit();
     }
+    /**
+     * Has next partition.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean hasNextPartition() {
         return isDesc() ? partitionIndex >= 0 : partitionIndex <= partitions.size() - 1;
     }
+    /**
+     * Is full.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean isFull() {
         return currentLimit <= 0;
     }
+    /**
+     * Returns next partition.
+     *
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public long getNextPartition() {
@@ -65,10 +114,23 @@ public class TsKvQueryCursor extends QueryCursor {
         }
         return partition;
     }
+    /**
+     * Returns current limit.
+     *
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public int getCurrentLimit() {
         return currentLimit;
     }
+    /**
+     * Add data.
+     *
+     * @param newData new data ({@link List})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void addData(List<TsKvEntry> newData) {
         currentLimit -= newData.size();

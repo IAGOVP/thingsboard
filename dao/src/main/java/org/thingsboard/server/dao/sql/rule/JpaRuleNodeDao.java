@@ -38,8 +38,11 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 /**
- * JPA implementation of rule node dao.
+ * JPA/PostgreSQL implementation of rule node dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Slf4j
 @Component
@@ -48,21 +51,50 @@ public class JpaRuleNodeDao extends JpaAbstractDao<RuleNodeEntity, RuleNode> imp
 
     @Autowired
     private RuleNodeRepository ruleNodeRepository;
+    /**
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Class<RuleNodeEntity> getEntityClass() {
         return RuleNodeEntity.class;
     }
+    /**
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected JpaRepository<RuleNodeEntity, UUID> getRepository() {
         return ruleNodeRepository;
     }
+    /**
+     * Finds rule nodes by tenant id and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link String})
+     * @param configurationSearch configuration search ({@link String})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<RuleNode> findRuleNodesByTenantIdAndType(TenantId tenantId, String type, String configurationSearch) {
         return DaoUtil.convertDataList(ruleNodeRepository.findRuleNodesByTenantIdAndType(tenantId.getId(), type, configurationSearch));
     }
+    /**
+     * Finds all rule nodes by type.
+     *
+     * @param type type ({@link String})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<RuleNode> findAllRuleNodesByType(String type, PageLink pageLink) {
@@ -72,6 +104,15 @@ public class JpaRuleNodeDao extends JpaAbstractDao<RuleNodeEntity, RuleNode> imp
                         Objects.toString(pageLink.getTextSearch(), ""),
                         DaoUtil.toPageable(pageLink)));
     }
+    /**
+     * Finds all rule nodes by type and version less than.
+     *
+     * @param type type ({@link String})
+     * @param version version
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<RuleNode> findAllRuleNodesByTypeAndVersionLessThan(String type, int version, PageLink pageLink) {
@@ -82,6 +123,15 @@ public class JpaRuleNodeDao extends JpaAbstractDao<RuleNodeEntity, RuleNode> imp
                         Objects.toString(pageLink.getTextSearch(), ""),
                         DaoUtil.toPageable(pageLink)));
     }
+    /**
+     * Finds all rule node ids by type and version less than.
+     *
+     * @param type type ({@link String})
+     * @param version version
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<RuleNodeId> findAllRuleNodeIdsByTypeAndVersionLessThan(String type, int version, PageLink pageLink) {
@@ -92,23 +142,51 @@ public class JpaRuleNodeDao extends JpaAbstractDao<RuleNodeEntity, RuleNode> imp
                                 DaoUtil.toPageable(pageLink)))
                 .mapData(RuleNodeId::new);
     }
+    /**
+     * Finds all rule node by ids.
+     *
+     * @param ruleNodeIds rule node ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<RuleNode> findAllRuleNodeByIds(List<RuleNodeId> ruleNodeIds) {
         return DaoUtil.convertDataList(ruleNodeRepository.findAllById(
                 ruleNodeIds.stream().map(RuleNodeId::getId).collect(Collectors.toList())));
     }
+    /**
+     * Finds by external ids.
+     *
+     * @param ruleChainId rule chain id ({@link RuleChainId})
+     * @param externalIds external ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<RuleNode> findByExternalIds(RuleChainId ruleChainId, List<RuleNodeId> externalIds) {
         return DaoUtil.convertDataList(ruleNodeRepository.findRuleNodesByRuleChainIdAndExternalIdIn(ruleChainId.getId(),
                 externalIds.stream().map(RuleNodeId::getId).collect(Collectors.toList())));
     }
+    /**
+     * Deletes by id in.
+     *
+     * @param ruleNodeIds rule node ids ({@link List})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteByIdIn(List<RuleNodeId> ruleNodeIds) {
         ruleNodeRepository.deleteAllById(ruleNodeIds.stream().map(RuleNodeId::getId).collect(Collectors.toList()));
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

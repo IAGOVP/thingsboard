@@ -22,6 +22,13 @@ import lombok.Data;
  */
 @Data
 public class AlwaysTrueTopicFilter implements MqttTopicFilter {
+    /**
+     * Filter.
+     *
+     * @param topic topic ({@link String})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     public boolean filter(String topic) {

@@ -18,20 +18,50 @@ package org.thingsboard.server.transport.lwm2m.config;
 import org.thingsboard.server.common.transport.config.ssl.SslCredentials;
 
 /**
- * lw m2msecure server config contract.
+ * lw m2msecure server config contract (LwM2M transport and object model (ThingsBoard common module)).
  */
 public interface LwM2MSecureServerConfig {
 
     Integer getId();
 
+    /**
+     * Returns host.
+     *
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
     String getHost();
 
+    /**
+     * Returns port.
+     *
+     * @return {@link Integer}
+     * @throws Exception on processing failure
+     */
     Integer getPort();
 
+    /**
+     * Returns secure host.
+     *
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
     String getSecureHost();
 
+    /**
+     * Returns secure port.
+     *
+     * @return {@link Integer}
+     * @throws Exception on processing failure
+     */
     Integer getSecurePort();
 
+    /**
+     * Returns ssl credentials.
+     *
+     * @return {@link SslCredentials}
+     * @throws Exception on processing failure
+     */
     SslCredentials getSslCredentials();
 
 }

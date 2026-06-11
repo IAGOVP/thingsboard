@@ -53,22 +53,42 @@ public class UserCredentials extends BaseDataWithAdditionalInfo<UserCredentialsI
     public UserCredentials(UserCredentialsId id) {
         super(id);
     }
+    /**
+     * Is activation token expired.
+     *
+     * @return the boolean result
+     */
 
 
     @JsonIgnore
     public boolean isActivationTokenExpired() {
         return getActivationTokenTtl() == 0;
     }
+    /**
+     * Returns activation token ttl.
+     *
+     * @return the long result
+     */
 
     @JsonIgnore
     public long getActivationTokenTtl() {
         return activateTokenExpTime != null ? Math.max(activateTokenExpTime - System.currentTimeMillis(), 0) : 0;
     }
+    /**
+     * Is reset token expired.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     public boolean isResetTokenExpired() {
         return getResetTokenTtl() == 0;
     }
+    /**
+     * Returns reset token ttl.
+     *
+     * @return the long result
+     */
 
     @JsonIgnore
     public long getResetTokenTtl() {

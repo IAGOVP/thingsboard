@@ -21,11 +21,28 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * output strategy contract.
  */
 public interface OutputStrategy {
+    /**
+     * Returns type.
+     *
+     * @return {@link OutputStrategyType}
+     */
 
     @JsonIgnore
     OutputStrategyType getType();
+/**
+ * Has context only changes.
+ *
+ * @param other other ({@link OutputStrategy})
+ * @return the boolean result
+ */
 
     boolean hasContextOnlyChanges(OutputStrategy other);
+/**
+ * Has refresh context only changes.
+ *
+ * @param other other ({@link OutputStrategy})
+ * @return the boolean result
+ */
 
     boolean hasRefreshContextOnlyChanges(OutputStrategy other);
 

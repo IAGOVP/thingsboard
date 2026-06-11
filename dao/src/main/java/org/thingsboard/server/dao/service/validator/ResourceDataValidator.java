@@ -34,8 +34,11 @@ import org.thingsboard.server.dao.tenant.TenantService;
 
 import static org.thingsboard.server.common.data.EntityType.TB_RESOURCE;
 /**
- * Resource data validator.
+ * Validates resource entities before persistence.
+ *
+ * <p>Enforces constraints, uniqueness, and referential integrity at the DAO layer.
  */
+
 
 @Component
 public class ResourceDataValidator extends DataValidator<TbResource> {
@@ -50,11 +53,16 @@ public class ResourceDataValidator extends DataValidator<TbResource> {
     @Lazy
     private TbTenantProfileCache tenantProfileCache;
 
+    
     /**
-
-     * Validate create.
-
+     * Validates create.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resource resource ({@link TbResource})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateCreate(TenantId tenantId, TbResource resource) {
@@ -63,11 +71,16 @@ public class ResourceDataValidator extends DataValidator<TbResource> {
         }
     }
 
+    
     /**
-
-     * Validate update.
-
+     * Validates update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resource resource ({@link TbResource})
+     * @return {@link TbResource}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected TbResource validateUpdate(TenantId tenantId, TbResource resource) {
@@ -78,11 +91,16 @@ public class ResourceDataValidator extends DataValidator<TbResource> {
         return resource;
     }
 
+    
     /**
-
-     * Validate data impl.
-
+     * Validates data impl.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resource resource ({@link TbResource})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateDataImpl(TenantId tenantId, TbResource resource) {
@@ -112,11 +130,17 @@ public class ResourceDataValidator extends DataValidator<TbResource> {
         }
     }
 
+    
     /**
-
-     * Validate resource size.
-
+     * Validates resource size.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resourceId resource id ({@link TbResourceId})
+     * @param dataSize data size
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     public void validateResourceSize(TenantId tenantId, TbResourceId resourceId, long dataSize) {
         if (!tenantId.isSysTenantId()) {

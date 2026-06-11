@@ -18,14 +18,41 @@ package org.thingsboard.server.edqs.util;
 import org.thingsboard.server.common.data.ObjectType;
 import org.thingsboard.server.common.data.edqs.EdqsObject;
 import org.thingsboard.server.common.data.edqs.EdqsObjectKey;
+
 /**
- * Serialization contract for EDQS Kafka payloads.
+ * Serialization contract for EDQS Kafka payloads (Protobuf/JSON to {@link org.thingsboard.server.common.data.edqs.EdqsObject}).
  */
+
 public interface EdqsMapper {
+    /**
+     * Serialize.
+     *
+     * @param value value ({@link T})
+     * @return the operation result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     <T extends EdqsObject> byte[] serialize(T value);
 
+    
+    /**
+     * Deserialize.
+     *
+     * @param type type ({@link ObjectType})
+     * @param bytes bytes
+     * @param onlyKey only key
+     * @return {@link EdqsObject}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     EdqsObject deserialize(ObjectType type, byte[] bytes, boolean onlyKey);
+    /**
+     * Returns key.
+     *
+     * @param object object ({@link T})
+     * @return the operation result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     <T extends EdqsObject> EdqsObjectKey getKey(T object);
 

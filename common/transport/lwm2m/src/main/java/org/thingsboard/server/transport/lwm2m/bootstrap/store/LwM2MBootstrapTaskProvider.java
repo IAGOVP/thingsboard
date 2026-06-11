@@ -19,11 +19,18 @@ import org.eclipse.leshan.server.bootstrap.BootstrapTaskProvider;
 import org.eclipse.leshan.server.bootstrap.InvalidConfigurationException;
 
 /**
- * lw m2mbootstrap task provider contract.
+ * lw m2mbootstrap task provider contract (LwM2M transport and object model (ThingsBoard common module)).
  */
 public interface LwM2MBootstrapTaskProvider extends BootstrapTaskProvider {
 
     void put(String endpoint)  throws InvalidConfigurationException;
 
+    /**
+     * Removes the requested data.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     void remove(String endpoint);
 }

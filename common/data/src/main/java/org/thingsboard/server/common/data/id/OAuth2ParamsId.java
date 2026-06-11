@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.UUID;
 
 /**
- * Typed identifier for oauth2params.
+ * Typed identifier for OAuth2 provider parameters.
  */
 public class OAuth2ParamsId extends UUIDBased {
 
@@ -29,6 +29,12 @@ public class OAuth2ParamsId extends UUIDBased {
     public OAuth2ParamsId(@JsonProperty("id") UUID id) {
         super(id);
     }
+    /**
+     * From string.
+     *
+     * @param oauth2ParamsId oauth2params id ({@link String})
+     * @return {@link OAuth2ParamsId}
+     */
 
     public static OAuth2ParamsId fromString(String oauth2ParamsId) {
         return new OAuth2ParamsId(UUID.fromString(oauth2ParamsId));

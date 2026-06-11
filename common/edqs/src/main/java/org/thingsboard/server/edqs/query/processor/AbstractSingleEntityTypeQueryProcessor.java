@@ -28,23 +28,40 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
+
 /**
  * EDQS query processor for abstract single entity type entity filters.
+ *
+ * <p>Evaluates {@link org.thingsboard.server.common.data.query.EntityFilter} against a {@link org.thingsboard.server.edqs.repo.TenantRepo} (EDQS microservice — entity filter query processors).
  */
+
 public abstract class AbstractSingleEntityTypeQueryProcessor<T extends EntityFilter> extends AbstractQueryProcessor<T> {
 
     public AbstractSingleEntityTypeQueryProcessor(TenantRepo repository, QueryContext ctx, EdqsQuery query, T filter) {
         super(repository, ctx, query, filter);
     }
+    /**
+     * Processes query.
+     *
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<SortableEntityData> processQuery() {
         if (ctx.isTenantUser()) {
+            /** Process tenant query. */
             return processTenantQuery();
         } else {
             return processCustomerQuery(ctx.getCustomerId().getId());
         }
     }
+    /**
+     * Counts the requested data.
+     *
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public long count() {
@@ -60,6 +77,12 @@ public abstract class AbstractSingleEntityTypeQueryProcessor<T extends EntityFil
         }
         return result.get();
     }
+    /**
+     * Processes tenant query.
+     *
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected List<SortableEntityData> processTenantQuery() {
         List<SortableEntityData> result = new ArrayList<>(getProbableResultSize());
@@ -68,6 +91,13 @@ public abstract class AbstractSingleEntityTypeQueryProcessor<T extends EntityFil
         });
         return result;
     }
+    /**
+     * Processes customer query.
+     *
+     * @param customerId customer scope for permission filtering (may be null)
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected List<SortableEntityData> processCustomerQuery(UUID customerId) {
         List<SortableEntityData> result = new ArrayList<>(getProbableResultSize());
@@ -76,10 +106,31 @@ public abstract class AbstractSingleEntityTypeQueryProcessor<T extends EntityFil
         });
         return result;
     }
+    /**
+     * Processes customer query.
+     *
+     * @param customerId customer scope for permission filtering (may be null)
+     * @param processor processor ({@link Consumer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract void processCustomerQuery(UUID customerId, Consumer<EntityData<?>> processor);
+    /**
+     * Processes all.
+     *
+     * @param processor processor ({@link Consumer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract void processAll(Consumer<EntityData<?>> processor);
+    /**
+     * Returns probable result size.
+     *
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract int getProbableResultSize();
 

@@ -46,7 +46,12 @@ public class SessionMetaData {
     void setScheduledFuture(ScheduledFuture scheduledFuture) {
         this.scheduledFuture = scheduledFuture;
     }
-
+    /**
+     * Has scheduled future.
+     *
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
     public boolean hasScheduledFuture() {
         return null != this.scheduledFuture;
     }

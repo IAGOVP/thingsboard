@@ -40,11 +40,11 @@ import org.thingsboard.server.queue.provider.EdqsClientQueueFactory;
 
 import java.util.UUID;
 
-    /**
-     * Default Spring implementation for edqs api service (Entity Data Query Service integration from tb-core).
-     *
-     * <p>Registered as a {@code @Service} or {@code @Component} bean.
-     */
+    
+/**
+ * REST-layer facade that delegates entity queries to {@link DefaultEdqsService}.
+ */
+
 
 @Service
 @Slf4j

@@ -17,10 +17,10 @@ package org.thingsboard.common.util.geo;
 
 import lombok.Data;
 
-@Data
 /**
  * Perimeter.
  */
+@Data
 public class Perimeter {
 
     private PerimeterType perimeterType;

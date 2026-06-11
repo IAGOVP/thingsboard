@@ -33,31 +33,61 @@ public abstract class BasicKvEntry implements KvEntry {
     protected BasicKvEntry(String key) {
         this.key = key;
     }
+    /**
+     * Returns key.
+     *
+     * @return {@link String}
+     */
 
     @Override
     public String getKey() {
         return key;
     }
+    /**
+     * Returns str value.
+     *
+     * @return optional {@link String}, empty if not found
+     */
 
     @Override
     public Optional<String> getStrValue() {
         return Optional.ofNullable(null);
     }
+    /**
+     * Returns long value.
+     *
+     * @return optional {@link Long}, empty if not found
+     */
 
     @Override
     public Optional<Long> getLongValue() {
         return Optional.ofNullable(null);
     }
+    /**
+     * Returns boolean value.
+     *
+     * @return optional {@link Boolean}, empty if not found
+     */
 
     @Override
     public Optional<Boolean> getBooleanValue() {
         return Optional.ofNullable(null);
     }
+    /**
+     * Returns double value.
+     *
+     * @return optional {@link Double}, empty if not found
+     */
 
     @Override
     public Optional<Double> getDoubleValue() {
         return Optional.ofNullable(null);
     }
+    /**
+     * Returns json value.
+     *
+     * @return optional {@link String}, empty if not found
+     */
 
     @Override
     public Optional<String> getJsonValue() {

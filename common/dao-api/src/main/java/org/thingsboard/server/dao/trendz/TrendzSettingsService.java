@@ -23,10 +23,27 @@ import org.thingsboard.server.common.data.trendz.TrendzSettings;
  */
 public interface TrendzSettingsService {
 
+    /**
+     * Saves or persists trendz settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param settings settings ({@link TrendzSettings})
+     */
     void saveTrendzSettings(TenantId tenantId, TrendzSettings settings);
 
+    /**
+     * Finds trendz settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link TrendzSettings}
+     */
     TrendzSettings findTrendzSettings(TenantId tenantId);
 
+    /**
+     * Deletes trendz settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     */
     void deleteTrendzSettings(TenantId tenantId);
 
 }

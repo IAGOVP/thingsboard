@@ -28,13 +28,28 @@ import org.thingsboard.server.dao.model.sql.CalculatedFieldDebugEventEntity;
 import java.util.List;
 import java.util.UUID;
 
+
 /**
 
- * calculated field debug event repository contract.
+ * Spring Data JPA repository for calculated field debug event entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
 
+
 public interface CalculatedFieldDebugEventRepository extends EventRepository<CalculatedFieldDebugEventEntity, CalculatedFieldDebugEvent>, JpaRepository<CalculatedFieldDebugEventEntity, UUID> {
+    /**
+     * Finds latest events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     @Query(nativeQuery = true, value = "SELECT * FROM cf_debug_event e WHERE e.tenant_id = :tenantId AND e.entity_id = :entityId ORDER BY e.ts DESC LIMIT :limit")
@@ -47,6 +62,17 @@ public interface CalculatedFieldDebugEventRepository extends EventRepository<Cal
             "AND (:startTime IS NULL OR e.ts >= :startTime) " +
             "AND (:endTime IS NULL OR e.ts <= :endTime)"
     )
+    /**
+     * Finds events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<CalculatedFieldDebugEventEntity> findEvents(@Param("tenantId") UUID tenantId,
                                                      @Param("entityId") UUID entityId,
                                                      @Param("startTime") Long startTime,
@@ -86,6 +112,27 @@ public interface CalculatedFieldDebugEventRepository extends EventRepository<Cal
                     "AND ((:isError = FALSE) OR e.e_error IS NOT NULL) " +
                     "AND (:error IS NULL OR e.e_error ILIKE concat('%', :error, '%'))"
     )
+    /**
+     * Finds events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @param serviceId service id ({@link String})
+     * @param calculatedFieldId calculated field id ({@link UUID})
+     * @param eventEntityId event entity id ({@link String})
+     * @param eventEntityType event entity type ({@link String})
+     * @param eventMsgId event msg id ({@link String})
+     * @param eventMsgType event msg type ({@link String})
+     * @param eventArguments event arguments ({@link String})
+     * @param eventResult event result ({@link String})
+     * @param isError is error
+     * @param error error ({@link String})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<CalculatedFieldDebugEventEntity> findEvents(@Param("tenantId") UUID tenantId,
                                                      @Param("entityId") UUID entityId,
                                                      @Param("startTime") Long startTime,
@@ -110,6 +157,16 @@ public interface CalculatedFieldDebugEventRepository extends EventRepository<Cal
             "AND (:startTime IS NULL OR e.ts >= :startTime) " +
             "AND (:endTime IS NULL OR e.ts <= :endTime)"
     )
+    /**
+     * Removes events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
     void removeEvents(@Param("tenantId") UUID tenantId,
                       @Param("entityId") UUID entityId,
                       @Param("startTime") Long startTime,
@@ -133,6 +190,26 @@ public interface CalculatedFieldDebugEventRepository extends EventRepository<Cal
                     "AND (:eventResult IS NULL OR e.e_result ILIKE concat('%', :eventResult, '%')) " +
                     "AND ((:isError = FALSE) OR e.e_error IS NOT NULL) " +
                     "AND (:error IS NULL OR e.e_error ILIKE concat('%', :error, '%'))")
+    /**
+     * Removes events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @param serviceId service id ({@link String})
+     * @param calculatedFieldId calculated field id ({@link UUID})
+     * @param eventEntityId event entity id ({@link String})
+     * @param eventEntityType event entity type ({@link String})
+     * @param eventMsgId event msg id ({@link String})
+     * @param eventMsgType event msg type ({@link String})
+     * @param eventArguments event arguments ({@link String})
+     * @param eventResult event result ({@link String})
+     * @param isError is error
+     * @param error error ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
     void removeEvents(@Param("tenantId") UUID tenantId,
                       @Param("entityId") UUID entityId,
                       @Param("startTime") Long startTime,

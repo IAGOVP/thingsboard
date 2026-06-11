@@ -21,12 +21,23 @@ import org.thingsboard.server.common.msg.MsgType;
 import java.io.Serializable;
 
 /**
- * edge session msg contract.
+ * Message contract: edge session msg.
  */
+
 public interface EdgeSessionMsg extends Serializable {
 
+    /**
+     * Returns tenant id.
+     *
+     * @return {@link TenantId}
+     */
     TenantId getTenantId();
 
+    /**
+     * Returns msg type.
+     *
+     * @return {@link MsgType}
+     */
     MsgType getMsgType();
 
 }

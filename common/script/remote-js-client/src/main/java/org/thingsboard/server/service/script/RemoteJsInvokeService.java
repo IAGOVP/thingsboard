@@ -53,10 +53,10 @@ import java.util.concurrent.locks.ReentrantLock;
 
 @Slf4j
 @ConditionalOnExpression("'${js.evaluator:null}'=='remote' && ('${service.type:null}'=='monolith' || '${service.type:null}'=='tb-core' || '${service.type:null}'=='tb-rule-engine')")
-@Service
 /**
  * Remote js invoke service.
  */
+@Service
 public class RemoteJsInvokeService extends AbstractJsInvokeService {
 
     @Getter

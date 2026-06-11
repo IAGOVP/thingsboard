@@ -31,11 +31,48 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * Validator.
+
+
+
+
+
+ * Validator (shared DAO validators, removers, and constraints).
+
+
+
+
+
 
  */
+
+
+
+
+
+
 
 public final class Validator {
 
@@ -43,13 +80,16 @@ public final class Validator {
 
     public static final Pattern PROPERTY_PATTERN = Pattern.compile("^[\\p{L}0-9_-]+$"); // Unicode letters, numbers, '_' and '-' allowed
 
+    
     /**
-     * This method validate <code>EntityId</code> entity id. If entity id is invalid than throw
-     * <code>IncorrectParameterException</code> exception
+     * Validates entity id.
      *
-     * @param entityId      the entityId
-     * @param errorMessage  the error message for exception
+     * @param entityId target entity identifier
+     * @param errorMessage error message ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     @Deprecated
     public static void validateEntityId(EntityId entityId, String errorMessage) {
         if (entityId == null || entityId.getId() == null) {
@@ -57,65 +97,80 @@ public final class Validator {
         }
     }
 
+    
     /**
-     * This method validate <code>EntityId</code> entity id. If entity id is invalid than throw
-     * <code>IncorrectParameterException</code> exception
+     * Validates entity id.
      *
-     * @param entityId              the entityId
-     * @param errorMessageFunction  the error message function for exception that applies entityId
+     * @param entityId target entity identifier
+     * @param errorMessageFunction error message function ({@link Function})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     public static void validateEntityId(EntityId entityId, Function<EntityId, String> errorMessageFunction) {
         if (entityId == null || entityId.getId() == null) {
             throw new IncorrectParameterException(errorMessageFunction.apply(entityId));
         }
     }
 
+    
     /**
-     * This method validate <code>String</code> string. If string is invalid than throw
-     * <code>IncorrectParameterException</code> exception
+     * Validates string.
      *
-     * @param val           the val
-     * @param errorMessage  the error message for exception
+     * @param val val ({@link String})
+     * @param errorMessage error message ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     public static void validateString(String val, String errorMessage) {
         if (val == null || val.isEmpty()) {
             throw new IncorrectParameterException(errorMessage);
         }
     }
 
+    
     /**
-     * This method validate <code>String</code> string. If string is invalid than throw
-     * <code>IncorrectParameterException</code> exception
+     * Validates string.
      *
-     * @param val                   the value
-     * @param errorMessageFunction  the error message function that applies value
+     * @param val val ({@link String})
+     * @param errorMessageFunction error message function ({@link Function})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     public static void validateString(String val, Function<String, String> errorMessageFunction) {
         if (val == null || val.isEmpty()) {
             throw new IncorrectParameterException(errorMessageFunction.apply(val));
         }
     }
 
+    
     /**
-     * This method validate <code>long</code> value. If value isn't positive than throw
-     * <code>IncorrectParameterException</code> exception
+     * Validates positive number.
      *
-     * @param val           the val
-     * @param errorMessage  the error message for exception
+     * @param val val
+     * @param errorMessage error message ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     public static void validatePositiveNumber(long val, String errorMessage) {
         if (val <= 0) {
             throw new IncorrectParameterException(errorMessage);
         }
     }
 
+    
     /**
-     * This method validate <code>UUID</code> id. If id is null than throw
-     * <code>IncorrectParameterException</code> exception
+     * Validates id.
      *
-     * @param id            the id
-     * @param errorMessage  the error message for exception
+     * @param id entity UUID primary key
+     * @param errorMessage error message ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     @Deprecated
     public static void validateId(UUID id, String errorMessage) {
         if (id == null) {
@@ -123,26 +178,32 @@ public final class Validator {
         }
     }
 
+    
     /**
-     * This method validate <code>UUID</code> id. If id is null than throw
-     * <code>IncorrectParameterException</code> exception
+     * Validates id.
      *
-     * @param id                    the id
-     * @param errorMessageFunction  the error message function for exception that applies id
+     * @param id entity UUID primary key
+     * @param errorMessageFunction error message function ({@link Function})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     public static void validateId(UUID id, Function<UUID, String> errorMessageFunction) {
         if (id == null) {
             throw new IncorrectParameterException(errorMessageFunction.apply(id));
         }
     }
 
+    
     /**
-     * This method validate <code>UUIDBased</code> id. If id is null than throw
-     * <code>IncorrectParameterException</code> exception
+     * Validates id.
      *
-     * @param id            the id
-     * @param errorMessage  the error message for exception
+     * @param id entity UUID primary key
+     * @param errorMessage error message ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     @Deprecated
     public static void validateId(UUIDBased id, String errorMessage) {
         if (id == null || id.getId() == null) {
@@ -150,13 +211,16 @@ public final class Validator {
         }
     }
 
+    
     /**
-     * This method validate <code>UUIDBased</code> id. If id is null than throw
-     * <code>IncorrectParameterException</code> exception
+     * Validates id.
      *
-     * @param id                    the id
-     * @param errorMessageFunction  the error message function for exception that applies id
+     * @param id entity UUID primary key
+     * @param errorMessageFunction error message function ({@link Function})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     public static void validateId(UUIDBased id, Function<UUIDBased, String> errorMessageFunction) {
         if (id == null || id.getId() == null) {
             throw new IncorrectParameterException(errorMessageFunction.apply(id));
@@ -177,13 +241,16 @@ public final class Validator {
         }
     }
 
+    
     /**
-     * This method validate list of <code>UUIDBased</code> ids. If at least one of the ids is null than throw
-     * <code>IncorrectParameterException</code> exception
+     * Validates ids.
      *
-     * @param ids           the list of ids
-     * @param errorMessage  the error message for exception
+     * @param ids ids ({@link List})
+     * @param errorMessage error message ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     @Deprecated
     public static void validateIds(List<? extends UUIDBased> ids, String errorMessage) {
         if (ids == null || ids.isEmpty()) {
@@ -195,13 +262,16 @@ public final class Validator {
         }
     }
 
+    
     /**
-     * This method validate list of <code>UUIDBased</code> ids. If at least one of the ids is null than throw
-     * <code>IncorrectParameterException</code> exception
+     * Validates ids.
      *
-     * @param ids                   the list of ids
-     * @param errorMessageFunction  the error message function for exception that applies ids
+     * @param ids ids ({@link List})
+     * @param errorMessageFunction error message function ({@link Function})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     public static void validateIds(List<? extends UUIDBased> ids, Function<List<? extends UUIDBased>, String> errorMessageFunction) {
         if (ids == null || ids.isEmpty()) {
             throw new IncorrectParameterException(errorMessageFunction.apply(ids));
@@ -212,45 +282,29 @@ public final class Validator {
         }
     }
 
+    
     /**
-     * Validates the specified PageLink object delegating to {@link #validatePageLink(PageLink, Set)}
-     * with no restrictions on allowed sort properties.
+     * Validates page link.
      *
-     * @param pageLink the PageLink object to validate
-     * @throws IncorrectParameterException if the pageLink is null, has invalid page size,
-     *                                   invalid page number, or invalid sort property
-     * @see #validatePageLink(PageLink, Set)
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     public static void validatePageLink(PageLink pageLink) {
         validatePageLink(pageLink, null);
     }
 
+    
     /**
-     * Validates the specified PageLink object ensuring that:
-     * <ul>
-     * <li>The PageLink object is not null</li>
-     * <li>The page size is greater than zero</li>
-     * <li>The page number is non-negative</li>
-     * <li>If sorting is specified, the sort property is valid and allowed</li>
-     * </ul>
+     * Validates page link.
      *
-     * <p>When {@code allowedSortProperties} is provided, the sort property
-     * must be contained within this set. If {@code allowedSortProperties} is null,
-     * only basic sort property validation is performed.
-     *
-     * @param pageLink the PageLink object to validate.
-     * @param allowedSortProperties a Set of allowed sort property names, or null to skip
-     *                            this validation. If provided and the PageLink contains
-     *                            a sort order, the sort property must be in this set.
-     * @throws IncorrectParameterException if any of the following conditions are met:
-     *         <ul>
-     *         <li>{@code pageLink} is null</li>
-     *         <li>page size is less than 1</li>
-     *         <li>page number is negative</li>
-     *         <li>sort property is malformed</li>
-     *         <li>sort property is not in the {@code allowedSortProperties} set (when the set is provided and not null)</li>
-     *         </ul>
+     * @param pageLink pagination, sort, and text-search parameters
+     * @param allowedSortProperties allowed sort properties ({@link Set})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     public static void validatePageLink(PageLink pageLink, Set<String> allowedSortProperties) {
         if (pageLink == null) {
             throw new IncorrectParameterException("Page link must be specified.");
@@ -271,11 +325,15 @@ public final class Validator {
         }
     }
 
+    
     /**
-
-     * Validate entity data page link.
-
+     * Validates entity data page link.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     public static void validateEntityDataPageLink(EntityDataPageLink pageLink) {
         if (pageLink == null) {
@@ -293,21 +351,30 @@ public final class Validator {
         }
     }
 
+    
     /**
-
      * Is valid property.
-
+     *
+     * @param key attribute or cache key
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     public static boolean isValidProperty(String key) {
         return StringUtils.isEmpty(key) || RegexUtils.matches(key, PROPERTY_PATTERN);
     }
 
+    
     /**
-
-     * Check not null.
-
+     * Checks not null.
+     *
+     * @param reference reference ({@link Object})
+     * @param errorMessage error message ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     public static void checkNotNull(Object reference, String errorMessage) {
         if (reference == null) {

@@ -24,7 +24,8 @@ import java.lang.annotation.RetentionPolicy;
 @ConditionalOnExpression("('${database.ts.type}'=='cassandra' || '${database.ts_latest.type}'=='cassandra') " +
         "&& ('${cassandra.cloud.secure_connect_bundle_path}' == null || '${cassandra.cloud.secure_connect_bundle_path}'.isBlank() )")
 public @/**
- * no sql any dao non cloud contract.
+ * no sql any dao non cloud contract for the DAO layer.
  */
+
 interface NoSqlAnyDaoNonCloud {
 }

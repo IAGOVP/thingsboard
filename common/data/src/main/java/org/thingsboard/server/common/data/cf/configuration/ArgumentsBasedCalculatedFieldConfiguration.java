@@ -31,10 +31,20 @@ import static java.util.stream.Collectors.toSet;
  * arguments based calculated field configuration contract.
  */
 public interface ArgumentsBasedCalculatedFieldConfiguration extends CalculatedFieldConfiguration {
+    /**
+     * Returns arguments.
+     *
+     * @return {@link Map}
+     */
 
     @Valid
     @NotEmpty
     Map<String, Argument> getArguments();
+/**
+ * Returns referenced entities.
+ *
+ * @return {@link Set}
+ */
 
     default Set<EntityId> getReferencedEntities() {
         var args = getArguments();

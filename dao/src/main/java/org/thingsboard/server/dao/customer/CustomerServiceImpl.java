@@ -62,8 +62,11 @@ import java.util.stream.Collectors;
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
 import static org.thingsboard.server.dao.service.Validator.validateId;
 /**
- * Spring service implementing customer API.
+ * Spring {@code @Service} implementing the customer DAO API.
+ *
+ * <p>Delegates to {@code *Dao} implementations and manages cache eviction (customer entity persistence and caching).
  */
+
 
 @Service("CustomerDaoService")
 @Slf4j
@@ -103,11 +106,15 @@ public class CustomerServiceImpl extends AbstractCachedEntityService<CustomerCac
     @Autowired
     private JpaExecutorService executor;
 
+    
     /**
-
-     * Handle evict event.
-
+     * Handles evict event.
+     *
+     * @param event event ({@link CustomerCacheEvictEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @TransactionalEventListener(classes = CustomerCacheEvictEvent.class)
     @Override
@@ -120,11 +127,16 @@ public class CustomerServiceImpl extends AbstractCachedEntityService<CustomerCac
         cache.evict(keys);
     }
 
+    
     /**
-
-     * Loads customer by id.
-
+     * Finds customer by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @return {@link Customer}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Customer findCustomerById(TenantId tenantId, CustomerId customerId) {
@@ -133,11 +145,16 @@ public class CustomerServiceImpl extends AbstractCachedEntityService<CustomerCac
         return customerDao.findById(tenantId, customerId.getId());
     }
 
+    
     /**
-
-     * Loads customer by tenant id and title.
-
+     * Finds customer by tenant id and title.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param title title ({@link String})
+     * @return optional {@link Customer}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<Customer> findCustomerByTenantIdAndTitle(TenantId tenantId, String title) {
@@ -148,11 +165,16 @@ public class CustomerServiceImpl extends AbstractCachedEntityService<CustomerCac
                         .orElse(null), true));
     }
 
+    
     /**
-
-     * Loads customer by tenant id and title async.
-
+     * Finds customer by tenant id and title async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param title title ({@link String})
+     * @return future completing with optional {@link Customer}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<Optional<Customer>> findCustomerByTenantIdAndTitleAsync(TenantId tenantId, String title) {
@@ -161,11 +183,16 @@ public class CustomerServiceImpl extends AbstractCachedEntityService<CustomerCac
         return executor.submit(() -> findCustomerByTenantIdAndTitle(tenantId, title));
     }
 
+    
     /**
-
-     * Loads customer by id async.
-
+     * Finds customer by id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @return future completing with {@link Customer}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<Customer> findCustomerByIdAsync(TenantId tenantId, CustomerId customerId) {
@@ -174,11 +201,15 @@ public class CustomerServiceImpl extends AbstractCachedEntityService<CustomerCac
         return customerDao.findByIdAsync(tenantId, customerId.getId());
     }
 
+    
     /**
-
-     * Persists customer.
-
+     * Saves or persists customer.
+     *
+     * @param customer customer ({@link Customer})
+     * @return {@link Customer}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -186,11 +217,16 @@ public class CustomerServiceImpl extends AbstractCachedEntityService<CustomerCac
         return saveCustomer(customer, NameConflictStrategy.DEFAULT);
     }
 
+    
     /**
-
-     * Persists customer.
-
+     * Saves or persists customer.
+     *
+     * @param customer customer ({@link Customer})
+     * @param nameConflictStrategy name conflict strategy ({@link NameConflictStrategy})
+     * @return {@link Customer}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -238,11 +274,16 @@ public class CustomerServiceImpl extends AbstractCachedEntityService<CustomerCac
         }
     }
 
+    
     /**
-
-     * Removes customer.
-
+     * Deletes customer.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -252,11 +293,17 @@ public class CustomerServiceImpl extends AbstractCachedEntityService<CustomerCac
         deleteEntity(tenantId, customerId, false);
     }
 
+    
     /**
-
-     * Removes entity.
-
+     * Deletes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional
     @Override
@@ -287,11 +334,15 @@ public class CustomerServiceImpl extends AbstractCachedEntityService<CustomerCac
         eventPublisher.publishEvent(DeleteEntityEvent.builder().tenantId(tenantId).entityId(customerId).build());
     }
 
+    
     /**
-
-     * Loads or create public customer.
-
+     * Finds or create public customer.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link Customer}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Customer findOrCreatePublicCustomer(TenantId tenantId) {
@@ -321,11 +372,15 @@ public class CustomerServiceImpl extends AbstractCachedEntityService<CustomerCac
         }
     }
 
+    
     /**
-
-     * Loads public customer.
-
+     * Finds public customer.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link Customer}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Customer findPublicCustomer(TenantId tenantId) {
@@ -335,11 +390,16 @@ public class CustomerServiceImpl extends AbstractCachedEntityService<CustomerCac
         return publicCustomerOpt.orElse(null);
     }
 
+    
     /**
-
-     * Loads customers by tenant id.
-
+     * Finds customers by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<Customer> findCustomersByTenantId(TenantId tenantId, PageLink pageLink) {
@@ -349,11 +409,15 @@ public class CustomerServiceImpl extends AbstractCachedEntityService<CustomerCac
         return customerDao.findCustomersByTenantId(tenantId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Removes customers by tenant id.
-
+     * Deletes customers by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteCustomersByTenantId(TenantId tenantId) {
@@ -362,11 +426,16 @@ public class CustomerServiceImpl extends AbstractCachedEntityService<CustomerCac
         customersByTenantRemover.removeEntities(tenantId, tenantId);
     }
 
+    
     /**
-
-     * Loads customers by tenant id and ids.
-
+     * Finds customers by tenant id and ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerIds customer ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<Customer> findCustomersByTenantIdAndIds(TenantId tenantId, List<CustomerId> customerIds) {
@@ -374,11 +443,15 @@ public class CustomerServiceImpl extends AbstractCachedEntityService<CustomerCac
         return customerDao.findCustomersByTenantIdAndIds(tenantId.getId(), customerIds.stream().map(CustomerId::getId).collect(Collectors.toList()));
     }
 
+    
     /**
-
-     * Removes by tenant id.
-
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteByTenantId(TenantId tenantId) {
@@ -411,22 +484,32 @@ public class CustomerServiceImpl extends AbstractCachedEntityService<CustomerCac
                 }
             };
 
+    
     /**
-
-     * Loads entity.
-
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findCustomerById(tenantId, new CustomerId(entityId.getId())));
     }
 
+    
     /**
-
-     * Loads entity async.
-
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
@@ -434,22 +517,29 @@ public class CustomerServiceImpl extends AbstractCachedEntityService<CustomerCac
                 .transform(Optional::ofNullable, directExecutor());
     }
 
+    
     /**
-
      * Counts by tenant id.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public long countByTenantId(TenantId tenantId) {
         return customerDao.countByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

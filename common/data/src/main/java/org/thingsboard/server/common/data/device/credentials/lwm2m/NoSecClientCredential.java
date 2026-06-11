@@ -19,6 +19,11 @@ package org.thingsboard.server.common.data.device.credentials.lwm2m;
  * No sec client credential.
  */
 public class NoSecClientCredential extends AbstractLwM2MClientCredential {
+    /**
+     * Returns security config client mode.
+     *
+     * @return {@link LwM2MSecurityMode}
+     */
 
     @Override
     public LwM2MSecurityMode getSecurityConfigClientMode() {

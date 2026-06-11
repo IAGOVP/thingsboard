@@ -32,8 +32,14 @@ import org.thingsboard.server.common.data.page.PageData;
 import java.util.Map;
 import java.util.UUID;
 /**
- * Default native device repository.
+ * Default native device repository (JPA/PostgreSQL persistence layer (JPA repositories and PostgreSQL DAO implementations)).
  */
+
+
+
+
+
+
 
 @Repository
 @Slf4j
@@ -45,11 +51,15 @@ public class DefaultNativeDeviceRepository extends AbstractNativeRepository impl
         super(jdbcTemplate, transactionTemplate);
     }
 
+    
     /**
-
-     * Loads device id infos.
-
+     * Finds device id infos.
+     *
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<DeviceIdInfo> findDeviceIdInfos(Pageable pageable) {
@@ -62,11 +72,15 @@ public class DefaultNativeDeviceRepository extends AbstractNativeRepository impl
         });
     }
 
+    
     /**
-
-     * Loads profile entity id infos.
-
+     * Finds profile entity id infos.
+     *
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<ProfileEntityIdInfo> findProfileEntityIdInfos(Pageable pageable) {
@@ -74,11 +88,16 @@ public class DefaultNativeDeviceRepository extends AbstractNativeRepository impl
         return find(COUNT_QUERY, PROFILE_DEVICE_ID_INFO_QUERY, pageable, DefaultNativeDeviceRepository::toInfo);
     }
 
+    
     /**
-
-     * Loads profile entity id infos by tenant id.
-
+     * Finds profile entity id infos by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<ProfileEntityIdInfo> findProfileEntityIdInfosByTenantId(UUID tenantId, Pageable pageable) {

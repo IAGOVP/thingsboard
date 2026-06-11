@@ -35,11 +35,22 @@ public class AttributesImmediateOutputStrategy implements AttributesOutputStrate
     private boolean saveAttribute;
     private boolean sendWsUpdate;
     private boolean processCfs;
+    /**
+     * Returns type.
+     *
+     * @return {@link OutputStrategyType}
+     */
 
     @Override
     public OutputStrategyType getType() {
         return OutputStrategyType.IMMEDIATE;
     }
+    /**
+     * Has context only changes.
+     *
+     * @param other other ({@link OutputStrategy})
+     * @return the boolean result
+     */
 
     @Override
     public boolean hasContextOnlyChanges(OutputStrategy other) {
@@ -51,6 +62,12 @@ public class AttributesImmediateOutputStrategy implements AttributesOutputStrate
         boolean processCfsUpdated = processCfs != otherStrategy.isProcessCfs();
         return saveTimeSeriesUpdated || sendWsUpdateUpdated || processCfsUpdated;
     }
+    /**
+     * Has refresh context only changes.
+     *
+     * @param other other ({@link OutputStrategy})
+     * @return the boolean result
+     */
 
     @Override
     public boolean hasRefreshContextOnlyChanges(OutputStrategy other) {

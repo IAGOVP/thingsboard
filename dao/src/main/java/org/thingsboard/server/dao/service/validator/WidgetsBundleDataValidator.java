@@ -25,8 +25,11 @@ import org.thingsboard.server.dao.service.DataValidator;
 import org.thingsboard.server.dao.tenant.TenantService;
 import org.thingsboard.server.dao.widget.WidgetsBundleDao;
 /**
- * Widgets bundle data validator.
+ * Validates widgets bundle entities before persistence.
+ *
+ * <p>Enforces constraints, uniqueness, and referential integrity at the DAO layer.
  */
+
 
 @Component
 @AllArgsConstructor
@@ -35,11 +38,16 @@ public class WidgetsBundleDataValidator extends DataValidator<WidgetsBundle> {
     private final WidgetsBundleDao widgetsBundleDao;
     private final TenantService tenantService;
 
+    
     /**
-
-     * Validate data impl.
-
+     * Validates data impl.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetsBundle widgets bundle ({@link WidgetsBundle})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateDataImpl(TenantId tenantId, WidgetsBundle widgetsBundle) {
@@ -54,11 +62,16 @@ public class WidgetsBundleDataValidator extends DataValidator<WidgetsBundle> {
         }
     }
 
+    
     /**
-
-     * Validate create.
-
+     * Validates create.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetsBundle widgets bundle ({@link WidgetsBundle})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateCreate(TenantId tenantId, WidgetsBundle widgetsBundle) {
@@ -78,11 +91,16 @@ public class WidgetsBundleDataValidator extends DataValidator<WidgetsBundle> {
         widgetsBundle.setAlias(alias);
     }
 
+    
     /**
-
-     * Validate update.
-
+     * Validates update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetsBundle widgets bundle ({@link WidgetsBundle})
+     * @return {@link WidgetsBundle}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected WidgetsBundle validateUpdate(TenantId tenantId, WidgetsBundle widgetsBundle) {

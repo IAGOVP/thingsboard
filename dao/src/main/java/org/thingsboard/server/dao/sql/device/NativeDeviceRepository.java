@@ -20,13 +20,26 @@ import org.thingsboard.server.common.data.DeviceIdInfo;
 import org.thingsboard.server.common.data.ProfileEntityIdInfo;
 import org.thingsboard.server.common.data.page.PageData;
 
+
 /**
 
- * native device repository contract.
+ * Spring Data JPA repository for native device entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
 
+
 public interface NativeDeviceRepository extends NativeProfileEntityRepository {
+    /**
+     * Finds device id infos.
+     *
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<DeviceIdInfo> findDeviceIdInfos(Pageable pageable);
 

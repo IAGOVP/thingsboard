@@ -19,7 +19,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-
 @RequiredArgsConstructor
 /**
  * Tb script execution task.

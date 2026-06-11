@@ -50,6 +50,12 @@ public enum ComponentLifecycleEvent implements Serializable {
             BY_PROTO[event.getProtoNumber()] = event;
         }
     }
+    /**
+     * For proto number.
+     *
+     * @param protoNumber proto number
+     * @return {@link ComponentLifecycleEvent}
+     */
 
     public static ComponentLifecycleEvent forProtoNumber(int protoNumber) {
         if (protoNumber < 0 || protoNumber >= BY_PROTO.length) {

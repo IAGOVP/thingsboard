@@ -39,8 +39,11 @@ import static org.thingsboard.server.dao.model.ModelConstants.EVENT_ERROR_COLUMN
 import static org.thingsboard.server.dao.model.ModelConstants.EVENT_MSG_ID_COLUMN_NAME;
 import static org.thingsboard.server.dao.model.ModelConstants.EVENT_MSG_TYPE_COLUMN_NAME;
 /**
- * Calculated field debug event entity.
+ * JPA/Cassandra row model for calculated field debug event.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -81,6 +84,12 @@ public class CalculatedFieldDebugEventEntity extends EventEntity<CalculatedField
         this.result = event.getResult();
         this.error = event.getError();
     }
+    /**
+     * To data.
+     *
+     * @return {@link CalculatedFieldDebugEvent}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public CalculatedFieldDebugEvent toData() {

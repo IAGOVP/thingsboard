@@ -15,20 +15,22 @@
  */
 package org.thingsboard.server.queue.memory;
 
-import lombok.extern.slf4j.Slf4j;
-import org.thingsboard.server.common.msg.queue.TopicPartitionInfo;
-import org.thingsboard.server.queue.TbQueueConsumer;
-import org.thingsboard.server.queue.TbQueueMsg;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Slf4j
+
+import lombok.extern.slf4j.Slf4j;
+import org.thingsboard.server.common.msg.queue.TopicPartitionInfo;
+import org.thingsboard.server.queue.TbQueueConsumer;
+import org.thingsboard.server.queue.TbQueueMsg;
+
+
 /**
- * In memory tb queue consumer.
+ * In-memory {@link TbQueueConsumer} polling from {@link InMemoryStorage}.
  */
+@Slf4j
 public class InMemoryTbQueueConsumer<T extends TbQueueMsg> implements TbQueueConsumer<T> {
     private final InMemoryStorage storage;
     private volatile Set<TopicPartitionInfo> partitions;

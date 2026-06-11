@@ -34,8 +34,11 @@ import org.thingsboard.server.dao.util.SqlDao;
 import java.util.UUID;
 
 /**
- * Created by Valerii Sosliuk on 5/6/2017.
+ * JPA/PostgreSQL implementation of device credentials dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 @Slf4j
 @Component
 @SqlDao
@@ -44,44 +47,60 @@ public class JpaDeviceCredentialsDao extends JpaAbstractDao<DeviceCredentialsEnt
     @Autowired
     private DeviceCredentialsRepository deviceCredentialsRepository;
 
+    
     /**
-
-     * Get entity class.
-
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected Class<DeviceCredentialsEntity> getEntityClass() {
         return DeviceCredentialsEntity.class;
     }
 
+    
     /**
-
-     * Get repository.
-
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected JpaRepository<DeviceCredentialsEntity, UUID> getRepository() {
         return deviceCredentialsRepository;
     }
 
+    
     /**
-
-     * Loads by device id.
-
+     * Finds by device id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @return {@link DeviceCredentials}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceCredentials findByDeviceId(TenantId tenantId, UUID deviceId) {
         return DaoUtil.getData(deviceCredentialsRepository.findByDeviceId(deviceId));
     }
 
+    
     /**
-
-     * Loads by credentials id.
-
+     * Finds by credentials id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param credentialsId credentials id ({@link String})
+     * @return {@link DeviceCredentials}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceCredentials findByCredentialsId(TenantId tenantId, String credentialsId) {
@@ -89,22 +108,32 @@ public class JpaDeviceCredentialsDao extends JpaAbstractDao<DeviceCredentialsEnt
         return DaoUtil.getData(deviceCredentialsRepository.findByCredentialsId(credentialsId));
     }
 
+    
     /**
-
      * Removes by device id.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @return {@link DeviceCredentials}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DeviceCredentials removeByDeviceId(TenantId tenantId, DeviceId deviceId) {
         return DaoUtil.getData(deviceCredentialsRepository.deleteByDeviceId(deviceId.getId()));
     }
 
+    
     /**
-
-     * Loads all by tenant id.
-
+     * Finds all by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<DeviceCredentials> findAllByTenantId(TenantId tenantId, PageLink pageLink) {

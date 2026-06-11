@@ -28,8 +28,9 @@ import java.time.Duration;
 import java.util.List;
 
 /**
- * Created by ashvayka on 22.10.18.
+ * Tb rate limits.
  */
+
 public class TbRateLimits {
     private final LocalBucket bucket;
 
@@ -61,6 +62,12 @@ public class TbRateLimits {
         return bucket.tryConsume(1);
     }
 
+    /**
+     * Try consume.
+     *
+     * @param number number
+     * @return the boolean result
+     */
     public boolean tryConsume(long number) {
         return bucket.tryConsume(number);
     }

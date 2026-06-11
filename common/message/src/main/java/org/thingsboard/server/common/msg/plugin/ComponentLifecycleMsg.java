@@ -29,11 +29,11 @@ import org.thingsboard.server.common.msg.cluster.ToAllNodesMsg;
 
 import java.io.Serial;
 import java.util.Optional;
+/**
+ * Rule-engine component lifecycle create/update/delete notification.
+ */
 
 @Data
-/**
- * Message: component lifecycle msg.
- */
 public class ComponentLifecycleMsg implements TenantAwareMsg, ToAllNodesMsg {
 
     @Serial

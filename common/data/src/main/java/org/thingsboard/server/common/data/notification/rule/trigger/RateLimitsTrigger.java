@@ -39,27 +39,52 @@ public class RateLimitsTrigger implements NotificationRuleTrigger {
     private final LimitedApi api;
     private final EntityId limitLevel;
     private final String limitLevelEntityName;
+    /**
+     * Returns type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     */
 
     @Override
     public NotificationRuleTriggerType getType() {
         return NotificationRuleTriggerType.RATE_LIMITS;
     }
+    /**
+     * Returns originator entity id.
+     *
+     * @return {@link EntityId}
+     */
 
     @Override
     public EntityId getOriginatorEntityId() {
         return limitLevel != null ? limitLevel : tenantId;
     }
+    /**
+     * Returns deduplication strategy.
+     *
+     * @return {@link DeduplicationStrategy}
+     */
 
 
     @Override
     public DeduplicationStrategy getDeduplicationStrategy() {
         return DeduplicationStrategy.ALL;
     }
+    /**
+     * Returns deduplication key.
+     *
+     * @return {@link String}
+     */
 
     @Override
     public String getDeduplicationKey() {
         return String.join(":", NotificationRuleTrigger.super.getDeduplicationKey(), api.toString());
     }
+    /**
+     * Returns default deduplication duration.
+     *
+     * @return the long result
+     */
 
     @Override
     public long getDefaultDeduplicationDuration() {

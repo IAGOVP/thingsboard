@@ -15,13 +15,59 @@
  */
 package org.thingsboard.server.dao.sql.query;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * query log component contract.
+
+
+
+
+
+ * query log component contract (JPA/PostgreSQL persistence layer (JPA repositories and PostgreSQL DAO implementations)).
+
+
+
+
+
 
  */
 
+
+
+
+
+
+
 public interface QueryLogComponent {
+    /**
+     * Log query.
+     *
+     * @param ctx calculated-field execution context
+     * @param query filter and sort query definition
+     * @param duration duration
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void logQuery(SqlQueryContext ctx, String query, long duration);
 }

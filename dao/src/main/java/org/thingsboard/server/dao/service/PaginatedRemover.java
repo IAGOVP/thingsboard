@@ -19,15 +19,60 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.data.page.PageData;
 import org.thingsboard.server.common.data.page.PageLink;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * Paginated remover.
+
+
+
+
+
+ * Paginated remover (shared DAO validators, removers, and constraints).
+
+
+
+
+
 
  */
+
+
+
+
+
+
 
 public abstract class PaginatedRemover<I, D> {
 
     private static final int DEFAULT_LIMIT = 100;
+    /**
+     * Removes entities.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void removeEntities(TenantId tenantId, I id) {
         PageLink pageLink = new PageLink(DEFAULT_LIMIT);
@@ -40,8 +85,25 @@ public abstract class PaginatedRemover<I, D> {
             hasNext = entities.hasNext();
         }
     }
+    /**
+     * Finds entities.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract PageData<D> findEntities(TenantId tenantId, I id, PageLink pageLink);
+    /**
+     * Removes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entity domain entity to persist or validate
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract void removeEntity(TenantId tenantId, D entity);
 

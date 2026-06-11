@@ -31,6 +31,11 @@ public class AlarmConditionValue<T> {
 
     private T staticValue;
     private String dynamicValueArgument;
+    /**
+     * Is valid.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     @AssertTrue(message = "Either staticValue or dynamicValueArgument must be set")

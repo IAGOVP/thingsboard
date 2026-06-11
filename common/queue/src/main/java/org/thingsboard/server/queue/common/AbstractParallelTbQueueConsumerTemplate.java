@@ -17,17 +17,19 @@ package org.thingsboard.server.queue.common;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+
 import lombok.extern.slf4j.Slf4j;
 import org.thingsboard.common.util.ThingsBoardThreadFactory;
 import org.thingsboard.server.queue.TbQueueMsg;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
-@Slf4j
 /**
- * Abstract parallel tb queue consumer template.
+ * Parallel consumer variant of {@link AbstractTbQueueConsumerTemplate} that dispatches
+ * messages to a thread pool while preserving per-partition ordering guarantees.
  */
+@Slf4j
 public abstract class AbstractParallelTbQueueConsumerTemplate<R, T extends TbQueueMsg> extends AbstractTbQueueConsumerTemplate<R, T> {
 
     protected ListeningExecutorService consumerExecutor;

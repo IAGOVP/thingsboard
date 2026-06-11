@@ -51,6 +51,11 @@ public class AlarmNotificationRuleTriggerConfig implements NotificationRuleTrigg
     private Set<AlarmAction> notifyOn;
     @Schema
     private ClearRule clearRule;
+    /**
+     * Returns trigger type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     */
 
     @Override
     public NotificationRuleTriggerType getTriggerType() {

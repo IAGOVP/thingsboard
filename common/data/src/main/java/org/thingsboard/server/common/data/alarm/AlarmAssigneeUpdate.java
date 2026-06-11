@@ -21,7 +21,7 @@ import java.io.Serializable;
 
 @Data
 /**
- * Alarm assignee update.
+ * Payload for changing alarm assignee.
  */
 public class AlarmAssigneeUpdate implements Serializable {
 

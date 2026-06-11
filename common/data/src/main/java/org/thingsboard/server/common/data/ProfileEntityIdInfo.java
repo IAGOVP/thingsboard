@@ -47,10 +47,28 @@ public class ProfileEntityIdInfo implements Serializable, HasTenantId {
         this.profileId = profileId;
         this.entityId = entityId;
     }
+    /**
+     * Creates the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ownerId owner id ({@link EntityId})
+     * @param profileId profile id ({@link DeviceProfileId})
+     * @param entityId target entity identifier
+     * @return {@link ProfileEntityIdInfo}
+     */
 
     public static ProfileEntityIdInfo create(UUID tenantId, EntityId ownerId, DeviceProfileId profileId, DeviceId entityId) {
         return new ProfileEntityIdInfo(tenantId, ownerId, profileId, entityId);
     }
+    /**
+     * Creates the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ownerId owner id ({@link EntityId})
+     * @param profileId profile id ({@link AssetProfileId})
+     * @param entityId target entity identifier
+     * @return {@link ProfileEntityIdInfo}
+     */
 
     public static ProfileEntityIdInfo create(UUID tenantId, EntityId ownerId, AssetProfileId profileId, AssetId entityId) {
         return new ProfileEntityIdInfo(tenantId, ownerId, profileId, entityId);

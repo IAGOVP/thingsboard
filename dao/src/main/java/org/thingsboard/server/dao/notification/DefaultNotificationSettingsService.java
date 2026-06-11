@@ -61,8 +61,14 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 /**
- * Default notification settings service.
+ * Spring component for default notification settings service (notification templates, targets, rules, and delivery requests).
  */
+
+
+
+
+
+
 
 @Service
 @RequiredArgsConstructor
@@ -77,11 +83,16 @@ public class DefaultNotificationSettingsService implements NotificationSettingsS
 
     private static final String SETTINGS_KEY = "notifications";
 
+    
     /**
-
-     * Persists notification settings.
-
+     * Saves or persists notification settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param settings settings ({@link NotificationSettings})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @CacheEvict(cacheNames = CacheConstants.NOTIFICATION_SETTINGS_CACHE, key = "#tenantId")
     @Override
@@ -100,11 +111,15 @@ public class DefaultNotificationSettingsService implements NotificationSettingsS
         adminSettingsService.saveAdminSettings(tenantId, adminSettings);
     }
 
+    
     /**
-
-     * Loads notification settings.
-
+     * Finds notification settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link NotificationSettings}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Cacheable(cacheNames = CacheConstants.NOTIFICATION_SETTINGS_CACHE, key = "#tenantId")
     @Override
@@ -118,11 +133,15 @@ public class DefaultNotificationSettingsService implements NotificationSettingsS
                 });
     }
 
+    
     /**
-
-     * Removes notification settings.
-
+     * Deletes notification settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @CacheEvict(cacheNames = CacheConstants.NOTIFICATION_SETTINGS_CACHE, key = "#tenantId")
     @Override
@@ -130,11 +149,17 @@ public class DefaultNotificationSettingsService implements NotificationSettingsS
         adminSettingsService.deleteAdminSettingsByTenantIdAndKey(tenantId, SETTINGS_KEY);
     }
 
+    
     /**
-
-     * Persists user notification settings.
-
+     * Saves or persists user notification settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @param settings settings ({@link UserNotificationSettings})
+     * @return {@link UserNotificationSettings}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public UserNotificationSettings saveUserNotificationSettings(TenantId tenantId, UserId userId, UserNotificationSettings settings) {
@@ -146,11 +171,17 @@ public class DefaultNotificationSettingsService implements NotificationSettingsS
         return formatUserNotificationSettings(settings);
     }
 
+    
     /**
-
-     * Get user notification settings.
-
+     * Returns user notification settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @param format format
+     * @return {@link UserNotificationSettings}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public UserNotificationSettings getUserNotificationSettings(TenantId tenantId, UserId userId, boolean format) {
@@ -194,11 +225,15 @@ public class DefaultNotificationSettingsService implements NotificationSettingsS
         return new UserNotificationSettings(prefs);
     }
 
+    
     /**
-
      * Creates default notification configs.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Transactional
     @Override
@@ -246,11 +281,15 @@ public class DefaultNotificationSettingsService implements NotificationSettingsS
         defaultNotifications.create(tenantId, DefaultNotifications.edgeCommunicationFailures, tenantAdmins.getId());
     }
 
+    
     /**
-
      * Updates default notification configs.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void updateDefaultNotificationConfigs(TenantId tenantId) {
@@ -307,11 +346,17 @@ public class DefaultNotificationSettingsService implements NotificationSettingsS
         }
     }
 
+    
     /**
-
      * Move mail templates to notification center.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param mailTemplates mail templates ({@link JsonNode})
+     * @param mailTemplatesNames mail templates names ({@link Map})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void moveMailTemplatesToNotificationCenter(TenantId tenantId, JsonNode mailTemplates, Map<String, NotificationType> mailTemplatesNames) {

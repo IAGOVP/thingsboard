@@ -26,17 +26,25 @@ import java.util.List;
  */
 @Data
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-/**
- * Rule chain update result.
- */
 public class RuleChainUpdateResult {
 
     private final boolean success;
     private final List<RuleNodeUpdateResult> updatedRuleNodes;
+    /**
+     * Failed.
+     *
+     * @return {@link RuleChainUpdateResult}
+     */
 
     public static RuleChainUpdateResult failed(){
         return new RuleChainUpdateResult(false, null);
     }
+    /**
+     * Successful.
+     *
+     * @param updatedRuleNodes updated rule nodes ({@link List})
+     * @return {@link RuleChainUpdateResult}
+     */
 
     public static RuleChainUpdateResult successful(List<RuleNodeUpdateResult> updatedRuleNodes){
         return new RuleChainUpdateResult(true, updatedRuleNodes);

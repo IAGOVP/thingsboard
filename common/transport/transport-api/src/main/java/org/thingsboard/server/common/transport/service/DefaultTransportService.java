@@ -128,7 +128,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
- * Default transport service.
+ * Default {@link TransportService} implementation: credential validation via transport API queue, telemetry/attribute posting, RPC session tracking, and OTA chunk delivery.
  */
 @Slf4j
 @Service
@@ -194,6 +194,12 @@ public class DefaultTransportService extends TransportActivityManager implements
     private ExecutorService consumerExecutor;
 
     private final Map<String, RpcRequestMetadata> toServerRpcPendingMap = new ConcurrentHashMap<>();
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @PostConstruct
     public void init() {
@@ -217,6 +223,12 @@ public class DefaultTransportService extends TransportActivityManager implements
                 .consumerExecutor(consumerExecutor)
                 .build();
     }
+    /**
+     * Start.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @AfterStartUp(order = AfterStartUp.TRANSPORT_SERVICE)
     public void start() {
@@ -239,6 +251,12 @@ public class DefaultTransportService extends TransportActivityManager implements
     private void invalidateRateLimits() {
         rateLimitService.invalidateRateLimitsIpTable(sessionInactivityTimeout);
     }
+    /**
+     * Destroy.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @PreDestroy
     public void destroy() {
@@ -255,11 +273,26 @@ public class DefaultTransportService extends TransportActivityManager implements
             transportApiRequestTemplate.stop();
         }
     }
+    /**
+     * Register async session.
+     *
+     * @param sessionInfo session info
+     * @param listener listener ({@link SessionMsgListener})
+     * @return {@link SessionMetaData}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public SessionMetaData registerAsyncSession(TransportProtos.SessionInfoProto sessionInfo, SessionMsgListener listener) {
         return sessions.computeIfAbsent(toSessionId(sessionInfo), (x) -> new SessionMetaData(sessionInfo, TransportProtos.SessionType.ASYNC, listener));
     }
+    /**
+     * Returns entity profile.
+     *
+     * @param msg msg
+     * @return the TransportProtos.GetEntityProfileResponseMsg value
+     * @throws Exception on processing failure
+     */
 
     @Override
     public TransportProtos.GetEntityProfileResponseMsg getEntityProfile(TransportProtos.GetEntityProfileRequestMsg msg) {
@@ -272,6 +305,13 @@ public class DefaultTransportService extends TransportActivityManager implements
             throw new RuntimeException(e);
         }
     }
+    /**
+     * Returns queue routing info.
+     *
+     * @param msg msg
+     * @return {@link List}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public List<TransportProtos.GetQueueRoutingInfoResponseMsg> getQueueRoutingInfo(TransportProtos.GetAllQueueRoutingInfoRequestMsg msg) {
@@ -284,6 +324,13 @@ public class DefaultTransportService extends TransportActivityManager implements
             throw new RuntimeException(e);
         }
     }
+    /**
+     * Returns resource.
+     *
+     * @param msg msg
+     * @return the TransportProtos.GetResourceResponseMsg value
+     * @throws Exception on processing failure
+     */
 
     @Override
     public TransportProtos.GetResourceResponseMsg getResource(TransportProtos.GetResourceRequestMsg msg) {
@@ -296,6 +343,13 @@ public class DefaultTransportService extends TransportActivityManager implements
             throw new RuntimeException(e);
         }
     }
+    /**
+     * Returns snmp devices ids.
+     *
+     * @param requestMsg request msg
+     * @return the TransportProtos.GetSnmpDevicesResponseMsg value
+     * @throws Exception on processing failure
+     */
 
     @Override
     public TransportProtos.GetSnmpDevicesResponseMsg getSnmpDevicesIds(TransportProtos.GetSnmpDevicesRequestMsg requestMsg) {
@@ -312,6 +366,13 @@ public class DefaultTransportService extends TransportActivityManager implements
             throw new RuntimeException(e);
         }
     }
+    /**
+     * Returns device.
+     *
+     * @param requestMsg request msg
+     * @return the TransportProtos.GetDeviceResponseMsg value
+     * @throws Exception on processing failure
+     */
 
     @Override
     public TransportProtos.GetDeviceResponseMsg getDevice(TransportProtos.GetDeviceRequestMsg requestMsg) {
@@ -332,6 +393,13 @@ public class DefaultTransportService extends TransportActivityManager implements
             throw new RuntimeException(e);
         }
     }
+    /**
+     * Returns device credentials.
+     *
+     * @param requestMsg request msg
+     * @return the TransportProtos.GetDeviceCredentialsResponseMsg value
+     * @throws Exception on processing failure
+     */
 
     @Override
     public TransportProtos.GetDeviceCredentialsResponseMsg getDeviceCredentials(TransportProtos.GetDeviceCredentialsRequestMsg requestMsg) {
@@ -348,6 +416,15 @@ public class DefaultTransportService extends TransportActivityManager implements
             throw new RuntimeException(e);
         }
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param transportType transport type ({@link DeviceTransportType})
+     * @param msg msg
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void process(DeviceTransportType transportType, TransportProtos.ValidateDeviceTokenRequestMsg msg,
@@ -357,6 +434,15 @@ public class DefaultTransportService extends TransportActivityManager implements
                 TransportApiRequestMsg.newBuilder().setValidateTokenRequestMsg(msg).build());
         doProcess(transportType, protoMsg, callback);
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param transportType transport type ({@link DeviceTransportType})
+     * @param msg msg
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void process(DeviceTransportType transportType, TransportProtos.ValidateBasicMqttCredRequestMsg msg,
@@ -366,6 +452,14 @@ public class DefaultTransportService extends TransportActivityManager implements
                 TransportApiRequestMsg.newBuilder().setValidateBasicMqttCredRequestMsg(msg).build());
         doProcess(transportType, protoMsg, callback);
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param requestMsg request msg
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void process(TransportProtos.ValidateDeviceLwM2MCredentialsRequestMsg requestMsg, TransportServiceCallback<ValidateDeviceCredentialsResponse> callback) {
@@ -387,6 +481,15 @@ public class DefaultTransportService extends TransportActivityManager implements
         }, MoreExecutors.directExecutor());
         AsyncCallbackTemplate.withCallback(response, callback::onSuccess, callback::onError, transportCallbackExecutor);
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param transportType transport type ({@link DeviceTransportType})
+     * @param msg msg
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void process(DeviceTransportType transportType, TransportProtos.ValidateDeviceX509CertRequestMsg msg, TransportServiceCallback<ValidateDeviceCredentialsResponse> callback) {
@@ -394,6 +497,15 @@ public class DefaultTransportService extends TransportActivityManager implements
         TbProtoQueueMsg<TransportApiRequestMsg> protoMsg = new TbProtoQueueMsg<>(UUID.randomUUID(), TransportApiRequestMsg.newBuilder().setValidateX509CertRequestMsg(msg).build());
         doProcess(transportType, protoMsg, callback);
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param transportType transport type ({@link DeviceTransportType})
+     * @param msg msg
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void process(DeviceTransportType transportType, TransportProtos.ValidateOrCreateDeviceX509CertRequestMsg msg, TransportServiceCallback<ValidateDeviceCredentialsResponse> callback) {
@@ -425,6 +537,15 @@ public class DefaultTransportService extends TransportActivityManager implements
         }, MoreExecutors.directExecutor());
         AsyncCallbackTemplate.withCallback(response, callback::onSuccess, callback::onError, transportCallbackExecutor);
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param requestMsg request msg
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void process(TenantId tenantId, TransportProtos.GetOrCreateDeviceFromGatewayRequestMsg requestMsg, TransportServiceCallback<GetOrCreateDeviceFromGatewayResponse> callback) {
@@ -457,6 +578,14 @@ public class DefaultTransportService extends TransportActivityManager implements
             AsyncCallbackTemplate.withCallback(response, callback::onSuccess, callback::onError, transportCallbackExecutor);
         }
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param msg msg
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void process(TransportProtos.LwM2MRequestMsg msg, TransportServiceCallback<TransportProtos.LwM2MResponseMsg> callback) {
@@ -485,6 +614,14 @@ public class DefaultTransportService extends TransportActivityManager implements
         }
         return tdi;
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param requestMsg request msg ({@link ProvisionDeviceRequestMsg})
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void process(ProvisionDeviceRequestMsg requestMsg, TransportServiceCallback<ProvisionDeviceResponseMsg> callback) {
@@ -495,6 +632,15 @@ public class DefaultTransportService extends TransportActivityManager implements
                 , MoreExecutors.directExecutor());
         AsyncCallbackTemplate.withCallback(response, callback::onSuccess, callback::onError, transportCallbackExecutor);
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param sessionInfo session info
+     * @param msg msg
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void process(TransportProtos.SessionInfoProto sessionInfo, TransportProtos.SubscriptionInfoProto msg, TransportServiceCallback<Void> callback) {
@@ -504,6 +650,15 @@ public class DefaultTransportService extends TransportActivityManager implements
         sendToDeviceActor(sessionInfo, TransportToDeviceActorMsg.newBuilder().setSessionInfo(sessionInfo)
                 .setSubscriptionInfo(msg).build(), callback);
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param sessionInfo session info
+     * @param msg msg
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void process(TransportProtos.SessionInfoProto sessionInfo, TransportProtos.SessionEventMsg msg, TransportServiceCallback<Void> callback) {
@@ -515,6 +670,14 @@ public class DefaultTransportService extends TransportActivityManager implements
                     .setSessionEvent(msg).build(), callback);
         }
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param msg msg ({@link TransportToDeviceActorMsg})
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void process(TransportToDeviceActorMsg msg, TransportServiceCallback<Void> callback) {
@@ -534,11 +697,30 @@ public class DefaultTransportService extends TransportActivityManager implements
             sendToDeviceActor(sessionInfo, msg, callback);
         }
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param sessionInfo session info
+     * @param msg msg
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void process(TransportProtos.SessionInfoProto sessionInfo, TransportProtos.PostTelemetryMsg msg, TransportServiceCallback<Void> callback) {
         process(sessionInfo, msg, null, callback);
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param sessionInfo session info
+     * @param msg msg
+     * @param md md ({@link TbMsgMetaData})
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void process(TransportProtos.SessionInfoProto sessionInfo, TransportProtos.PostTelemetryMsg msg, TbMsgMetaData md, TransportServiceCallback<Void> callback) {
@@ -562,11 +744,30 @@ public class DefaultTransportService extends TransportActivityManager implements
             }
         }
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param sessionInfo session info
+     * @param msg msg
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void process(TransportProtos.SessionInfoProto sessionInfo, TransportProtos.PostAttributeMsg msg, TransportServiceCallback<Void> callback) {
         process(sessionInfo, msg, null, callback);
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param sessionInfo session info
+     * @param msg msg
+     * @param md md ({@link TbMsgMetaData})
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void process(TransportProtos.SessionInfoProto sessionInfo, TransportProtos.PostAttributeMsg msg, TbMsgMetaData md, TransportServiceCallback<Void> callback) {
@@ -587,6 +788,15 @@ public class DefaultTransportService extends TransportActivityManager implements
                     new TransportTbQueueCallback(new ApiStatsProxyCallback<>(tenantId, customerId, msg.getKvList().size(), callback)));
         }
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param sessionInfo session info
+     * @param msg msg
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void process(TransportProtos.SessionInfoProto sessionInfo, TransportProtos.GetAttributeRequestMsg msg, TransportServiceCallback<Void> callback) {
@@ -596,6 +806,15 @@ public class DefaultTransportService extends TransportActivityManager implements
                     .setGetAttributes(msg).build(), new ApiStatsProxyCallback<>(getTenantId(sessionInfo), getCustomerId(sessionInfo), 1, callback));
         }
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param sessionInfo session info
+     * @param msg msg
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void process(TransportProtos.SessionInfoProto sessionInfo, TransportProtos.SubscribeToAttributeUpdatesMsg msg, TransportServiceCallback<Void> callback) {
@@ -609,6 +828,15 @@ public class DefaultTransportService extends TransportActivityManager implements
                     new ApiStatsProxyCallback<>(getTenantId(sessionInfo), getCustomerId(sessionInfo), 1, callback));
         }
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param sessionInfo session info
+     * @param msg msg
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void process(TransportProtos.SessionInfoProto sessionInfo, TransportProtos.SubscribeToRPCMsg msg, TransportServiceCallback<Void> callback) {
@@ -622,6 +850,15 @@ public class DefaultTransportService extends TransportActivityManager implements
                     new ApiStatsProxyCallback<>(getTenantId(sessionInfo), getCustomerId(sessionInfo), 1, callback));
         }
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param sessionInfo session info
+     * @param msg msg
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void process(TransportProtos.SessionInfoProto sessionInfo, TransportProtos.ToDeviceRpcResponseMsg msg, TransportServiceCallback<Void> callback) {
@@ -631,6 +868,15 @@ public class DefaultTransportService extends TransportActivityManager implements
                     new ApiStatsProxyCallback<>(getTenantId(sessionInfo), getCustomerId(sessionInfo), 1, callback));
         }
     }
+    /**
+     * Notify about uplink.
+     *
+     * @param sessionInfo session info
+     * @param msg msg
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void notifyAboutUplink(TransportProtos.SessionInfoProto sessionInfo, TransportProtos.UplinkNotificationMsg msg, TransportServiceCallback<Void> callback) {
@@ -639,11 +885,32 @@ public class DefaultTransportService extends TransportActivityManager implements
             sendToDeviceActor(sessionInfo, TransportToDeviceActorMsg.newBuilder().setSessionInfo(sessionInfo).setUplinkNotificationMsg(msg).build(), callback);
         }
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param sessionInfo session info
+     * @param msg msg
+     * @param rpcStatus rpc status ({@link RpcStatus})
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void process(TransportProtos.SessionInfoProto sessionInfo, TransportProtos.ToDeviceRpcRequestMsg msg, RpcStatus rpcStatus, TransportServiceCallback<Void> callback) {
         process(sessionInfo, msg, rpcStatus, false, callback);
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param sessionInfo session info
+     * @param msg msg
+     * @param rpcStatus rpc status ({@link RpcStatus})
+     * @param reportActivity report activity
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void process(TransportProtos.SessionInfoProto sessionInfo, TransportProtos.ToDeviceRpcRequestMsg msg, RpcStatus rpcStatus, boolean reportActivity, TransportServiceCallback<Void> callback) {
@@ -684,6 +951,15 @@ public class DefaultTransportService extends TransportActivityManager implements
             }
         }
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param sessionInfo session info
+     * @param msg msg
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void process(TransportProtos.SessionInfoProto sessionInfo, TransportProtos.ToServerRpcRequestMsg msg, TransportServiceCallback<Void> callback) {
@@ -709,6 +985,15 @@ public class DefaultTransportService extends TransportActivityManager implements
             scheduler.schedule(() -> processTimeout(requestId), clientSideRpcTimeout, TimeUnit.MILLISECONDS);
         }
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param sessionInfo session info
+     * @param msg msg
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void process(TransportProtos.SessionInfoProto sessionInfo, TransportProtos.ClaimDeviceMsg msg, TransportServiceCallback<Void> callback) {
@@ -718,6 +1003,15 @@ public class DefaultTransportService extends TransportActivityManager implements
                     .setClaimDevice(msg).build(), callback);
         }
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param sessionInfo session info
+     * @param msg msg
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void process(TransportProtos.SessionInfoProto sessionInfo, TransportProtos.GetOtaPackageRequestMsg msg, TransportServiceCallback<TransportProtos.GetOtaPackageResponseMsg> callback) {
@@ -730,6 +1024,13 @@ public class DefaultTransportService extends TransportActivityManager implements
             }, callback::onError, transportCallbackExecutor);
         }
     }
+    /**
+     * Record activity.
+     *
+     * @param sessionInfo session info
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void recordActivity(TransportProtos.SessionInfoProto sessionInfo) {
@@ -743,6 +1044,17 @@ public class DefaultTransportService extends TransportActivityManager implements
             log.warn("Session info is missing, unable to record activity");
         }
     }
+    /**
+     * Lifecycle event.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @param eventType event type ({@link ComponentLifecycleEvent})
+     * @param success success
+     * @param error error ({@link Throwable})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void lifecycleEvent(TenantId tenantId, DeviceId deviceId, ComponentLifecycleEvent eventType, boolean success, Throwable error) {
@@ -763,6 +1075,16 @@ public class DefaultTransportService extends TransportActivityManager implements
             log.error("[{}][{}] Failed to send lifecycle event to core", tenantId, deviceId, e);
         }
     }
+    /**
+     * Error event.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @param method method ({@link String})
+     * @param error error ({@link Throwable})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void errorEvent(TenantId tenantId, DeviceId deviceId, String method, Throwable error) {
@@ -782,6 +1104,15 @@ public class DefaultTransportService extends TransportActivityManager implements
             log.error("[{}][{}] Failed to send error event to core", tenantId, deviceId, e);
         }
     }
+    /**
+     * Register sync session.
+     *
+     * @param sessionInfo session info
+     * @param listener listener ({@link SessionMsgListener})
+     * @param timeout timeout
+     * @return {@link SessionMetaData}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public SessionMetaData registerSyncSession(TransportProtos.SessionInfoProto sessionInfo, SessionMsgListener listener, long timeout) {
@@ -799,6 +1130,13 @@ public class DefaultTransportService extends TransportActivityManager implements
         currentSession.setScheduledFuture(executorFuture);
         return currentSession;
     }
+    /**
+     * Deregister session.
+     *
+     * @param sessionInfo session info
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void deregisterSession(TransportProtos.SessionInfoProto sessionInfo) {
@@ -809,6 +1147,14 @@ public class DefaultTransportService extends TransportActivityManager implements
         }
         sessions.remove(toSessionId(sessionInfo));
     }
+    /**
+     * Log.
+     *
+     * @param sessionInfo session info
+     * @param msg msg ({@link String})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void log(TransportProtos.SessionInfoProto sessionInfo, String msg) {
@@ -885,7 +1231,13 @@ public class DefaultTransportService extends TransportActivityManager implements
             return false;
         }
     }
-
+    /**
+     * Processes to transport msg.
+     *
+     * @param toSessionMsg to session msg ({@link ToTransportMsg})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     protected void processToTransportMsg(ToTransportMsg toSessionMsg) {
         UUID sessionId = new UUID(toSessionMsg.getSessionIdMSB(), toSessionMsg.getSessionIdLSB());
         SessionMetaData md = sessions.get(sessionId);
@@ -967,8 +1319,13 @@ public class DefaultTransportService extends TransportActivityManager implements
             }
         }
     }
-
-
+    /**
+     * Handles profile update.
+     *
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void onProfileUpdate(DeviceProfile deviceProfile) {
         long deviceProfileIdMSB = deviceProfile.getId().getId().getMostSignificantBits();
         long deviceProfileIdLSB = deviceProfile.getId().getId().getLeastSignificantBits();
@@ -1073,19 +1430,43 @@ public class DefaultTransportService extends TransportActivityManager implements
 
         eventPublisher.publishEvent(new DeviceDeletedEvent(deviceId));
     }
-
+    /**
+     * To session id.
+     *
+     * @param sessionInfo session info
+     * @return {@link UUID}
+     * @throws Exception on processing failure
+     */
     protected UUID toSessionId(TransportProtos.SessionInfoProto sessionInfo) {
         return new UUID(sessionInfo.getSessionIdMSB(), sessionInfo.getSessionIdLSB());
     }
-
+    /**
+     * Returns routing key.
+     *
+     * @param sessionInfo session info
+     * @return {@link UUID}
+     * @throws Exception on processing failure
+     */
     protected UUID getRoutingKey(TransportProtos.SessionInfoProto sessionInfo) {
         return new UUID(sessionInfo.getDeviceIdMSB(), sessionInfo.getDeviceIdLSB());
     }
-
+    /**
+     * Returns tenant id.
+     *
+     * @param sessionInfo session info
+     * @return {@link TenantId}
+     * @throws Exception on processing failure
+     */
     protected TenantId getTenantId(TransportProtos.SessionInfoProto sessionInfo) {
         return TenantId.fromUUID(new UUID(sessionInfo.getTenantIdMSB(), sessionInfo.getTenantIdLSB()));
     }
-
+    /**
+     * Returns customer id.
+     *
+     * @param sessionInfo session info
+     * @return {@link CustomerId}
+     * @throws Exception on processing failure
+     */
     protected CustomerId getCustomerId(TransportProtos.SessionInfoProto sessionInfo) {
         long msb = sessionInfo.getCustomerIdMSB();
         long lsb = sessionInfo.getCustomerIdLSB();
@@ -1095,11 +1476,25 @@ public class DefaultTransportService extends TransportActivityManager implements
             return new CustomerId(EntityId.NULL_UUID);
         }
     }
-
+    /**
+     * Returns device id.
+     *
+     * @param sessionInfo session info
+     * @return {@link DeviceId}
+     * @throws Exception on processing failure
+     */
     protected DeviceId getDeviceId(TransportProtos.SessionInfoProto sessionInfo) {
         return new DeviceId(new UUID(sessionInfo.getDeviceIdMSB(), sessionInfo.getDeviceIdLSB()));
     }
-
+    /**
+     * Send to device actor.
+     *
+     * @param sessionInfo session info
+     * @param toDeviceActorMsg to device actor msg ({@link TransportToDeviceActorMsg})
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     protected void sendToDeviceActor(TransportProtos.SessionInfoProto sessionInfo, TransportToDeviceActorMsg toDeviceActorMsg, TransportServiceCallback<Void> callback) {
         ToCoreMsg toCoreMsg = ToCoreMsg.newBuilder().setToDeviceActorMsg(toDeviceActorMsg).build();
         sendToCore(getTenantId(sessionInfo), getDeviceId(sessionInfo), toCoreMsg, getRoutingKey(sessionInfo), callback);
@@ -1161,11 +1556,25 @@ public class DefaultTransportService extends TransportActivityManager implements
         private TransportTbQueueCallback(TransportServiceCallback<Void> callback) {
             this.callback = callback;
         }
+        /**
+         * Handles success.
+         *
+         * @param metadata metadata ({@link TbQueueMsgMetadata})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onSuccess(TbQueueMsgMetadata metadata) {
             DefaultTransportService.this.transportCallbackExecutor.submit(() -> callback.onSuccess(null));
         }
+        /**
+         * Handles failure.
+         *
+         * @param t t ({@link Throwable})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onFailure(Throwable t) {
@@ -1182,6 +1591,13 @@ public class DefaultTransportService extends TransportActivityManager implements
             this.callback = callback;
             this.stats = stats;
         }
+        /**
+         * Handles success.
+         *
+         * @param metadata metadata ({@link TbQueueMsgMetadata})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onSuccess(TbQueueMsgMetadata metadata) {
@@ -1190,6 +1606,13 @@ public class DefaultTransportService extends TransportActivityManager implements
                 callback.onSuccess(metadata);
             }
         }
+        /**
+         * Handles failure.
+         *
+         * @param t t ({@link Throwable})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onFailure(Throwable t) {
@@ -1209,6 +1632,13 @@ public class DefaultTransportService extends TransportActivityManager implements
             this.msgCount = new AtomicInteger(msgCount);
             this.callback = callback;
         }
+        /**
+         * Handles success.
+         *
+         * @param metadata metadata ({@link TbQueueMsgMetadata})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onSuccess(TbQueueMsgMetadata metadata) {
@@ -1216,6 +1646,13 @@ public class DefaultTransportService extends TransportActivityManager implements
                 DefaultTransportService.this.transportCallbackExecutor.submit(() -> callback.onSuccess(null));
             }
         }
+        /**
+         * Handles failure.
+         *
+         * @param t t ({@link Throwable})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onFailure(Throwable t) {
@@ -1236,6 +1673,13 @@ public class DefaultTransportService extends TransportActivityManager implements
             this.dataPoints = dataPoints;
             this.callback = callback;
         }
+        /**
+         * Handles success.
+         *
+         * @param msg msg ({@link T})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onSuccess(T msg) {
@@ -1246,6 +1690,13 @@ public class DefaultTransportService extends TransportActivityManager implements
                 callback.onSuccess(msg);
             }
         }
+        /**
+         * Handles error.
+         *
+         * @param e e ({@link Throwable})
+         * @return nothing
+         * @throws Exception on processing failure
+         */
 
         @Override
         public void onError(Throwable e) {
@@ -1253,16 +1704,38 @@ public class DefaultTransportService extends TransportActivityManager implements
         }
 
     }
+    /**
+     * Returns callback executor.
+     *
+     * @return {@link ExecutorService}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public ExecutorService getCallbackExecutor() {
         return transportCallbackExecutor;
     }
+    /**
+     * Has session.
+     *
+     * @param sessionInfo session info
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     public boolean hasSession(TransportProtos.SessionInfoProto sessionInfo) {
         return sessions.containsKey(toSessionId(sessionInfo));
     }
+    /**
+     * Creates gauge stats.
+     *
+     * @param statsName stats name ({@link String})
+     * @param number number ({@link AtomicInteger})
+     * @param tags tags
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void createGaugeStats(String statsName, AtomicInteger number, String... tags) {
@@ -1281,6 +1754,12 @@ public class DefaultTransportService extends TransportActivityManager implements
         sb.append(']');
         return sb.toString();
     }
+    /**
+     * Print stats.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Scheduled(fixedDelayString = "${transport.stats.print-interval-ms:60000}")
     public void printStats() {

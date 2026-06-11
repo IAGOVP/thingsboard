@@ -25,11 +25,21 @@ import org.thingsboard.server.common.data.transport.snmp.config.MultipleMappings
 public class SharedAttributesSettingSnmpCommunicationConfig extends MultipleMappingsSnmpCommunicationConfig {
 
     private static final long serialVersionUID = 8981224974190924703L;
+    /**
+     * Returns spec.
+     *
+     * @return {@link SnmpCommunicationSpec}
+     */
 
     @Override
     public SnmpCommunicationSpec getSpec() {
         return SnmpCommunicationSpec.SHARED_ATTRIBUTES_SETTING;
     }
+    /**
+     * Returns method.
+     *
+     * @return {@link SnmpMethod}
+     */
 
     @Override
     public SnmpMethod getMethod() {

@@ -21,16 +21,13 @@ import org.apache.zookeeper.Environment;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
-/**
- * Created by igor on 11/24/16.
- */
 
+/**
+ * Logs environment and queue configuration at startup for diagnostics.
+ */
 @Service("environmentLogService")
 @ConditionalOnProperty(prefix = "zk", value = "enabled", havingValue = "false", matchIfMissing = true)
 @Slf4j
-/**
- * Environment log service.
- */
 public class EnvironmentLogService {
 
     @PostConstruct

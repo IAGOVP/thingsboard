@@ -22,10 +22,10 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Data
 /**
  * Pending commit.
  */
+@Data
 public class PendingCommit {
 
     private final UUID txId;

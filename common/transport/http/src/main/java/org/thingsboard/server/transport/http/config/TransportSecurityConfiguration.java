@@ -28,7 +28,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
- * Configuration for transport securityuration.
+ * Spring Security for {@code /api/v1/**}: permits device API paths; token validated per request.
  */
 @Configuration
 @EnableWebSecurity
@@ -38,6 +38,12 @@ public class TransportSecurityConfiguration {
 
     @Value("${transport.http.max_payload_size:/api/v1/*/rpc/**=65536;/api/v1/**=52428800}")
     private String maxPayloadSizeConfig;
+    /**
+     * Transport payload size filter.
+     *
+     * @return {@link PayloadSizeFilter}
+     * @throws Exception on processing failure
+     */
 
     @Bean
     protected PayloadSizeFilter transportPayloadSizeFilter() {

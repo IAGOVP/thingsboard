@@ -56,6 +56,11 @@ public class OAuth2ClientInfo extends BaseData<OAuth2ClientId> implements HasNam
         this.providerName =  oAuth2Client.getAdditionalInfoField("providerName", JsonNode::asText,"");
         this.platforms = oAuth2Client.getPlatforms();
     }
+    /**
+     * Returns name.
+     *
+     * @return {@link String}
+     */
 
     @Override
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

@@ -33,8 +33,11 @@ import org.thingsboard.server.exception.DataValidationException;
 import java.util.Optional;
 import java.util.UUID;
 /**
- * JPA implementation of rule chain details dao.
+ * JPA/PostgreSQL implementation of rule chain details dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Slf4j
 @Component
@@ -43,6 +46,14 @@ import java.util.UUID;
 public class JpaRuleChainDetailsDao extends JpaAbstractDao<RuleChainDetailsEntity, RuleChainDetails> implements RuleChainDetailsDao {
 
     private final RuleChainDetailsRepository ruleChainDetailsRepository;
+    /**
+     * Finds by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key attribute or cache key
+     * @return {@link RuleChainDetails}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleChainDetails findById(TenantId tenantId, UUID key) {
@@ -53,6 +64,15 @@ public class JpaRuleChainDetailsDao extends JpaAbstractDao<RuleChainDetailsEntit
         entity.ifPresent(e -> getEntityManager().detach(e));
         return DaoUtil.getData(entity);
     }
+    /**
+     * Do save.
+     *
+     * @param entity domain entity to persist or validate
+     * @param isNew is new
+     * @param flush flush
+     * @return {@link RuleChainDetailsEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected RuleChainDetailsEntity doSave(RuleChainDetailsEntity entity, boolean isNew, boolean flush) {
@@ -66,11 +86,23 @@ public class JpaRuleChainDetailsDao extends JpaAbstractDao<RuleChainDetailsEntit
             throw e;
         }
     }
+    /**
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Class<RuleChainDetailsEntity> getEntityClass() {
         return RuleChainDetailsEntity.class;
     }
+    /**
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected JpaRepository<RuleChainDetailsEntity, UUID> getRepository() {

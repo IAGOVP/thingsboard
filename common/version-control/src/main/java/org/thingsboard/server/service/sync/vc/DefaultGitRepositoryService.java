@@ -50,12 +50,12 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-@Slf4j
-@ConditionalOnProperty(prefix = "vc", value = "git.service", havingValue = "local", matchIfMissing = true)
-@Service
 /**
  * Default git repository service.
  */
+@Slf4j
+@ConditionalOnProperty(prefix = "vc", value = "git.service", havingValue = "local", matchIfMissing = true)
+@Service
 public class DefaultGitRepositoryService implements GitRepositoryService {
 
     @Value("${java.io.tmpdir}/repositories")

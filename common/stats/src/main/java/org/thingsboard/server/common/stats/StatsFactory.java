@@ -20,12 +20,14 @@ import io.micrometer.core.instrument.Timer;
 import java.util.function.ToDoubleFunction;
 
 /**
- * stats factory contract.
+ * Factory for Micrometer-backed counters, timers, and message statistics.
  */
 public interface StatsFactory {
 
+    /** Create stats counter. */
     StatsCounter createStatsCounter(String key, String statsName, String... otherTags);
 
+    /** Create default counter. */
     DefaultCounter createDefaultCounter(String key, String... tags);
 
     <T extends Number> T createGauge(String key, T number, String... tags);
@@ -34,10 +36,13 @@ public interface StatsFactory {
 
     <S> void createGauge(String type, String name, S stateObject, ToDoubleFunction<S> numberProvider, String... tags);
 
+    /** Create messages stats. */
     MessagesStats createMessagesStats(String key);
 
+    /** Create timer. */
     Timer createTimer(String key, String... tags);
 
+    /** Create stats timer. */
     StatsTimer createStatsTimer(String type, String name, String... tags);
 
 }

@@ -31,8 +31,11 @@ import org.thingsboard.server.dao.model.sql.JobEntity;
 import java.util.List;
 import java.util.UUID;
 /**
- * job repository contract.
+ * Spring Data JPA repository for job entities.
+ *
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
  */
+
 
 @Repository
 public interface JobRepository extends JpaRepository<JobEntity, UUID> {
@@ -44,6 +47,20 @@ public interface JobRepository extends JpaRepository<JobEntity, UUID> {
            "AND (:startTime <= 0 OR j.createdTime >= :startTime) " +
            "AND (:endTime <= 0 OR j.createdTime <= :endTime) " +
            "AND (:searchText IS NULL OR ilike(j.key, concat('%', :searchText, '%')) = true)")
+    /**
+     * Finds by tenant id and types and statuses and entities and time and search text.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param types types ({@link List})
+     * @param statuses statuses ({@link List})
+     * @param entities entities ({@link List})
+     * @param startTime start time
+     * @param endTime end time
+     * @param searchText search text ({@link String})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<JobEntity> findByTenantIdAndTypesAndStatusesAndEntitiesAndTimeAndSearchText(@Param("tenantId") UUID tenantId,
                                                                                      @Param("types") List<JobType> types,
                                                                                      @Param("statuses") List<JobStatus> statuses,
@@ -52,28 +69,94 @@ public interface JobRepository extends JpaRepository<JobEntity, UUID> {
                                                                                      @Param("endTime") long endTime,
                                                                                      @Param("searchText") String searchText,
                                                                                      Pageable pageable);
+    /**
+     * Finds by id for update.
+     *
+     * @param id entity UUID primary key
+     * @return {@link JobEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Query(value = "SELECT * FROM job j WHERE j.id = :id FOR UPDATE", nativeQuery = true)
     JobEntity findByIdForUpdate(UUID id);
 
     @Query("SELECT j FROM JobEntity j WHERE j.tenantId = :tenantId AND j.key = :key " +
            "ORDER BY j.createdTime DESC")
+    /**
+     * Finds latest by tenant id and key.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key attribute or cache key
+     * @param limit maximum number of records to return
+     * @return {@link JobEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     JobEntity findLatestByTenantIdAndKey(@Param("tenantId") UUID tenantId, @Param("key") String key, Limit limit);
+    /**
+     * Exists by tenant id and key and status in.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param key attribute or cache key
+     * @param statuses statuses ({@link List})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     boolean existsByTenantIdAndKeyAndStatusIn(UUID tenantId, String key, List<JobStatus> statuses);
+    /**
+     * Exists by tenant id and type and status in.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link JobType})
+     * @param statuses statuses ({@link List})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     boolean existsByTenantIdAndTypeAndStatusIn(UUID tenantId, JobType type, List<JobStatus> statuses);
+    /**
+     * Exists by tenant id and entity id and status in.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param statuses statuses ({@link List})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     boolean existsByTenantIdAndEntityIdAndStatusIn(UUID tenantId, UUID entityId, List<JobStatus> statuses);
 
     @Query(value = "SELECT * FROM job j WHERE j.tenant_id = :tenantId AND j.type = :type " +
                    "AND j.status = :status ORDER BY j.created_time ASC, j.id ASC LIMIT 1 FOR UPDATE", nativeQuery = true)
+    /**
+     * Finds oldest by tenant id and type and status for update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param type type ({@link String})
+     * @param status status ({@link String})
+     * @return {@link JobEntity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     JobEntity findOldestByTenantIdAndTypeAndStatusForUpdate(UUID tenantId, String type, String status);
+    /**
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Transactional
     @Modifying
     @Query("DELETE FROM JobEntity j WHERE j.tenantId = :tenantId")
     void deleteByTenantId(UUID tenantId);
+    /**
+     * Deletes by entity id.
+     *
+     * @param entityId target entity identifier
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Transactional
     @Modifying

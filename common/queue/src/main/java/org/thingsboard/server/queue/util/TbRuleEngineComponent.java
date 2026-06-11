@@ -15,16 +15,18 @@
  */
 package org.thingsboard.server.queue.util;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
-
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+
+
+/**
+ * Classpath marker for Rule Engine service Spring components.
+ */
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @ConditionalOnExpression("'${service.type:null}'=='monolith' || '${service.type:null}'=='tb-rule-engine'")
-public @/**
- * tb rule engine component contract.
- */
-interface TbRuleEngineComponent {}
+public @interface TbRuleEngineComponent {}

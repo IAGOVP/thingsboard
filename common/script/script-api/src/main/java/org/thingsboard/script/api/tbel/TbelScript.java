@@ -20,10 +20,10 @@ import lombok.Data;
 import java.util.HashMap;
 import java.util.Map;
 
-@Data
 /**
  * Tbel script.
  */
+@Data
 public class TbelScript {
 
     private final String scriptBody;

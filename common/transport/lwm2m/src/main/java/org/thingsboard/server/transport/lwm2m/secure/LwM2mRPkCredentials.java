@@ -58,7 +58,7 @@ public class LwM2mRPkCredentials {
 
     private void generatePublicKeyRPK(String publX, String publY, String privS) {
         try {
-            /*Get Elliptic Curve Parameter spec for secp256r1 */
+              */
             AlgorithmParameters algoParameters = AlgorithmParameters.getInstance("EC");
             algoParameters.init(new ECGenParameterSpec("secp256r1"));
             ECParameterSpec parameterSpec = algoParameters.getParameterSpec(ECParameterSpec.class);
@@ -66,18 +66,18 @@ public class LwM2mRPkCredentials {
                 // Get point values
                 byte[] publicX = Hex.decodeHex(publX.toCharArray());
                 byte[] publicY = Hex.decodeHex(publY.toCharArray());
-                 /* Create key specs */
+                   */
                 KeySpec publicKeySpec = new ECPublicKeySpec(new ECPoint(new BigInteger(publicX), new BigInteger(publicY)),
                         parameterSpec);
-                 /* Get keys */
+                   */
                 this.serverPublicKey = KeyFactory.getInstance("EC").generatePublic(publicKeySpec);
             }
             if (privS != null && !privS.isEmpty()) {
-                /* Get point values */
+                  */
                 byte[] privateS = Hex.decodeHex(privS.toCharArray());
-                /* Create key specs */
+                  */
                 KeySpec privateKeySpec = new ECPrivateKeySpec(new BigInteger(privateS), parameterSpec);
-                /* Get keys */
+                  */
                 this.serverPrivateKey = KeyFactory.getInstance("EC").generatePrivate(privateKeySpec);
             }
         } catch (GeneralSecurityException | IllegalArgumentException e) {

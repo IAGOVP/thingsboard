@@ -42,11 +42,27 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 /**
- * Alarm data adapter.
+ * Alarm data adapter (JPA/PostgreSQL persistence layer (JPA repositories and PostgreSQL DAO implementations)).
  */
+
+
+
+
+
+
 
 @Slf4j
 public class AlarmDataAdapter {
+    /**
+     * Creates alarm data.
+     *
+     * @param pageLink pagination, sort, and text-search parameters
+     * @param rows rows ({@link List})
+     * @param totalElements total elements
+     * @param orderedEntityIds ordered entity ids ({@link Collection})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static PageData<AlarmData> createAlarmData(EntityDataPageLink pageLink,
                                                       List<Map<String, Object>> rows,

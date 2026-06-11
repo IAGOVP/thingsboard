@@ -28,8 +28,11 @@ import org.thingsboard.server.exception.DataValidationException;
 import org.thingsboard.server.dao.mobile.MobileAppDao;
 import org.thingsboard.server.dao.service.DataValidator;
 /**
- * Qr code settings data validator.
+ * Validates qr code settings entities before persistence.
+ *
+ * <p>Enforces constraints, uniqueness, and referential integrity at the DAO layer.
  */
+
 
 @Component
 @AllArgsConstructor
@@ -38,11 +41,16 @@ public class QrCodeSettingsDataValidator extends DataValidator<QrCodeSettings> {
     @Autowired
     MobileAppDao mobileAppDao;
 
+    
     /**
-
-     * Validate data impl.
-
+     * Validates data impl.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param qrCodeSettings qr code settings ({@link QrCodeSettings})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateDataImpl(TenantId tenantId, QrCodeSettings qrCodeSettings) {

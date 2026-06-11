@@ -39,8 +39,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 /**
- * JPA implementation of notification rule dao.
+ * JPA/PostgreSQL implementation of notification rule dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @Component
 @SqlDao
@@ -48,12 +51,28 @@ import java.util.UUID;
 public class JpaNotificationRuleDao extends JpaAbstractDao<NotificationRuleEntity, NotificationRule> implements NotificationRuleDao, TenantEntityDao<NotificationRule> {
 
     private final NotificationRuleRepository notificationRuleRepository;
+    /**
+     * Finds by tenant id and page link.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<NotificationRule> findByTenantIdAndPageLink(TenantId tenantId, PageLink pageLink) {
         return DaoUtil.toPageData(notificationRuleRepository.findByTenantIdAndSearchText(tenantId.getId(),
                 pageLink.getTextSearch(), DaoUtil.toPageable(pageLink)));
     }
+    /**
+     * Finds infos by tenant id and page link.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<NotificationRuleInfo> findInfosByTenantIdAndPageLink(TenantId tenantId, PageLink pageLink) {
@@ -63,62 +82,151 @@ public class JpaNotificationRuleDao extends JpaAbstractDao<NotificationRuleEntit
                         ))))
                 .mapData(NotificationRuleInfoEntity::toData);
     }
+    /**
+     * Exists by tenant id and target id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param targetId target id ({@link NotificationTargetId})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean existsByTenantIdAndTargetId(TenantId tenantId, NotificationTargetId targetId) {
         return notificationRuleRepository.existsByTenantIdAndRecipientsConfigContaining(tenantId.getId(), targetId.getId().toString());
     }
+    /**
+     * Finds by tenant id and trigger type and enabled.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param triggerType trigger type ({@link NotificationRuleTriggerType})
+     * @param enabled enabled
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<NotificationRule> findByTenantIdAndTriggerTypeAndEnabled(TenantId tenantId, NotificationRuleTriggerType triggerType, boolean enabled) {
         return DaoUtil.convertDataList(notificationRuleRepository.findAllByTenantIdAndTriggerTypeAndEnabled(tenantId.getId(), triggerType, enabled));
     }
+    /**
+     * Finds info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @return {@link NotificationRuleInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationRuleInfo findInfoById(TenantId tenantId, NotificationRuleId id) {
         NotificationRuleInfoEntity infoEntity = notificationRuleRepository.findInfoById(id.getId());
         return infoEntity != null ? infoEntity.toData() : null;
     }
+    /**
+     * Removes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void removeByTenantId(TenantId tenantId) {
         notificationRuleRepository.deleteByTenantId(tenantId.getId());
     }
+    /**
+     * Finds by tenant id and external id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param externalId external id ({@link UUID})
+     * @return {@link NotificationRule}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationRule findByTenantIdAndExternalId(UUID tenantId, UUID externalId) {
         return DaoUtil.getData(notificationRuleRepository.findByTenantIdAndExternalId(tenantId, externalId));
     }
+    /**
+     * Finds by tenant id and name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return {@link NotificationRule}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationRule findByTenantIdAndName(UUID tenantId, String name) {
         return DaoUtil.getData(notificationRuleRepository.findByTenantIdAndName(tenantId, name));
     }
+    /**
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<NotificationRule> findByTenantId(UUID tenantId, PageLink pageLink) {
         return DaoUtil.toPageData(notificationRuleRepository.findByTenantId(tenantId, DaoUtil.toPageable(pageLink)));
     }
+    /**
+     * Returns external id by internal.
+     *
+     * @param internalId internal id ({@link NotificationRuleId})
+     * @return {@link NotificationRuleId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationRuleId getExternalIdByInternal(NotificationRuleId internalId) {
         return DaoUtil.toEntityId(notificationRuleRepository.getExternalIdByInternal(internalId.getId()), NotificationRuleId::new);
     }
+    /**
+     * Finds all by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<NotificationRule> findAllByTenantId(TenantId tenantId, PageLink pageLink) {
         return findByTenantId(tenantId.getId(), pageLink);
     }
+    /**
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Class<NotificationRuleEntity> getEntityClass() {
         return NotificationRuleEntity.class;
     }
+    /**
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected JpaRepository<NotificationRuleEntity, UUID> getRepository() {
         return notificationRuleRepository;
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

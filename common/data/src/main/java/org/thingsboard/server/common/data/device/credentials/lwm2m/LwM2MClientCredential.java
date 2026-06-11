@@ -34,9 +34,19 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * lw m2mclient credential contract.
  */
 public interface LwM2MClientCredential {
+    /**
+     * Returns security config client mode.
+     *
+     * @return {@link LwM2MSecurityMode}
+     */
 
     @JsonIgnore
     LwM2MSecurityMode getSecurityConfigClientMode();
+/**
+ * Returns endpoint.
+ *
+ * @return {@link String}
+ */
 
     String getEndpoint();
 }

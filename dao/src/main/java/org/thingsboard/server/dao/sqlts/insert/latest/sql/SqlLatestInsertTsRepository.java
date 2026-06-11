@@ -28,8 +28,14 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
 /**
- * Sql latest insert ts repository.
+ * Sql latest insert ts repository (time-series SQL/Timescale persistence (SQL/Timescale time-series key-value storage)).
  */
+
+
+
+
+
+
 
 @SqlTsLatestAnyDao
 @Repository
@@ -59,6 +65,15 @@ public class SqlLatestInsertTsRepository extends AbstractVersionedInsertReposito
         this.batchUpdateQuery = (updateByLatestTs ? BATCH_UPDATE_BY_LATEST_TS : BATCH_UPDATE) + RETURNING;
         this.insertOrUpdateQuery = (updateByLatestTs ? INSERT_OR_UPDATE_BY_LATEST_TS : INSERT_OR_UPDATE) + RETURNING;
     }
+    /**
+     * Set on batch update values.
+     *
+     * @param ps ps ({@link PreparedStatement})
+     * @param i i
+     * @param entities entities ({@link List})
+     * @return nothing
+     * @throws SQLException if sqlexception is thrown during processing
+     */
 
     @Override
     protected void setOnBatchUpdateValues(PreparedStatement ps, int i, List<TsKvLatestEntity> entities) throws SQLException {
@@ -93,6 +108,15 @@ public class SqlLatestInsertTsRepository extends AbstractVersionedInsertReposito
             ps.setLong(9, tsKvLatestEntity.getTs());
         }
     }
+    /**
+     * Set on insert or update values.
+     *
+     * @param ps ps ({@link PreparedStatement})
+     * @param i i
+     * @param insertEntities insert entities ({@link List})
+     * @return nothing
+     * @throws SQLException if sqlexception is thrown during processing
+     */
 
     @Override
     protected void setOnInsertOrUpdateValues(PreparedStatement ps, int i, List<TsKvLatestEntity> insertEntities) throws SQLException {
@@ -136,11 +160,23 @@ public class SqlLatestInsertTsRepository extends AbstractVersionedInsertReposito
         ps.setString(8, replaceNullChars(tsKvLatestEntity.getJsonValue()));
         ps.setString(14, replaceNullChars(tsKvLatestEntity.getJsonValue()));
     }
+    /**
+     * Returns batch update query.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected String getBatchUpdateQuery() {
         return batchUpdateQuery;
     }
+    /**
+     * Returns insert or update query.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected String getInsertOrUpdateQuery() {

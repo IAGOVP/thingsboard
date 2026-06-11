@@ -23,6 +23,12 @@ import org.thingsboard.server.common.data.exception.ThingsboardException;
 public interface ThrowingRunnable {
 
     void run() throws ThingsboardException;
+/**
+ * And then.
+ *
+ * @param after after ({@link ThrowingRunnable})
+ * @return {@link ThrowingRunnable}
+ */
 
     default ThrowingRunnable andThen(ThrowingRunnable after) {
         return () -> {

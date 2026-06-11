@@ -22,13 +22,26 @@ import org.thingsboard.server.dao.model.sql.MobileAppBundleOauth2ClientEntity;
 import java.util.List;
 import java.util.UUID;
 
+
 /**
 
- * mobile app bundle oauth2client repository contract.
+ * Spring Data JPA repository for mobile app bundle oauth2client entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
 
+
 public interface MobileAppBundleOauth2ClientRepository extends JpaRepository<MobileAppBundleOauth2ClientEntity, MobileAppOauth2ClientCompositeKey> {
+    /**
+     * Finds all by mobile app bundle id.
+     *
+     * @param mobileAppId mobile app id ({@link UUID})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<MobileAppBundleOauth2ClientEntity> findAllByMobileAppBundleId(UUID mobileAppId);
 

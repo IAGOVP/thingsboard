@@ -32,8 +32,11 @@ import java.util.Optional;
 
 import static org.thingsboard.server.dao.model.ModelConstants.NULL_UUID;
 /**
- * Device data validator.
+ * Validates device entities before persistence.
+ *
+ * <p>Enforces constraints, uniqueness, and referential integrity at the DAO layer.
  */
+
 
 @Component
 public class DeviceDataValidator extends AbstractHasOtaPackageValidator<Device> {
@@ -47,22 +50,32 @@ public class DeviceDataValidator extends AbstractHasOtaPackageValidator<Device> 
     @Autowired
     private CustomerDao customerDao;
 
+    
     /**
-
-     * Validate create.
-
+     * Validates create.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param device device ({@link Device})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateCreate(TenantId tenantId, Device device) {
         validateNumberOfEntitiesPerTenant(tenantId, EntityType.DEVICE);
     }
 
+    
     /**
-
-     * Validate update.
-
+     * Validates update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param device device ({@link Device})
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected Device validateUpdate(TenantId tenantId, Device device) {
@@ -73,11 +86,16 @@ public class DeviceDataValidator extends AbstractHasOtaPackageValidator<Device> 
         return old;
     }
 
+    
     /**
-
-     * Validate data impl.
-
+     * Validates data impl.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param device device ({@link Device})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateDataImpl(TenantId tenantId, Device device) {

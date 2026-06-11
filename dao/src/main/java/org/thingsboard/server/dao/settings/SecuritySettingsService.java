@@ -17,15 +17,65 @@ package org.thingsboard.server.dao.settings;
 
 import org.thingsboard.server.common.data.security.model.SecuritySettings;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * security settings service contract.
+
+
+
+
+
+ * security settings service contract (system and tenant admin settings).
+
+
+
+
+
 
  */
 
+
+
+
+
+
+
 public interface SecuritySettingsService {
+    /**
+     * Returns security settings.
+     *
+     * @return {@link SecuritySettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     SecuritySettings getSecuritySettings();
+    /**
+     * Saves or persists security settings.
+     *
+     * @param securitySettings security settings ({@link SecuritySettings})
+     * @return {@link SecuritySettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     SecuritySettings saveSecuritySettings(SecuritySettings securitySettings);
 

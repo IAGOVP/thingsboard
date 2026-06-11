@@ -52,8 +52,11 @@ import static org.thingsboard.server.dao.model.ModelConstants.AUDIT_LOG_TENANT_I
 import static org.thingsboard.server.dao.model.ModelConstants.AUDIT_LOG_USER_ID_PROPERTY;
 import static org.thingsboard.server.dao.model.ModelConstants.AUDIT_LOG_USER_NAME_PROPERTY;
 /**
- * Audit log entity.
+ * JPA/Cassandra row model for audit log.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -127,6 +130,12 @@ public class AuditLogEntity extends BaseSqlEntity<AuditLog> implements BaseEntit
         this.actionStatus = auditLog.getActionStatus();
         this.actionFailureDetails = auditLog.getActionFailureDetails();
     }
+    /**
+     * To data.
+     *
+     * @return {@link AuditLog}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AuditLog toData() {

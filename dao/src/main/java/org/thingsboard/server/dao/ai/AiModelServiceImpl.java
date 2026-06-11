@@ -42,8 +42,11 @@ import java.util.UUID;
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
 import static org.thingsboard.server.dao.service.Validator.validatePageLink;
 /**
- * Spring service implementing ai model API.
+ * Spring {@code @Service} implementing the ai model DAO API.
+ *
+ * <p>Delegates to {@code *Dao} implementations and manages cache eviction (ThingsBoard DAO layer).
  */
+
 
 @Service
 @RequiredArgsConstructor
@@ -54,11 +57,15 @@ class AiModelServiceImpl extends CachedVersionedEntityService<AiModelCacheKey, A
     private final JpaExecutorService jpaExecutor;
     private final AiModelDao aiModelDao;
 
+    
     /**
-
-     * Handle evict event.
-
+     * Handles evict event.
+     *
+     * @param event event ({@link AiModelCacheEvictEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @TransactionalEventListener
@@ -73,11 +80,15 @@ class AiModelServiceImpl extends CachedVersionedEntityService<AiModelCacheKey, A
         }
     }
 
+    
     /**
-
-     * Persists .
-
+     * Saves or persists the requested data.
+     *
+     * @param model model ({@link AiModel})
+     * @return {@link AiModel}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -85,11 +96,16 @@ class AiModelServiceImpl extends CachedVersionedEntityService<AiModelCacheKey, A
         return save(model, true);
     }
 
+    
     /**
-
-     * Persists .
-
+     * Saves or persists the requested data.
+     *
+     * @param aiModel ai model ({@link AiModel})
+     * @param doValidate do validate
+     * @return {@link AiModel}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AiModel save(AiModel aiModel, boolean doValidate) {
@@ -118,22 +134,32 @@ class AiModelServiceImpl extends CachedVersionedEntityService<AiModelCacheKey, A
         return savedModel;
     }
 
+    
     /**
-
-     * Loads ai model by id.
-
+     * Finds ai model by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param modelId model id ({@link AiModelId})
+     * @return optional {@link AiModel}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<AiModel> findAiModelById(TenantId tenantId, AiModelId modelId) {
         return Optional.ofNullable(aiModelDao.findById(tenantId, modelId.getId()));
     }
 
+    
     /**
-
-     * Loads ai models by tenant id.
-
+     * Finds ai models by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AiModel> findAiModelsByTenantId(TenantId tenantId, PageLink pageLink) {
@@ -141,11 +167,16 @@ class AiModelServiceImpl extends CachedVersionedEntityService<AiModelCacheKey, A
         return aiModelDao.findAllByTenantId(tenantId, pageLink);
     }
 
+    
     /**
-
-     * Loads ai model by tenant id and id.
-
+     * Finds ai model by tenant id and id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param modelId model id ({@link AiModelId})
+     * @return optional {@link AiModel}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<AiModel> findAiModelByTenantIdAndId(TenantId tenantId, AiModelId modelId) {
@@ -153,33 +184,48 @@ class AiModelServiceImpl extends CachedVersionedEntityService<AiModelCacheKey, A
         return Optional.ofNullable(cache.get(cacheKey, () -> aiModelDao.findByTenantIdAndId(tenantId, modelId).orElse(null)));
     }
 
+    
     /**
-
-     * Loads ai model by tenant id and id async.
-
+     * Finds ai model by tenant id and id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param modelId model id ({@link AiModelId})
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Optional<AiModel>> findAiModelByTenantIdAndIdAsync(TenantId tenantId, AiModelId modelId) {
         return FluentFuture.from(jpaExecutor.submit(() -> findAiModelByTenantIdAndId(tenantId, modelId)));
     }
 
+    
     /**
-
-     * Loads ai model by tenant id and name.
-
+     * Finds ai model by tenant id and name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return optional {@link AiModel}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<AiModel> findAiModelByTenantIdAndName(TenantId tenantId, String name) {
         return Optional.ofNullable(aiModelDao.findByTenantIdAndName(tenantId.getId(), name));
     }
 
+    
     /**
-
-     * Removes by tenant id and id.
-
+     * Deletes by tenant id and id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param modelId model id ({@link AiModelId})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -187,11 +233,16 @@ class AiModelServiceImpl extends CachedVersionedEntityService<AiModelCacheKey, A
         return deleteByTenantIdAndIdInternal(tenantId, modelId.getId());
     }
 
+    
     /**
-
-     * Loads entity.
-
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
@@ -199,11 +250,16 @@ class AiModelServiceImpl extends CachedVersionedEntityService<AiModelCacheKey, A
                 .map(model -> model); // necessary to cast to HasId<?>
     }
 
+    
     /**
-
-     * Loads entity async.
-
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
@@ -211,22 +267,32 @@ class AiModelServiceImpl extends CachedVersionedEntityService<AiModelCacheKey, A
                 .transform(modelOpt -> modelOpt.map(model -> model), directExecutor());  // necessary to cast to HasId<?>
     }
 
+    
     /**
-
      * Counts by tenant id.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public long countByTenantId(TenantId tenantId) {
         return aiModelDao.countByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Removes entity.
-
+     * Deletes entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id entity UUID primary key
+     * @param force force
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -249,11 +315,15 @@ class AiModelServiceImpl extends CachedVersionedEntityService<AiModelCacheKey, A
         return deleted;
     }
 
+    
     /**
-
-     * Removes by tenant id.
-
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -262,11 +332,14 @@ class AiModelServiceImpl extends CachedVersionedEntityService<AiModelCacheKey, A
         deleted.forEach(id -> publishEvictEvent(new AiModelCacheEvictEvent.Deleted(AiModelCacheKey.of(tenantId, id))));
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

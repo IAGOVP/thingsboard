@@ -20,8 +20,11 @@ import lombok.RequiredArgsConstructor;
 import org.thingsboard.server.common.data.EntityType;
 import org.thingsboard.server.common.data.id.TenantId;
 /**
- * Entity count cache evict event.
+ * Cache eviction event published when entity count cache data changes.
+ *
+ * <p>Consumed by cache listeners to invalidate stale entries cluster-wide.
  */
+
 
 @Data
 @RequiredArgsConstructor

@@ -23,16 +23,40 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
- * versioned tb cache contract.
+ * Extension of {@link TbTransactionalCache} for entities implementing {@link org.thingsboard.server.common.data.HasVersion}.
+ *
+ * <p>Writes include the entity version so stale updates from out-of-order events are rejected.
+ * Adds version-aware {@link #evict(K, Long)} that writes a tombstone at the given version.
+ *
+ * <p>Implementations: {@link VersionedCaffeineTbCache}, {@link VersionedRedisTbCache}.
+ *
+ * @param <K> versioned cache key
+ * @param <V> versioned entity type
+ * @see VersionedCacheKey
  */
 public interface VersionedTbCache<K extends VersionedCacheKey, V extends Serializable & HasVersion> extends TbTransactionalCache<K, V> {
 
     TbCacheValueWrapper<V> get(K key);
 
+/**
+         * Cache-aside get with automatic put on miss.
+         *
+         * @param key      cache key
+         * @param supplier database fallback
+         * @return cached or loaded value
+         */
     default V get(K key, Supplier<V> supplier) {
         return get(key, supplier, true);
     }
 
+/**
+         * Cache-aside get with optional write-through.
+         *
+         * @param key         cache key
+         * @param supplier    database fallback
+         * @param putToCache  whether to store the loaded value
+         * @return cached or loaded value
+         */
     default V get(K key, Supplier<V> supplier, boolean putToCache) {
         return Optional.ofNullable(get(key))
                 .map(TbCacheValueWrapper::get)
@@ -51,8 +75,20 @@ public interface VersionedTbCache<K extends VersionedCacheKey, V extends Seriali
 
     void evict(Collection<K> keys);
 
+/**
+         * Version-aware eviction writing a versioned tombstone.
+         *
+         * @param key     cache key
+         * @param version entity version for optimistic invalidation
+         */
     void evict(K key, Long version);
 
+/**
+         * Extracts the version stamp from an entity for compare-and-set logic.
+         *
+         * @param value entity; {@code null} maps to {@code 0L}
+         * @return version number, {@code 0L} for null, or {@code null} when version is unset
+         */
     default Long getVersion(V value) {
         if (value == null) {
             return 0L;

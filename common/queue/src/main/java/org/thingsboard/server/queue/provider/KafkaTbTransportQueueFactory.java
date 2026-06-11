@@ -46,12 +46,12 @@ import org.thingsboard.server.queue.settings.TbQueueRuleEngineSettings;
 import org.thingsboard.server.queue.settings.TbQueueTransportApiSettings;
 import org.thingsboard.server.queue.settings.TbQueueTransportNotificationSettings;
 
-@Component
-@ConditionalOnExpression("'${queue.type:null}'=='kafka' && (('${service.type:null}'=='monolith' && '${transport.api_enabled:true}'=='true') || '${service.type:null}'=='tb-transport')")
-@Slf4j
+
 /**
- * Factory for kafka tb transport queue.
+ * Creates Kafka producers and consumers for transport service communication.
  */
+@Component
+@Slf4j
 public class KafkaTbTransportQueueFactory implements TbTransportQueueFactory {
 
     private final TbKafkaSettings kafkaSettings;

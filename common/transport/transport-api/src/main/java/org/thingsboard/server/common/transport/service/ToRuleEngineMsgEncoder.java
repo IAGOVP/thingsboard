@@ -22,6 +22,13 @@ import org.thingsboard.server.queue.kafka.TbKafkaEncoder;
  * To rule engine msg encoder.
  */
 public class ToRuleEngineMsgEncoder implements TbKafkaEncoder<ToRuleEngineMsg> {
+    /**
+     * Encode.
+     *
+     * @param value value ({@link ToRuleEngineMsg})
+     * @return the byte[] value
+     * @throws Exception on processing failure
+     */
     @Override
     public byte[] encode(ToRuleEngineMsg value) {
         return value.toByteArray();

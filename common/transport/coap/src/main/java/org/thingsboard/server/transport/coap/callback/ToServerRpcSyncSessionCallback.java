@@ -32,6 +32,13 @@ public class ToServerRpcSyncSessionCallback extends AbstractSyncSessionCallback 
     public ToServerRpcSyncSessionCallback(TbCoapClientState state, CoapExchange exchange, Request request) {
         super(state, exchange, request);
     }
+    /**
+     * Handles to server rpc response.
+     *
+     * @param toServerResponse to server response
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void onToServerRpcResponse(TransportProtos.ToServerRpcResponseMsg toServerResponse) {

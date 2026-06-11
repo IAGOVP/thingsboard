@@ -67,6 +67,11 @@ public class Queue extends BaseDataWithAdditionalInfo<QueueId> implements HasNam
         this.processingStrategy = queueConfiguration.getProcessingStrategy();
         setAdditionalInfo(queueConfiguration.getAdditionalInfo());
     }
+    /**
+     * Returns custom properties.
+     *
+     * @return {@link String}
+     */
 
 
     @JsonIgnore
@@ -75,6 +80,11 @@ public class Queue extends BaseDataWithAdditionalInfo<QueueId> implements HasNam
                 .map(info -> info.get("customProperties"))
                 .filter(JsonNode::isTextual).map(JsonNode::asText).orElse(null);
     }
+    /**
+     * Is duplicate msg to all partitions.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     public boolean isDuplicateMsgToAllPartitions() {

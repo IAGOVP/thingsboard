@@ -36,9 +36,13 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
 /**
  * EDQS query processor for abstract relation entity filters.
+ *
+ * <p>Evaluates {@link org.thingsboard.server.common.data.query.EntityFilter} against a {@link org.thingsboard.server.edqs.repo.TenantRepo} (EDQS microservice — entity filter query processors).
  */
+
 public abstract class AbstractRelationQueryProcessor<T extends EntityFilter> extends AbstractQueryProcessor<T> {
 
     public static final int MAXIMUM_QUERY_LEVEL = 100;
@@ -46,29 +50,73 @@ public abstract class AbstractRelationQueryProcessor<T extends EntityFilter> ext
     public AbstractRelationQueryProcessor(TenantRepo repo, QueryContext ctx, EdqsQuery query, T filter) {
         super(repo, ctx, query, filter);
     }
+    /**
+     * Returns root entities.
+     *
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract Set<UUID> getRootEntities();
+    /**
+     * Returns direction.
+     *
+     * @return {@link EntitySearchDirection}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract EntitySearchDirection getDirection();
+    /**
+     * Returns max level.
+     *
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract int getMaxLevel();
+    /**
+     * Is fetch last level only.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract boolean isFetchLastLevelOnly();
+    /**
+     * Is multi root.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected boolean isMultiRoot() {
         return false;
     }
+    /**
+     * Processes query.
+     *
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<SortableEntityData> processQuery() {
         var relations = repository.getRelations(RelationTypeGroup.COMMON);
         var entities = getEntitiesSet(relations);
         if (ctx.isTenantUser()) {
+            /** Process tenant query. */
             return processTenantQuery(entities);
         } else {
+            /** Process customer query. */
             return processCustomerQuery(entities);
         }
     }
+    /**
+     * Counts the requested data.
+     *
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public long count() {
@@ -155,8 +203,18 @@ public abstract class AbstractRelationQueryProcessor<T extends EntityFilter> ext
         }
         return result;
     }
+    /**
+     * Checks the requested data.
+     *
+     * @param relationInfo relation info ({@link RelationInfo})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract boolean check(RelationInfo relationInfo);
+    /**
+     * Relation search task (EDQS microservice — entity filter query processors).
+     */
 
     @RequiredArgsConstructor
     @EqualsAndHashCode

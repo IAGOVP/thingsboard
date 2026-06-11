@@ -16,19 +16,20 @@
 package org.thingsboard.server.queue.kafka;
 
 import jakarta.annotation.PostConstruct;
+import java.util.Map;
+
+
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.thingsboard.server.queue.util.PropertyUtils;
 import org.thingsboard.server.queue.util.TbKafkaComponent;
 
-import java.util.Map;
-
+/**
+ * Per-topic Kafka configuration (partition count and custom properties) from application settings.
+ */
 @Component
 @TbKafkaComponent
-/**
- * Tb kafka topic configs.
- */
 public class TbKafkaTopicConfigs {
 
     public static final String NUM_PARTITIONS_SETTING = "partitions";

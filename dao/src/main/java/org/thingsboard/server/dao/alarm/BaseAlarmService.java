@@ -85,7 +85,10 @@ import static org.thingsboard.server.dao.service.Validator.validateEntityDataPag
 import static org.thingsboard.server.dao.service.Validator.validateId;
 /**
  * Default DAO-layer service implementation for alarm.
+ *
+ * <p>Coordinates validation, caching, cluster events, and {@code *Dao} persistence (alarm persistence, comments, and alarm-type caching).
  */
+
 
 @Service("AlarmDaoService")
 @Slf4j
@@ -100,11 +103,15 @@ public class BaseAlarmService extends AbstractCachedEntityService<TenantId, Page
     private final AlarmDao alarmDao;
     private final EntityService entityService;
 
+    
     /**
-
-     * Handle evict event.
-
+     * Handles evict event.
+     *
+     * @param event event ({@link AlarmTypesCacheEvictEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @TransactionalEventListener
@@ -113,11 +120,15 @@ public class BaseAlarmService extends AbstractCachedEntityService<TenantId, Page
         cache.evict(tenantId);
     }
 
+    
     /**
-
      * Updates alarm.
-
+     *
+     * @param request request payload with operation parameters
+     * @return {@link AlarmApiCallResult}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AlarmApiCallResult updateAlarm(AlarmUpdateRequest request) {
@@ -130,22 +141,31 @@ public class BaseAlarmService extends AbstractCachedEntityService<TenantId, Page
         return result;
     }
 
+    
     /**
-
      * Creates alarm.
-
+     *
+     * @param request request payload with operation parameters
+     * @return {@link AlarmApiCallResult}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AlarmApiCallResult createAlarm(AlarmCreateOrUpdateActiveRequest request) {
         return createAlarm(request, true);
     }
 
+    
     /**
-
      * Creates alarm.
-
+     *
+     * @param request request payload with operation parameters
+     * @param alarmCreationEnabled alarm creation enabled
+     * @return {@link AlarmApiCallResult}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AlarmApiCallResult createAlarm(AlarmCreateOrUpdateActiveRequest request, boolean alarmCreationEnabled) {
@@ -169,11 +189,17 @@ public class BaseAlarmService extends AbstractCachedEntityService<TenantId, Page
         return withPropagated(result);
     }
 
+    
     /**
-
      * Acknowledge alarm.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alarmId alarm id ({@link AlarmId})
+     * @param ackTs ack ts
+     * @return {@link AlarmApiCallResult}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AlarmApiCallResult acknowledgeAlarm(TenantId tenantId, AlarmId alarmId, long ackTs) {
@@ -189,11 +215,19 @@ public class BaseAlarmService extends AbstractCachedEntityService<TenantId, Page
         return result;
     }
 
+    
     /**
-
      * Clear alarm.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alarmId alarm id ({@link AlarmId})
+     * @param clearTs clear ts
+     * @param details details ({@link JsonNode})
+     * @param pushEvent push event
+     * @return {@link AlarmApiCallResult}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AlarmApiCallResult clearAlarm(TenantId tenantId, AlarmId alarmId, long clearTs, JsonNode details, boolean pushEvent) {
@@ -209,33 +243,51 @@ public class BaseAlarmService extends AbstractCachedEntityService<TenantId, Page
         return result;
     }
 
+    
     /**
-
-     * Loads latest active by originator and type.
-
+     * Finds latest active by originator and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param originator originator ({@link EntityId})
+     * @param type type ({@link String})
+     * @return {@link Alarm}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Alarm findLatestActiveByOriginatorAndType(TenantId tenantId, EntityId originator, String type) {
         return alarmDao.findLatestActiveByOriginatorAndType(tenantId, originator, type);
     }
 
+    
     /**
-
-     * Loads latest active by originator and type async.
-
+     * Finds latest active by originator and type async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param originator originator ({@link EntityId})
+     * @param type type ({@link String})
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Alarm> findLatestActiveByOriginatorAndTypeAsync(TenantId tenantId, EntityId originator, String type) {
         return alarmDao.findLatestActiveByOriginatorAndTypeAsync(tenantId, originator, type);
     }
 
+    
     /**
-
-     * Loads alarm data by query for entities.
-
+     * Finds alarm data by query for entities.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param query filter and sort query definition
+     * @param orderedEntityIds ordered entity ids ({@link Collection})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AlarmData> findAlarmDataByQueryForEntities(TenantId tenantId,
@@ -245,11 +297,16 @@ public class BaseAlarmService extends AbstractCachedEntityService<TenantId, Page
         return alarmDao.findAlarmDataByQueryForEntities(tenantId, query, orderedEntityIds);
     }
 
+    
     /**
-
      * Del alarm.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alarmId alarm id ({@link AlarmId})
+     * @return {@link AlarmApiCallResult}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -257,11 +314,17 @@ public class BaseAlarmService extends AbstractCachedEntityService<TenantId, Page
         return delAlarm(tenantId, alarmId, true);
     }
 
+    
     /**
-
      * Del alarm.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alarmId alarm id ({@link AlarmId})
+     * @param checkAndDeleteAlarmType check and delete alarm type
+     * @return {@link AlarmApiCallResult}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -295,11 +358,16 @@ public class BaseAlarmService extends AbstractCachedEntityService<TenantId, Page
         }
     }
 
+    
     /**
-
      * Del alarm types.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param types types ({@link Set})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     @Transactional
@@ -339,11 +407,18 @@ public class BaseAlarmService extends AbstractCachedEntityService<TenantId, Page
         return relations.map(EntityRelation::getFrom).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
+    
     /**
-
-     * Assign alarm.
-
+     * Assigns alarm.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alarmId alarm id ({@link AlarmId})
+     * @param assigneeId assignee id ({@link UserId})
+     * @param assignTime assign time
+     * @return {@link AlarmApiCallResult}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AlarmApiCallResult assignAlarm(TenantId tenantId, AlarmId alarmId, UserId assigneeId, long assignTime) {
@@ -355,11 +430,17 @@ public class BaseAlarmService extends AbstractCachedEntityService<TenantId, Page
         return result;
     }
 
+    
     /**
-
-     * Unassign alarm.
-
+     * Unassigns alarm.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alarmId alarm id ({@link AlarmId})
+     * @param unassignTime unassign time
+     * @return {@link AlarmApiCallResult}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AlarmApiCallResult unassignAlarm(TenantId tenantId, AlarmId alarmId, long unassignTime) {
@@ -371,11 +452,16 @@ public class BaseAlarmService extends AbstractCachedEntityService<TenantId, Page
         return result;
     }
 
+    
     /**
-
-     * Loads alarm by id.
-
+     * Finds alarm by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alarmId alarm id ({@link AlarmId})
+     * @return {@link Alarm}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Alarm findAlarmById(TenantId tenantId, AlarmId alarmId) {
@@ -384,11 +470,16 @@ public class BaseAlarmService extends AbstractCachedEntityService<TenantId, Page
         return alarmDao.findAlarmById(tenantId, alarmId.getId());
     }
 
+    
     /**
-
-     * Loads alarm by id async.
-
+     * Finds alarm by id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alarmId alarm id ({@link AlarmId})
+     * @return future completing with {@link Alarm}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public ListenableFuture<Alarm> findAlarmByIdAsync(TenantId tenantId, AlarmId alarmId) {
@@ -397,11 +488,16 @@ public class BaseAlarmService extends AbstractCachedEntityService<TenantId, Page
         return alarmDao.findAlarmByIdAsync(tenantId, alarmId.getId());
     }
 
+    
     /**
-
-     * Loads alarm info by id.
-
+     * Finds alarm info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alarmId alarm id ({@link AlarmId})
+     * @return {@link AlarmInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AlarmInfo findAlarmInfoById(TenantId tenantId, AlarmId alarmId) {
@@ -410,55 +506,85 @@ public class BaseAlarmService extends AbstractCachedEntityService<TenantId, Page
         return alarmDao.findAlarmInfoById(tenantId, alarmId.getId());
     }
 
+    
     /**
-
-     * Loads alarms.
-
+     * Finds alarms.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param query filter and sort query definition
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AlarmInfo> findAlarms(TenantId tenantId, AlarmQuery query) {
         return alarmDao.findAlarms(tenantId, query);
     }
 
+    
     /**
-
-     * Loads customer alarms.
-
+     * Finds customer alarms.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param query filter and sort query definition
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AlarmInfo> findCustomerAlarms(TenantId tenantId, CustomerId customerId, AlarmQuery query) {
         return alarmDao.findCustomerAlarms(tenantId, customerId, query);
     }
 
+    
     /**
-
-     * Loads alarms v2.
-
+     * Finds alarms v2.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param query filter and sort query definition
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AlarmInfo> findAlarmsV2(TenantId tenantId, AlarmQueryV2 query) {
         return alarmDao.findAlarmsV2(tenantId, query);
     }
 
+    
     /**
-
-     * Loads customer alarms v2.
-
+     * Finds customer alarms v2.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param query filter and sort query definition
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AlarmInfo> findCustomerAlarmsV2(TenantId tenantId, CustomerId customerId, AlarmQueryV2 query) {
         return alarmDao.findCustomerAlarmsV2(tenantId, customerId, query);
     }
 
+    
     /**
-
-     * Loads alarm ids by assignee id.
-
+     * Finds alarm ids by assignee id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @param createdTimeOffset created time offset
+     * @param idOffset cursor for batch id scan (exclusive lower bound)
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<TbPair<UUID, Long>> findAlarmIdsByAssigneeId(TenantId tenantId, UserId userId, long createdTimeOffset, AlarmId idOffset, int limit) {
@@ -467,11 +593,19 @@ public class BaseAlarmService extends AbstractCachedEntityService<TenantId, Page
         return alarmDao.findAlarmIdsByAssigneeId(tenantId, userId, createdTimeOffset, idOffset, limit).getData();
     }
 
+    
     /**
-
-     * Loads alarm ids by originator id.
-
+     * Finds alarm ids by originator id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param originatorId originator id ({@link EntityId})
+     * @param createdTimeOffset created time offset
+     * @param idOffset cursor for batch id scan (exclusive lower bound)
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<TbPair<UUID, Long>> findAlarmIdsByOriginatorId(TenantId tenantId, EntityId originatorId, long createdTimeOffset, AlarmId idOffset, int limit) {
@@ -479,11 +613,19 @@ public class BaseAlarmService extends AbstractCachedEntityService<TenantId, Page
         return alarmDao.findAlarmIdsByOriginatorId(tenantId, originatorId, createdTimeOffset, idOffset, limit).getData();
     }
 
+    
     /**
-
-     * Loads highest alarm severity.
-
+     * Finds highest alarm severity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param alarmSearchStatus alarm search status ({@link AlarmSearchStatus})
+     * @param alarmStatus alarm status ({@link AlarmStatus})
+     * @param assigneeId assignee id ({@link String})
+     * @return {@link AlarmSeverity}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public AlarmSeverity findHighestAlarmSeverity(TenantId tenantId, EntityId entityId, AlarmSearchStatus alarmSearchStatus,
@@ -501,11 +643,16 @@ public class BaseAlarmService extends AbstractCachedEntityService<TenantId, Page
         return alarmSeverities.stream().min(AlarmSeverity::compareTo).orElse(null);
     }
 
+    
     /**
-
-     * Removes entity alarm records.
-
+     * Deletes entity alarm records.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public int deleteEntityAlarmRecords(TenantId tenantId, EntityId entityId) {
@@ -513,11 +660,15 @@ public class BaseAlarmService extends AbstractCachedEntityService<TenantId, Page
         return alarmDao.deleteEntityAlarmRecords(tenantId, entityId);
     }
 
+    
     /**
-
-     * Removes entity alarm records by tenant id.
-
+     * Deletes entity alarm records by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteEntityAlarmRecordsByTenantId(TenantId tenantId) {
@@ -525,22 +676,35 @@ public class BaseAlarmService extends AbstractCachedEntityService<TenantId, Page
         alarmDao.deleteEntityAlarmRecordsByTenantId(tenantId);
     }
 
+    
     /**
-
      * Counts alarms by query.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param query filter and sort query definition
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public long countAlarmsByQuery(TenantId tenantId, CustomerId customerId, AlarmCountQuery query) {
         return countAlarmsByQuery(tenantId, customerId, query, null);
     }
 
+    
     /**
-
      * Counts alarms by query.
-
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param query filter and sort query definition
+     * @param orderedEntityIds ordered entity ids ({@link Collection})
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public long countAlarmsByQuery(TenantId tenantId, CustomerId customerId, AlarmCountQuery query, Collection<EntityId> orderedEntityIds) {
@@ -548,11 +712,16 @@ public class BaseAlarmService extends AbstractCachedEntityService<TenantId, Page
         return alarmDao.countAlarmsByQuery(tenantId, customerId, query, orderedEntityIds);
     }
 
+    
     /**
-
-     * Loads alarm types by tenant id.
-
+     * Finds alarm types by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<EntitySubtype> findAlarmTypesByTenantId(TenantId tenantId, PageLink pageLink) {
@@ -565,11 +734,17 @@ public class BaseAlarmService extends AbstractCachedEntityService<TenantId, Page
         return alarmDao.findTenantAlarmTypes(tenantId.getId(), pageLink);
     }
 
+    
     /**
-
-     * Loads active originator alarms.
-
+     * Finds active originator alarms.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param originatorAlarmFilter originator alarm filter ({@link OriginatorAlarmFilter})
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<UUID> findActiveOriginatorAlarms(TenantId tenantId, OriginatorAlarmFilter originatorAlarmFilter, int limit) {
@@ -638,22 +813,32 @@ public class BaseAlarmService extends AbstractCachedEntityService<TenantId, Page
         }
     }
 
+    
     /**
-
-     * Loads entity.
-
+     * Finds entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return optional {@link HasId}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public Optional<HasId<?>> findEntity(TenantId tenantId, EntityId entityId) {
         return Optional.ofNullable(findAlarmById(tenantId, new AlarmId(entityId.getId())));
     }
 
+    
     /**
-
-     * Loads entity async.
-
+     * Finds entity async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public FluentFuture<Optional<HasId<?>>> findEntityAsync(TenantId tenantId, EntityId entityId) {
@@ -661,11 +846,14 @@ public class BaseAlarmService extends AbstractCachedEntityService<TenantId, Page
                 .transform(Optional::ofNullable, directExecutor());
     }
 
+    
     /**
-
-     * Get entity type.
-
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public EntityType getEntityType() {

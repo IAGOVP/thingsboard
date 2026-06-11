@@ -27,11 +27,17 @@ import org.thingsboard.server.dao.model.sql.AuditLogEntity;
 import java.util.List;
 import java.util.UUID;
 
+
 /**
 
- * audit log repository contract.
+ * Spring Data JPA repository for audit log entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
+
 
 public interface AuditLogRepository extends JpaRepository<AuditLogEntity, UUID> {
 
@@ -46,6 +52,18 @@ public interface AuditLogRepository extends JpaRepository<AuditLogEntity, UUID> 
             "OR ilike(a.actionType, CONCAT('%', :textSearch, '%')) = true " +
             "OR ilike(a.actionStatus, CONCAT('%', :textSearch, '%')) = true)"
     )
+    /**
+     * Finds by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param textSearch text search ({@link String})
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @param actionTypes action types ({@link List})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<AuditLogEntity> findByTenantId(
                                  @Param("tenantId") UUID tenantId,
                                  @Param("textSearch") String textSearch,
@@ -65,6 +83,20 @@ public interface AuditLogRepository extends JpaRepository<AuditLogEntity, UUID> 
             "OR ilike(a.actionType, CONCAT('%', :textSearch, '%')) = true " +
             "OR ilike(a.actionStatus, CONCAT('%', :textSearch, '%')) = true)"
     )
+    /**
+     * Finds audit logs by tenant id and entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityType entity type discriminator
+     * @param entityId target entity identifier
+     * @param textSearch text search ({@link String})
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @param actionTypes action types ({@link List})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<AuditLogEntity> findAuditLogsByTenantIdAndEntityId(@Param("tenantId") UUID tenantId,
                                                             @Param("entityType") EntityType entityType,
                                                             @Param("entityId") UUID entityId,
@@ -86,6 +118,19 @@ public interface AuditLogRepository extends JpaRepository<AuditLogEntity, UUID> 
             "OR ilike(a.actionType, CONCAT('%', :textSearch, '%')) = true " +
             "OR ilike(a.actionStatus, CONCAT('%', :textSearch, '%')) = true)"
     )
+    /**
+     * Finds audit logs by tenant id and customer id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param textSearch text search ({@link String})
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @param actionTypes action types ({@link List})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<AuditLogEntity> findAuditLogsByTenantIdAndCustomerId(@Param("tenantId") UUID tenantId,
                                                               @Param("customerId") UUID customerId,
                                                               @Param("textSearch") String textSearch,
@@ -105,6 +150,19 @@ public interface AuditLogRepository extends JpaRepository<AuditLogEntity, UUID> 
             "OR ilike(a.actionType, CONCAT('%', :textSearch, '%')) = true " +
             "OR ilike(a.actionStatus, CONCAT('%', :textSearch, '%')) = true)"
     )
+    /**
+     * Finds audit logs by tenant id and user id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @param textSearch text search ({@link String})
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @param actionTypes action types ({@link List})
+     * @param pageable pageable ({@link Pageable})
+     * @return {@link Page}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     Page<AuditLogEntity> findAuditLogsByTenantIdAndUserId(@Param("tenantId") UUID tenantId,
                                                           @Param("userId") UUID userId,
                                                           @Param("textSearch") String textSearch,

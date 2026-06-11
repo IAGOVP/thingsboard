@@ -19,8 +19,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.repository.config.BootstrapMode;
 /**
- * Default dedicated jpa dao config.
+ * Spring configuration for default dedicated jpa dao DAO beans.
+ *
+ * <p>Registers entity managers, repositories, and datasource routing.
  */
+
 
 @DefaultDataSource
 @Configuration

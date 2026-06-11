@@ -32,8 +32,11 @@ import org.thingsboard.server.dao.util.mapping.JsonConverter;
 
 import java.util.UUID;
 /**
- * User credentials entity.
+ * JPA/Cassandra row model for user credentials.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -91,6 +94,12 @@ public final class UserCredentialsEntity extends BaseSqlEntity<UserCredentials> 
         this.lastLoginTs = userCredentials.getLastLoginTs();
         this.failedLoginAttempts = userCredentials.getFailedLoginAttempts();
     }
+    /**
+     * To data.
+     *
+     * @return {@link UserCredentials}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UserCredentials toData() {

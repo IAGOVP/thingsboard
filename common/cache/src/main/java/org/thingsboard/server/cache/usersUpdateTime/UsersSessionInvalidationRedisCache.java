@@ -25,13 +25,23 @@ import org.thingsboard.server.cache.TBRedisCacheConfiguration;
 import org.thingsboard.server.cache.TbJsonRedisSerializer;
 import org.thingsboard.server.common.data.CacheConstants;
 
+/**
+ * Redis cache for cross-node user session invalidation timestamps.
+ *
+ * <p>Bean {@code UsersSessionInvalidation}. Stores {@link Long} update times as JSON.
+ *
+ * @see UsersSessionInvalidationCaffeineCache
+ * @see CacheSpecsMap
+ */
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "redis")
 @Service("UsersSessionInvalidation")
-/**
- * Users session invalidation redis cache.
- */
 public class UsersSessionInvalidationRedisCache extends RedisTbTransactionalCache<String, Long> {
 
+/**
+         * @param configuration     Redis connection settings
+         * @param cacheSpecsMap     cache specs including JWT-aligned TTL
+         * @param connectionFactory Redis factory
+         */
     @Autowired
     public UsersSessionInvalidationRedisCache(TBRedisCacheConfiguration configuration, CacheSpecsMap cacheSpecsMap, RedisConnectionFactory connectionFactory) {
         super(CacheConstants.USERS_SESSION_INVALIDATION_CACHE, cacheSpecsMap, connectionFactory, configuration, new TbJsonRedisSerializer<>(Long.class));

@@ -44,8 +44,10 @@ public class NumberUtils {
             return value;
         }
         if (precision.equals(0)) {
+            /** To int. */
             return toInt(value);
         }
+        /** To fixed. */
         return toFixed(value, precision);
     }
 

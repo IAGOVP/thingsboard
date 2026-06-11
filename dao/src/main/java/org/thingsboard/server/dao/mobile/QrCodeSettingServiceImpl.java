@@ -35,8 +35,11 @@ import static org.thingsboard.server.common.data.oauth2.PlatformType.ANDROID;
 import static org.thingsboard.server.common.data.oauth2.PlatformType.IOS;
 import static org.thingsboard.server.dao.service.Validator.validateId;
 /**
- * Spring service implementing qr code setting API.
+ * Spring {@code @Service} implementing the qr code setting DAO API.
+ *
+ * <p>Delegates to {@code *Dao} implementations and manages cache eviction (mobile apps, bundles, and QR code settings).
  */
+
 
 @Service
 @Slf4j
@@ -55,11 +58,16 @@ public class QrCodeSettingServiceImpl extends AbstractCachedEntityService<Tenant
     private final MobileAppService mobileAppService;
     private final DataValidator<QrCodeSettings> mobileAppSettingsDataValidator;
 
+    
     /**
-
-     * Persists qr code settings.
-
+     * Saves or persists qr code settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param qrCodeSettings qr code settings ({@link QrCodeSettings})
+     * @return {@link QrCodeSettings}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public QrCodeSettings saveQrCodeSettings(TenantId tenantId, QrCodeSettings qrCodeSettings) {
@@ -77,11 +85,15 @@ public class QrCodeSettingServiceImpl extends AbstractCachedEntityService<Tenant
         }
     }
 
+    
     /**
-
-     * Loads qr code settings.
-
+     * Finds qr code settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link QrCodeSettings}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public QrCodeSettings findQrCodeSettings(TenantId tenantId) {
@@ -91,11 +103,16 @@ public class QrCodeSettingServiceImpl extends AbstractCachedEntityService<Tenant
         return constructMobileAppSettings(qrCodeSettings);
     }
 
+    
     /**
-
-     * Loads app from qr code settings.
-
+     * Finds app from qr code settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param platformType platform type ({@link PlatformType})
+     * @return {@link MobileApp}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public MobileApp findAppFromQrCodeSettings(TenantId tenantId, PlatformType platformType) {
@@ -104,11 +121,15 @@ public class QrCodeSettingServiceImpl extends AbstractCachedEntityService<Tenant
         return qrCodeSettings.getMobileAppBundleId() != null ? mobileAppService.findByBundleIdAndPlatformType(tenantId, qrCodeSettings.getMobileAppBundleId(), platformType) : null;
     }
 
+    
     /**
-
-     * Removes by tenant id.
-
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void deleteByTenantId(TenantId tenantId) {
@@ -117,11 +138,15 @@ public class QrCodeSettingServiceImpl extends AbstractCachedEntityService<Tenant
         qrCodeSettingsDao.removeByTenantId(tenantId);
     }
 
+    
     /**
-
-     * Handle evict event.
-
+     * Handles evict event.
+     *
+     * @param event event ({@link QrCodeSettingsEvictEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @TransactionalEventListener(classes = QrCodeSettingsEvictEvent.class)
     @Override

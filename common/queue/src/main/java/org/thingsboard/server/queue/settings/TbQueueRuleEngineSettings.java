@@ -20,12 +20,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+
+/**
+ * Kafka topic and consumer settings for Rule Engine queues.
+ */
 @Lazy
 @Data
 @Component
-/**
- * Tb queue rule engine settings.
- */
 public class TbQueueRuleEngineSettings {
 
     @Value("${queue.rule-engine.topic}")

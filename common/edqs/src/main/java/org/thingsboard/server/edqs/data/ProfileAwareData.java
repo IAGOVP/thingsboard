@@ -18,9 +18,13 @@ package org.thingsboard.server.edqs.data;
 import org.thingsboard.server.common.data.edqs.fields.ProfileAwareFields;
 
 import java.util.UUID;
+
 /**
- * In-memory EDQS projection of profile aware entity fields and metadata.
+ * In-memory EDQS projection of profile aware entity fields.
+ *
+ * <p>Updated from {@link org.thingsboard.server.common.data.edqs.EdqsEvent} and used during query execution.
  */
+
 public abstract class ProfileAwareData<T> extends BaseEntityData<ProfileAwareFields> {
 
     public ProfileAwareData(UUID id) {

@@ -40,8 +40,11 @@ import static org.thingsboard.server.dao.model.ModelConstants.EVENT_RELATION_TYP
 import static org.thingsboard.server.dao.model.ModelConstants.EVENT_TYPE_COLUMN_NAME;
 import static org.thingsboard.server.dao.model.ModelConstants.RULE_NODE_DEBUG_EVENT_TABLE_NAME;
 /**
- * Rule node debug event entity.
+ * JPA/Cassandra row model for rule node debug event.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -86,6 +89,12 @@ public class RuleNodeDebugEventEntity extends EventEntity<RuleNodeDebugEvent> im
         this.metadata = event.getMetadata();
         this.error = event.getError();
     }
+    /**
+     * To data.
+     *
+     * @return {@link RuleNodeDebugEvent}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleNodeDebugEvent toData() {

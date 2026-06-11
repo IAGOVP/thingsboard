@@ -61,19 +61,40 @@ public class LwM2mCredentialsSecurityInfoValidator {
 
     private final LwM2mTransportContext context;
     private final LwM2MTransportServerConfig config;
-
+    /**
+     * Returns endpoint security info by credentials id.
+     *
+     * @param credentialsId credentials id ({@link String})
+     * @param keyValue key value ({@link LwM2mTypeServer})
+     * @return {@link TbLwM2MSecurityInfo}
+     * @throws Exception on processing failure
+     */
     public TbLwM2MSecurityInfo getEndpointSecurityInfoByCredentialsId(String credentialsId, LwM2mTypeServer keyValue) {
         CountDownLatch latch = new CountDownLatch(1);
         final TbLwM2MSecurityInfo[] resultSecurityStore = new TbLwM2MSecurityInfo[1];
         log.trace("Validating credentials [{}]", credentialsId);
         context.getTransportService().process(ValidateDeviceLwM2MCredentialsRequestMsg.newBuilder().setCredentialsId(credentialsId).build(),
                 new TransportServiceCallback<>() {
+                    /**
+                     * Handles success.
+                     *
+                     * @param msg msg ({@link ValidateDeviceCredentialsResponse})
+                     * @return nothing
+                     * @throws Exception on processing failure
+                     */
                     @Override
                     public void onSuccess(ValidateDeviceCredentialsResponse msg) {
                         log.trace("Validated credentials: [{}] [{}]", credentialsId, msg);
                         resultSecurityStore[0] = createSecurityInfo(credentialsId, msg, keyValue);
                         latch.countDown();
                     }
+                    /**
+                     * Handles error.
+                     *
+                     * @param e e ({@link Throwable})
+                     * @return nothing
+                     * @throws Exception on processing failure
+                     */
 
                     @Override
                     public void onError(Throwable e) {

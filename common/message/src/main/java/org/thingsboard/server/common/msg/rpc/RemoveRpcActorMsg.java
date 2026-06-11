@@ -22,11 +22,13 @@ import org.thingsboard.server.common.msg.MsgType;
 import org.thingsboard.server.common.msg.ToDeviceActorNotificationMsg;
 
 import java.util.UUID;
+/**
+ * Internal actor or queue message: remove rpc actor msg.
+ *
+ * <p>Serialized between tb-core, rule-engine, transport, and edge services.
+ */
 
 @Data
-/**
- * Message: remove rpc actor msg.
- */
 public class RemoveRpcActorMsg implements ToDeviceActorNotificationMsg {
 
     private static final long serialVersionUID = -6112720854949677477L;

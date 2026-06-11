@@ -57,6 +57,11 @@ public class EntityCountQuery {
         this.keyFilters = keyFilters;
         this.keyFiltersOperation = keyFiltersOperation;
     }
+    /**
+     * Returns key filters operation or default.
+     *
+     * @return {@link ComplexOperation}
+     */
 
     public ComplexOperation getKeyFiltersOperationOrDefault() {
         return keyFiltersOperation != null ? keyFiltersOperation : ComplexOperation.AND;

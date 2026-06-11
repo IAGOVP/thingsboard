@@ -42,6 +42,12 @@ public class TbLwM2MCreateRequest extends AbstractTbLwM2MTargetedDownlinkRequest
         this.objectContentFormat = objectContentFormat;
         this.nodes = nodes;
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link LwM2MOperationType}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public LwM2MOperationType getType() {

@@ -36,11 +36,21 @@ public class EntityActionTrigger implements NotificationRuleTrigger {
     private final HasName entity;
     private final ActionType actionType;
     private final User user;
+    /**
+     * Returns type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     */
 
     @Override
     public NotificationRuleTriggerType getType() {
         return NotificationRuleTriggerType.ENTITY_ACTION;
     }
+    /**
+     * Returns originator entity id.
+     *
+     * @return {@link EntityId}
+     */
 
     @Override
     public EntityId getOriginatorEntityId() {

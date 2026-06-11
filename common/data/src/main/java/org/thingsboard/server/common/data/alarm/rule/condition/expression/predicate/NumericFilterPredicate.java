@@ -37,6 +37,11 @@ public class NumericFilterPredicate implements SimpleKeyFilterPredicate<Double> 
     @Valid
     @NotNull
     private AlarmConditionValue<Double> value;
+    /**
+     * Returns type.
+     *
+     * @return {@link FilterPredicateType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, ref = "#/components/schemas/AlarmRuleFilterPredicateType")
     @Override

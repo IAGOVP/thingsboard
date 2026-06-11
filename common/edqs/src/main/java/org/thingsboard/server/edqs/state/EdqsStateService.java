@@ -25,24 +25,76 @@ import org.thingsboard.server.queue.common.consumer.PartitionedQueueConsumerMana
 
 import java.util.List;
 import java.util.Set;
+
 /**
- * Persists and replays EDQS Kafka state topic so consumers catch up after restart; tracks partition assignment and {@link #isReady()} for health checks.
+ * Persists and replays EDQS Kafka partition state for crash recovery.
+ *
+ * <p>Tracks which tenants are assigned to each consumer partition and exposes {@link #isReady()} for readiness probes.
  */
+
 public interface EdqsStateService {
 
-    /** Registers consumers that start after state replay for assigned partitions. */
+    
+  /**
+   * Starts Kafka consumers and wires partition/state services.
+   *
+   * @param eventConsumer event consumer ({@link PartitionedQueueConsumerManager})
+   * @param otherConsumers other consumers ({@link List})
+   * @return nothing
+   * @throws Exception if an unexpected error occurs during processing
+   */
+
+    
     void init(PartitionedQueueConsumerManager<TbProtoQueueMsg<ToEdqsMsg>> eventConsumer, List<PartitionedQueueConsumerManager<?>> otherConsumers);
 
-    /** Replays state records for newly assigned Kafka partitions. */
+    
+  /**
+   * Processes the requested data.
+   *
+   * @param partitions partitions ({@link Set})
+   * @return nothing
+   * @throws Exception if an unexpected error occurs during processing
+   */
+
+    
     void process(Set<TopicPartitionInfo> partitions);
 
-    /** Persists raw event before {@link org.thingsboard.server.edqs.repo.EdqsRepository} mutation. */
+    
+ /**
+  * Saves or persists the requested data.
+  *
+  * @param tenantId tenant that owns the indexed entities
+  * @param type type ({@link ObjectType})
+  * @param key key ({@link String})
+  * @param eventType event type ({@link EdqsEventType})
+  * @param msg Kafka queue message wrapper
+  * @return nothing
+  * @throws Exception if an unexpected error occurs during processing
+  */
+
+    
     void save(TenantId tenantId, ObjectType type, String key, EdqsEventType eventType, ToEdqsMsg msg);
 
-    /** True when state replay finished and {@link org.thingsboard.server.edqs.EdqsController} may return 200. */
+    
+   /**
+    * Returns true when all assigned Kafka partitions have been restored and the index is queryable.
+    *
+    * @return the boolean result
+    * @throws Exception if an unexpected error occurs during processing
+    */
+
+    
     boolean isReady();
 
-    /** Flushes and closes state storage. */
+    
+    /**
+     * Shuts down EDQS consumers and flushes pending state.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
+    
     void stop();
 
 }

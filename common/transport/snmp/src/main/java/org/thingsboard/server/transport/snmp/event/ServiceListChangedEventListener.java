@@ -30,6 +30,13 @@ import org.thingsboard.server.transport.snmp.service.SnmpTransportBalancingServi
 @RequiredArgsConstructor
 public class ServiceListChangedEventListener extends TbApplicationEventListener<ServiceListChangedEvent> {
     private final SnmpTransportBalancingService snmpTransportBalancingService;
+    /**
+     * Handles tb application event.
+     *
+     * @param event event ({@link ServiceListChangedEvent})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected void onTbApplicationEvent(ServiceListChangedEvent event) {

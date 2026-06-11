@@ -30,6 +30,11 @@ public class MobileAppNotificationDeliveryMethodConfig implements NotificationDe
     private String firebaseServiceAccountCredentialsFileName;
     @NotEmpty
     private String firebaseServiceAccountCredentials;
+    /**
+     * Returns method.
+     *
+     * @return {@link NotificationDeliveryMethod}
+     */
 
     @Override
     public NotificationDeliveryMethod getMethod() {

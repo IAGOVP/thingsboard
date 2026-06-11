@@ -20,12 +20,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+
+/**
+ * Kafka settings for remote JavaScript invocation queues.
+ */
 @Lazy
 @Data
 @Component
-/**
- * Tb queue remote js invoke settings.
- */
 public class TbQueueRemoteJsInvokeSettings {
 
     @Value("${queue.prefix:}")

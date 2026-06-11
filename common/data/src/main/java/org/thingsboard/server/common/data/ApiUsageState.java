@@ -68,34 +68,74 @@ public class ApiUsageState extends BaseData<ApiUsageStateId> implements HasTenan
         this.alarmExecState = ur.getAlarmExecState();
         this.version = ur.getVersion();
     }
+    /**
+     * Is transport enabled.
+     *
+     * @return the boolean result
+     */
 
     public boolean isTransportEnabled() {
         return !ApiUsageStateValue.DISABLED.equals(transportState);
     }
+    /**
+     * Is re exec enabled.
+     *
+     * @return the boolean result
+     */
 
     public boolean isReExecEnabled() {
         return !ApiUsageStateValue.DISABLED.equals(reExecState);
     }
+    /**
+     * Is db storage enabled.
+     *
+     * @return the boolean result
+     */
 
     public boolean isDbStorageEnabled() {
         return !ApiUsageStateValue.DISABLED.equals(dbStorageState);
     }
+    /**
+     * Is js exec enabled.
+     *
+     * @return the boolean result
+     */
 
     public boolean isJsExecEnabled() {
         return !ApiUsageStateValue.DISABLED.equals(jsExecState);
     }
+    /**
+     * Is tbel exec enabled.
+     *
+     * @return the boolean result
+     */
 
     public boolean isTbelExecEnabled() {
         return !ApiUsageStateValue.DISABLED.equals(tbelExecState);
     }
+    /**
+     * Is email send enabled.
+     *
+     * @return the boolean result
+     */
 
     public boolean isEmailSendEnabled() {
         return !ApiUsageStateValue.DISABLED.equals(emailExecState);
     }
+    /**
+     * Is sms send enabled.
+     *
+     * @return the boolean result
+     */
 
     public boolean isSmsSendEnabled() {
         return !ApiUsageStateValue.DISABLED.equals(smsExecState);
     }
+    /**
+     * Is alarm creation enabled.
+     *
+     * @return the boolean result
+     */
 
     public boolean isAlarmCreationEnabled() {
         return alarmExecState != ApiUsageStateValue.DISABLED;

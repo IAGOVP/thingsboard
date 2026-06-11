@@ -18,7 +18,7 @@ package org.thingsboard.server.common.transport;
 import org.thingsboard.server.common.transport.session.SessionContext;
 
 /**
- * transport adaptor contract.
+ * Marker for protocol-specific payload adaptors that convert wire format to transport protobuf.
  */
 public interface TransportAdaptor<C extends SessionContext, T, V> {
 

@@ -57,18 +57,46 @@ public final class EdgeUtils {
     private static final int STACK_TRACE_LIMIT = 10;
 
     private EdgeUtils() {}
+    /**
+     * Next positive int.
+     *
+     * @return the int result
+     */
 
     public static int nextPositiveInt() {
         return ThreadLocalRandom.current().nextInt(0, Integer.MAX_VALUE);
     }
+    /**
+     * Returns edge event type by entity type.
+     *
+     * @param entityType entity type ({@link EntityType})
+     * @return {@link EdgeEventType}
+     */
 
     public static EdgeEventType getEdgeEventTypeByEntityType(EntityType entityType) {
         return entityTypeEdgeEventTypeEnumMap.get(entityType);
     }
+    /**
+     * Returns edge event action type by action type.
+     *
+     * @param actionType action type ({@link ActionType})
+     * @return {@link EdgeEventActionType}
+     */
 
     public static EdgeEventActionType getEdgeEventActionTypeByActionType(ActionType actionType) {
         return actionTypeEdgeEventActionTypeEnumMap.get(actionType);
     }
+    /**
+     * Construct edge event.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link EdgeId})
+     * @param type type ({@link EdgeEventType})
+     * @param action action ({@link EdgeEventActionType})
+     * @param entityId target entity identifier
+     * @param body body ({@link JsonNode})
+     * @return {@link EdgeEvent}
+     */
 
     public static EdgeEvent constructEdgeEvent(TenantId tenantId,
                                                EdgeId edgeId,
@@ -87,6 +115,12 @@ public final class EdgeUtils {
         edgeEvent.setBody(body);
         return edgeEvent;
     }
+    /**
+     * Creates error msg from root cause and stack trace.
+     *
+     * @param t t ({@link Throwable})
+     * @return {@link String}
+     */
 
     public static String createErrorMsgFromRootCauseAndStackTrace(Throwable t) {
         Throwable rootCause = Throwables.getRootCause(t);

@@ -21,6 +21,11 @@ package org.thingsboard.server.common.data;
 public interface HasVersion {
 
     Long getVersion();
+/**
+ * Set version.
+ *
+ * @param version version ({@link Long})
+ */
 
     default void setVersion(Long version) {
     }

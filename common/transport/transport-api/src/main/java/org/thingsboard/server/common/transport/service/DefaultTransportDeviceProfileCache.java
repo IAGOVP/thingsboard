@@ -45,12 +45,27 @@ public class DefaultTransportDeviceProfileCache implements TransportDeviceProfil
     private final ConcurrentMap<DeviceProfileId, DeviceProfile> deviceProfiles = new ConcurrentHashMap<>();
 
     private TransportService transportService;
+    /**
+     * Set transport service.
+     *
+     * @param transportService transport service ({@link TransportService})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Lazy
     @Autowired
     public void setTransportService(TransportService transportService) {
         this.transportService = transportService;
     }
+    /**
+     * Returns or create.
+     *
+     * @param id id ({@link DeviceProfileId})
+     * @param proto proto
+     * @return {@link DeviceProfile}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public DeviceProfile getOrCreate(DeviceProfileId id, TransportProtos.DeviceProfileProto proto) {
@@ -61,16 +76,37 @@ public class DefaultTransportDeviceProfileCache implements TransportDeviceProfil
         }
         return profile;
     }
+    /**
+     * Returns the requested data.
+     *
+     * @param id id ({@link DeviceProfileId})
+     * @return {@link DeviceProfile}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public DeviceProfile get(DeviceProfileId id) {
         return this.getDeviceProfile(id);
     }
+    /**
+     * Put.
+     *
+     * @param profile profile ({@link DeviceProfile})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void put(DeviceProfile profile) {
         deviceProfiles.put(profile.getId(), profile);
     }
+    /**
+     * Put.
+     *
+     * @param proto proto
+     * @return {@link DeviceProfile}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public DeviceProfile put(TransportProtos.DeviceProfileProto proto) {
@@ -78,6 +114,13 @@ public class DefaultTransportDeviceProfileCache implements TransportDeviceProfil
         put(deviceProfile);
         return deviceProfile;
     }
+    /**
+     * Evict.
+     *
+     * @param id id ({@link DeviceProfileId})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void evict(DeviceProfileId id) {

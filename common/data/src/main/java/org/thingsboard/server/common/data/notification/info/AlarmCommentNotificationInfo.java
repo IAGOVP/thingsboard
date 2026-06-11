@@ -56,6 +56,11 @@ public class AlarmCommentNotificationInfo implements RuleOriginatedNotificationI
     private AlarmStatus alarmStatus;
     private CustomerId alarmCustomerId;
     private DashboardId dashboardId;
+    /**
+     * Returns template data.
+     *
+     * @return {@link Map}
+     */
 
     @Override
     public Map<String, String> getTemplateData() {
@@ -76,16 +81,31 @@ public class AlarmCommentNotificationInfo implements RuleOriginatedNotificationI
                 "alarmOriginatorLabel", alarmOriginatorLabel
         );
     }
+    /**
+     * Returns affected customer id.
+     *
+     * @return {@link CustomerId}
+     */
 
     @Override
     public CustomerId getAffectedCustomerId() {
         return alarmCustomerId;
     }
+    /**
+     * Returns state entity id.
+     *
+     * @return {@link EntityId}
+     */
 
     @Override
     public EntityId getStateEntityId() {
         return alarmOriginator;
     }
+    /**
+     * Returns dashboard id.
+     *
+     * @return {@link DashboardId}
+     */
 
     @Override
     public DashboardId getDashboardId() {

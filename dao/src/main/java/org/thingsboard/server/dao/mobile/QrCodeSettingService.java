@@ -20,19 +20,86 @@ import org.thingsboard.server.common.data.mobile.app.MobileApp;
 import org.thingsboard.server.common.data.mobile.qrCodeSettings.QrCodeSettings;
 import org.thingsboard.server.common.data.oauth2.PlatformType;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * qr code setting service contract.
+
+
+
+
+
+ * qr code setting service contract (mobile apps, bundles, and QR code settings).
+
+
+
+
+
 
  */
 
+
+
+
+
+
+
 public interface QrCodeSettingService {
+    /**
+     * Saves or persists qr code settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param qrCodeSettings qr code settings ({@link QrCodeSettings})
+     * @return {@link QrCodeSettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     QrCodeSettings saveQrCodeSettings(TenantId tenantId, QrCodeSettings qrCodeSettings);
+    /**
+     * Finds qr code settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link QrCodeSettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     QrCodeSettings findQrCodeSettings(TenantId tenantId);
+    /**
+     * Finds app from qr code settings.
+     *
+     * @param sysTenantId sys tenant id ({@link TenantId})
+     * @param platformType platform type ({@link PlatformType})
+     * @return {@link MobileApp}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     MobileApp findAppFromQrCodeSettings(TenantId sysTenantId, PlatformType platformType);
+    /**
+     * Deletes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void deleteByTenantId(TenantId tenantId);
 

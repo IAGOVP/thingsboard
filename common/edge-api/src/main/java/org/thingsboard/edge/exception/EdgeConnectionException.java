@@ -16,7 +16,7 @@
 package org.thingsboard.edge.exception;
 
 /**
- * Exception: edge connection exception.
+ * Unchecked exception when the edge cannot establish or maintain a cloud RPC connection.
  */
 public class EdgeConnectionException extends RuntimeException {
 

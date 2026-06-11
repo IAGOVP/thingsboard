@@ -28,6 +28,11 @@ public enum JobType {
     DUMMY("Dummy job");
 
     private final String title;
+    /**
+     * Returns tasks topic.
+     *
+     * @return {@link String}
+     */
 
     public String getTasksTopic() {
         return "tasks." + name().toLowerCase();

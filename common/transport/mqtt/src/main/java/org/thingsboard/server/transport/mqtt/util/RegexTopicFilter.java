@@ -30,6 +30,13 @@ public class RegexTopicFilter implements MqttTopicFilter {
     public RegexTopicFilter(String regex) {
         this.regex = Pattern.compile(regex);
     }
+    /**
+     * Filter.
+     *
+     * @param topic topic ({@link String})
+     * @return the boolean result
+     * @throws Exception on processing failure
+     */
 
     @Override
     public boolean filter(String topic) {

@@ -51,6 +51,11 @@ public abstract class JobConfiguration implements Serializable {
     private String tasksKey; // internal
     @ArraySchema(schema = @Schema(ref = "#/components/schemas/TaskResult"))
     private List<TaskResult> toReprocess; // internal
+    /**
+     * Returns type.
+     *
+     * @return {@link JobType}
+     */
 
     @JsonIgnore
     public abstract JobType getType();

@@ -21,11 +21,13 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.msg.MsgType;
 
 import java.io.Serial;
+/**
+ * Internal actor or queue message: edge event update msg.
+ *
+ * <p>Serialized between tb-core, rule-engine, transport, and edge services.
+ */
 
 @Data
-/**
- * Message: edge event update msg.
- */
 public class EdgeEventUpdateMsg implements EdgeSessionMsg {
 
     @Serial

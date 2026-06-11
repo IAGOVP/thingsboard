@@ -19,8 +19,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 /**
- * Tb sql blocking queue params.
+ * Tb sql blocking queue params (JPA/PostgreSQL persistence layer (JPA repositories and PostgreSQL DAO implementations)).
  */
+
+
+
+
+
+
 
 @Slf4j
 @Data

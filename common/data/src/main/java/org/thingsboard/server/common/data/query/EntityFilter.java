@@ -72,9 +72,22 @@ import static org.thingsboard.server.common.data.query.AliasEntityId.resolveAlia
  * entity filter contract.
  */
 public interface EntityFilter {
+    /**
+     * Returns type.
+     *
+     * @return {@link EntityFilterType}
+     */
 
     @JsonIgnore
     EntityFilterType getType();
+/**
+ * Resolve entity filter.
+ *
+ * @param filter filter ({@link EntityFilter})
+ * @param tenantId tenant that owns the entity or operation
+ * @param userId user id ({@link UserId})
+ * @param userOwnerId user owner id ({@link EntityId})
+ */
 
     static void resolveEntityFilter(EntityFilter filter, TenantId tenantId, UserId userId, EntityId userOwnerId) {
         if (filter instanceof SingleEntityFilter singleEntityFilter) {

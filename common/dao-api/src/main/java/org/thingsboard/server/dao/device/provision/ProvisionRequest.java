@@ -20,12 +20,11 @@ import lombok.Data;
 import org.thingsboard.server.common.data.device.credentials.ProvisionDeviceCredentialsData;
 import org.thingsboard.server.common.data.device.profile.ProvisionDeviceProfileCredentials;
 import org.thingsboard.server.common.data.security.DeviceCredentialsType;
-
-@Data
-@AllArgsConstructor
 /**
  * Provision request.
  */
+@Data
+@AllArgsConstructor
 public class ProvisionRequest {
     private String deviceName;
     private DeviceCredentialsType credentialsType;

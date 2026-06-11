@@ -27,11 +27,48 @@ import org.thingsboard.server.exception.DataValidationException;
 import org.thingsboard.server.dao.ota.OtaPackageService;
 import org.thingsboard.server.dao.service.DataValidator;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
- * Abstract has ota package validator.
+
+
+
+
+
+ * Abstract has ota package validator (entity data validators invoked before save (shared DAO validators, removers, and constraints)).
+
+
+
+
+
 
  */
+
+
+
+
+
+
 
 public abstract class AbstractHasOtaPackageValidator<D extends BaseData<?>> extends DataValidator<D> {
 
@@ -39,11 +76,17 @@ public abstract class AbstractHasOtaPackageValidator<D extends BaseData<?>> exte
     @Lazy
     private OtaPackageService otaPackageService;
 
+    
     /**
-
-     * Validate ota package.
-
+     * Validates ota package.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entity domain entity to persist or validate
+     * @param deviceProfileId device profile id ({@link DeviceProfileId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected <T extends HasOtaPackage> void validateOtaPackage(TenantId tenantId, T entity, DeviceProfileId deviceProfileId) {
         if (entity.getFirmwareId() != null) {

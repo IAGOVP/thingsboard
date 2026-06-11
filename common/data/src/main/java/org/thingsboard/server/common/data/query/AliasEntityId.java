@@ -33,23 +33,63 @@ import org.thingsboard.server.common.data.id.UserId;
 public interface AliasEntityId extends EntityId {
 
     AliasEntityType getAliasEntityType();
+/**
+ * Default entity id.
+ *
+ * @return {@link EntityId}
+ */
 
     EntityId defaultEntityId();
+/**
+ * To entity id.
+ *
+ * @return {@link EntityId}
+ */
 
     EntityId toEntityId();
+    /**
+     * Is alias entity id.
+     *
+     * @return the boolean result
+     */
 
     @JsonIgnore
     default boolean isAliasEntityId() {
+        /**
+         * Returns alias entity type.
+         *
+         * @return the return value
+         */
         return getAliasEntityType() != null;
     }
+/**
+ * From entity id.
+ *
+ * @param entityId target entity identifier
+ * @return {@link AliasEntityId}
+ */
 
     static AliasEntityId fromEntityId(EntityId entityId) {
         if (entityId != null) {
+            /**
+             * Alias entity id impl.
+             *
+             * @return the return new value
+             */
             return new AliasEntityIdImpl(entityId);
         } else {
             return null;
         }
     }
+/**
+ * Resolve alias entity id.
+ *
+ * @param aliasEntityId alias entity id ({@link AliasEntityId})
+ * @param tenantId tenant that owns the entity or operation
+ * @param userId user id ({@link UserId})
+ * @param userOwnerId user owner id ({@link EntityId})
+ * @return {@link AliasEntityId}
+ */
 
     static AliasEntityId resolveAliasEntityId(AliasEntityId aliasEntityId, TenantId tenantId, UserId userId, EntityId userOwnerId) {
         if (aliasEntityId != null) {
@@ -58,18 +98,43 @@ public interface AliasEntityId extends EntityId {
                 switch (aliasEntityType) {
                     case CURRENT_CUSTOMER -> {
                         if (EntityType.CUSTOMER.equals(userOwnerId.getEntityType())) {
+                            /**
+                             * From entity id.
+                             *
+                             * @return the return value
+                             */
                             return fromEntityId(userOwnerId);
                         } else {
+                            /**
+                             * From entity id.
+                             *
+                             * @return the return value
+                             */
                             return fromEntityId(aliasEntityId.defaultEntityId());
                         }
                     }
                     case CURRENT_TENANT -> {
+                        /**
+                         * From entity id.
+                         *
+                         * @return the return value
+                         */
                         return fromEntityId(tenantId);
                     }
                     case CURRENT_USER -> {
+                        /**
+                         * From entity id.
+                         *
+                         * @return the return value
+                         */
                         return fromEntityId(userId);
                     }
                     case CURRENT_USER_OWNER -> {
+                        /**
+                         * From entity id.
+                         *
+                         * @return the return value
+                         */
                         return fromEntityId(userOwnerId);
                     }
                 }

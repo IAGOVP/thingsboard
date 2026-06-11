@@ -32,8 +32,11 @@ import java.util.UUID;
 import static org.thingsboard.server.dao.model.ModelConstants.DOMAIN_OAUTH2_CLIENT_DOMAIN_ID_PROPERTY;
 import static org.thingsboard.server.dao.model.ModelConstants.DOMAIN_OAUTH2_CLIENT_TABLE_NAME;
 /**
- * Domain oauth2client entity.
+ * JPA/Cassandra row model for domain oauth2client.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @Entity
@@ -58,6 +61,12 @@ public final class DomainOauth2ClientEntity implements ToData<DomainOauth2Client
         domainId = domainOauth2Client.getDomainId().getId();
         oauth2ClientId = domainOauth2Client.getOAuth2ClientId().getId();
     }
+    /**
+     * To data.
+     *
+     * @return {@link DomainOauth2Client}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public DomainOauth2Client toData() {

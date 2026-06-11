@@ -19,16 +19,15 @@ import lombok.Data;
 import org.thingsboard.server.common.data.DeviceProfile;
 import org.thingsboard.server.common.transport.auth.ValidateDeviceCredentialsResponse;
 
-@Data
 /**
  * Tb coap dtls session info.
  */
+@Data
 public class TbCoapDtlsSessionInfo {
 
     private ValidateDeviceCredentialsResponse msg;
     private DeviceProfile deviceProfile;
     private long lastActivityTime;
-
 
     public TbCoapDtlsSessionInfo(ValidateDeviceCredentialsResponse msg, DeviceProfile deviceProfile) {
         this.msg = msg;

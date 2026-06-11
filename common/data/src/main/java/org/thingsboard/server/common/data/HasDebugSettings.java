@@ -21,14 +21,34 @@ import org.thingsboard.server.common.data.debug.DebugSettings;
  * has debug settings contract.
  */
 public interface HasDebugSettings {
+    /**
+     * Is debug mode.
+     *
+     * @return the boolean result
+     */
 
     @Deprecated
     boolean isDebugMode();
+    /**
+     * Set debug mode.
+     *
+     * @param debugMode debug mode
+     */
 
     @Deprecated
     void setDebugMode(boolean debugMode);
+/**
+ * Returns debug settings.
+ *
+ * @return {@link DebugSettings}
+ */
 
     DebugSettings getDebugSettings();
+/**
+ * Set debug settings.
+ *
+ * @param debugSettings debug settings ({@link DebugSettings})
+ */
 
     void setDebugSettings(DebugSettings debugSettings);
 

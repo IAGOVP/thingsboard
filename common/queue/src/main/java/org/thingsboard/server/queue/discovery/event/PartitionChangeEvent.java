@@ -15,6 +15,13 @@
  */
 package org.thingsboard.server.queue.discovery.event;
 
+import java.io.Serial;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+
 import lombok.Getter;
 import lombok.ToString;
 import org.thingsboard.server.common.data.DataConstants;
@@ -22,16 +29,11 @@ import org.thingsboard.server.common.msg.queue.ServiceType;
 import org.thingsboard.server.common.msg.queue.TopicPartitionInfo;
 import org.thingsboard.server.queue.discovery.QueueKey;
 
-import java.io.Serial;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-@ToString(callSuper = true)
 /**
- * Partition change event.
+ * Published when Kafka partition assignment changes for a service instance.
  */
+@ToString(callSuper = true)
 public class PartitionChangeEvent extends TbApplicationEvent {
 
     @Serial

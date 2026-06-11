@@ -19,13 +19,26 @@ import org.thingsboard.server.dao.model.sqlts.latest.TsKvLatestEntity;
 
 import java.util.List;
 
+
 /**
 
- * insert latest ts repository contract.
+ * Spring Data JPA repository for insert latest ts entities.
+
+ *
+
+ * <p>Defines query methods and native SQL used by the corresponding {@code Jpa*Dao}.
 
  */
 
+
 public interface InsertLatestTsRepository {
+    /**
+     * Saves or updates the requested data.
+     *
+     * @param entities entities ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<Long> saveOrUpdate(List<TsKvLatestEntity> entities);
 

@@ -45,6 +45,11 @@ import java.io.Serializable;
  * coap device type configuration contract.
  */
 public interface CoapDeviceTypeConfiguration extends Serializable {
+    /**
+     * Returns coap device type.
+     *
+     * @return {@link CoapDeviceType}
+     */
 
     @JsonIgnore
     CoapDeviceType getCoapDeviceType();

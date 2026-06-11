@@ -27,9 +27,40 @@ import org.thingsboard.common.util.ThingsBoardExecutors;
 
 import java.util.concurrent.ExecutorService;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
- * Created by ashvayka on 21.02.17.
+
+
+
+
+
+ * Cassandra abstract async dao (Cassandra async DAO infrastructure (Cassandra async DAO base classes)).
+
+
+
+
+
  */
+
+
+
+
+
+
 public abstract class CassandraAbstractAsyncDao extends CassandraAbstractDao {
 
     protected ExecutorService readResultsProcessingExecutor;
@@ -40,22 +71,28 @@ public abstract class CassandraAbstractAsyncDao extends CassandraAbstractDao {
     @Value("${cassandra.query.max_result_set_size_in_bytes:52428800}")
     protected long maxResultSetSizeBytes;
 
+    
     /**
-
      * Start executor.
-
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @PostConstruct
     public void startExecutor() {
         readResultsProcessingExecutor = ThingsBoardExecutors.newWorkStealingPool(threadPoolSize, "cassandra-callback");
     }
 
+    
     /**
-
      * Stop executor.
-
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @PreDestroy
     public void stopExecutor() {
@@ -64,11 +101,16 @@ public abstract class CassandraAbstractAsyncDao extends CassandraAbstractDao {
         }
     }
 
+    
     /**
-
-     * Get future.
-
+     * Returns future.
+     *
+     * @param future future ({@link TbResultSetFuture})
+     * @param transformer transformer
+     * @return future completing with {@link T}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected <T> ListenableFuture<T> getFuture(TbResultSetFuture future, java.util.function.Function<TbResultSet, T> transformer) {
         return Futures.transform(future, new Function<TbResultSet, T>() {
@@ -83,11 +125,16 @@ public abstract class CassandraAbstractAsyncDao extends CassandraAbstractDao {
         }, readResultsProcessingExecutor);
     }
 
+    
     /**
-
-     * Get future async.
-
+     * Returns future async.
+     *
+     * @param future future ({@link TbResultSetFuture})
+     * @param transformer transformer
+     * @return future completing with {@link T}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     protected <T> ListenableFuture<T> getFutureAsync(TbResultSetFuture future, com.google.common.util.concurrent.AsyncFunction<TbResultSet, T> transformer) {
         return Futures.transformAsync(future, new AsyncFunction<TbResultSet, T>() {

@@ -39,12 +39,24 @@ public class SslUtil {
 
     private SslUtil() {
     }
-
+    /**
+     * Returns certificate string.
+     *
+     * @param cert cert ({@link Certificate})
+     * @return {@link String}
+     * @throws CertificateEncodingException if certificate encoding exception is thrown during processing
+     */
     public static String getCertificateString(Certificate cert)
             throws CertificateEncodingException {
         return EncryptionUtil.certTrimNewLines(Base64.getEncoder().encodeToString(cert.getEncoded()));
     }
-
+    /**
+     * Returns certificate chain string.
+     *
+     * @param chain chain
+     * @return {@link String}
+     * @throws CertificateEncodingException if certificate encoding exception is thrown during processing
+     */
     public static String getCertificateChainString(Certificate[] chain)
             throws CertificateEncodingException {
         String begin = "-----BEGIN CERTIFICATE-----";
@@ -55,7 +67,13 @@ public class SslUtil {
         }
         return stringBuilder.toString();
     }
-
+    /**
+     * Read cert file.
+     *
+     * @param fileContent file content ({@link String})
+     * @return {@link X509Certificate}
+     * @throws Exception on processing failure
+     */
     public static X509Certificate readCertFile(String fileContent) {
         X509Certificate certificate = null;
         try {
@@ -72,7 +90,13 @@ public class SslUtil {
         } catch (Exception ignored) {}
         return certificate;
     }
-
+    /**
+     * Parse common name.
+     *
+     * @param certificate certificate ({@link X509Certificate})
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
     public static String parseCommonName(X509Certificate certificate) {
         X500Name x500name;
         try {

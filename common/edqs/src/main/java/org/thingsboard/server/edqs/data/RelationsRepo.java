@@ -23,30 +23,63 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-@NoArgsConstructor
 /**
- * EDQS component: relations repo.
+ * Relations repo (EDQS microservice — in-memory entity projections).
  */
+
+@NoArgsConstructor
 public class RelationsRepo {
 
     private final ConcurrentMap<UUID, Set<RelationInfo>> fromRelations = new ConcurrentHashMap<>();
     private final ConcurrentMap<UUID, Set<RelationInfo>> toRelations = new ConcurrentHashMap<>();
+    /**
+     * Add.
+     *
+     * @param from from ({@link EntityData})
+     * @param to to ({@link EntityData})
+     * @param type type ({@link String})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean add(EntityData<?> from, EntityData<?> to, String type) {
         boolean addedFromRelation = fromRelations.computeIfAbsent(from.getId(), k -> ConcurrentHashMap.newKeySet()).add(new RelationInfo(type, to));
         boolean addedToRelation = toRelations.computeIfAbsent(to.getId(), k -> ConcurrentHashMap.newKeySet()).add(new RelationInfo(type, from));
         return addedFromRelation || addedToRelation;
     }
+    /**
+     * Returns from.
+     *
+     * @param entityId target entity identifier
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Set<RelationInfo> getFrom(UUID entityId) {
         var result = fromRelations.get(entityId);
         return result == null ? Collections.emptySet() : result;
     }
+    /**
+     * Returns to.
+     *
+     * @param entityId target entity identifier
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Set<RelationInfo> getTo(UUID entityId) {
         var result = toRelations.get(entityId);
         return result == null ? Collections.emptySet() : result;
     }
+    /**
+     * Removes the requested data.
+     *
+     * @param from from ({@link UUID})
+     * @param to to ({@link UUID})
+     * @param type type ({@link String})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean remove(UUID from, UUID to, String type) {
         boolean removedFromRelation = false;

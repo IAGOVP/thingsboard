@@ -34,6 +34,13 @@ public class RpcReadResponseCallback<R extends LwM2mRequest<T>, T extends ReadRe
     public RpcReadResponseCallback(TransportService transportService, LwM2mClient client, TransportProtos.ToDeviceRpcRequestMsg requestMsg, DownlinkRequestCallback<R, T> callback) {
         super(transportService, client, requestMsg, callback);
     }
+    /**
+     * Serialize successful response.
+     *
+     * @param response response ({@link T})
+     * @return optional {@link String}, empty if not found
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected Optional<String> serializeSuccessfulResponse(T response) {

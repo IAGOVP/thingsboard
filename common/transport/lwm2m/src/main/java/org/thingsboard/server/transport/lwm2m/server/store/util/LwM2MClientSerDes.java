@@ -56,6 +56,13 @@ import static org.thingsboard.common.util.JacksonUtil.toJsonNode;
 public class LwM2MClientSerDes {
     public static final String VALUE = "value";
     private static final RegistrationSerDes registrationSerDes = new RegistrationSerDes();
+    /**
+     * Serialize.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @return the byte[] value
+     * @throws Exception on processing failure
+     */
 
     @SneakyThrows
     public static byte[] serialize(LwM2mClient client) {
@@ -250,6 +257,13 @@ public class LwM2MClientSerDes {
                 throw new LwM2mNodeException(String.format("Type %s is not supported", type.name()));
         }
     }
+    /**
+     * Deserialize.
+     *
+     * @param data data
+     * @return {@link LwM2mClient}
+     * @throws Exception on processing failure
+     */
 
     @SneakyThrows
     public static LwM2mClient deserialize(byte[] data) {

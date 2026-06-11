@@ -86,6 +86,12 @@ public class SnmpTransportContext extends TransportContext {
 
     @Value("${transport.snmp.batch_retries}")
     private int snmpBootstrapBatchRetries;
+    /**
+     * Fetches devices and establish sessions.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @AfterStartUp(order = AfterStartUp.AFTER_TRANSPORT_SERVICE)
     public void fetchDevicesAndEstablishSessions() {
@@ -218,6 +224,13 @@ public class SnmpTransportContext extends TransportContext {
         transportService.process(DeviceTransportType.SNMP,
                 TransportProtos.ValidateDeviceTokenRequestMsg.newBuilder().setToken(sessionContext.getToken()).build(),
                 new TransportServiceCallback<>() {
+                    /**
+                     * Handles success.
+                     *
+                     * @param msg msg ({@link ValidateDeviceCredentialsResponse})
+                     * @return nothing
+                     * @throws Exception on processing failure
+                     */
                     @Override
                     public void onSuccess(ValidateDeviceCredentialsResponse msg) {
                         if (msg.hasDeviceInfo()) {
@@ -232,6 +245,13 @@ public class SnmpTransportContext extends TransportContext {
                             log.warn("[{}] Failed to process device auth", sessionContext.getDeviceId());
                         }
                     }
+                    /**
+                     * Handles error.
+                     *
+                     * @param e e ({@link Throwable})
+                     * @return nothing
+                     * @throws Exception on processing failure
+                     */
 
                     @Override
                     public void onError(Throwable e) {
@@ -259,6 +279,13 @@ public class SnmpTransportContext extends TransportContext {
         deviceSessionContext.setDeviceInfo(msg.getDeviceInfo());
         deviceSessionContext.setConnected(true);
     }
+    /**
+     * Handles device updated or created.
+     *
+     * @param deviceUpdatedEvent device updated event ({@link DeviceUpdatedEvent})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @EventListener(DeviceUpdatedEvent.class)
     public void onDeviceUpdatedOrCreated(DeviceUpdatedEvent deviceUpdatedEvent) {
@@ -291,16 +318,34 @@ public class SnmpTransportContext extends TransportContext {
             }
         }
     }
-
+    /**
+     * Handles device deleted.
+     *
+     * @param sessionContext session context ({@link DeviceSessionContext})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void onDeviceDeleted(DeviceSessionContext sessionContext) {
         destroyDeviceSession(sessionContext);
     }
-
+    /**
+     * Handles device profile updated.
+     *
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @param sessionContext session context ({@link DeviceSessionContext})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void onDeviceProfileUpdated(DeviceProfile deviceProfile, DeviceSessionContext sessionContext) {
         log.debug("Handling device profile {} update event for device {}", deviceProfile.getId(), sessionContext.getDeviceId());
         updateDeviceSession(sessionContext, sessionContext.getDevice(), deviceProfile);
     }
-
+    /**
+     * Handles snmp transport list changed.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void onSnmpTransportListChanged() {
         log.trace("SNMP transport list changed. Updating sessions");
         List<DeviceId> deleted = new LinkedList<>();
@@ -326,11 +371,21 @@ public class SnmpTransportContext extends TransportContext {
         log.trace("Removing deleted SNMP devices: {}", deleted);
         allSnmpDevicesIds.removeAll(deleted);
     }
-
-
+    /**
+     * Returns sessions.
+     *
+     * @return {@link Collection}
+     * @throws Exception on processing failure
+     */
     public Collection<DeviceSessionContext> getSessions() {
         return sessions.values();
     }
+    /**
+     * Destroy.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @PreDestroy
     public void destroy() {

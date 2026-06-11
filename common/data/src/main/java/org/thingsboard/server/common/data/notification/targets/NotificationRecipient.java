@@ -21,16 +21,36 @@ package org.thingsboard.server.common.data.notification.targets;
 public interface NotificationRecipient {
 
     Object getId();
+/**
+ * Returns title.
+ *
+ * @return {@link String}
+ */
 
     String getTitle();
+/**
+ * Returns first name.
+ *
+ * @return {@link String}
+ */
 
     default String getFirstName() {
         return null;
     }
+/**
+ * Returns last name.
+ *
+ * @return {@link String}
+ */
 
     default String getLastName() {
         return null;
     }
+/**
+ * Returns email.
+ *
+ * @return {@link String}
+ */
 
     default String getEmail() {
         return null;

@@ -33,6 +33,10 @@ public abstract class BaseCalculatedFieldConfiguration implements ExpressionBase
 
     @NotNull
     protected Output output;
+    /**
+     * Validates the requested data.
+     *
+     */
 
     @Override
     public void validate() {
@@ -41,6 +45,10 @@ public abstract class BaseCalculatedFieldConfiguration implements ExpressionBase
             throw new IllegalArgumentException("Calculated field with type: '" + getType() + "' doesn't support relation query configuration!");
         }
     }
+    /**
+     * Base calculated field restriction.
+     *
+     */
 
     protected void baseCalculatedFieldRestriction() {
         if (arguments.containsKey("ctx")) {

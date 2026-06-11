@@ -20,11 +20,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.thingsboard.server.common.data.StringUtils;
+/**
+ * Exception in message/actor pipeline: rule engine exception.
+ */
 
 @Slf4j
-/**
- * Exception: rule engine exception.
- */
 public class RuleEngineException extends Exception {
     protected static final ObjectMapper mapper = new ObjectMapper();
 

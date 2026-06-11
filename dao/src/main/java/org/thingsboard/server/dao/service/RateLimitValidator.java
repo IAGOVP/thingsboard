@@ -21,17 +21,28 @@ import lombok.extern.slf4j.Slf4j;
 import org.thingsboard.server.common.data.limit.RateLimitUtil;
 import org.thingsboard.server.common.data.validation.RateLimit;
 /**
- * Rate limit validator.
+ * Rate limit validator (shared DAO validators, removers, and constraints).
  */
+
+
+
+
+
+
 
 @Slf4j
 public class RateLimitValidator implements ConstraintValidator<RateLimit, String>  {
 
+    
     /**
-
      * Is valid.
-
+     *
+     * @param value value ({@link String})
+     * @param constraintValidatorContext constraint validator context ({@link ConstraintValidatorContext})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {

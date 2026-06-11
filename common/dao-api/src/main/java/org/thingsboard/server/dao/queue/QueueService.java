@@ -29,21 +29,77 @@ import java.util.List;
  */
 public interface QueueService extends EntityDaoService {
 
+    /**
+     * Saves or persists queue.
+     *
+     * @param queue queue ({@link Queue})
+     * @return {@link Queue}
+     */
     Queue saveQueue(Queue queue);
 
+    /**
+     * Deletes queue.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param queueId queue id ({@link QueueId})
+     */
     void deleteQueue(TenantId tenantId, QueueId queueId);
 
+    /**
+     * Finds queues by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link List}
+     */
     List<Queue> findQueuesByTenantId(TenantId tenantId);
 
+    /**
+     * Finds queues by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<Queue> findQueuesByTenantId(TenantId tenantId, PageLink pageLink);
 
+    /**
+     * Finds all queues.
+     *
+     * @return {@link List}
+     */
     List<Queue> findAllQueues();
 
+    /**
+     * Finds queue by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param queueId queue id ({@link QueueId})
+     * @return {@link Queue}
+     */
     Queue findQueueById(TenantId tenantId, QueueId queueId);
 
+    /**
+     * Finds queue by tenant id and name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity name (unique within tenant scope where applicable)
+     * @return {@link Queue}
+     */
     Queue findQueueByTenantIdAndName(TenantId tenantId, String name);
 
+    /**
+     * Finds queue by tenant id and name internal.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param queueName queue name ({@link String})
+     * @return {@link Queue}
+     */
     Queue findQueueByTenantIdAndNameInternal(TenantId tenantId, String queueName);
 
+    /**
+     * Deletes queues by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     */
     void deleteQueuesByTenantId(TenantId tenantId);
 }

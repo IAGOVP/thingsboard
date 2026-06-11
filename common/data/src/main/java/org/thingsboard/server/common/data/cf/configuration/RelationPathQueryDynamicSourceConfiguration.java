@@ -35,11 +35,20 @@ public class RelationPathQueryDynamicSourceConfiguration implements CfArgumentDy
 
     @ArraySchema(schema = @Schema(implementation = RelationPathLevel.class))
     private List<RelationPathLevel> levels;
+    /**
+     * Returns type.
+     *
+     * @return {@link CFArgumentDynamicSourceType}
+     */
 
     @Override
     public CFArgumentDynamicSourceType getType() {
         return CFArgumentDynamicSourceType.RELATION_PATH_QUERY;
     }
+    /**
+     * Validates the requested data.
+     *
+     */
 
     @Override
     public void validate() {
@@ -48,6 +57,12 @@ public class RelationPathQueryDynamicSourceConfiguration implements CfArgumentDy
         }
         levels.forEach(RelationPathLevel::validate);
     }
+    /**
+     * Resolve entity ids.
+     *
+     * @param relations relations ({@link List})
+     * @return {@link List}
+     */
 
     public List<EntityId> resolveEntityIds(List<EntityRelation> relations) {
         EntitySearchDirection lastLevelDirection = getLastLevel().direction();
@@ -56,6 +71,12 @@ public class RelationPathQueryDynamicSourceConfiguration implements CfArgumentDy
             case TO -> relations.stream().map(EntityRelation::getFrom).toList();
         };
     }
+    /**
+     * Validates max relation level.
+     *
+     * @param argumentName argument name ({@link String})
+     * @param maxAllowedRelationLevel max allowed relation level
+     */
 
     public void validateMaxRelationLevel(String argumentName, int maxAllowedRelationLevel) {
         if (levels.size() > maxAllowedRelationLevel) {
@@ -63,6 +84,12 @@ public class RelationPathQueryDynamicSourceConfiguration implements CfArgumentDy
                                                "maximum allowed relation level in tenant profile: " + maxAllowedRelationLevel + " for argument: " + argumentName);
         }
     }
+    /**
+     * To relation path query.
+     *
+     * @param entityId target entity identifier
+     * @return {@link EntityRelationPathQuery}
+     */
 
     public EntityRelationPathQuery toRelationPathQuery(EntityId entityId) {
         return new EntityRelationPathQuery(entityId, levels);

@@ -44,8 +44,11 @@ import java.util.Objects;
 @EnableJpaRepositories(value = {"org.thingsboard.server.dao.sql.event", "org.thingsboard.server.dao.sql.audit"},
         bootstrapMode = BootstrapMode.LAZY,
 /**
- * Dedicated events jpa dao config.
+ * Spring configuration for dedicated events jpa dao DAO beans.
+ *
+ * <p>Registers entity managers, repositories, and datasource routing.
  */
+
         entityManagerFactoryRef = "eventsEntityManagerFactory", transactionManagerRef = "eventsTransactionManager")
 public class DedicatedEventsJpaDaoConfig {
 
@@ -54,18 +57,39 @@ public class DedicatedEventsJpaDaoConfig {
     public static final String EVENTS_TRANSACTION_MANAGER = EVENTS_PERSISTENCE_UNIT + "TransactionManager";
     public static final String EVENTS_TRANSACTION_TEMPLATE = EVENTS_PERSISTENCE_UNIT + "TransactionTemplate";
     public static final String EVENTS_JDBC_TEMPLATE = EVENTS_PERSISTENCE_UNIT + "JdbcTemplate";
+    /**
+     * Events data source properties.
+     *
+     * @return {@link DataSourceProperties}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Bean
     @ConfigurationProperties("spring.datasource.events")
     public DataSourceProperties eventsDataSourceProperties() {
         return new DataSourceProperties();
     }
+    /**
+     * Events data source.
+     *
+     * @param eventsDataSourceProperties events data source properties ({@link DataSourceProperties})
+     * @return {@link DataSource}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ConfigurationProperties(prefix = "spring.datasource.events.hikari")
     @Bean(EVENTS_DATA_SOURCE)
     public DataSource eventsDataSource(@Qualifier("eventsDataSourceProperties") DataSourceProperties eventsDataSourceProperties) {
         return eventsDataSourceProperties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
     }
+    /**
+     * Events entity manager factory.
+     *
+     * @param eventsDataSource events data source ({@link DataSource})
+     * @param builder builder ({@link EntityManagerFactoryBuilder})
+     * @return {@link LocalContainerEntityManagerFactoryBean}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Bean
     public LocalContainerEntityManagerFactoryBean eventsEntityManagerFactory(@Qualifier(EVENTS_DATA_SOURCE) DataSource eventsDataSource,
@@ -76,16 +100,37 @@ public class DedicatedEventsJpaDaoConfig {
                 .persistenceUnit(EVENTS_PERSISTENCE_UNIT)
                 .build();
     }
+    /**
+     * Events transaction manager.
+     *
+     * @param eventsEntityManagerFactory events entity manager factory ({@link LocalContainerEntityManagerFactoryBean})
+     * @return {@link JpaTransactionManager}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Bean(EVENTS_TRANSACTION_MANAGER)
     public JpaTransactionManager eventsTransactionManager(@Qualifier("eventsEntityManagerFactory") LocalContainerEntityManagerFactoryBean eventsEntityManagerFactory) {
         return new JpaTransactionManager(Objects.requireNonNull(eventsEntityManagerFactory.getObject()));
     }
+    /**
+     * Events transaction template.
+     *
+     * @param eventsTransactionManager events transaction manager ({@link JpaTransactionManager})
+     * @return {@link TransactionTemplate}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Bean(EVENTS_TRANSACTION_TEMPLATE)
     public TransactionTemplate eventsTransactionTemplate(@Qualifier(EVENTS_TRANSACTION_MANAGER) JpaTransactionManager eventsTransactionManager) {
         return new TransactionTemplate(eventsTransactionManager);
     }
+    /**
+     * Events jdbc template.
+     *
+     * @param eventsDataSource events data source ({@link DataSource})
+     * @return {@link JdbcTemplate}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Bean(EVENTS_JDBC_TEMPLATE)
     public JdbcTemplate eventsJdbcTemplate(@Qualifier(EVENTS_DATA_SOURCE) DataSource eventsDataSource) {

@@ -26,8 +26,9 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * @author Andrew Shvayka
+ * Snapshot of client, shared, and server-side device attributes.
  */
+
 public class DeviceAttributes {
 
     private final Map<String, AttributeKvEntry> clientSideAttributesMap;

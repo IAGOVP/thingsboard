@@ -41,8 +41,11 @@ import java.util.concurrent.TimeUnit;
 
 import static org.thingsboard.server.dao.model.ModelConstants.AUDIT_LOG_TABLE_NAME;
 /**
- * JPA implementation of audit log dao.
+ * JPA/PostgreSQL implementation of audit log dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @DefaultDataSource
 @Component
@@ -57,11 +60,18 @@ public class JpaAuditLogDao extends JpaPartitionedAbstractDao<AuditLogEntity, Au
     @Value("${sql.audit_logs.partition_size:168}")
     private int partitionSizeInHours;
 
+    
     /**
-
-     * Loads audit logs by tenant id and entity id.
-
+     * Finds audit logs by tenant id and entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param actionTypes action types ({@link List})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AuditLog> findAuditLogsByTenantIdAndEntityId(UUID tenantId, EntityId entityId, List<ActionType> actionTypes, TimePageLink pageLink) {
@@ -78,11 +88,18 @@ public class JpaAuditLogDao extends JpaPartitionedAbstractDao<AuditLogEntity, Au
                                 DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads audit logs by tenant id and customer id.
-
+     * Finds audit logs by tenant id and customer id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param actionTypes action types ({@link List})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AuditLog> findAuditLogsByTenantIdAndCustomerId(UUID tenantId, CustomerId customerId, List<ActionType> actionTypes, TimePageLink pageLink) {
@@ -98,11 +115,18 @@ public class JpaAuditLogDao extends JpaPartitionedAbstractDao<AuditLogEntity, Au
                                 DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads audit logs by tenant id and user id.
-
+     * Finds audit logs by tenant id and user id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId target user identifier
+     * @param actionTypes action types ({@link List})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AuditLog> findAuditLogsByTenantIdAndUserId(UUID tenantId, UserId userId, List<ActionType> actionTypes, TimePageLink pageLink) {
@@ -118,11 +142,17 @@ public class JpaAuditLogDao extends JpaPartitionedAbstractDao<AuditLogEntity, Au
                                 DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads audit logs by tenant id.
-
+     * Finds audit logs by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param actionTypes action types ({@link List})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<AuditLog> findAuditLogsByTenantId(UUID tenantId, List<ActionType> actionTypes, TimePageLink pageLink) {
@@ -136,44 +166,58 @@ public class JpaAuditLogDao extends JpaPartitionedAbstractDao<AuditLogEntity, Au
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
      * Clean up audit logs.
-
+     *
+     * @param expTime exp time
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void cleanUpAuditLogs(long expTime) {
         partitioningRepository.dropPartitionsBefore(AUDIT_LOG_TABLE_NAME, expTime, TimeUnit.HOURS.toMillis(partitionSizeInHours));
     }
 
+    
     /**
-
      * Creates partition.
-
+     *
+     * @param entity domain entity to persist or validate
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void createPartition(AuditLogEntity entity) {
         partitioningRepository.createPartitionIfNotExists(AUDIT_LOG_TABLE_NAME, entity.getCreatedTime(), TimeUnit.HOURS.toMillis(partitionSizeInHours));
     }
 
+    
     /**
-
-     * Get entity class.
-
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected Class<AuditLogEntity> getEntityClass() {
         return AuditLogEntity.class;
     }
 
+    
     /**
-
-     * Get repository.
-
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected JpaRepository<AuditLogEntity, UUID> getRepository() {

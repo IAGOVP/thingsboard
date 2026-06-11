@@ -27,17 +27,47 @@ import org.thingsboard.server.dao.ExportableEntityDao;
 import java.util.Collection;
 import java.util.List;
 
+
 /**
 
- * Persistence contract for notification template (see JPA/Cassandra implementations).
+ * Persistence contract for notification template.
+
+ *
+
+ * <p>Implemented by {@code Jpa*Dao} or Cassandra DAO classes (notification templates, targets, rules, and delivery requests).
 
  */
 
+
 public interface NotificationTemplateDao extends Dao<NotificationTemplate>, ExportableEntityDao<NotificationTemplateId, NotificationTemplate> {
+    /**
+     * Finds by tenant id and notification types and page link.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param notificationTypes notification types ({@link List})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<NotificationTemplate> findByTenantIdAndNotificationTypesAndPageLink(TenantId tenantId, List<NotificationType> notificationTypes, PageLink pageLink);
+    /**
+     * Counts by tenant id and notification types.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param notificationTypes notification types ({@link Collection})
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     int countByTenantIdAndNotificationTypes(TenantId tenantId, Collection<NotificationType> notificationTypes);
+    /**
+     * Removes by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void removeByTenantId(TenantId tenantId);
 

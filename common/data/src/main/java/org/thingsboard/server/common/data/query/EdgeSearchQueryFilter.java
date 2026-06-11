@@ -28,6 +28,11 @@ import java.util.List;
  * Edge search query filter.
  */
 public class EdgeSearchQueryFilter extends EntitySearchQueryFilter {
+    /**
+     * Returns type.
+     *
+     * @return {@link EntityFilterType}
+     */
 
     @Override
     public EntityFilterType getType() {

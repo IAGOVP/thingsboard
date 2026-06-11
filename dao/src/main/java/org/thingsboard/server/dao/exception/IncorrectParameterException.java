@@ -16,13 +16,56 @@
 package org.thingsboard.server.dao.exception;
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 
 
- * Incorrect parameter exception.
+
+
+
+
+
+ * DAO exception for incorrect parameter exception (DAO-layer checked and runtime exceptions).
+
+
+
+
+
 
 
  */
+
+
+
+
+
+
 
 
 public class IncorrectParameterException extends RuntimeException {

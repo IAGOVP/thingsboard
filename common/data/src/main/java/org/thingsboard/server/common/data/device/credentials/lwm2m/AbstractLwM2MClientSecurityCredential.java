@@ -28,6 +28,13 @@ public abstract class AbstractLwM2MClientSecurityCredential extends AbstractLwM2
     protected String key;
 
     protected byte[] securityInBytes;
+    /**
+     * Returns decoded.
+     *
+     * @return the byte[] value
+     * @throws IllegalArgumentException if illegal argument exception is thrown during processing
+     * @throws DecoderException if decoder exception is thrown during processing
+     */
 
     public abstract byte[] getDecoded() throws IllegalArgumentException, DecoderException;
 }

@@ -22,21 +22,28 @@ import org.springframework.stereotype.Service;
 
 import static org.thingsboard.server.common.data.CacheConstants.OTA_PACKAGE_DATA_CACHE;
 
+/**
+ * In-process Caffeine implementation of {@link OtaPackageDataCache}.
+ *
+ * <p>Activated when {@code cache.type=caffeine}. Uses {@link org.thingsboard.server.common.data.CacheConstants#OTA_PACKAGE_DATA_CACHE}.
+ * Chunk reads slice the in-memory {@code byte[]} without separate Redis GETRANGE.
+ */
 @Service
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "caffeine", matchIfMissing = true)
 @RequiredArgsConstructor
-/**
- * Caffeine ota package cache.
- */
 public class CaffeineOtaPackageCache implements OtaPackageDataCache {
+
+    /** Spring cache manager providing the OTA data cache region. */
 
     private final CacheManager cacheManager;
 
+/** {@inheritDoc} */
     @Override
     public byte[] get(String key) {
         return get(key, 0, 0);
     }
 
+/** {@inheritDoc} */
     @Override
     public byte[] get(String key, int chunkSize, int chunk) {
         byte[] data = cacheManager.getCache(OTA_PACKAGE_DATA_CACHE).get(key, byte[].class);
@@ -59,11 +66,13 @@ public class CaffeineOtaPackageCache implements OtaPackageDataCache {
         return new byte[0];
     }
 
+/** {@inheritDoc} */
     @Override
     public void put(String key, byte[] value) {
         cacheManager.getCache(OTA_PACKAGE_DATA_CACHE).putIfAbsent(key, value);
     }
 
+/** {@inheritDoc} */
     @Override
     public void evict(String key) {
         cacheManager.getCache(OTA_PACKAGE_DATA_CACHE).evict(key);

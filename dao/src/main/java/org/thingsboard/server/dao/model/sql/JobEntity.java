@@ -39,8 +39,11 @@ import org.thingsboard.server.dao.util.mapping.JsonConverter;
 
 import java.util.UUID;
 /**
- * Job entity.
+ * JPA/Cassandra row model for job.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -89,6 +92,12 @@ public class JobEntity extends BaseSqlEntity<Job> {
         this.configuration = toJson(job.getConfiguration());
         this.result = toJson(job.getResult());
     }
+    /**
+     * To data.
+     *
+     * @return {@link Job}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Job toData() {

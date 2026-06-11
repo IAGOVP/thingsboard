@@ -37,11 +37,12 @@ import org.thingsboard.server.queue.kafka.TbKafkaTopicConfigs;
 import org.thingsboard.server.queue.settings.TbQueueCoreSettings;
 import org.thingsboard.server.queue.settings.TbQueueVersionControlSettings;
 
+
+/**
+ * Creates Kafka queue components for entity version-control synchronization.
+ */
 @Component
 @ConditionalOnExpression("'${queue.type:null}'=='kafka' && '${service.type:null}'=='tb-vc-executor'")
-/**
- * Factory for kafka tb version control queue.
- */
 public class KafkaTbVersionControlQueueFactory implements TbVersionControlQueueFactory {
 
     private final TbKafkaSettings kafkaSettings;

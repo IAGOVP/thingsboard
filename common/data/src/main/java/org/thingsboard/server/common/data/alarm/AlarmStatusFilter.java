@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 /**
- * Alarm status filter.
+ * Filter predicate matching alarm ack/clear status combinations.
  */
 public class AlarmStatusFilter {
 
@@ -32,6 +32,12 @@ public class AlarmStatusFilter {
         this.clearFilter = clearFilter;
         this.ackFilter = ackFilter;
     }
+    /**
+     * From.
+     *
+     * @param query query ({@link AlarmQuery})
+     * @return {@link AlarmStatusFilter}
+     */
 
     public static AlarmStatusFilter from(AlarmQuery query) {
         if (query.getSearchStatus() != null) {
@@ -41,6 +47,12 @@ public class AlarmStatusFilter {
         }
         return AlarmStatusFilter.empty();
     }
+    /**
+     * From.
+     *
+     * @param alarmSearchStatus alarm search status ({@link AlarmSearchStatus})
+     * @return {@link AlarmStatusFilter}
+     */
 
     public static AlarmStatusFilter from(AlarmSearchStatus alarmSearchStatus) {
         switch (alarmSearchStatus) {
@@ -56,6 +68,12 @@ public class AlarmStatusFilter {
                 return EMPTY;
         }
     }
+    /**
+     * From.
+     *
+     * @param alarmStatus alarm status ({@link AlarmStatus})
+     * @return {@link AlarmStatusFilter}
+     */
 
     public static AlarmStatusFilter from(AlarmStatus alarmStatus) {
         switch (alarmStatus) {
@@ -71,30 +89,66 @@ public class AlarmStatusFilter {
                 return EMPTY;
         }
     }
+    /**
+     * Empty.
+     *
+     * @return {@link AlarmStatusFilter}
+     */
 
     public static AlarmStatusFilter empty() {
         return EMPTY;
     }
+    /**
+     * Has any filter.
+     *
+     * @return the boolean result
+     */
 
     public boolean hasAnyFilter() {
         return clearFilter.isPresent() || ackFilter.isPresent();
     }
+    /**
+     * Has clear filter.
+     *
+     * @return the boolean result
+     */
 
     public boolean hasClearFilter() {
         return clearFilter.isPresent();
     }
+    /**
+     * Has ack filter.
+     *
+     * @return the boolean result
+     */
 
     public boolean hasAckFilter() {
         return ackFilter.isPresent();
     }
+    /**
+     * Returns clear filter.
+     *
+     * @return the boolean result
+     */
 
     public boolean getClearFilter() {
         return clearFilter.orElseThrow(() -> new RuntimeException("Clear filter is not set! Use `hasClearFilter` to check."));
     }
+    /**
+     * Returns ack filter.
+     *
+     * @return the boolean result
+     */
 
     public boolean getAckFilter() {
         return ackFilter.orElseThrow(() -> new RuntimeException("Ack filter is not set! Use `hasAckFilter` to check."));
     }
+    /**
+     * From.
+     *
+     * @param statuses statuses ({@link Collection})
+     * @return {@link AlarmStatusFilter}
+     */
 
 
     public static AlarmStatusFilter from(Collection<AlarmSearchStatus> statuses) {
@@ -116,6 +170,12 @@ public class AlarmStatusFilter {
         }
         return new AlarmStatusFilter(clear, ack);
     }
+    /**
+     * Matches.
+     *
+     * @param alarm alarm ({@link Alarm})
+     * @return the boolean result
+     */
 
     public boolean matches(Alarm alarm) {
         return ackFilter.map(ackFilter -> ackFilter.equals(alarm.isAcknowledged())).orElse(true) &&

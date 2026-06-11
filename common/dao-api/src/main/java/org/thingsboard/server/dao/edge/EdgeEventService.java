@@ -27,10 +27,31 @@ import org.thingsboard.server.common.data.page.TimePageLink;
  */
 public interface EdgeEventService {
 
+    /**
+     * Saves or persists async.
+     *
+     * @param edgeEvent edge event ({@link EdgeEvent})
+     * @return future completing with {@link Void}
+     */
     ListenableFuture<Void> saveAsync(EdgeEvent edgeEvent);
 
+    /**
+     * Finds edge events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link EdgeId})
+     * @param seqIdStart seq id start ({@link Long})
+     * @param seqIdEnd seq id end ({@link Long})
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<EdgeEvent> findEdgeEvents(TenantId tenantId, EdgeId edgeId, Long seqIdStart, Long seqIdEnd, TimePageLink pageLink);
 
+    /**
+     * Cleanup events.
+     *
+     * @param ttl ttl
+     */
     void cleanupEvents(long ttl);
 
 }

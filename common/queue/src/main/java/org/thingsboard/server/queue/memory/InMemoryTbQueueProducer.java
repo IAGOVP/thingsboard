@@ -21,10 +21,10 @@ import org.thingsboard.server.queue.TbQueueCallback;
 import org.thingsboard.server.queue.TbQueueMsg;
 import org.thingsboard.server.queue.TbQueueProducer;
 
-@Data
 /**
- * In memory tb queue producer.
+ * In-memory {@link TbQueueProducer} for tests and monolith deployments without Kafka.
  */
+@Data
 public class InMemoryTbQueueProducer<T extends TbQueueMsg> implements TbQueueProducer<T> {
 
     private final InMemoryStorage storage;

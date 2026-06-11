@@ -26,15 +26,40 @@ import org.thingsboard.server.common.data.id.TenantId;
 public interface ExportableEntity<I extends EntityId> extends HasId<I>, HasName {
 
     void setId(I id);
+    /**
+     * Returns external id.
+     *
+     * @return {@link I}
+     */
 
     @Schema(description = "JSON object with External Id from the VCS", accessMode = Schema.AccessMode.READ_ONLY, hidden = true)
     I getExternalId();
+/**
+ * Set external id.
+ *
+ * @param externalId external id ({@link I})
+ */
 
     void setExternalId(I externalId);
+/**
+ * Returns created time.
+ *
+ * @return the long result
+ */
 
     long getCreatedTime();
+/**
+ * Set created time.
+ *
+ * @param createdTime created time
+ */
 
     void setCreatedTime(long createdTime);
+/**
+ * Set tenant id.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ */
 
     void setTenantId(TenantId tenantId);
 

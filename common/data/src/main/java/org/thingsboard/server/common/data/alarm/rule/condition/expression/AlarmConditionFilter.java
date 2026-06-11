@@ -48,6 +48,12 @@ public class AlarmConditionFilter implements Serializable {
     @Valid
     @NotEmpty
     private List<KeyFilterPredicate> predicates;
+    /**
+     * Has predicate.
+     *
+     * @param type type ({@link FilterPredicateType})
+     * @return the boolean result
+     */
 
     public boolean hasPredicate(FilterPredicateType type) {
         return containsPredicate(predicates, type);

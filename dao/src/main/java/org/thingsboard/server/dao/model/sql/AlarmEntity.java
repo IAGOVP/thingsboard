@@ -24,8 +24,11 @@ import org.thingsboard.server.common.data.alarm.AlarmInfo;
 
 import static org.thingsboard.server.dao.model.ModelConstants.ALARM_TABLE_NAME;
 /**
- * Alarm entity.
+ * JPA/Cassandra row model for alarm.
+ *
+ * <p>Maps database columns to domain objects via {@code toData()} conversion.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -44,6 +47,12 @@ public final class AlarmEntity extends AbstractAlarmEntity<Alarm> {
     public AlarmEntity(Alarm alarm) {
         super(alarm);
     }
+    /**
+     * To data.
+     *
+     * @return {@link Alarm}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Alarm toData() {

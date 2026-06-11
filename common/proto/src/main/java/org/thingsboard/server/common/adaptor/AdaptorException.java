@@ -16,7 +16,7 @@
 package org.thingsboard.server.common.adaptor;
 
 /**
- * Exception: adaptor exception.
+ * Thrown when adaptor.
  */
 public class AdaptorException extends Exception {
 

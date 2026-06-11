@@ -22,13 +22,28 @@ import org.thingsboard.server.gen.transport.TransportProtos;
 import java.util.Collection;
 
 /**
- * lw m2mtransport adaptor contract.
+ * Converts LwM2M object/resource values to ThingsBoard telemetry and attribute protobuf messages.
  */
 public interface LwM2MTransportAdaptor {
 
     TransportProtos.PostTelemetryMsg convertToPostTelemetry(JsonElement jsonElement) throws AdaptorException;
 
+    /**
+     * Convert to post attributes.
+     *
+     * @param jsonElement json element ({@link JsonElement})
+     * @return the TransportProtos.PostAttributeMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
     TransportProtos.PostAttributeMsg convertToPostAttributes(JsonElement jsonElement) throws AdaptorException;
 
+    /**
+     * Convert to get attributes.
+     *
+     * @param clientKeys client keys ({@link Collection})
+     * @param sharedKeys shared keys ({@link Collection})
+     * @return the TransportProtos.GetAttributeRequestMsg value
+     * @throws AdaptorException on invalid payload or topic format
+     */
     TransportProtos.GetAttributeRequestMsg convertToGetAttributes(Collection<String> clientKeys, Collection<String> sharedKeys) throws AdaptorException;
 }

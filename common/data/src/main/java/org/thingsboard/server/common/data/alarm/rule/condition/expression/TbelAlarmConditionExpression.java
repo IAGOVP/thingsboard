@@ -30,6 +30,11 @@ public class TbelAlarmConditionExpression implements AlarmConditionExpression {
 
     @NotBlank
     private String expression;
+    /**
+     * Returns type.
+     *
+     * @return {@link AlarmConditionExpressionType}
+     */
 
     @Override
     public AlarmConditionExpressionType getType() {

@@ -15,18 +15,20 @@
  */
 package org.thingsboard.server.queue.environment;
 
+import java.util.concurrent.locks.ReentrantLock;
+
+
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * No-op {@link DistributedLockService} for single-node deployments.
+ */
 @Service
 @ConditionalOnProperty(prefix = "zk", value = "enabled", havingValue = "false", matchIfMissing = true)
-/**
- * Dummy distributed lock service.
- */
 public class DummyDistributedLockService implements DistributedLockService {
 
     @Override

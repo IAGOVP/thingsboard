@@ -32,18 +32,67 @@ import java.util.List;
  */
 public interface MobileAppBundleService extends EntityDaoService {
 
+    /**
+     * Saves or persists mobile app bundle.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param mobileAppBundle mobile app bundle ({@link MobileAppBundle})
+     * @return {@link MobileAppBundle}
+     */
     MobileAppBundle saveMobileAppBundle(TenantId tenantId, MobileAppBundle mobileAppBundle);
 
+    /**
+     * Updates oauth2clients.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param mobileAppBundleId mobile app bundle id ({@link MobileAppBundleId})
+     * @param oAuth2ClientIds o auth2client ids ({@link List})
+     */
     void updateOauth2Clients(TenantId tenantId, MobileAppBundleId mobileAppBundleId, List<OAuth2ClientId> oAuth2ClientIds);
 
+    /**
+     * Finds mobile app bundle by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param mobileAppBundleId mobile app bundle id ({@link MobileAppBundleId})
+     * @return {@link MobileAppBundle}
+     */
     MobileAppBundle findMobileAppBundleById(TenantId tenantId, MobileAppBundleId mobileAppBundleId);
 
+    /**
+     * Finds mobile app bundle infos by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     */
     PageData<MobileAppBundleInfo> findMobileAppBundleInfosByTenantId(TenantId tenantId, PageLink pageLink);
 
+    /**
+     * Finds mobile app bundle info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param mobileAppBundleId mobile app bundle id ({@link MobileAppBundleId})
+     * @return {@link MobileAppBundleInfo}
+     */
     MobileAppBundleInfo findMobileAppBundleInfoById(TenantId tenantId, MobileAppBundleId mobileAppBundleId);
 
+    /**
+     * Finds mobile app bundle by pkg name and platform.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pkgName pkg name ({@link String})
+     * @param platform platform ({@link PlatformType})
+     * @return {@link MobileAppBundle}
+     */
     MobileAppBundle findMobileAppBundleByPkgNameAndPlatform(TenantId tenantId, String pkgName, PlatformType platform);
 
+    /**
+     * Deletes mobile app bundle by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param mobileAppBundleId mobile app bundle id ({@link MobileAppBundleId})
+     */
     void deleteMobileAppBundleById(TenantId tenantId, MobileAppBundleId mobileAppBundleId);
 
 }

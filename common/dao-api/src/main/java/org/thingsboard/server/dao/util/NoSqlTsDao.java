@@ -23,7 +23,8 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 @ConditionalOnProperty(prefix = "database.ts", value = "type", havingValue = "cassandra")
 public @/**
- * DAO contract for no sql ts.
+ * no sql ts dao contract for the DAO layer.
  */
+
 interface NoSqlTsDao {
 }

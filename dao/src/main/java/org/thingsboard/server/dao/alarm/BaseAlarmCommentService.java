@@ -37,13 +37,11 @@ import org.thingsboard.server.dao.service.DataValidator;
 import static org.thingsboard.server.dao.service.Validator.validateId;
 
 /**
- * Default implementation of {@link org.thingsboard.server.dao.alarm.AlarmCommentService}.
+ * Default DAO-layer service implementation for alarm comment.
  *
- * <p>Validates tenant scope, persists via {@link AlarmCommentDao}, and publishes
- * {@link SaveEntityEvent} / {@link DeleteEntityEvent} for downstream consumers.
- *
- * <p>REST: {@code AlarmCommentController} ({@code /api/alarm/{alarmId}/comment}).
+ * <p>Coordinates validation, caching, cluster events, and {@code *Dao} persistence (alarm persistence, comments, and alarm-type caching).
  */
+
 @Service
 @Slf4j
 public class BaseAlarmCommentService extends AbstractEntityService implements AlarmCommentService {
@@ -54,9 +52,16 @@ public class BaseAlarmCommentService extends AbstractEntityService implements Al
     @Autowired
     private DataValidator<AlarmComment> alarmCommentDataValidator;
 
+    
     /**
-     * Creates a new comment when {@code alarmComment.getId()} is null; otherwise updates text and marks edited.
+     * Creates or update alarm comment.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alarmComment alarm comment ({@link AlarmComment})
+     * @return {@link AlarmComment}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     @Override
     public AlarmComment createOrUpdateAlarmComment(TenantId tenantId, AlarmComment alarmComment) {
         AlarmComment oldAlarmComment = alarmCommentDataValidator.validate(alarmComment, c -> tenantId);
@@ -74,7 +79,16 @@ public class BaseAlarmCommentService extends AbstractEntityService implements Al
         return result;
     }
 
-    /** Inserts a comment and publishes a delete-style entity event (legacy event type for notifications). */
+    
+    /**
+     * Saves or persists alarm comment.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alarmComment alarm comment ({@link AlarmComment})
+     * @return {@link AlarmComment}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     @Override
     public AlarmComment saveAlarmComment(TenantId tenantId, AlarmComment alarmComment) {
         log.debug("Saving Alarm Comment: {}", alarmComment);
@@ -85,14 +99,33 @@ public class BaseAlarmCommentService extends AbstractEntityService implements Al
         return result;
     }
 
-    /** Paged list of comments for an alarm (newest first per {@link PageLink}). */
+    
+    /**
+     * Finds alarm comments.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alarmId alarm id ({@link AlarmId})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     @Override
     public PageData<AlarmCommentInfo> findAlarmComments(TenantId tenantId, AlarmId alarmId, PageLink pageLink) {
         log.trace("Executing findAlarmComments by alarmId [{}]", alarmId);
         return alarmCommentDao.findAlarmComments(tenantId, alarmId, pageLink);
     }
 
-    /** Async load by comment id. */
+    
+    /**
+     * Finds alarm comment by id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alarmCommentId alarm comment id ({@link AlarmCommentId})
+     * @return future completing with {@link AlarmComment}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     @Override
     public ListenableFuture<AlarmComment> findAlarmCommentByIdAsync(TenantId tenantId, AlarmCommentId alarmCommentId) {
         log.trace("Executing findAlarmCommentByIdAsync by alarmCommentId [{}]", alarmCommentId);
@@ -100,7 +133,16 @@ public class BaseAlarmCommentService extends AbstractEntityService implements Al
         return alarmCommentDao.findAlarmCommentByIdAsync(tenantId, alarmCommentId.getId());
     }
 
-    /** Synchronous load by comment id. */
+    
+    /**
+     * Finds alarm comment by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alarmCommentId alarm comment id ({@link AlarmCommentId})
+     * @return {@link AlarmComment}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     @Override
     public AlarmComment findAlarmCommentById(TenantId tenantId, AlarmCommentId alarmCommentId) {
         log.trace("Executing findAlarmCommentByIdAsync by alarmCommentId [{}]", alarmCommentId);

@@ -38,6 +38,11 @@ public class DashboardPage extends AbstractMobilePage {
     @Schema(description = "Dashboard id", example = "784f394c-42b6-435a-983c-b7beff2784f9")
     @JsonView(Views.Public.class)
     private String dashboardId;
+    /**
+     * Returns type.
+     *
+     * @return {@link MobilePageType}
+     */
 
     @Override
     public MobilePageType getType() {

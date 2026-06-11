@@ -22,19 +22,30 @@ import lombok.extern.slf4j.Slf4j;
 import org.thingsboard.server.common.data.StringUtils;
 import org.thingsboard.server.common.data.validation.Length;
 /**
- * String length validator.
+ * String length validator (shared DAO validators, removers, and constraints).
  */
+
+
+
+
+
+
 
 @Slf4j
 public class StringLengthValidator implements ConstraintValidator<Length, Object> {
     private int max;
     private int min;
 
+    
     /**
-
      * Is valid.
-
+     *
+     * @param value value ({@link Object})
+     * @param context context ({@link ConstraintValidatorContext})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext context) {
@@ -50,11 +61,15 @@ public class StringLengthValidator implements ConstraintValidator<Length, Object
         return stringValue.length() >= min && stringValue.length() <= max;
     }
 
+    
     /**
-
      * Initialize.
-
+     *
+     * @param constraintAnnotation constraint annotation ({@link Length})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public void initialize(Length constraintAnnotation) {

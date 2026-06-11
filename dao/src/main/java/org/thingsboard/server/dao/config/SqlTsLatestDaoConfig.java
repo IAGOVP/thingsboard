@@ -23,8 +23,11 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.thingsboard.server.dao.util.SqlTsLatestDao;
 import org.thingsboard.server.dao.util.TbAutoConfiguration;
 /**
- * Sql ts latest dao config.
+ * Spring configuration for sql ts latest dao DAO beans.
+ *
+ * <p>Registers entity managers, repositories, and datasource routing.
  */
+
 
 @Configuration
 @TbAutoConfiguration

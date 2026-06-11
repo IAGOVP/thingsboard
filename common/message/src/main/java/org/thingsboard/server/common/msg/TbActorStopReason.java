@@ -16,8 +16,9 @@
 package org.thingsboard.server.common.msg;
 
 /**
- * tb actor stop reason values.
+ * Enumerates tb actor stop reason values for message routing or payloads.
  */
+
 public enum TbActorStopReason {
 
     INIT_FAILED, STOPPED

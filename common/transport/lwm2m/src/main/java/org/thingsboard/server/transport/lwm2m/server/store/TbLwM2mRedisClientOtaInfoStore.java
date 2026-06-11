@@ -39,21 +39,49 @@ public class TbLwM2mRedisClientOtaInfoStore implements TbLwM2MClientOtaInfoStore
             connection.set((OTA_EP + type + info.getEndpoint()).getBytes(), JacksonUtil.toString(info).getBytes());
         }
     }
+    /**
+     * Returns fw.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return {@link LwM2MClientFwOtaInfo}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public LwM2MClientFwOtaInfo getFw(String endpoint) {
         return getLwM2MClientOtaInfo(OtaPackageType.FIRMWARE, endpoint, LwM2MClientFwOtaInfo.class);
     }
+    /**
+     * Put fw.
+     *
+     * @param info info ({@link LwM2MClientFwOtaInfo})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void putFw(LwM2MClientFwOtaInfo info) {
         put(OtaPackageType.FIRMWARE, info);
     }
+    /**
+     * Returns sw.
+     *
+     * @param endpoint endpoint ({@link String})
+     * @return {@link LwM2MClientSwOtaInfo}
+     * @throws Exception on processing failure
+     */
 
     @Override
     public LwM2MClientSwOtaInfo getSw(String endpoint) {
         return getLwM2MClientOtaInfo(OtaPackageType.SOFTWARE, endpoint, LwM2MClientSwOtaInfo.class);
     }
+    /**
+     * Put sw.
+     *
+     * @param info info ({@link LwM2MClientSwOtaInfo})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void putSw(LwM2MClientSwOtaInfo info) {

@@ -31,8 +31,11 @@ import org.thingsboard.server.dao.tenant.TenantService;
 
 import static org.thingsboard.server.dao.model.ModelConstants.NULL_UUID;
 /**
- * Edge data validator.
+ * Validates edge entities before persistence.
+ *
+ * <p>Enforces constraints, uniqueness, and referential integrity at the DAO layer.
  */
+
 
 @Component
 @AllArgsConstructor
@@ -42,33 +45,48 @@ public class EdgeDataValidator extends DataValidator<Edge> {
     private final TenantService tenantService;
     private final CustomerDao customerDao;
 
+    
     /**
-
-     * Validate create.
-
+     * Validates create.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edge edge ({@link Edge})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateCreate(TenantId tenantId, Edge edge) {
         validateNumberOfEntitiesPerTenant(tenantId, EntityType.EDGE);
     }
 
+    
     /**
-
-     * Validate update.
-
+     * Validates update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edge edge ({@link Edge})
+     * @return {@link Edge}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected Edge validateUpdate(TenantId tenantId, Edge edge) {
         return edgeDao.findById(edge.getTenantId(), edge.getId().getId());
     }
 
+    
     /**
-
-     * Validate data impl.
-
+     * Validates data impl.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edge edge ({@link Edge})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected void validateDataImpl(TenantId tenantId, Edge edge) {

@@ -15,18 +15,20 @@
  */
 package org.thingsboard.server.queue.housekeeper;
 
+import java.util.Set;
+
+
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.thingsboard.server.common.data.housekeeper.HousekeeperTaskType;
 
-import java.util.Set;
 
+/**
+ * Configuration for housekeeper queue topics and processing parameters.
+ */
 @Component
 @Getter
-/**
- * Configuration for housekeeper.
- */
 public class HousekeeperConfig {
 
     @Value("${queue.core.housekeeper.disabled-task-types:}")

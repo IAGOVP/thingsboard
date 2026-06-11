@@ -38,8 +38,11 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by Valerii Sosliuk on 5/6/2017.
+ * JPA/PostgreSQL implementation of dashboard info dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 @Slf4j
 @Component
 @SqlDao
@@ -48,33 +51,44 @@ public class JpaDashboardInfoDao extends JpaAbstractDao<DashboardInfoEntity, Das
     @Autowired
     private DashboardInfoRepository dashboardInfoRepository;
 
+    
     /**
-
-     * Get entity class.
-
+     * Returns entity class.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected Class<DashboardInfoEntity> getEntityClass() {
         return DashboardInfoEntity.class;
     }
 
+    
     /**
-
-     * Get repository.
-
+     * Returns repository.
+     *
+     * @return {@link JpaRepository}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     protected JpaRepository<DashboardInfoEntity, UUID> getRepository() {
         return dashboardInfoRepository;
     }
 
+    
     /**
-
-     * Loads dashboards by tenant id.
-
+     * Finds dashboards by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<DashboardInfo> findDashboardsByTenantId(UUID tenantId, PageLink pageLink) {
@@ -85,11 +99,16 @@ public class JpaDashboardInfoDao extends JpaAbstractDao<DashboardInfoEntity, Das
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads mobile dashboards by tenant id.
-
+     * Finds mobile dashboards by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<DashboardInfo> findMobileDashboardsByTenantId(UUID tenantId, PageLink pageLink) {
@@ -105,11 +124,17 @@ public class JpaDashboardInfoDao extends JpaAbstractDao<DashboardInfoEntity, Das
                         DaoUtil.toPageable(pageLink, sortOrders)));
     }
 
+    
     /**
-
-     * Loads dashboards by tenant id and customer id.
-
+     * Finds dashboards by tenant id and customer id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<DashboardInfo> findDashboardsByTenantIdAndCustomerId(UUID tenantId, UUID customerId, PageLink pageLink) {
@@ -121,11 +146,17 @@ public class JpaDashboardInfoDao extends JpaAbstractDao<DashboardInfoEntity, Das
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads mobile dashboards by tenant id and customer id.
-
+     * Finds mobile dashboards by tenant id and customer id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId target customer identifier
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<DashboardInfo> findMobileDashboardsByTenantIdAndCustomerId(UUID tenantId, UUID customerId, PageLink pageLink) {
@@ -142,11 +173,17 @@ public class JpaDashboardInfoDao extends JpaAbstractDao<DashboardInfoEntity, Das
                         DaoUtil.toPageable(pageLink, sortOrders)));
     }
 
+    
     /**
-
-     * Loads dashboards by tenant id and edge id.
-
+     * Finds dashboards by tenant id and edge id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link UUID})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public PageData<DashboardInfo> findDashboardsByTenantIdAndEdgeId(UUID tenantId, UUID edgeId, PageLink pageLink) {
@@ -159,77 +196,114 @@ public class JpaDashboardInfoDao extends JpaAbstractDao<DashboardInfoEntity, Das
                         DaoUtil.toPageable(pageLink)));
     }
 
+    
     /**
-
-     * Loads first by tenant id and name.
-
+     * Finds first by tenant id and name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name entity or attribute name
+     * @return {@link DashboardInfo}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public DashboardInfo findFirstByTenantIdAndName(UUID tenantId, String name) {
         return DaoUtil.getData(dashboardInfoRepository.findFirstByTenantIdAndTitle(tenantId, name));
     }
 
+    
     /**
-
-     * Loads title by id.
-
+     * Finds title by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param dashboardId dashboard id ({@link UUID})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public String findTitleById(UUID tenantId, UUID dashboardId) {
         return dashboardInfoRepository.findTitleByTenantIdAndId(tenantId, dashboardId);
     }
 
+    
     /**
-
-     * Loads dashboards by ids.
-
+     * Finds dashboards by ids.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param dashboardIds dashboard ids ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<DashboardInfo> findDashboardsByIds(UUID tenantId, List<UUID> dashboardIds) {
         return DaoUtil.convertDataList(dashboardInfoRepository.findByIdIn(dashboardIds));
     }
 
+    
     /**
-
-     * Loads by tenant and image link.
-
+     * Finds by tenant and image link.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param imageLink image link ({@link String})
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<DashboardInfo> findByTenantAndImageLink(TenantId tenantId, String imageLink, int limit) {
         return DaoUtil.convertDataList(dashboardInfoRepository.findByTenantAndImageLink(tenantId.getId(), imageLink, limit));
     }
 
+    
     /**
-
-     * Loads by image link.
-
+     * Finds by image link.
+     *
+     * @param imageLink image link ({@link String})
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<DashboardInfo> findByImageLink(String imageLink, int limit) {
         return DaoUtil.convertDataList(dashboardInfoRepository.findByImageLink(imageLink, limit));
     }
 
+    
     /**
-
-     * Loads by tenant id and resource.
-
+     * Finds by tenant id and resource.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param reference reference ({@link String})
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<EntityInfo> findByTenantIdAndResource(TenantId tenantId, String reference, int limit) {
         return dashboardInfoRepository.findDashboardInfosByTenantIdAndResourceLink(tenantId.getId(), reference, PageRequest.of(0, limit));
     }
 
+    
     /**
-
-     * Loads by resource.
-
+     * Finds by resource.
+     *
+     * @param reference reference ({@link String})
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
 
     @Override
     public List<EntityInfo> findByResource(String reference, int limit) {

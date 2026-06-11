@@ -36,6 +36,12 @@ public enum TelemetryObserveStrategy {
         this.description = description;
         this.id = id;
     }
+    /**
+     * From description.
+     *
+     * @param description description ({@link String})
+     * @return {@link TelemetryObserveStrategy}
+     */
 
     public static TelemetryObserveStrategy fromDescription(String description) {
         for (TelemetryObserveStrategy strategy : values()) {
@@ -45,6 +51,12 @@ public enum TelemetryObserveStrategy {
         }
         throw new IllegalArgumentException("Unknown TelemetryObserveStrategy id: " + description);
     }
+    /**
+     * From id.
+     *
+     * @param id id
+     * @return {@link TelemetryObserveStrategy}
+     */
 
     public static TelemetryObserveStrategy fromId(int id) {
         for (TelemetryObserveStrategy strategy : values()) {

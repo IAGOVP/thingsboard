@@ -33,6 +33,11 @@ public class BooleanFilterPredicate implements SimpleKeyFilterPredicate<Boolean>
     @Valid
     @NotNull
     private AlarmConditionValue<Boolean> value;
+    /**
+     * Returns type.
+     *
+     * @return {@link FilterPredicateType}
+     */
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, ref = "#/components/schemas/AlarmRuleFilterPredicateType")
     @Override

@@ -19,8 +19,14 @@ import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.thingsboard.server.common.data.limit.LimitedApi;
 /**
- * Buffered rate executor type.
+ * Enumerates buffered rate executor type values used in DAO utilities (KV conversion, rate executors, JSON mapping).
  */
+
+
+
+
+
+
 
 @Getter
 public enum BufferedRateExecutorType {

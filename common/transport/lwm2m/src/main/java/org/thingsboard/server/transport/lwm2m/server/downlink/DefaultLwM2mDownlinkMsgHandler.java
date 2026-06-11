@@ -124,7 +124,7 @@ import static org.thingsboard.server.transport.lwm2m.utils.LwM2MTransportUtil.ge
 import static org.thingsboard.server.transport.lwm2m.utils.LwM2MTransportUtil.validateVersionedId;
 
 /**
- * Handles default lw m2m downlink msg.
+ * Default {@link LwM2mDownlinkMsgHandler} implementation using Eclipse Leshan client callbacks.
  */
 @Slf4j
 @Service("lwM2mDownlinkMsgHandler")
@@ -139,28 +139,61 @@ public class DefaultLwM2mDownlinkMsgHandler extends LwM2MExecutorAwareService im
     private final LwM2MTelemetryLogService logService;
     private final LwM2mClientContext clientContext;
     private final LwM2mVersionedModelProvider modelProvider;
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @PostConstruct
     public void init() {
         super.init();
         this.converter = LwM2mValueConverterImpl.getInstance();
     }
+    /**
+     * Destroy.
+     *
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @PreDestroy
     public void destroy() {
         log.trace("Destroying {}", getClass().getSimpleName());
         super.destroy();
     }
+    /**
+     * Returns executor size.
+     *
+     * @return monotonically increasing MQTT packet identifier
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected int getExecutorSize() {
         return config.getDownlinkPoolSize();
     }
+    /**
+     * Returns executor name.
+     *
+     * @return {@link String}
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected String getExecutorName() {
         return "LwM2M Downlink";
     }
+    /**
+     * Send read request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void sendReadRequest(LwM2mClient client, TbLwM2MReadRequest request, DownlinkRequestCallback<ReadRequest, ReadResponse> callback) {
@@ -168,6 +201,15 @@ public class DefaultLwM2mDownlinkMsgHandler extends LwM2MExecutorAwareService im
         ReadRequest downlink = new ReadRequest(getRequestContentFormat(client, request.getVersionedId(), modelProvider), request.getObjectId());
         sendSimpleRequest(client, downlink, request.getTimeout(), callback);
     }
+    /**
+     * Send read composite request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void sendReadCompositeRequest(LwM2mClient client, TbLwM2MReadCompositeRequest request,
@@ -181,9 +223,17 @@ public class DefaultLwM2mDownlinkMsgHandler extends LwM2MExecutorAwareService im
         }
     }
 
+    
     /**
-     * if resource in CompositeObservation is already registered - return BAD REQUEST
+     * Send observe request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
      */
+
     @Override
     public void sendObserveRequest(LwM2mClient client, TbLwM2MObserveRequest request, DownlinkRequestCallback<ObserveRequest, ObserveResponse> callback) {
         try {
@@ -211,6 +261,15 @@ public class DefaultLwM2mDownlinkMsgHandler extends LwM2MExecutorAwareService im
             callback.onValidationError(request.toString(), e.getMessage());
         }
     }
+    /**
+     * Send observe all request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void sendObserveAllRequest(LwM2mClient client, TbLwM2MObserveAllRequest request, DownlinkRequestCallback<TbLwM2MObserveAllRequest, Set<String>> callback) {
@@ -227,9 +286,17 @@ public class DefaultLwM2mDownlinkMsgHandler extends LwM2MExecutorAwareService im
         callback.onSuccess(request, paths);
     }
 
+    
     /**
-     * if resource (SingleObservation or in CompositeObservation) is already registered - return BAD REQUEST
+     * Send observe composite request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
      */
+
     @Override
     public void sendObserveCompositeRequest(LwM2mClient client, TbLwM2MObserveCompositeRequest request, DownlinkRequestCallback<ObserveCompositeRequest,
             ObserveCompositeResponse> callback) {
@@ -247,6 +314,15 @@ public class DefaultLwM2mDownlinkMsgHandler extends LwM2MExecutorAwareService im
             callback.onValidationError(request.toString(), e.getMessage());
         }
     }
+    /**
+     * Send cancel observe composite request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void sendCancelObserveCompositeRequest(LwM2mClient client, TbLwM2MCancelObserveCompositeRequest request, DownlinkRequestCallback<TbLwM2MCancelObserveCompositeRequest, Integer> callback) {
@@ -262,11 +338,29 @@ public class DefaultLwM2mDownlinkMsgHandler extends LwM2MExecutorAwareService im
             callback.onValidationError(request.toString(), e.getMessage());
         }
     }
+    /**
+     * Send discover all request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void sendDiscoverAllRequest(LwM2mClient client, TbLwM2MDiscoverAllRequest request, DownlinkRequestCallback<TbLwM2MDiscoverAllRequest, List<String>> callback) {
         callback.onSuccess(request, Arrays.stream(client.getRegistration().getSortedObjectLinks()).map(Link::toCoreLinkFormat).collect(Collectors.toList()));
     }
+    /**
+     * Send execute request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void sendExecuteRequest(LwM2mClient client, TbLwM2MExecuteRequest request, DownlinkRequestCallback<ExecuteRequest, ExecuteResponse> callback) {
@@ -305,6 +399,15 @@ public class DefaultLwM2mDownlinkMsgHandler extends LwM2MExecutorAwareService im
             callback.onValidationError(request.toString(), e.getMessage());
         }
     }
+    /**
+     * Send delete request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void sendDeleteRequest(LwM2mClient client, TbLwM2MDeleteRequest request, DownlinkRequestCallback<DeleteRequest, DeleteResponse> callback) {
@@ -315,6 +418,15 @@ public class DefaultLwM2mDownlinkMsgHandler extends LwM2MExecutorAwareService im
             callback.onValidationError(request.toString(), e.getMessage());
         }
     }
+    /**
+     * Send cancel observe request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void sendCancelObserveRequest(LwM2mClient client, TbLwM2MCancelObserveRequest request, DownlinkRequestCallback<TbLwM2MCancelObserveRequest, Integer> callback) {
@@ -330,12 +442,30 @@ public class DefaultLwM2mDownlinkMsgHandler extends LwM2MExecutorAwareService im
             callback.onValidationError(request.toString(), e.getMessage());
         }
     }
+    /**
+     * Send cancel observe all request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void sendCancelObserveAllRequest(LwM2mClient client, TbLwM2MCancelAllRequest request, DownlinkRequestCallback<TbLwM2MCancelAllRequest, Integer> callback) {
         int observeCancelCnt = context.getServer().getObservationService().cancelObservations(client.getRegistration());
         callback.onSuccess(request, observeCancelCnt);
     }
+    /**
+     * Send discover request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void sendDiscoverRequest(LwM2mClient client, TbLwM2MDiscoverRequest request, DownlinkRequestCallback<DiscoverRequest, DiscoverResponse> callback) {
@@ -343,18 +473,17 @@ public class DefaultLwM2mDownlinkMsgHandler extends LwM2MExecutorAwareService im
         sendSimpleRequest(client, new DiscoverRequest(request.getObjectId()), request.getTimeout(), callback);
     }
 
+    
     /**
-     * Example # 1:
-     * AttributeSet attributes = new AttributeSet(new Attribute(Attribute.MINIMUM_PERIOD, 10L),
-     * new Attribute(Attribute.MAXIMUM_PERIOD, 100L));
-     * WriteAttributesRequest requestTest = new WriteAttributesRequest(3, 0, 14, attributes);
-     * sendSimpleRequest(client, requestTest, request.getTimeout(), callback);
-     * <p>
-     * Example # 2
-     * Dimension and Object version are read only attributes.
-     * addAttribute(attributes, DIMENSION, params.getDim(), dim -> dim >= 0 && dim <= 255);
-     * addAttribute(attributes, OBJECT_VERSION, params.getVer(), StringUtils::isNotEmpty, Function.identity());
+     * Send write attributes request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
      */
+
     @Override
     public void sendWriteAttributesRequest(LwM2mClient client, TbLwM2MWriteAttributesRequest request, DownlinkRequestCallback<WriteAttributesRequest, WriteAttributesResponse> callback) {
         try {
@@ -370,6 +499,7 @@ public class DefaultLwM2mDownlinkMsgHandler extends LwM2MExecutorAwareService im
 
     private LwM2mAttributeSet getAttributesSet(ObjectAttributes params) {
         List<LwM2mAttribute<?>> attributes = new LinkedList<>();
+
         /**
          * Only: AttributeClass.NOTIFICATION -> RW
          */
@@ -380,6 +510,7 @@ public class DefaultLwM2mDownlinkMsgHandler extends LwM2MExecutorAwareService im
         addAttribute(attributes, STEP, params.getSt());
         addAttribute(attributes, EVALUATE_MAXIMUM_PERIOD, params.getEpmax());
         addAttribute(attributes, EVALUATE_MINIMUM_PERIOD, params.getEpmin());
+
         /**
          * Only:  AttributeClass.PROPERTIES -> R
          */
@@ -395,6 +526,15 @@ public class DefaultLwM2mDownlinkMsgHandler extends LwM2MExecutorAwareService im
 
         return new LwM2mAttributeSet(attributes);
     }
+    /**
+     * Send write replace request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void sendWriteReplaceRequest(LwM2mClient client, TbLwM2MWriteReplaceRequest request, DownlinkRequestCallback<WriteRequest, WriteResponse> callback) {
@@ -445,6 +585,15 @@ public class DefaultLwM2mDownlinkMsgHandler extends LwM2MExecutorAwareService im
             callback.onValidationError(toString(request), "Resource " + request.getVersionedId() + ". This operation can only be used for Resource or ResourceInstance!");
         }
     }
+    /**
+     * Send write composite request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param rpcWriteCompositeRequest rpc write composite request ({@link RpcWriteCompositeRequest})
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void sendWriteCompositeRequest(LwM2mClient client, RpcWriteCompositeRequest rpcWriteCompositeRequest,
@@ -460,6 +609,15 @@ public class DefaultLwM2mDownlinkMsgHandler extends LwM2MExecutorAwareService im
             callback.onError(toString(rpcWriteCompositeRequest), e);
         }
     }
+    /**
+     * Send write update request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     public void sendWriteUpdateRequest(LwM2mClient client, TbLwM2MWriteUpdateRequest request, DownlinkRequestCallback<WriteRequest, WriteResponse> callback) {
@@ -475,7 +633,7 @@ public class DefaultLwM2mDownlinkMsgHandler extends LwM2MExecutorAwareService im
                      *  params = "{\"id\":0,\"value\":[{\"id\":14,\"value\":\"+5\"},{\"id\":15,\"value\":\"+9\"}]}"
                      *  int rscId = resultIds.getObjectInstanceId();
                      *  contentFormat – Format of the payload (TLV or JSON).
-                     */
+                       */
                     Collection<LwM2mResource> resources = client.getNewResourcesForInstance(request.getVersionedId(),
                             request.getValue(), modelProvider, this.converter);
                     if (resources.size() > 0) {
@@ -518,7 +676,15 @@ public class DefaultLwM2mDownlinkMsgHandler extends LwM2MExecutorAwareService im
             callback.onValidationError(toString(request), e.getMessage());
         }
     }
-
+    /**
+     * Send create request.
+     *
+     * @param client client ({@link LwM2mClient})
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception on processing failure
+     */
     public void sendCreateRequest(LwM2mClient client, TbLwM2MCreateRequest request, DownlinkRequestCallback<CreateRequest, CreateResponse> callback) {
         validateVersionedId(client, request);
         CreateRequest downlink = null;

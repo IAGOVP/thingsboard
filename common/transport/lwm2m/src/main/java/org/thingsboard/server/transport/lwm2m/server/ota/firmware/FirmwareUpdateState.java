@@ -39,7 +39,13 @@ public enum FirmwareUpdateState {
         this.code = code;
         this.type = type;
     }
-
+    /**
+     * From state fw by type.
+     *
+     * @param type type ({@link String})
+     * @return {@link FirmwareUpdateState}
+     * @throws Exception on processing failure
+     */
     public static FirmwareUpdateState fromStateFwByType(String type) {
         for (FirmwareUpdateState to : FirmwareUpdateState.values()) {
             if (to.type.equals(type)) {
@@ -48,7 +54,13 @@ public enum FirmwareUpdateState {
         }
         throw new IllegalArgumentException(String.format("Unsupported FW State type  : %s", type));
     }
-
+    /**
+     * From state fw by code.
+     *
+     * @param code code
+     * @return {@link FirmwareUpdateState}
+     * @throws Exception on processing failure
+     */
     public static FirmwareUpdateState fromStateFwByCode(int code) {
         for (FirmwareUpdateState to : FirmwareUpdateState.values()) {
             if (to.code == code) {

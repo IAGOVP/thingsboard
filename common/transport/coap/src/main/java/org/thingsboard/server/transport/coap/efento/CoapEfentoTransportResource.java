@@ -97,6 +97,13 @@ public class CoapEfentoTransportResource extends AbstractCoapTransportResource {
         this.setObserveType(CoAP.Type.CON); // configure the notification type to CONs
 //        this.getAttributes().setObservable(); // mark observable in the Link-Format
     }
+    /**
+     * Processes handle get.
+     *
+     * @param exchange exchange ({@link CoapExchange})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected void processHandleGet(CoapExchange exchange) {
@@ -113,6 +120,13 @@ public class CoapEfentoTransportResource extends AbstractCoapTransportResource {
             exchange.respond(CoAP.ResponseCode.CONTENT, bytes);
         }
     }
+    /**
+     * Processes handle post.
+     *
+     * @param exchange exchange ({@link CoapExchange})
+     * @return nothing
+     * @throws Exception on processing failure
+     */
 
     @Override
     protected void processHandlePost(CoapExchange exchange) {
@@ -228,6 +242,13 @@ public class CoapEfentoTransportResource extends AbstractCoapTransportResource {
                     }
                 }));
     }
+    /**
+     * Returns child.
+     *
+     * @param name name ({@link String})
+     * @return {@link Resource}
+     * @throws AdaptorException on invalid payload or topic format
+     */
 
     @Override
     public Resource getChild(String name) {

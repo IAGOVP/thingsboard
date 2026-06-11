@@ -56,8 +56,11 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 /**
- * JPA implementation of base event dao.
+ * JPA/PostgreSQL implementation of base event dao.
+ *
+ * <p>Uses Spring Data repositories and {@link org.thingsboard.server.dao.sql.JpaAbstractDao} helpers.
  */
+
 
 @DefaultDataSource
 @Component
@@ -124,6 +127,13 @@ public class JpaBaseEventDao implements EventDao {
             queue.destroy();
         }
     }
+    /**
+     * Saves or persists async.
+     *
+     * @param event event ({@link Event})
+     * @return future completing with {@link Void}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<Void> saveAsync(Event event) {
@@ -144,11 +154,31 @@ public class JpaBaseEventDao implements EventDao {
                 partitionConfiguration.getPartitionSizeInMs(event.getType()));
         return queue.add(event);
     }
+    /**
+     * Finds events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param eventType event type ({@link EventType})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<? extends Event> findEvents(UUID tenantId, UUID entityId, EventType eventType, TimePageLink pageLink) {
         return DaoUtil.toPageData(getEventRepository(eventType).findEvents(tenantId, entityId, pageLink.getStartTime(), pageLink.getEndTime(), DaoUtil.toPageable(pageLink, EventEntity.eventColumnMap)));
     }
+    /**
+     * Finds event by filter.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param eventFilter event filter ({@link EventFilter})
+     * @param pageLink pagination, sort, and text-search parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<? extends Event> findEventByFilter(UUID tenantId, UUID entityId, EventFilter eventFilter, TimePageLink pageLink) {
@@ -173,11 +203,32 @@ public class JpaBaseEventDao implements EventDao {
             return findEvents(tenantId, entityId, eventFilter.getEventType(), pageLink);
         }
     }
+    /**
+     * Removes events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void removeEvents(UUID tenantId, UUID entityId, Long startTime, Long endTime) {
         removeEvents(tenantId, entityId, startTime, endTime, EventType.values());
     }
+    /**
+     * Removes events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @param types types
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void removeEvents(UUID tenantId, UUID entityId, Long startTime, Long endTime, EventType... types) {
@@ -187,6 +238,17 @@ public class JpaBaseEventDao implements EventDao {
             getEventRepository(eventType).removeEvents(tenantId, entityId, startTime, endTime);
         }
     }
+    /**
+     * Removes events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param eventFilter event filter ({@link EventFilter})
+     * @param startTime start time ({@link Long})
+     * @param endTime end time ({@link Long})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void removeEvents(UUID tenantId, UUID entityId, EventFilter eventFilter, Long startTime, Long endTime) {
@@ -418,16 +480,43 @@ public class JpaBaseEventDao implements EventDao {
                 eventFilter.isError(),
                 eventFilter.getErrorStr());
     }
+    /**
+     * Finds latest events.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param eventType event type ({@link EventType})
+     * @param limit maximum number of records to return
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<? extends Event> findLatestEvents(UUID tenantId, UUID entityId, EventType eventType, int limit) {
         return DaoUtil.convertDataList(getEventRepository(eventType).findLatestEvents(tenantId, entityId, limit));
     }
+    /**
+     * Finds latest debug rule node in event.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link Event}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Event findLatestDebugRuleNodeInEvent(UUID tenantId, UUID entityId) {
         return DaoUtil.getData(ruleNodeDebugEventRepository.findLatestDebugRuleNodeInEvent(tenantId, entityId));
     }
+    /**
+     * Cleanup events.
+     *
+     * @param regularEventExpTs regular event exp ts
+     * @param debugEventExpTs debug event exp ts
+     * @param cleanupDb cleanup db
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void cleanupEvents(long regularEventExpTs, long debugEventExpTs, boolean cleanupDb) {

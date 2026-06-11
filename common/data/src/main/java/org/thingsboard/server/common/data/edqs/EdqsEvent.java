@@ -25,8 +25,9 @@ import org.thingsboard.server.common.data.id.TenantId;
 @AllArgsConstructor
 @Builder
 /**
- * Edqs event.
+ * Kafka event describing create/update/delete of an indexed entity, relation, attribute, or latest TS value.
  */
+
 public class EdqsEvent {
     
     private final TenantId tenantId;
